@@ -295,12 +295,16 @@ bool Document::add()
                 }
             }
         }
-        appendDocString();
-        if (getScriptEngine() != 0)
+        if (appendDocString() > 0)
         {
-            getScriptEngine()->eventAfterAddString();
-            saveChanges();
+            if (getScriptEngine() != 0)
+            {
+                getScriptEngine()->eventAfterAddString();
+                saveChanges();
+            }
         }
+        else
+            result = false;
     }
     return result;
 }
@@ -610,7 +614,7 @@ void Document::loadDocument()
             if (dict->isConst())
             {   // ... и помечен как "постоянный"
                 // то установим его значение, которое актуально для всего документа
-                qulonglong val = getValue(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.кркод")), 0).toULongLong();
+                int val = getValue(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.кркод")), 0).toULongLong();
                 if (val > 0)
                 {
                     dict->setId(val);
@@ -630,7 +634,7 @@ void Document::loadDocument()
                     if (childDict != 0 && childDict->isConst())
                     {
                         // Установим сначала значение основного справочника
-                        qulonglong val = getValue(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.кркод")), 0).toULongLong();
+                        int val = getValue(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.кркод")), 0).toULongLong();
                         if (val > 0)
                         {
                             dict->setId(val);
@@ -658,7 +662,7 @@ void Document::loadDocument()
             if (dict->isConst())
             {   // ... и помечен как "постоянный"
                 // то установим его значение, которое актуально для всего документа
-                qulonglong val = getValue(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.дбкод")), 0).toULongLong();
+                int val = getValue(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.дбкод")), 0).toULongLong();
                 if (val > 0)
                 {
                     dict->setId(val);
@@ -680,7 +684,7 @@ void Document::loadDocument()
                         if (childDict->isConst())
                         {
                             // Установим сначала значение основного справочника
-                            qulonglong val = getValue(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.дбкод")), 0).toULongLong();
+                            int val = getValue(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.дбкод")), 0).toULongLong();
                             if (val > 0)
                             {
                                 dict->setId(val);
@@ -763,7 +767,7 @@ void Document::setConstDictId(QString dName, QVariant id)
                         dict = getDictionariesList()->value(dictName);
                         for (int r = 0; r < tableModel->rowCount(); r++)
                         {
-                            qulonglong id = getValue(QString("P%1__%2").arg(topersList->at(i).number).arg(db->getObjectName("проводки.дбкод")), r).toULongLong();
+                            int id = getValue(QString("P%1__%2").arg(topersList->at(i).number).arg(db->getObjectName("проводки.дбкод")), r).toULongLong();
                             dict->setId(id);
                             id = dict->getId();
                             setValue(QString("P%1__%2").arg(topersList->at(i).number).arg(db->getObjectName("проводки.дбкод")), id, r);
@@ -799,7 +803,7 @@ void Document::setConstDictId(QString dName, QVariant id)
                         dict = getDictionariesList()->value(dictName);
                         for (int r = 0; r < tableModel->rowCount(); r++)
                         {
-                            qulonglong id = getValue(QString("P%1__%2").arg(topersList->at(i).number).arg(db->getObjectName("проводки.кркод")), r).toULongLong();
+                            int id = getValue(QString("P%1__%2").arg(topersList->at(i).number).arg(db->getObjectName("проводки.кркод")), r).toULongLong();
                             dict->setId(id);
                             id = dict->getId();
                             setValue(QString("P%1__%2").arg(topersList->at(i).number).arg(db->getObjectName("проводки.кркод")), id, r);
@@ -1051,12 +1055,12 @@ bool Document::prepareValue(QString name, Dictionary* dict)
 {
     if (!prvValues.contains(name))
     {
-        qulonglong id;
+        int id = -1;
         if (dict->isSaldo())
             id = ((Saldo*)dict)->getId();
         else
             id = dict->getId();
-        if (id != 0 || !dict->getExact())
+        if (id > 0 || !dict->getExact())
         {
             prvValues.insert(name, QVariant(id));
             return true;
@@ -1080,13 +1084,16 @@ bool Document::prepareValue(QString name, QVariant val)
 int Document::appendDocString()
 {
     int result = 0;
+    prvValues.clear();
+
     QString dictName, parameter;
 
     foreach (QString dictName, getDictionariesList()->keys())
     {
         Dictionary* dict = dictionaries->getDictionary(dictName);
         if (dict->isAutoLoaded())
-            prepareValue(dictName, dict);
+            if (!prepareValue(dictName, dict))
+                return result;
     }
 
     // Просмотрим все проводки типовой операции
@@ -1094,7 +1101,7 @@ int Document::appendDocString()
     {
         QString prefix = QString("P%1__").arg(i + 1);
         QString fldName;
-        qulonglong dbId = 0, crId = 0;
+        int dbId = 0, crId = 0;
         float quan = 0, price = 0, sum = 0;
 
         fldName = prefix + "ДБКОД";
@@ -1151,8 +1158,6 @@ int Document::appendDocString()
     {
         db->saveDocAttribute(operNumber, docId, attrList);
     }
-
-    prvValues.clear();
 
     if (result > 0)      // Если строка была добавлена
     {

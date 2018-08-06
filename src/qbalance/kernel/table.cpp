@@ -145,7 +145,12 @@ void Table::query(QString filter)
         if (command.size() > 0)
         {
             if (filter.size() > 0)
-                command.append(QString(" WHERE %1").arg(filter));
+            {
+                if (command.contains(" WHERE "))
+                    command.replace(" WHERE ", QString(" WHERE %1 AND ").arg(filter));
+                else
+                    command.append(QString(" WHERE %1").arg(filter));
+            }
             if (tableModel->isTestSelect())
                 command.append(QString(" LIMIT 0"));
             app->debug(1, "Query:(*) " + command);
@@ -250,6 +255,9 @@ QString Table::defineFieldType(QVariant::Type type)
             break;
         case QVariant::DateTime:
             result = "DATETIME";
+            break;
+        case QVariant::Bool:
+            result = "BOOLEAN";
             break;
         default:
             app->showError(QString("Не найден тип %1 в методе <QString Table::defineFieldType(QVariant::Type type)>. Необходимо поправить исходный код.").arg(type));

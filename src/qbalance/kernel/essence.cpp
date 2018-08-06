@@ -568,7 +568,7 @@ void Essence::setValue(QString n, QVariant value, int row)
 }
 
 
-qulonglong Essence::getId(int row)
+int Essence::getId(int row)
 {
     if (row < 0)
         row = getCurrentRow();
@@ -576,7 +576,7 @@ qulonglong Essence::getId(int row)
 }
 
 
-int Essence::locateId(qulonglong id)
+int Essence::locateId(int id)
 {
     for (int i = 0; i < tableModel->rowCount(); i++)
     {
@@ -607,7 +607,7 @@ QString Essence::getName(int row)
 }
 
 
-void Essence::setId(qulonglong id)
+void Essence::setId(int id)
 {
     bool enabled = photoEnabled;
     photoEnabled = false;
@@ -1293,7 +1293,7 @@ bool Essence::getFile(QString path, QString fileName, FileType type)
             QByteArray array = file.readAll();
             file.close();
 
-            qulonglong localFileCheckSum = app->calculateCRC32(&array);
+            int localFileCheckSum = app->calculateCRC32(&array);
 
             if (servFileInfo.size != localFileCheckSum) // Если локальный и серверный файлы различаются по контрольной сумме
             {

@@ -179,7 +179,7 @@ void Saldo::setPhotoPath(QString path)
 }
 
 
-void Saldo::setId(qulonglong id)
+void Saldo::setId(int id)
 {
     bool enabled = photoEnabled;
     photoEnabled = false;

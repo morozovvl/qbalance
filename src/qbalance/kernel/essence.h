@@ -127,10 +127,10 @@ public:
     virtual void                        load();
 
 // Функции для получения, сохранения данных модели
-    Q_INVOKABLE virtual qulonglong      getId(int row = -1);
+    Q_INVOKABLE virtual int             getId(int row = -1);
     Q_INVOKABLE virtual QString         getName(int row = -1);
-    Q_INVOKABLE virtual void            setId(qulonglong);
-    Q_INVOKABLE virtual int             locateId(qulonglong);            // Возвращает номер строки с заданным полем КОД
+    Q_INVOKABLE virtual void            setId(int);
+    Q_INVOKABLE virtual int             locateId(int);            // Возвращает номер строки с заданным полем КОД
     Q_INVOKABLE virtual int             locateValue(QString, QVariant);  // Возвращает номер строки с заданным значение поля
     Q_INVOKABLE virtual bool            isFieldExists(QString field);
     Q_INVOKABLE virtual QVariant        getValue(QString, int row = -1);                 // Возвращает значение заданного поля в текущей записи

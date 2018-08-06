@@ -268,9 +268,10 @@ QString SearchParameters::getFilter(QString dictName, QString defFilter)
 
                         if (filter.size() > 0)
                             filter.append(" AND ");
-                        filter.append(QString("%1.%2 ILIKE '%3'").arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table))
-                                                                 .arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table + "." + searchParameters[i].field))
-                                                                 .arg(param));
+                        if (searchParameters[i].table.size() > 0)
+                            filter.append(QString("%1.").arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table)));
+                        filter.append(QString("%1").arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table + "." + searchParameters[i].field)));
+                        filter.append(QString(" ILIKE '%1'").arg(param));
                     }
                 }
             }

@@ -1393,12 +1393,6 @@ int DBFactory::insertDictDefault(QString tableName, QHash<QString, QVariant>* va
                 valuesList.append(',');
             valuesList.append(str);
         }
-/*
-        command = QString("INSERT INTO %1 (%4, %2) VALUES ((SELECT MAX(%4)+1 FROM %1),%3) RETURNING %4;").arg(getNameCom(tableName))
-                                                                          .arg(fieldsList)
-                                                                          .arg(valuesList)
-                                                                          .arg(getNameCom(tableName + ".КОД"));
-*/
         command = QString("INSERT INTO %1 (%2) VALUES (%3) RETURNING %4;").arg(getObjectNameCom(tableName))
                                                                           .arg(fieldsList)
                                                                           .arg(valuesList)
@@ -1415,7 +1409,7 @@ int DBFactory::insertDictDefault(QString tableName, QHash<QString, QVariant>* va
 }
 
 
-void DBFactory::insertSaldo(QString acc, qulonglong id)
+void DBFactory::insertSaldo(QString acc, int id)
 {
     QString command = QString("SELECT %1 FROM %2 WHERE %3 = '%4' AND %5 = %6;").arg(getObjectNameCom("сальдо.САЛЬДО"))
                                                                               .arg(getObjectNameCom("сальдо"))
@@ -1436,7 +1430,7 @@ void DBFactory::insertSaldo(QString acc, qulonglong id)
 }
 
 
-bool DBFactory::removeDictValue(QString tableName, qulonglong id)
+bool DBFactory::removeDictValue(QString tableName, int id)
 {
     clearError();
     QString command = QString("DELETE FROM \"%1\" WHERE \"%2\" = %3;").arg(tableName).arg(getObjectName("код")).arg(id);

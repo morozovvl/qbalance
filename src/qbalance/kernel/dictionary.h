@@ -79,11 +79,11 @@ public:
     Q_INVOKABLE virtual void            query(QString filter = "", bool = false);
     Q_INVOKABLE virtual void            queryName(QString filter = "");
     virtual bool                        calculate(bool update = true);
-    Q_INVOKABLE virtual qulonglong      getId(int row = -1, bool = false);
+    Q_INVOKABLE virtual int      getId(int row = -1, bool = false);
     Q_INVOKABLE virtual void setOrderClause(QString = "");
     Q_INVOKABLE virtual void setSorted(bool sorted);
     Q_INVOKABLE virtual void setValue(QString name, QVariant value, int row = -1);
-    Q_INVOKABLE virtual void setValue(qulonglong, QString, QVariant);
+    Q_INVOKABLE virtual void setValue(int, QString, QVariant);
 
 
 // Функции для работы справочника в составе документа
@@ -116,7 +116,7 @@ public:
     QStringList getChildDicts();
     Dictionary* getParentDict();
     void setParentDict(Dictionary* dict);
-    Q_INVOKABLE virtual void            setId(qulonglong);
+    Q_INVOKABLE virtual void            setId(int);
     void    setIdEnabled(bool e);
     Q_INVOKABLE virtual void setForm(QString = "");
     Q_INVOKABLE virtual void updateCurrentRow(int = 0);

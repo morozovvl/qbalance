@@ -427,7 +427,7 @@ void Dictionary::setValue(QString name, QVariant value, int row)
 }
 
 
-void Dictionary::setValue(qulonglong id, QString name, QVariant value)
+void Dictionary::setValue(int id, QString name, QVariant value)
 {
     setId(id);
     Essence::setValue(name, value);
@@ -448,9 +448,9 @@ bool Dictionary::calculate(bool update) {
 }
 
 
-qulonglong Dictionary::getId(int row, bool forceToRefresh)
+int Dictionary::getId(int row, bool forceToRefresh)
 {
-    qulonglong result = Essence::getId(row);
+    int result = Essence::getId(row);
     if ((result == 0 || forceToRefresh || getIdRefresh) && lIsSet)
     {
         // Если это набор, то продолжаем
@@ -467,7 +467,7 @@ qulonglong Dictionary::getId(int row, bool forceToRefresh)
                 Dictionary* dict = dictionaries->getDictionary(name);
                 if (dict != 0)                       // Если удалось открыть справочник
                 {
-                    qulonglong id = dict->getId();
+                    int id = dict->getId();
                     if (dict->getExact())
                     {
                         if (id != 0)
@@ -500,7 +500,7 @@ qulonglong Dictionary::getId(int row, bool forceToRefresh)
 }
 
 
-void Dictionary::setId(qulonglong id)
+void Dictionary::setId(int id)
 {
     if (lsetIdEnabled && getValue(idFieldName) != id)
     {
@@ -512,7 +512,7 @@ void Dictionary::setId(qulonglong id)
                 Dictionary* dict = dictionaries->getDictionary(dictName);
                 if (!dict->isSet())
                 {
-                    qulonglong val = getValue(QString("%1_%2").arg(idFieldName).arg(dictName).toUpper(), 0).toULongLong();
+                    int val = getValue(QString("%1_%2").arg(idFieldName).arg(dictName).toUpper(), 0).toULongLong();
                     if (val > 0)
                         dict->setId(val);
                 }
@@ -870,7 +870,7 @@ void Dictionary::lock(bool toLock)
             Dictionary* dict = dictionaries->getDictionary(dictName);
             if (toLock)
             {
-                qlonglong id = getValue(idFieldName + "_" + dictName).toLongLong();
+                int id = getValue(idFieldName + "_" + dictName).toLongLong();
                 dict->setId(id);
             }
             dict->lock(toLock);

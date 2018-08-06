@@ -210,10 +210,6 @@ void Form::createForm(QString fileName, QWidget* pwgt)
 
         vbxLayout->addLayout(cmdButtonLayout);
         formWidget->setLayout(vbxLayout);
-        if (buttonOk != 0)                  // Для стандартной формы соединяем нажатие кнопки "Ok" с обработчиком
-        {                                   // Для нестандартной формы обработчик подключается во время загрузки формы
-            connect(buttonOk, SIGNAL(clicked()), this, SLOT(cmdOk()));
-        }
     }
 
     if (buttonOk != 0)

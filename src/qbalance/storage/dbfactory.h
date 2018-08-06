@@ -188,8 +188,8 @@ public:
     void getColumnsRestrictions(QString, QList<FieldType>*);                    // Устанавливает ограничение на просматриваемые поля исходя из разграничений доступа
     QString getPhotoDatabase();
     int insertDictDefault(QString tableName, QHash<QString, QVariant>* values);                 // Вставляет в справочник новую строку
-    bool removeDictValue(QString, qulonglong);                                          // Удаляет строку в указанном справочнике с заданным кодом
-    void insertSaldo(QString , qulonglong);                 // Вставляет в сальдо новую строку
+    bool removeDictValue(QString, int);                                          // Удаляет строку в указанном справочнике с заданным кодом
+    void insertSaldo(QString , int);                 // Вставляет в сальдо новую строку
     void setPeriod(QDate, QDate);
     void getPeriod(QDate&, QDate&);
     void setConstDictId(QString, QVariant, int, int, int);
