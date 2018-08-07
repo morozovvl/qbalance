@@ -124,8 +124,8 @@ public:
     Q_INVOKABLE void showParameterText(QString);
     Q_INVOKABLE int appendDocString();
     Q_INVOKABLE int appendDocStrings(int);
-    bool prepareValue(QString, Dictionary*);
-    Q_INVOKABLE bool prepareValue(QString, QVariant);
+    void prepareValue(QString, Dictionary*);
+    Q_INVOKABLE void prepareValue(QString, QVariant);
     Q_INVOKABLE virtual void setValue(QString name, QVariant value, int row = -1);
     Q_INVOKABLE virtual QVariant getValue(QString, int row = -1);
     Q_INVOKABLE void saveVariable(QString, QVariant);

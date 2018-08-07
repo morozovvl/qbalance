@@ -258,7 +258,7 @@ void Document::showItog()
 
 bool Document::add()
 {
-    bool result = false;
+    bool result = true;
 
     if (getIsSingleString())
         result = true;
@@ -290,8 +290,7 @@ bool Document::add()
                 {        // Если поле ссылается на другую таблицу
                     QString dictName = fieldName;
                     dictName.remove(0, 4);
-                    if (!prepareValue(fieldName, dictionaries->getDictionary(dictName)))
-                        return false;
+                    prepareValue(fieldName, dictionaries->getDictionary(dictName));
                 }
             }
         }
@@ -1051,7 +1050,7 @@ bool Document::showNextDict()
 }
 
 
-bool Document::prepareValue(QString name, Dictionary* dict)
+void Document::prepareValue(QString name, Dictionary* dict)
 {
     if (!prvValues.contains(name))
     {
@@ -1063,28 +1062,23 @@ bool Document::prepareValue(QString name, Dictionary* dict)
         if (id > 0 || !dict->getExact())
         {
             prvValues.insert(name, QVariant(id));
-            return true;
         }
     }
-    return false;
 }
 
 
-bool Document::prepareValue(QString name, QVariant val)
+void Document::prepareValue(QString name, QVariant val)
 {
     if (!prvValues.contains(name))
     {
         prvValues.insert(name, val);
-        return true;
     }
-    return false;
 }
 
 
 int Document::appendDocString()
 {
     int result = 0;
-    prvValues.clear();
 
     QString dictName, parameter;
 
@@ -1092,8 +1086,9 @@ int Document::appendDocString()
     {
         Dictionary* dict = dictionaries->getDictionary(dictName);
         if (dict->isAutoLoaded())
-            if (!prepareValue(dictName, dict))
-                return result;
+        {
+            prepareValue(dictName, dict);
+        }
     }
 
     // Просмотрим все проводки типовой операции
@@ -1136,6 +1131,7 @@ int Document::appendDocString()
         // Добавим параметры проводки <ДбКод, КрКод, Кол, Цена, Сумма> в список параметров
         parameter.append(QString("%1,%2,%3,%4,%5,").arg(dbId).arg(crId).arg(quan).arg(price).arg(sum));
      }
+
     // Добавим строку в документ с параметрами всех проводок операции
     result = db->addDocStr(operNumber, docId, parameter);
     QString attrList;
@@ -1171,6 +1167,8 @@ int Document::appendDocString()
             grdTable->setCurrentFocus();
         }
     }
+
+    prvValues.clear();
 
     return result;
 }

@@ -297,8 +297,8 @@ void FormDocument::cmdOk()
         if (dateEdit->date() < app->getBeginDate() || dateEdit->date() > app->getEndDate())
         {
             app->showError(QObject::trUtf8("Документ сохранен на пределами рабочего периода"));
+            cmdQuery();
         }
-//        getParent()->saveChanges();
     }
     FormGrid::cmdOk();
 }
