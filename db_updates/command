@@ -1,0 +1,15 @@
+#! /bin/sh
+
+cp /home/vladimir/work1/Backup/enterprise ./enterprise.bak
+#sudo service postgresql start
+dropdb -U sa qbalance
+#dropdb -U sa qbalance_extend
+createdb -U sa qbalance
+#dropdb -U sa enterprise
+#createdb -U sa enterprise
+#psql -U sa enterprise < ./enterprise.bak
+psql -U sa qbalance < ./enterprise.bak
+psql -U sa qbalance < ./очистка_РАБОЧЕЙ_базы.sql
+pg_dump -U sa qbalance > ../initdb1.sql
+
+

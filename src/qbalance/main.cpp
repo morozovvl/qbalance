@@ -35,9 +35,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //#include <mcheck.h>
 
 
-#ifdef Q_OS_LINUX
+//#ifdef Q_OS_LINUX
 #define CRASHHANDLER
-#endif
+//#endif
 
 
 // Процедура для создания ошибки сегментирования

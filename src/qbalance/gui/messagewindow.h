@@ -33,6 +33,8 @@ public:
     explicit MessageWindow();
     ~MessageWindow();
     QTextEdit* getTextEditor();
+    bool    isNeedShow();
+    void    setNeedShow(bool);
 
 public slots:
     void print(QString = "");
@@ -41,8 +43,9 @@ public slots:
 
 private:
     QTextEdit*      textEditor;
-    QMdiSubWindow* subWindow;
-    TApplication*    app;
+    QMdiSubWindow*  subWindow;
+    TApplication*   app;
+    bool            needShow;
 
     void readSettings();
     void writeSettings();

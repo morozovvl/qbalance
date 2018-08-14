@@ -41,6 +41,7 @@ MessageWindow::MessageWindow() :
     }
 
     readSettings();
+    needShow = false;
 }
 
 
@@ -81,10 +82,15 @@ void MessageWindow::show()
         {
             textEditor->show();
             subWindow->show();
+            subWindow->raise();
         }
     }
     else
+    {
         textEditor->show();
+        subWindow->raise();
+    }
+    needShow = true;
 }
 
 
@@ -210,3 +216,14 @@ void MessageWindow::writeSettings()
     }
 }
 
+
+bool MessageWindow::isNeedShow()
+{
+    return needShow;
+}
+
+
+void MessageWindow::setNeedShow(bool need)
+{
+    needShow = need;
+}

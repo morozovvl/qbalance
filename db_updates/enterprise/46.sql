@@ -1,0 +1,1 @@
+﻿GRANT ALL ON TABLE "константы" TO "продавец";

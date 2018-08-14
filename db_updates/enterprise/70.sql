@@ -1,0 +1,1 @@
+﻿ALTER TABLE атрибуты71 ADD COLUMN КОДДОК1 INTEGER;

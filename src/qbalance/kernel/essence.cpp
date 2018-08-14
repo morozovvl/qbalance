@@ -559,12 +559,6 @@ void Essence::setValue(QString n, QVariant value, int row)
         }
         setCurrentIndex(oldIndex);
     }
-/*
-    else
-    {
-        app->showError(QObject::trUtf8("Не существует колонки ") + n);
-    }
-*/
 }
 
 
