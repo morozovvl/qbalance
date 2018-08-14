@@ -171,7 +171,9 @@ void ConnectionForm::readConnectionsList()
           settings.beginGroup(CONNECTION_GROUP_NAME);
           pcmbConnection->clear();
           foreach (QString connectionName, settings.childGroups())
+          {
               pcmbConnection->addItem(connectionName);
+          }
           readSettings(pcmbConnection->currentText());
     }
 }

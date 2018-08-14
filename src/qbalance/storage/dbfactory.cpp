@@ -203,6 +203,7 @@ bool DBFactory::createNewDB(QString dbName, QString password, QStringList script
     //Базу данных следует всегда создавать в UTF-8
     //т.к. есть возможность возвращать данные на клиент в нужной кодировке
     app->getMessageWindow()->show();
+    execPSql(QStringList() << QString("-c \"%1\"").arg("CREATE ROLE test PASSWORD '*';"), "postgres", password);
     QString command = QString("CREATE DATABASE %1 WITH TEMPLATE template0 ENCODING = 'UTF-8';").arg(dbName);
     if (execPSql(QStringList() << QString("-c \"%1\"").arg(command), "postgres", password))
     {
@@ -310,7 +311,7 @@ bool DBFactory::open(QString login, QString password)
     db->setPassword(password);
     if (db->open())
     {
-        dbIsOpened = true;
+//        dbIsOpened = true;
         exec("SET search_path TO system, public;");
         exec(QString("set client_encoding='%1';").arg(TApplication::encoding()));
         exec("set standard_conforming_strings=on;");
@@ -321,21 +322,7 @@ bool DBFactory::open(QString login, QString password)
         return true;
     }
     else
-    {
-        setError(db->lastError().text());
-        db->setHostName(hostName);
-        db->setDatabaseName("postgres");
-        db->setPort(port);
-        db->setUserName(login);
-        db->setPassword(password);
-        if (db->open())
-        {
             errorNumber = 1;
-            db->close();
-        }
-        else
-            errorNumber = 2;
-    }
     return false;
 }
 
@@ -441,6 +428,7 @@ void DBFactory::loadSystemTables()
             if (!tables.contains(tableName))
                 tables.insert(tableName, type);
     }
+    dbIsOpened = true;
 }
 
 

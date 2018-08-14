@@ -538,7 +538,7 @@ void TApplication::initConfig()
     setConfigTypeName("password", "Пароль");
     setConfig("password", "PASSWORD1", "Новый пароль", CONFIG_VALUE_PASSWORD, "");
     setConfig("password", "PASSWORD2", "Повторите новый пароль", CONFIG_VALUE_PASSWORD, "");
-    setConfig("password", "", "", CONFIG_VALUE_PUSHBUTTON, "");
+    setConfig("password", "PASSWORD_BUTTON", "", CONFIG_VALUE_PUSHBUTTON, "Сменить пароль");
 
     setConfigTypeName("openoffice", "OpenOffice");
     setConfig("openoffice", "OO_PATH", "Каталог OpenOffice", CONFIG_VALUE_STRING, "");

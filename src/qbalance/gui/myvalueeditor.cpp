@@ -62,7 +62,7 @@ MyValueEditor::MyValueEditor(ConfigEntry& val, ConfigForm* confForm, QWidget *pa
     }
     else if (value->valueType == CONFIG_VALUE_PUSHBUTTON)
     {
-        widget = new QPushButton("Сменить пароль", this);
+        widget = new QPushButton(value->value.toString(), this);
         connect (widget, SIGNAL(pressed()), configForm, SLOT(changePassword()));
     }
     else
