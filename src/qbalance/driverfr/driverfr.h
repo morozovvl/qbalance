@@ -654,10 +654,10 @@ public:
     void setSlowingValve(int a) { SlowingValve = a; }
     void setStringForPrinting(QString a)
     {
-        if (a.size() > 0)
-            memcpy(StringForPrinting, a.toLocal8Bit().data(), 250);
-        else
-            StringForPrinting[0] = 0;
+        memset(StringForPrinting, 0, (int)sizeof(StringForPrinting));
+        int size = a.size() > (int)sizeof(StringForPrinting) - 1 ? (int)sizeof(StringForPrinting) - 1 : a.size();
+        if (size > 0)
+            memcpy(StringForPrinting, a.toLocal8Bit().data(), size);
     }
     void setStringQuantity(int a) { StringQuantity = a; }
     void setSumm1(double a) { Summ1 = a; }
@@ -678,10 +678,10 @@ public:
     void setValueOfFieldInteger(int a) { ValueOfFieldInteger = a; }
     void setValueOfFieldString(QString a)
     {
-        if (a.size() > 0)
-            memcpy(ValueOfFieldString, a.toLocal8Bit().data(), 41);
-        else
-            ValueOfFieldString[0] = 0;
+        memset(StringForPrinting, 0, (int)sizeof(ValueOfFieldString));
+        int size = a.size() > (int)sizeof(ValueOfFieldString) - 1 ? (int)sizeof(ValueOfFieldString) - 1 : a.size();
+        if (size > 0)
+            memcpy(ValueOfFieldString, a.toLocal8Bit().data(), size);
     }
 };
 

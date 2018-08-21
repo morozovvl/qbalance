@@ -35,9 +35,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //#include <mcheck.h>
 
 
-//#ifdef Q_OS_LINUX
+#ifdef Q_OS_LINUX
 #define CRASHHANDLER
-//#endif
+#endif
 
 
 // Процедура для создания ошибки сегментирования
@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
 
     application.setOrganizationName("Enterprise");
     application.setApplicationName("qbalance");
-    application.setApplicationVersion("0.15");
+    application.setApplicationVersion("0.16");
 
 #if QT_VERSION < 0x050000
     QTextCodec::setCodecForTr(application.codec());

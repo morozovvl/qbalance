@@ -483,7 +483,7 @@ void TApplication::initConfig()
 
     setConfigTypeName("cReader", "Ридер магнитных карт");
     setConfig("cReader", "CARD_READER_NEEDED", "Использовать считыватель магнитных карт", CONFIG_VALUE_BOOLEAN, false);
-    setConfig("cReader", "CARD_READER_PREFIX", "Префикс магнитной карты", CONFIG_VALUE_STRING, ";8336322632=");
+    setConfig("cReader", "CARD_READER_PREFIX", "Префикс магнитной карты", CONFIG_VALUE_STRING, ";123456789=");
 
     setConfigTypeName("bcReader", "Сканер штрих кодов");
     setConfig("bcReader", "BAR_CODE_READER_NEEDED", "Использовать сканер штрих кодов", CONFIG_VALUE_BOOLEAN, false);
@@ -511,6 +511,7 @@ void TApplication::initConfig()
     setConfig("form", "SAVE_FORM_CONFIG_TO_DB", "Сохранять геометрию форм на сервере", CONFIG_VALUE_BOOLEAN, false);
 
     setConfigTypeName("dbUpdates", "Обновления БД");
+    setConfig("dbUpdates", "PERMANENT_FRESH_TEST", "Постоянно проверять обновления скриптов", CONFIG_VALUE_BOOLEAN, true);
     setConfig("dbUpdates", "ASK_LOAD_UPDATES_TO_DB", "Спрашивать, если есть обновления базы данных", CONFIG_VALUE_BOOLEAN, true);
     setConfig("dbUpdates", "SAVE_DB_UPDATES_TO_LOCAL", "Сохранять обновления БД локально", CONFIG_VALUE_BOOLEAN, false);
 

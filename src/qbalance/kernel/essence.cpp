@@ -913,15 +913,6 @@ bool Essence::open()
 
 void Essence::close()
 {
-    delete reportScriptEngine;
-    reportScriptEngine = 0;
-
-
-    if (m_networkAccessManager != 0)
-        delete m_networkAccessManager;
-
-    closeScriptEngine();
-
     if (form != 0)
     {
         form->close();
@@ -933,6 +924,15 @@ void Essence::close()
         else
             form->deleteLater();
     }
+
+    delete reportScriptEngine;
+    reportScriptEngine = 0;
+
+
+    if (m_networkAccessManager != 0)
+        delete m_networkAccessManager;
+
+    closeScriptEngine();
 
     Table::close();
 }
@@ -1263,54 +1263,55 @@ bool Essence::getFile(QString path, QString fileName, FileType type)
     TApplication* app = TApplication::exemplar();
     DBFactory* db = app->getDBFactory();
     QString fullFileName = path + fileName;
-//    if (!QDir().exists(fullFileName))
-//    {   // Если файл не существует, то попытаемся получить его с сервера
+    if (!QDir().exists(fullFileName))
+    {   // Если файл не существует, то попытаемся получить его с сервера
         QByteArray templateFile = db->getFile(fileName, type);
         if (templateFile.size() > 0)
         {   // Если удалось получить шаблон отчета, то сохраним его локально
             app->saveFile(fullFileName, &templateFile);
             result = true;
         }
-//    }
-/*
+    }
     else
     {   // файл существует локально
-        QFile file(fullFileName);
-        // Проверим, какой файл свежее, локальный или на сервере
-        int diff = app->getSecDiff();
-        QFileInfo fi(file);
-        QDateTime locFileTime = fi.lastModified();
-        locFileTime.addSecs(diff);  // Время модификации локального файла, приведенное к серверному времени
-        FileInfo servFileInfo = db->getFileInfo(fileName, type);
-        if (file.open(QIODevice::ReadOnly))
+        if (app->getConfigValue("PERMANENT_FRESH_TEST").toBool())
         {
-            QByteArray array = file.readAll();
-            file.close();
-
-            int localFileCheckSum = app->calculateCRC32(&array);
-
-            if (servFileInfo.size != localFileCheckSum) // Если локальный и серверный файлы различаются по контрольной сумме
+            QFile file(fullFileName);
+            // Проверим, какой файл свежее, локальный или на сервере
+            int diff = app->getSecDiff();
+            QFileInfo fi(file);
+            QDateTime locFileTime = fi.lastModified();
+            locFileTime.addSecs(diff);  // Время модификации локального файла, приведенное к серверному времени
+            FileInfo servFileInfo = db->getFileInfo(fileName, type);
+            if (file.open(QIODevice::ReadOnly))
             {
-                if (app->isSA())   // Если не указано время сохранения файла на сервере
+                QByteArray array = file.readAll();
+                file.close();
+
+                int localFileCheckSum = app->calculateCRC32(&array);
+
+                if (servFileInfo.size != localFileCheckSum) // Если локальный и серверный файлы различаются по контрольной сумме
                 {
-                    if (locFileTime.secsTo(servFileInfo.lastModified) < 120)   // Если локальный файл новее серверного на 120 секунд
-                        db->setFile(fileName, type, array);      // Сохранить копию файла на сервере, если мы работаем как SA
-                    else if (locFileTime.secsTo(servFileInfo.lastModified) > 120)   // Если локальный файл старее серверного на 120 секунд
+                    if (app->isSA())   // Если не указано время сохранения файла на сервере
+                    {
+                        if (locFileTime.secsTo(servFileInfo.lastModified) < 120)   // Если локальный файл новее серверного на 120 секунд
+                            db->setFile(fileName, type, array);      // Сохранить копию файла на сервере, если мы работаем как SA
+                        else if (locFileTime.secsTo(servFileInfo.lastModified) > 120)   // Если локальный файл старее серверного на 120 секунд
+                        {
+                            QByteArray templateFile = db->getFile(fileName, type);
+                            app->saveFile(fullFileName, &templateFile);
+                        }
+                    }
+                    else
                     {
                         QByteArray templateFile = db->getFile(fileName, type);
                         app->saveFile(fullFileName, &templateFile);
                     }
                 }
-                else
-                {
-                    QByteArray templateFile = db->getFile(fileName, type);
-                    app->saveFile(fullFileName, &templateFile);
-                }
             }
-            result = true;
         }
+        result = true;
     }
-*/
     return result;
 }
 

@@ -55,7 +55,7 @@ bool ConfigForm::open(QWidget* pwgt)
 
         QTreeWidget* treeWidget = new QTreeWidget();
         QTreeWidgetItem* treeWidgetItem0 = 0;
-
+/*
         treeWidgetItem0 = new QTreeWidgetItem(treeWidget, QStringList(QObject::trUtf8("Справочники")));
         treeWidgetItem0->addChild(new QTreeWidgetItem(QStringList() << QObject::trUtf8("Создать") << "10"));
         treeWidgetItem0->addChild(new QTreeWidgetItem(QStringList() << QObject::trUtf8("Свойства") << "11"));
@@ -70,7 +70,7 @@ bool ConfigForm::open(QWidget* pwgt)
         treeWidgetItem0->addChild(new QTreeWidgetItem(treeWidgetItem0, QStringList() << QObject::trUtf8("Создать") << "30"));
         treeWidgetItem0->addChild(new QTreeWidgetItem(treeWidgetItem0, QStringList() << QObject::trUtf8("Свойства") << "31"));
         treeWidgetItem0->addChild(new QTreeWidgetItem(treeWidgetItem0, QStringList() << QObject::trUtf8("Доступ") << "32"));
-
+*/
         foreach (QString type, app->getConfigTypes())
         {
             treeWidgetItem0 = new QTreeWidgetItem(treeWidget, QStringList() << app->getConfigTypeName(type) << type);
@@ -92,6 +92,7 @@ bool ConfigForm::open(QWidget* pwgt)
         if (vbxLayout != 0) {
             vbxLayout->insertLayout(0, hLayout);
         }
+
 //        app->setIcons(formWidget);
         return true;
     }
@@ -207,6 +208,7 @@ void ConfigForm::changePassword()
     if (password1 == password2)
     {
         app->getDBFactory()->changePassword(password1);
+        cmdOk();
     }
     else
         app->showError("Пароли не совпадают!");

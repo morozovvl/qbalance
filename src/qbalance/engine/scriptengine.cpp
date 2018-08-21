@@ -1424,7 +1424,7 @@ void ScriptEngine::appendEvent(QString funcName, EventFunction* func)
 QString ScriptEngine::loadScript(QString scriptFile)
 {
     QString result;
-    if (!scripts.contains(scriptFile))
+    if (!scripts.contains(scriptFile) || TApplication::exemplar()->getConfigValue("PERMANENT_FRESH_TEST").toBool())
     {
         QString fullScriptFile = scriptFile;
         if (!QDir().exists(scriptFile))

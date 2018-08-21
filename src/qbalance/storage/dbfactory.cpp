@@ -322,7 +322,21 @@ bool DBFactory::open(QString login, QString password)
         return true;
     }
     else
+    {
+        setError(db->lastError().text());
+        db->setHostName(hostName);
+        db->setDatabaseName("postgres");
+        db->setPort(port);
+        db->setUserName(login);
+        db->setPassword(password);
+        if (db->open())
+        {
             errorNumber = 1;
+            db->close();
+        }
+        else
+            errorNumber = 2;
+    }
     return false;
 }
 

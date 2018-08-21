@@ -69,7 +69,7 @@ public:
     Q_INVOKABLE virtual int     getColumnsCount();
     virtual void                setCurrentChangedScripts(bool);
     Q_INVOKABLE virtual void    setConfigName(QString);         // Используется в скриптах
-
+    virtual void                setApp(TApplication*);
 
 public slots:
     virtual void                cmdAdd();

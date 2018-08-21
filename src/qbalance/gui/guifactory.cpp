@@ -222,6 +222,7 @@ int GUIFactory::showError(QString errorText)
     msgBox.setParent(app->getMainWindow(), Qt::Dialog);
     msgBox.setWindowModality(Qt::ApplicationModal);
     msgBox.showMessage(errorText);
+    msgBox.setWindowTitle("Ошибка!");
     msgBox.exec();
 
     if (widget != 0)

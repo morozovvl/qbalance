@@ -100,6 +100,7 @@ void TableView::close()
 {
     disconnect(tableModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(setCurrentIndex(QModelIndex)));
     disconnect(essence, SIGNAL(photoLoaded()), this, SLOT(showPhoto()));
+
     writeSettings();
 }
 
@@ -110,10 +111,12 @@ void TableView::setEssence(Essence* ess)
     essence = ess;
     app = essence->getApp();
     fields = essence->returnColumnsProperties();
-    connect(essence, SIGNAL(photoLoaded()), this, SLOT(showPhoto()));
     tableModel = essence->getTableModel();
     QTableView::setModel(tableModel);
+
+    connect(essence, SIGNAL(photoLoaded()), this, SLOT(showPhoto()));
     connect(tableModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(setCurrentIndex(QModelIndex)));
+
     setReadOnly(essence->isReadOnly());
     setFormGrid(essence->getForm());
 }
@@ -274,63 +277,65 @@ void TableView::setColumnsHeaders()
         if (!columnsHeadersSeted)
         {
             app->getDBFactory()->getColumnsHeaders(essence->getTagName(), &fields);
+            if (fields.count() > 0)
+            {
+                QHeaderView* header = horizontalHeader();
+            #if QT_VERSION >= 0x050000
+                header->setSectionsMovable(true);
+            #else
+                header->setMovable(true);
+            #endif
+                header->setSortIndicatorShown(true);
+
+                // Составим список столбцов, у которых поле number в списке fields больше 0
+                for (int i = 0; i < fields.count(); i++)
+                {
+                    if (fields.at(i).number > 0)
+                    {
+                        MyItemDelegate* delegate = getColumnDelegate(fields.at(i));
+                        if (delegate != 0)
+                        {
+                            delegate->setFieldName(fields.at(i).column);
+                            setItemDelegateForColumn(i, delegate);
+                        }
+                        columns.insert(fields.at(i).number - 1, i);
+                    }
+                }
+
+                // Сделаем столбцы из этого списка первыми
+                int i;
+                for (i = 0;; i++)
+                {
+                    if (columns.contains(i))
+                    {
+                        int fldIndex = tableModel->fieldIndex(fields.at(columns.value(i)).column);
+                        int visualIndex = header->visualIndex(fldIndex);
+                        header->moveSection(visualIndex, i);
+                        header->showSection(visualIndex);
+                        tableModel->setHeaderData(fldIndex, Qt::Horizontal, fields.at(columns.value(i)).header);
+                    }
+                    else
+                        break;
+                }
+
+                // Остальные столбцы скроем
+                for (; i < header->count(); i++)
+                {
+                    header->hideSection(header->logicalIndex(i));
+                }
+
+                // Найдем индекс крайнего справа столбца
+                for (i = 0;; i++)
+                {
+                    if (horizontalHeader()->logicalIndex(i) < 0)
+                        break;
+                    maxColumn = i;
+                }
+            }
+            readSettings();
+
             columnsHeadersSeted = true;
         }
-
-        if (fields.count() > 0)
-        {
-            QHeaderView* header = horizontalHeader();
-        #if QT_VERSION >= 0x050000
-            header->setSectionsMovable(true);
-        #else
-            header->setMovable(true);
-        #endif
-            header->setSortIndicatorShown(true);
-
-            // Составим список столбцов, у которых поле number в списке fields больше 0
-            for (int i = 0; i < fields.count(); i++)
-            {
-                if (fields.at(i).number > 0)
-                {
-                    MyItemDelegate* delegate = getColumnDelegate(fields.at(i));
-                    if (delegate != 0)
-                    {
-                        delegate->setFieldName(fields.at(i).column);
-                        setItemDelegateForColumn(i, delegate);
-                    }
-                    columns.insert(fields.at(i).number - 1, i);
-                }
-            }
-
-            // Сделаем столбцы из этого списка первыми
-            int i;
-            for (i = 0;; i++)
-            {
-                if (columns.contains(i))
-                {
-                    int fldIndex = tableModel->fieldIndex(fields.at(columns.value(i)).column);
-                    int visualIndex = header->visualIndex(fldIndex);
-                    header->moveSection(visualIndex, i);
-                    header->showSection(visualIndex);
-                    tableModel->setHeaderData(fldIndex, Qt::Horizontal, fields.at(columns.value(i)).header);
-                }
-                else
-                    break;
-            }
-            // Остальные столбцы скроем
-            for (; i < header->count(); i++)
-            {
-                header->hideSection(header->logicalIndex(i));
-            }
-            // Найдем индекс крайнего справа столбца
-            for (i = 0;; i++)
-            {
-                if (horizontalHeader()->logicalIndex(i) < 0)
-                    break;
-                maxColumn = i;
-            }
-        }
-        readSettings();
     }
 }
 
@@ -413,7 +418,6 @@ MyItemDelegate* TableView::getColumnDelegate(FieldType fld)
     }
     if (result != 0)
     {
-        result->setEssence(essence);
         result->setReadOnly(fld.readOnly);
     }
     return result;
@@ -683,7 +687,7 @@ void TableView::appendColumnDefinition(int number, QString column, QString heade
             field.readOnly = readOnly;
             fields.removeAt(i);
             fields.insert(i, field);
-            columnsHeadersSeted = true;
+            columnsHeadersSeted = false;
             return;
         }
     }
@@ -714,4 +718,10 @@ int TableView::getColumnsCount()
 void TableView::setCurrentChangedScripts(bool c)
 {
     currentChangedScripts = c;
+}
+
+
+void TableView::setApp(TApplication* a)
+{
+    app = a;
 }

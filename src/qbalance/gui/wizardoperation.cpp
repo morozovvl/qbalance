@@ -882,16 +882,6 @@ void WizardOperation::generateScripts()
                 constDictName = topersList.at(i).crDict;
             }
         }
-/*
-        if (constDict == 1)
-        {
-            stream.reset();
-            func.body = QString("documents.setValue(\"%1\", getDictionary(\"%2\").getValue(\"имя\"));").arg(db->getObjectName("документы.комментарий"))
-                                                                                                       .arg(constDictName)
-                                                                                                       .arg(db->getObjectName(constDictName + ".имя"));
-            engine.appendEvent("EventParametersChanged()", &func);
-        }
-*/
         scripts = engine.getBlankScripts();
         textEditor->setText(scripts);
     }
