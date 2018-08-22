@@ -59,8 +59,6 @@ DELETE FROM смс_отправленные;
 DELETE FROM синонимы;
 DELETE FROM доступ;
 DELETE FROM товар;
-DELETE FROM прайс;
-DELETE FROM фирмы;
 DELETE FROM наценки;
 DELETE FROM группы;
 

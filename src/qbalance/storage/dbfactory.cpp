@@ -312,9 +312,11 @@ bool DBFactory::open(QString login, QString password)
     if (db->open())
     {
 //        dbIsOpened = true;
-        exec("SET search_path TO system, public;");
-        exec(QString("set client_encoding='%1';").arg(TApplication::encoding()));
-        exec("set standard_conforming_strings=on;");
+        exec("SET SEARCH_PATH TO system, public;");
+        exec(QString("SET CLIENT_ENCODING TO '%1';").arg(TApplication::encoding()));
+        exec("SET DATESTYLE TO ISO, DMY;");
+        exec("SET standard_conforming_strings TO on;");
+
         currentLogin = login;
         currentPassword = password;
 

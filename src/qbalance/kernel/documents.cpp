@@ -181,8 +181,8 @@ void Documents::setCurrentDocument(int strNum)
 void Documents::query(QString, bool)
 {
     Essence::query(QString("%1 BETWEEN cast('%2' as date) AND cast('%3' as date) AND %4=0 AND %5='%6'").arg(db->getObjectNameCom("документы.дата"))
-                                                                                                       .arg(TApplication::exemplar()->getBeginDate().toString(app->dateFormat()))
-                                                                                                       .arg(TApplication::exemplar()->getEndDate().toString(app->dateFormat()))
+                                                                                                       .arg(app->getBeginDate().toString(app->dateFormat()))
+                                                                                                       .arg(app->getEndDate().toString(app->dateFormat()))
                                                                                                        .arg(db->getObjectNameCom("документы.авто"))
                                                                                                        .arg(db->getObjectNameCom("документы.опер"))
                                                                                                        .arg(QString::number(operNumber)));

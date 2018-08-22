@@ -105,7 +105,7 @@ TApplication::TApplication(int & argc, char** argv)
     scriptMode = false;
     DebugModes.clear();
     dirName = "";
-    debugToBuffer = false;
+    debugToBuffer = true;
     writeDebug = true;
 }
 
@@ -518,15 +518,15 @@ void TApplication::initConfig()
     setConfigTypeName("photo", "Фотографии");
     setConfig("photo", "GET_PICTURE_FROM_SERVER_IN_DOCUMENT", "Загружать фото с сервера в документе (замедлит работу с документом)", CONFIG_VALUE_BOOLEAN, false);
 
-    setConfigTypeName("params", "Параметры");
+    setConfigTypeName("params", "Параметры журналов");
     setConfig("params", "PARAMETERS_D1", "Журнал комманд запросов (файл debug1.log)", CONFIG_VALUE_BOOLEAN, false);
+    setConfig("params", "PARAMETERS_FD", "Выводить полные команды запросов", CONFIG_VALUE_BOOLEAN, false);
     setConfig("params", "PARAMETERS_D2", "Журнал алгоритмов ядра (файл debug2.log)", CONFIG_VALUE_BOOLEAN, false);
     setConfig("params", "PARAMETERS_D3", "Журнал скриптов (файл debug3.log)", CONFIG_VALUE_BOOLEAN, false);
     setConfig("params", "PARAMETERS_D4", "Журнал устройства COM-порта (файл debug4.log)", CONFIG_VALUE_BOOLEAN, false);
     setConfig("params", "PARAMETERS_D5", "Журнал обмена между экземплярами приложения (файл debug5.log)", CONFIG_VALUE_BOOLEAN, false);
     setConfig("params", "PARAMETERS_D6", "Журнал банковского терминала (файл debug6.log)", CONFIG_VALUE_BOOLEAN, false);
     setConfig("params", "PARAMETERS_UL", "Объединить все включенные журналы отладки в одном файле (debug.log)", CONFIG_VALUE_BOOLEAN, false);
-    setConfig("params", "PARAMETERS_FD", "Выводить полную отладочную информацию", CONFIG_VALUE_BOOLEAN, false);
 
     setConfigTypeName("updates", "Обновления");
     setConfig("updates", "UPDATES_FTP_URL", "FTP сервер", CONFIG_VALUE_STRING, "vm13720.hv8.ru");
@@ -699,6 +699,8 @@ bool TApplication::initApplication()
             int result = gui->openDB(); // Попытаемся открыть базу данных
             if (result == 0)
             {   // БД открыть удалось
+
+                setDebugToBuffer(false);
 
                 secDiff = QDateTime::currentDateTime().secsTo(db->getValue("SELECT now();", 0, 0).toDateTime());
                 dictionaryList = Dictionaries::create<Dictionaries>();
@@ -1174,7 +1176,7 @@ void TApplication::debug(int mode, const QString& value, bool timeIsEnabled)
         QString debugMode = QString("%1").arg(mode);
         if (DebugModes.contains("") || mode == 0)
             debugMode = "";
-        if (!(db == 0 || debugToBuffer))                    // Если база данных открыта, то будем писать отладочную информацию в файл, иначе в буфер
+        if (!(debugToBuffer))                    // Если база данных открыта, то будем писать отладочную информацию в файл, иначе в буфер
         {
             if (tempDebugBuffer.contains(debugMode))                        // Если есть информация в буфере
             {
@@ -1448,6 +1450,9 @@ int TApplication::runScript(QString scrName)
 {
     int result = 0;
     QString scriptName = scrName;
+
+    setDebugToBuffer(false);
+
     if (!sendCommandMode)
     {
         QFileInfo fi(scriptName);
