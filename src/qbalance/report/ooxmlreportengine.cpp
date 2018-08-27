@@ -76,10 +76,10 @@ bool OOXMLReportEngine::open(QString fileName, ReportContext* cont, bool justPri
             zintCommandLine.append(QString(" --height=%1").arg(app->getConfigValue("BAR_CODE_PRINTER_BARCODEHEIGHT").toInt()));
             zintCommandLine.append(" --border=0");
             zintCommandLine.append(" -d " + essence->prepareBarCodeData());
-#ifdef Q_OS_WIN32
-                zint->start(app->applicationDirPath() + zintCommandLine);
-#else
+#ifdef Q_OS_LINUX
                 zint->start(zintCommandLine);
+#elif Q_OS_WIN
+                zint->start(app->applicationDirPath() + zintCommandLine);
 #endif
             if (app->waitProcessEnd(zint))
             {
@@ -113,16 +113,16 @@ bool OOXMLReportEngine::open(QString fileName, ReportContext* cont, bool justPri
         if (ooPath.size() == 0)
         {
             ooPath = app->getConfigValue("OO_PATH").toString();
-#ifdef Q_OS_WIN32
-//            ooPath = TApplication::exemplar()->findFileFromEnv("soffice.exe");
-            if (ooPath.size() > 0)
-                ooPath = ooPath.append("\\");
-            ooPath += "soffice.exe";
-#else
+#ifdef Q_OS_LINUX
 //            ooPath = TApplication::exemplar()->findFileFromEnv("soffice");
             if (ooPath.size() > 0)
                 ooPath = ooPath.append("/");
             ooPath += "soffice";
+#elif Q_OS_WIN
+//            ooPath = TApplication::exemplar()->findFileFromEnv("soffice.exe");
+            if (ooPath.size() > 0)
+                ooPath = ooPath.append("\\");
+            ooPath += "soffice.exe";
 #endif
         }
         QProcess* ooProcess = new QProcess();

@@ -24,7 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #if defined(Q_OS_LINUX)
 #include "../../google-breakpad/src/client/linux/handler/exception_handler.h"
-#elif defined(Q_OS_WIN32)
+#elif defined(Q_OS_WIN)
 #include "../../google-breakpad/src/client/windows/handler/exception_handler.h"
 #endif
 
@@ -56,14 +56,14 @@ namespace Breakpad {
     /************************************************************************/
     /* DumpCallback                                                         */
     /************************************************************************/
-#if defined(Q_OS_WIN32)
+#if defined(Q_OS_WIN)
     bool DumpCallback(const wchar_t* _dump_dir,const wchar_t* _minidump_id,void* context,EXCEPTION_POINTERS* exinfo,MDRawAssertionInfo* assertion,bool success)
 #elif defined(Q_OS_LINUX)
     bool DumpCallback(const google_breakpad::MinidumpDescriptor &,void *context, bool success)
 #endif
     {
         Q_UNUSED(context);
-#if defined(Q_OS_WIN32)
+#if defined(Q_OS_WIN)
         Q_UNUSED(_dump_dir);
         Q_UNUSED(_minidump_id);
         Q_UNUSED(assertion);
@@ -81,7 +81,7 @@ namespace Breakpad {
         if ( pHandler != NULL )
             return;
 
-#if defined(Q_OS_WIN32)
+#if defined(Q_OS_WIN)
         std::wstring pathAsStr = (const wchar_t*)dumpPath.utf16();
         pHandler = new google_breakpad::ExceptionHandler(
             pathAsStr,

@@ -1860,7 +1860,7 @@ void DBFactory::setFile(QString file, FileType type, QByteArray fileData, bool e
 QString DBFactory::storageEncoding()
 {
     QString result("UTF-8");
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
     result = "Windows-1251";
 #endif
     return result;

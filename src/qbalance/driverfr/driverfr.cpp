@@ -467,10 +467,10 @@ bool DriverFR::open(QString port, int rate, int timeout, int password)
             serialPort->setRemote(remote);
             serialPort->setBaudRate(rate);
             serialPort->setTimeout(timeout);
-#if   (defined Q_OS_WIN)
-            if (serialPort->open(QIODevice::ReadWrite | QIODevice::Unbuffered) && serialPort->isOpen())
-#else
+#ifdef  Q_OS_LINUX
             if (serialPort->open(QIODevice::ReadWrite) && serialPort->isOpen())
+#elif   Q_OS_WIN
+            if (serialPort->open(QIODevice::ReadWrite | QIODevice::Unbuffered) && serialPort->isOpen())
 #endif
             {
                 if (Connect(false))

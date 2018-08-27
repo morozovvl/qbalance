@@ -37,11 +37,15 @@ ConfigForm::ConfigForm(QObject* parent/* = 0*/): Form(parent)
     app = TApplication::exemplar();
     configName = "ConfigForm";
     currentConfigGroup = "";
+    signalMapper = new QSignalMapper(this);
+    connect (signalMapper, SIGNAL(mapped(QString)), this, SLOT(buttonPressed(QString)));
 }
 
 
 ConfigForm::~ConfigForm()
 {
+    disconnect (signalMapper, SIGNAL(mapped(QString)), this, SLOT(buttonPressed(QString)));
+    delete signalMapper;
 }
 
 
@@ -200,6 +204,17 @@ void ConfigForm::showConfigGroup(QString type)
 }
 
 
+void ConfigForm::buttonPressed(QString type)
+{
+    if (type == "PASSWORD_BUTTON")
+        changePassword();
+    else if (type == "UPDATES_FTP_ALL_UPLOAD")
+        ftpTotalUpload();
+    else if (type == "UPDATES_FTP_UPLOAD")
+        ftpUpload();
+}
+
+
 void ConfigForm::changePassword()
 {
     QString password1 = configs["PASSWORD1"].value.toString();
@@ -207,9 +222,28 @@ void ConfigForm::changePassword()
 
     if (password1 == password2)
     {
-        app->getDBFactory()->changePassword(password1);
-        cmdOk();
+        if (password1.size() > 0)
+        {
+            app->getDBFactory()->changePassword(password1);
+            cmdOk();
+        }
+        else
+            app->showError("Пароль не должен быть нулевой длины");
     }
     else
-        app->showError("Пароли не совпадают!");
+        app->showError("Пароли не совпадают");
+}
+
+
+void ConfigForm::ftpUpload()
+{
+    app->getUpdates()->putUpdates();
+    cmdOk();
+}
+
+
+void ConfigForm::ftpTotalUpload()
+{
+    app->getUpdates()->putTotalUpdates();
+    cmdOk();
 }

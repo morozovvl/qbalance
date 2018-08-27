@@ -305,6 +305,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         buttonQuery = new QPushButton();
         buttonQuery->setObjectName("buttonQuery");
         cmdButtonLayout->insertWidget(0, buttonQuery);
+        buttonQuery->hide();
     }
     else
     {
@@ -443,7 +444,6 @@ int FormGrid::exec()
         grdTable->setCurrentFocus();
     }
     setButtons();
-    showPhoto();
     return Form::exec();
 }
 
@@ -474,7 +474,6 @@ void FormGrid::cmdAdd()
     if (buttonAdd != 0 && buttonAdd->isVisible() && buttonAdd->isEnabled())
     {
         grdTable->cmdAdd();
-        showPhoto();
     }
     grdTable->setFocus();
     setButtons();
@@ -506,7 +505,6 @@ void FormGrid::cmdRequery()
     grdTable->cmdRequery();
     if (parent->getTableModel()->rowCount() == 0)
     {
-        showPhoto();
         app->showMessageOnStatusBar(trUtf8("Ничего не найдено."));
     }
     grdTable->setFocus();

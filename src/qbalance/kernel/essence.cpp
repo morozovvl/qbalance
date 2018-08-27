@@ -91,7 +91,7 @@ void Essence::postInitialize(QString name, QObject* parent)
     photoPath = "";
     photoPathVerified = false;
     photoIdField = "";
-    photoEnabled = true;
+    photoEnabled = false;
     m_networkAccessManager = 0;
     doSubmit = false;                           // По умолчанию не обновлять записи автоматически
     defaultFilter = "";
@@ -167,6 +167,10 @@ bool Essence::isPhotoEnabled()
 void Essence::setPhotoPath(QString path)
 {
     photoPath = path;
+    if (photoPath.size() > 0)
+        photoEnabled = true;
+    else
+        photoEnabled = false;
 }
 
 

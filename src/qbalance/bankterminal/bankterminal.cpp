@@ -31,10 +31,10 @@ BankTerminal::BankTerminal(QObject *parent) : QObject(parent)
 {
     app = 0;
     path = "";
-#ifdef Q_OS_WIN32
-        program = "loadparm.exe";
-#else
-        program = "sb_pilot";
+#ifdef  Q_OS_LINUX
+    program = "sb_pilot";
+#elif   Q_OS_WIN
+    program = "loadparm.exe";
 #endif
     termProcess = 0;
     remote = false;
@@ -53,7 +53,7 @@ void BankTerminal::getDefaultConfigs(QString configName)
     app->setConfig(configName, BANK_TERMINAL_PRINT_WAIT_MESSAGE, "Показывать сообщение о продолжении при печати слипов", CONFIG_VALUE_BOOLEAN, false);
     app->setConfig(configName, BANK_TERMINAL_PROGRAM_WAIT_TIME, "Время ожидания окончания работы программы банковского терминала, мс", CONFIG_VALUE_INTEGER, 60000);
     app->setConfig(configName, BANK_TERMINAL_INTERVAL_EMPTY_LINES, "Количество пустых строк между слипами и чеком", CONFIG_VALUE_INTEGER, 2);
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
     app->setConfig(configName, BANK_TERMINAL_PATH, "Каталог программы банковского терминала", CONFIG_VALUE_STRING, "C:/BankTerminal/");
 #else
     app->setConfig(configName, BANK_TERMINAL_PATH, "Каталог программы банковского терминала", CONFIG_VALUE_STRING, "/home/vladimir/BankTerminal/");

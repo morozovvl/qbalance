@@ -552,6 +552,7 @@ void Dictionary::setForm(QString formName)
     parameters = (SearchParameters*)form->getFormWidget()->findChild("searchParameters");
 
     grdTable = form->getGrdTable();
+//123
     if (grdTable != 0)
         grdTable->setEssence(this);
 }

@@ -468,10 +468,10 @@ void TApplication::initConfig()
 
     setConfigTypeName("fr", "Фискальный регистратор");
     setConfig("fr", "FR_NEEDED", "Использовать ФР", CONFIG_VALUE_BOOLEAN, false);
-#ifdef Q_OS_WIN32
-    setConfig("fr", "FR_DRIVER_PORT", "COM порт", CONFIG_VALUE_STRING, "COM1");
-#else
+#ifdef Q_OS_LINUX
     setConfig("fr", "FR_DRIVER_PORT", "COM порт", CONFIG_VALUE_STRING, "/dev/ttyUSB0");
+#elif Q_OS_WIN
+    setConfig("fr", "FR_DRIVER_PORT", "COM порт", CONFIG_VALUE_STRING, "COM1");
 #endif
     setConfig("fr", "FR_DRIVER_BOUD_RATE", "Скорость", CONFIG_VALUE_BOUND, 6);
     setConfig("fr", "FR_DRIVER_MAX_TIMEOUT", "Максимальное время ожидания ФР, с", CONFIG_VALUE_INTEGER, 60);
@@ -487,10 +487,10 @@ void TApplication::initConfig()
 
     setConfigTypeName("bcReader", "Сканер штрих кодов");
     setConfig("bcReader", "BAR_CODE_READER_NEEDED", "Использовать сканер штрих кодов", CONFIG_VALUE_BOOLEAN, false);
-#ifdef Q_OS_WIN32
-    setConfig("bcReader", "BAR_CODE_READER_PORT", "COM порт", CONFIG_VALUE_STRING, "COM3");
-#else
+#ifdef Q_OS_LINUX
     setConfig("bcReader", "BAR_CODE_READER_PORT", "COM порт", CONFIG_VALUE_STRING, "/dev/ttyUSB0");
+#elif Q_OS_WIN
+    setConfig("bcReader", "BAR_CODE_READER_PORT", "COM порт", CONFIG_VALUE_STRING, "COM3");
 #endif
     setConfig("bcReader", "BAR_CODE_READER_BAUD_RATE", "Скорость", CONFIG_VALUE_BOUND, 6);
     setConfig("bcReader", "BAR_CODE_READER_TIMEOUT", "Таймаут, мс", CONFIG_VALUE_INTEGER, 100);
@@ -533,8 +533,11 @@ void TApplication::initConfig()
     setConfig("updates", "UPDATES_FTP_PORT", "Порт", CONFIG_VALUE_INTEGER, 21);
     setConfig("updates", "UPDATES_FTP_ADMIN_CLIENT", "Логин клиента-администратора", CONFIG_VALUE_STRING, "ftpclient");
     setConfig("updates", "UPDATES_FTP_ADMIN_CLIENT_PASSWORD", "Пароль клиента-администратора", CONFIG_VALUE_PASSWORD, "");
+    setConfig("updates", "UPDATES_AUTO", "Автоматически выгружать обновления на сервер", CONFIG_VALUE_BOOLEAN, false);
     setConfig("updates", "UPDATES_FTP_CLIENT", "Логин клиента", CONFIG_VALUE_STRING, "ftp");
     setConfig("updates", "UPDATES_FTP_CLIENT_PASSWORD", "Пароль клиента", CONFIG_VALUE_PASSWORD, "");
+    setConfig("updates", "UPDATES_FTP_ALL_UPLOAD", "", CONFIG_VALUE_PUSHBUTTON, "Выгрузить все обновляемые файлы на сервер");
+    setConfig("updates", "UPDATES_FTP_UPLOAD", "", CONFIG_VALUE_PUSHBUTTON, "Выгрузить обновленные файлы на сервер");
 
     setConfigTypeName("password", "Пароль");
     setConfig("password", "PASSWORD1", "Новый пароль", CONFIG_VALUE_PASSWORD, "");
@@ -551,6 +554,7 @@ void TApplication::setConfig(QString type, QString name, QString label, ConfigEn
     ConfigEntry entry;
     configs.remove(name);
     configNames.removeAll(name);
+    entry.name = name;
     entry.type = type;
     entry.label = label;
     entry.valueType = valType;
@@ -569,11 +573,11 @@ void TApplication::removeConfig(QString name)
 
 void TApplication::setConfigValue(QString name, QVariant value)
 {
-    ConfigEntry entry;
-    if (configs.contains(name))
-        entry = configs.value(name);
-    entry.value = value;
-    setConfig(entry.type, name, entry.label, entry.valueType, entry.value);
+        ConfigEntry entry;
+        if (configs.contains(name))
+            entry = configs.value(name);
+        entry.value = value;
+        setConfig(entry.type, name, entry.label, entry.valueType, entry.value);
 }
 
 
@@ -715,6 +719,7 @@ bool TApplication::initApplication()
                         openPlugins();
 
                     updates = new Updates(this);
+                    updates->open();
 
                     gui->showMenus();
 
@@ -1104,10 +1109,10 @@ QObject* TApplication::createPlugin(QString fileName)
 {
     QObject* result = 0;
     QString pluginFile = applicationDirPath() + "/plugins/";
-#ifdef Q_OS_WIN32
-    pluginFile.append(QString("%1.dll").arg(fileName));
-#else
+#ifdef Q_OS_LINUX
     pluginFile.append(QString("lib%1.so").arg(fileName));
+#elif Q_OS_WIN
+    pluginFile.append(QString("%1.dll").arg(fileName));
 #endif
     if (QDir().exists(pluginFile))
     {
@@ -1631,17 +1636,17 @@ QString TApplication::findFileFromEnv(QString file)
     QStringList sl(QProcessEnvironment::systemEnvironment().toStringList());
     int idx = sl.indexOf(QRegExp("^PATH=.*", Qt::CaseInsensitive));
     QString path = sl.value(idx).remove("PATH=", Qt::CaseInsensitive);
-#ifdef Q_OS_WIN32
-    QStringList sl1(path.split(";"));
-#else
+#ifdef Q_OS_LINUX
     QStringList sl1(path.split(":"));
+#elif Q_OS_WIN
+    QStringList sl1(path.split(";"));
 #endif
     foreach (QString path, sl1)
     {
-#ifdef Q_OS_WIN32
-        result = path + "\\" + file;
-#else
+#ifdef Q_OS_LINUX
         result = path + "/" + file;
+#elif Q_OS_WIN
+        result = path + "\\" + file;
 #endif
         if (QFile::exists(result))
             break;
@@ -2234,10 +2239,15 @@ qulonglong TApplication::calculateCRC32(QByteArray* array)
 
 QString TApplication::OSType()
 {
-#ifdef Q_OS_WIN32
-    return "Windows";
-#endif
 #ifdef Q_OS_LINUX
     return "Linux";
+#elif Q_OS_WIN
+    return "Windows";
 #endif
+}
+
+
+Updates* TApplication::getUpdates()
+{
+    return updates;
 }

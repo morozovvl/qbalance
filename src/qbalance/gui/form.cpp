@@ -25,6 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QList>
 #include <QtGui/QPushButton>
 #include <QtGui/QDesktopWidget>
+#include <QtGui/QToolTip>
 #include <QtCore/QDebug>
 #include "form.h"
 #include "../kernel/app.h"
@@ -49,6 +50,12 @@ Form::Form(QObject* par/* = 0*/): QObject(par)
     freeWindow = false;
     subWindow = 0;
     configName = "Form";
+
+    // Установим цветовую палитру подсказок
+    QPalette palette = QToolTip::palette();
+//    palette.setColor(QPalette::ToolTipBase, Qt::yellow);
+    palette.setColor(QPalette::ToolTipText, Qt::black);
+    QToolTip::setPalette(palette);
 }
 
 
@@ -113,12 +120,12 @@ bool Form::isVisible()
     return subWindow != 0 ? subWindow->isVisible() : false;
 }
 
-/*
+
 Dictionary* Form::getParent()
 {
     return (Dictionary*)parent;
 }
-*/
+
 
 bool Form::isFormSelected()
 {

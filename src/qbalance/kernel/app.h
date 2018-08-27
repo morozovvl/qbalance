@@ -89,6 +89,7 @@ enum ConfigEntryType
 
 struct ConfigEntry
 {
+    QString name;
     QString type;
     QString label;
     ConfigEntryType valueType;
@@ -285,6 +286,7 @@ public:
     void                    saveMessages();
 
     Q_INVOKABLE virtual void showError(QString);
+    Updates*        getUpdates();
 
 public slots:
     void loadScriptFile();

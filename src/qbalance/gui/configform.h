@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QComboBox>
 #include <QtGui/QCheckBox>
 #include <QtGui/QTreeWidgetItem>
+#include <QtCore/QSignalMapper>
 #include "../kernel/configvars.h"
 #include "form.h"
 
@@ -34,13 +35,15 @@ class ConfigForm : public Form
 {
     Q_OBJECT
 public:
+    QSignalMapper *signalMapper;
+
     ConfigForm(QObject* parent = 0);
     ~ConfigForm();
     virtual bool open(QWidget* pwgt = 0);
 
 public slots:
     virtual void cmdOk();
-    virtual void changePassword();
+    virtual void buttonPressed(QString);
 
 private slots:
     void dispatch(QTreeWidgetItem*, int);
@@ -57,6 +60,9 @@ private:
     void dictPermissions();
 
     void showConfigGroup(QString);
+    void changePassword();
+    void ftpTotalUpload();
+    void ftpUpload();
 };
 
 #endif // CONFIGFORM_H

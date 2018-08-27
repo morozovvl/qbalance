@@ -22,21 +22,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QtCore/QObject>
 #include <QtCore/QHash>
+#include <QtCore/QMap>
 #include <QtNetwork/QFtp>
+#include <QtNetwork/QUrlInfo>
+#include <QtNetwork/QNetworkAccessManager>
 #include <QtCore/QFile>
+#include <QtCore/QStringList>
 #include <QtXml/QDomDocument>
+
 
 class TApplication;
 
-typedef struct
-{
-    QFile*  file;
-    QString remoteDir;
-    QString remoteDirExists;
-    QString remoteFileName;
-    QString localFileName;
-    bool    download;
-} UpdateFileInfo;
 
 class Updates : public QObject
 {
@@ -44,38 +40,26 @@ class Updates : public QObject
 
 private:
     TApplication*       app;
-    QFtp*   ftp;
-    QHash<int, UpdateFileInfo>  files;
-    QString url;
-    QDomDocument        filesList;
     QString             updatesPath;
     QString             serverBackupXMLFile;
-    QString             serverBackupPath;
-    bool                toUpload;
-    bool                updatesFinished;
-    bool                noNeedUpload;
+    QNetworkAccessManager*  nwmanager;
+    QMap<QString, QFile*> files;
 
-    void    prepareFilesList();
-    void    analizeFiles();
+    QStringList    prepareFilesList();
     QStringList         getFilesList();
     qulonglong calculateCRC32(QString);
+    QString             osPath;
 
 public:
-    explicit Updates(TApplication*, QObject *parent = 0);
-    bool open(QString, bool = false);
+    Updates(TApplication*, QObject *parent = 0);
+    ~Updates();
+    bool open();
     void close();
-
-signals:
-
-public slots:
+    void putTotalUpdates();
+    void putUpdates();
 
 private slots:
-    void testState(int);
-    void readUpdates();
-    void putUpdates();
-    void readFile(QString remoteDir, QString remoteFile, QString localFile);
-    void uploadFile(QString, QString);
-    void processCommand(int, bool);
+    void transmissionFinished(QNetworkReply*);
 };
 
 #endif // UPDATES_H
