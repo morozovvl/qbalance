@@ -41,22 +41,24 @@ class Updates : public QObject
 private:
     TApplication*       app;
     QString             updatesPath;
-    QString             serverBackupXMLFile;
+    QString             serverUpdateXMLFile;
     QNetworkAccessManager*  nwmanager;
-    QMap<QString, QFile*> files;
-
-    QStringList    prepareFilesList();
-    QStringList         getFilesList();
-    qulonglong calculateCRC32(QString);
+    QStringList         files;
     QString             osPath;
+
+    QStringList         prepareFilesList();
+    QStringList         getFilesList();
+    qulonglong          calculateCRC32(QString);
+    QNetworkRequest     makeNetworkRequest(QString, QString);
 
 public:
     Updates(TApplication*, QObject *parent = 0);
     ~Updates();
-    bool open();
-    void close();
-    void putTotalUpdates();
-    void putUpdates();
+    bool    open();
+    void    close();
+    void    putTotalUpdates();
+    void    putUpdates();
+    void    getUpdates();
 
 private slots:
     void transmissionFinished(QNetworkReply*);

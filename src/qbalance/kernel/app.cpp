@@ -468,9 +468,9 @@ void TApplication::initConfig()
 
     setConfigTypeName("fr", "Фискальный регистратор");
     setConfig("fr", "FR_NEEDED", "Использовать ФР", CONFIG_VALUE_BOOLEAN, false);
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_LINUX)
     setConfig("fr", "FR_DRIVER_PORT", "COM порт", CONFIG_VALUE_STRING, "/dev/ttyUSB0");
-#elif Q_OS_WIN
+#elif defined(Q_OS_WIN)
     setConfig("fr", "FR_DRIVER_PORT", "COM порт", CONFIG_VALUE_STRING, "COM1");
 #endif
     setConfig("fr", "FR_DRIVER_BOUD_RATE", "Скорость", CONFIG_VALUE_BOUND, 6);
@@ -487,9 +487,9 @@ void TApplication::initConfig()
 
     setConfigTypeName("bcReader", "Сканер штрих кодов");
     setConfig("bcReader", "BAR_CODE_READER_NEEDED", "Использовать сканер штрих кодов", CONFIG_VALUE_BOOLEAN, false);
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_LINUX)
     setConfig("bcReader", "BAR_CODE_READER_PORT", "COM порт", CONFIG_VALUE_STRING, "/dev/ttyUSB0");
-#elif Q_OS_WIN
+#elif defined(Q_OS_WIN)
     setConfig("bcReader", "BAR_CODE_READER_PORT", "COM порт", CONFIG_VALUE_STRING, "COM3");
 #endif
     setConfig("bcReader", "BAR_CODE_READER_BAUD_RATE", "Скорость", CONFIG_VALUE_BOUND, 6);
@@ -804,7 +804,7 @@ void TApplication::close()
     if (updates != 0)
     {
         updates->close();
-        delete updates;
+        updates->deleteLater();
     }
 
     saveMessages();
@@ -1109,9 +1109,9 @@ QObject* TApplication::createPlugin(QString fileName)
 {
     QObject* result = 0;
     QString pluginFile = applicationDirPath() + "/plugins/";
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_LINUX)
     pluginFile.append(QString("lib%1.so").arg(fileName));
-#elif Q_OS_WIN
+#elif defined(Q_OS_WIN)
     pluginFile.append(QString("%1.dll").arg(fileName));
 #endif
     if (QDir().exists(pluginFile))
@@ -1636,16 +1636,16 @@ QString TApplication::findFileFromEnv(QString file)
     QStringList sl(QProcessEnvironment::systemEnvironment().toStringList());
     int idx = sl.indexOf(QRegExp("^PATH=.*", Qt::CaseInsensitive));
     QString path = sl.value(idx).remove("PATH=", Qt::CaseInsensitive);
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_LINUX)
     QStringList sl1(path.split(":"));
-#elif Q_OS_WIN
+#elif defined(Q_OS_WIN)
     QStringList sl1(path.split(";"));
 #endif
     foreach (QString path, sl1)
     {
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_LINUX)
         result = path + "/" + file;
-#elif Q_OS_WIN
+#elif defined(Q_OS_WIN)
         result = path + "\\" + file;
 #endif
         if (QFile::exists(result))
@@ -2239,9 +2239,9 @@ qulonglong TApplication::calculateCRC32(QByteArray* array)
 
 QString TApplication::OSType()
 {
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_LINUX)
     return "Linux";
-#elif Q_OS_WIN
+#elif defined(Q_OS_WIN)
     return "Windows";
 #endif
 }

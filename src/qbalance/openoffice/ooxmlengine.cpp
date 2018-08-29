@@ -84,9 +84,9 @@ bool OOXMLEngine::open(QString fName, QString sheet, bool ro)
             // Распакуем файл шаблона документа OpenOffice
             QProcess* unzip = new QProcess();
             unzip->setWorkingDirectory(tmpDir);
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_LINUX)
             unzip->start("unzip", QStringList() << fileName);
-#elif Q_OS_WIN
+#elif defined(Q_OS_WIN)
             unzip->start(app->applicationDirPath() + "/unzip", QStringList() << fileName);
 #endif
             app->print(QString(unzip->readAllStandardOutput()));
@@ -149,7 +149,7 @@ void OOXMLEngine::close()
             // Запакуем файл OpenOffice обратно
             QProcess* zip = new QProcess();
             zip->setWorkingDirectory(tmpDir);
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN)
             zip->start(app->applicationDirPath() + "/zip", QStringList() << "-r" << fileName << ".");
 #else
             zip->start("zip", QStringList() << "-r" << fileName << ".");

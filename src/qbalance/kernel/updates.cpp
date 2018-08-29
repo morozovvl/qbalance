@@ -26,12 +26,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 Updates::Updates(TApplication* a, QObject *parent): QObject(parent)
 {
     app = a;
-    updatesPath = app->getUpdatesPath() + "/";
-    serverBackupXMLFile = "backup.xml";
+    updatesPath = app->applicationDirPath() + "/";
+    serverUpdateXMLFile = "updates.xml";
     nwmanager = new QNetworkAccessManager(app);
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_LINUX)
     osPath = QString("/linux/%1").arg(QSysInfo::WordSize);
-#elif Q_OS_WIN
+#elif defined(Q_OS_WIN)
     osPath = QString("/windows/%1").arg(QSysInfo::WordSize);
 #endif
 }
@@ -65,18 +65,12 @@ void Updates::putTotalUpdates()
         QStringList filesList = prepareFilesList();
         foreach (QString fileName, filesList)
         {
-            QString urlString = QString("ftp://%1/program%2%3").arg(app->getConfigValue("UPDATES_FTP_URL").toString()).arg(osPath).arg(fileName);
-            QUrl url;
-            url.setUrl(urlString);
-            url.setUserName(app->getConfigValue("UPDATES_FTP_ADMIN_CLIENT").toString());
-            url.setPassword(app->getConfigValue("UPDATES_FTP_ADMIN_CLIENT_PASSWORD").toString());
-            url.setPort(21);
-            QNetworkRequest request(url);
-            QFile* file = new QFile(app->applicationDirPath() + fileName);
+            QFile* file = new QFile(app->applicationDirPath() + "/" + fileName);
             if (file->open(QIODevice::ReadOnly))
             {
+                QNetworkRequest request = makeNetworkRequest("program" + osPath, fileName);
                 nwmanager->put(request, file);
-                files.insert(url.toString(), file);
+                files.append(request.url().toString());
             }
         }
     }
@@ -84,25 +78,44 @@ void Updates::putTotalUpdates()
 }
 
 
+QNetworkRequest Updates::makeNetworkRequest(QString path, QString fileName)
+{
+    QString urlString = QString("ftp://%1/%2/%3").arg(app->getConfigValue("UPDATES_FTP_URL").toString()).arg(path).arg(fileName);
+    QUrl url;
+    url.setUrl(urlString);
+    url.setUserName(app->getConfigValue("UPDATES_FTP_ADMIN_CLIENT").toString());
+    url.setPassword(app->getConfigValue("UPDATES_FTP_ADMIN_CLIENT_PASSWORD").toString());
+    url.setPort(21);
+    return QNetworkRequest(url);
+}
+
+
 void Updates::putUpdates()
 {
+    getUpdates();
+}
+
+
+void Updates::getUpdates()
+{
+    QNetworkRequest request = makeNetworkRequest("program" + osPath, serverUpdateXMLFile);
+    nwmanager->get(request);
 }
 
 
 void Updates::transmissionFinished(QNetworkReply* reply)
 {
     QString urlString = reply->url().toString();
-    QFile* file = files.value(urlString);
-    file->close();
-    delete file;
+    qDebug() << urlString;
     if (reply->error() == QNetworkReply::NoError)
         app->print(QString("Выгружен %1").arg(reply->url().toString(QUrl::RemoveScheme | QUrl::RemoveUserInfo | QUrl::RemovePassword | QUrl::RemovePort)));
     else
         app->print(QString("Ошибка(%1) %2").arg(reply->error()).arg(reply->url().toString(QUrl::RemoveScheme | QUrl::RemoveUserInfo | QUrl::RemovePassword | QUrl::RemovePort)));
-    files.remove(urlString);
-    if (files.count() == 0)
+    if (files.count() > 0)
     {
-        app->print("Выгрузка файлов на сервер FTP закончена.");
+        files.removeOne(urlString);
+        if (files.count() == 0)
+            app->print("Выгрузка файлов на сервер FTP закончена.");
     }
 }
 
@@ -114,14 +127,15 @@ QStringList Updates::prepareFilesList()
     QDomDocument        filesList;
     QHash<QString, QString> list;
     // Составим список файлов
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_LINUX)
     #define LIB_EXT "*.so*"
     list.insert("qbalance", "");
-#elif Q_OS_WIN
+#elif defined(Q_OS_WIN)
     #define LIB_EXT "*.dll"
-    list.insert("qbalance", "exe");
+    list.insert("qbalance.exe", "");
 #endif
-    list.insert("recources.qrc", "");
+    list.insert(serverUpdateXMLFile, "");
+    list.insert("resources.qrc", "");
     list.insert("plugins", LIB_EXT);
     list.insert("plugins/designer", LIB_EXT);
     list.insert("plugins/imageformats", LIB_EXT);
@@ -139,7 +153,9 @@ QStringList Updates::prepareFilesList()
             if (fi.isFile())
             {
                 QString fName = fileName;
-                QString path = "/" + fileName.replace(fi.fileName(), "");
+                QString path = fileName.replace(fi.fileName(), "");
+                if (path.size() > 0)
+                    path += "/";
                 f = filesList.createElement(fName.replace("/", "_"));
                 f.setAttribute("path", path);
                 f.setAttribute("file", fi.fileName());
@@ -148,8 +164,8 @@ QStringList Updates::prepareFilesList()
                 f.setAttribute("time", fi.created().time().toString());
                 f.setAttribute("crc32", calculateCRC32(fi.absoluteFilePath()));
                 root.appendChild(f);
-                if (!result.contains(path + "/" + fi.fileName()))
-                    result.append(path + "/" + fi.fileName());
+                if (!result.contains(path + fi.fileName()))
+                    result.append(path + fi.fileName());
             }
             else
             {
@@ -158,7 +174,9 @@ QStringList Updates::prepareFilesList()
                     if (fi.isFile())
                     {
                         QString fName = fileName + "/" + fi.fileName();
-                        QString path = "/" + fileName.replace(fi.fileName(), "");
+                        QString path = fileName.replace(fi.fileName(), "");
+                        if (path.size() > 0)
+                            path += "/";
                         f = filesList.createElement(fName.replace("/", "_"));
                         f.setAttribute("path", path);
                         f.setAttribute("file", fi.fileName());
@@ -167,15 +185,15 @@ QStringList Updates::prepareFilesList()
                         f.setAttribute("time", fi.created().time().toString());
                         f.setAttribute("crc32", calculateCRC32(fi.absoluteFilePath()));
                         root.appendChild(f);
-                        if (!result.contains(path + "/" + fi.fileName()))
-                            result.append(path + "/" + fi.fileName());
+                        if (!result.contains(path + fi.fileName()))
+                            result.append(path + fi.fileName());
                     }
                 }
             }
         }
     }
 
-    QFile file(updatesPath + serverBackupXMLFile);
+    QFile file(updatesPath + serverUpdateXMLFile);
     if (file.open(QIODevice::WriteOnly))
     {
         file.write(filesList.toByteArray());
@@ -189,7 +207,7 @@ QStringList Updates::getFilesList()
 // Составляет список файлов, в которых не сходится описание файлов на сервере и местных файлов
 {
     QStringList files;
-    QFile file(updatesPath + serverBackupXMLFile);
+    QFile file(updatesPath + serverUpdateXMLFile);
     if (file.open(QIODevice::ReadOnly))
     {
         QString errMessage;
