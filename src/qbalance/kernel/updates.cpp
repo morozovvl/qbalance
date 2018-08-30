@@ -59,10 +59,15 @@ void Updates::close()
 
 void Updates::putTotalUpdates()
 {
+    putUpdates(prepareTotalFilesList());
+}
+
+
+void Updates::putUpdates(QStringList filesList)
+{
     if (app->getConfigValue("UPDATES_FTP_URL").toString().size() > 0)
     {
         app->print("Запущена выгрузка файлов на сервер FTP");
-        QStringList filesList = prepareFilesList();
         foreach (QString fileName, filesList)
         {
             QFile* file = new QFile(app->applicationDirPath() + "/" + fileName);
@@ -70,11 +75,10 @@ void Updates::putTotalUpdates()
             {
                 QNetworkRequest request = makeNetworkRequest("program" + osPath, fileName);
                 nwmanager->put(request, file);
-                files.append(request.url().toString());
+                files.insert(request.url().toString(), fileName);
             }
         }
     }
-
 }
 
 
@@ -90,38 +94,98 @@ QNetworkRequest Updates::makeNetworkRequest(QString path, QString fileName)
 }
 
 
-void Updates::putUpdates()
-{
-    getUpdates();
-}
-
-
 void Updates::getUpdates()
 {
     QNetworkRequest request = makeNetworkRequest("program" + osPath, serverUpdateXMLFile);
     nwmanager->get(request);
+    files.insert(request.url().toString(), serverUpdateXMLFile);
 }
 
 
 void Updates::transmissionFinished(QNetworkReply* reply)
 {
     QString urlString = reply->url().toString();
-    qDebug() << urlString;
-    if (reply->error() == QNetworkReply::NoError)
-        app->print(QString("Выгружен %1").arg(reply->url().toString(QUrl::RemoveScheme | QUrl::RemoveUserInfo | QUrl::RemovePassword | QUrl::RemovePort)));
-    else
-        app->print(QString("Ошибка(%1) %2").arg(reply->error()).arg(reply->url().toString(QUrl::RemoveScheme | QUrl::RemoveUserInfo | QUrl::RemovePassword | QUrl::RemovePort)));
-    if (files.count() > 0)
+    // Если это операция выгрузки на сервер
+    if (reply->operation() == QNetworkAccessManager::PutOperation)
     {
-        files.removeOne(urlString);
+        if (reply->error() == QNetworkReply::NoError)
+            app->print(QString("Выгружен %1").arg(reply->url().toString(QUrl::RemoveScheme | QUrl::RemoveUserInfo | QUrl::RemovePassword | QUrl::RemovePort)));
+        else
+            app->print(QString("Ошибка(%1) %2").arg(reply->error()).arg(reply->url().toString(QUrl::RemoveScheme | QUrl::RemoveUserInfo | QUrl::RemovePassword | QUrl::RemovePort)));
+
         if (files.count() == 0)
             app->print("Выгрузка файлов на сервер FTP закончена.");
+        else
+            files.remove(urlString);
     }
+    else if (reply->operation() == QNetworkAccessManager::GetOperation)
+    {
+        if (reply->error() == QNetworkReply::NoError)
+        {
+            QFile file(files.value(urlString));
+            if( file.open(QIODevice::WriteOnly) )
+            {
+                QByteArray content = reply->readAll();
+                file.write(content); // пишем в файл
+                file.close();
+
+                putUpdates(prepareFilesList());
+            }
+            files.remove(urlString);
+        }
+    }
+    reply->deleteLater();
 }
 
 
-
 QStringList Updates::prepareFilesList()
+// Подготовить список обновляемых файлов, в которых произошли изменения
+{
+    QStringList result;
+    QDomDocument        filesList;
+    QFile* file = new QFile(app->applicationDirPath() + "/" + serverUpdateXMLFile);
+    if (file->open(QIODevice::ReadOnly))
+    {
+        filesList.setContent(file);
+        file->close();
+
+        QDomNodeList list = filesList.firstChild().childNodes();
+        for (int i = 0; i < list.count(); i++)
+        {
+            QDomElement element = list.at(i).toElement();
+            QFileInfo fi(app->applicationDirPath() + "/" + element.attribute("file"));
+            if (fi.isFile())
+            {
+                if ((QString("%1").arg(fi.size()) != element.attribute("size")) ||
+                    (QString("%1").arg(fi.created().date().toString(app->dateFormat())) != element.attribute("date")) ||
+                    (QString("%1").arg(fi.created().time().toString()) != element.attribute("time")) ||
+                    (QString("%1").arg(calculateCRC32(fi.absoluteFilePath())) != element.attribute("crc32")))
+                {
+                    result.append(element.attribute("file"));
+                    element.setAttribute("size", fi.size());
+                    element.setAttribute("date", fi.created().date().toString(app->dateFormat()));
+                    element.setAttribute("time", fi.created().time().toString());
+                    element.setAttribute("crc32", calculateCRC32(fi.absoluteFilePath()));
+
+                }
+            }
+        }
+    }
+    if (result.size() > 0)
+    {
+        QFile file(app->applicationDirPath() + "/" + serverUpdateXMLFile);
+        if (file.open(QIODevice::WriteOnly))
+        {
+            file.write(filesList.toByteArray());
+            file.close();
+        }
+    }
+    return result;
+}
+
+
+QStringList Updates::prepareTotalFilesList()
+// Подготовить полный список обновляемых файлов
 {
     QStringList result;
     QDomDocument        filesList;

@@ -237,7 +237,7 @@ void ConfigForm::changePassword()
 
 void ConfigForm::ftpUpload()
 {
-    app->getUpdates()->putUpdates();
+    app->getUpdates()->getUpdates();
     cmdOk();
 }
 

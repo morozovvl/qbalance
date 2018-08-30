@@ -39,14 +39,15 @@ class Updates : public QObject
     Q_OBJECT
 
 private:
-    TApplication*       app;
-    QString             updatesPath;
-    QString             serverUpdateXMLFile;
+    TApplication*           app;
+    QString                 updatesPath;
+    QString                 serverUpdateXMLFile;
     QNetworkAccessManager*  nwmanager;
-    QStringList         files;
-    QString             osPath;
+    QMap<QString, QString>  files;
+    QString                 osPath;
 
     QStringList         prepareFilesList();
+    QStringList         prepareTotalFilesList();
     QStringList         getFilesList();
     qulonglong          calculateCRC32(QString);
     QNetworkRequest     makeNetworkRequest(QString, QString);
@@ -57,7 +58,7 @@ public:
     bool    open();
     void    close();
     void    putTotalUpdates();
-    void    putUpdates();
+    void    putUpdates(QStringList);
     void    getUpdates();
 
 private slots:
