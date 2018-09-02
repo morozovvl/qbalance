@@ -45,21 +45,25 @@ private:
     QNetworkAccessManager*  nwmanager;
     QMap<QString, QString>  files;
     QString                 osPath;
+    bool                    isGetUpdates;
+    int                     updatesCount;
 
     QStringList         prepareFilesList();
     QStringList         prepareTotalFilesList();
-    QStringList         getFilesList();
+//    QStringList         getFilesList();
     qulonglong          calculateCRC32(QString);
     QNetworkRequest     makeNetworkRequest(QString, QString);
+    bool                removeDir(const QString &);
 
 public:
     Updates(TApplication*, QObject *parent = 0);
     ~Updates();
     bool    open();
     void    close();
+    void    getUpdates(QStringList);
     void    putTotalUpdates();
     void    putUpdates(QStringList);
-    void    getUpdates();
+    void    updateModified(bool = false);
 
 private slots:
     void transmissionFinished(QNetworkReply*);

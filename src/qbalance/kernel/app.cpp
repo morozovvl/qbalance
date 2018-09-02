@@ -538,6 +538,7 @@ void TApplication::initConfig()
     setConfig("updates", "UPDATES_FTP_CLIENT_PASSWORD", "Пароль клиента", CONFIG_VALUE_PASSWORD, "");
     setConfig("updates", "UPDATES_FTP_ALL_UPLOAD", "", CONFIG_VALUE_PUSHBUTTON, "Выгрузить все обновляемые файлы на сервер");
     setConfig("updates", "UPDATES_FTP_UPLOAD", "", CONFIG_VALUE_PUSHBUTTON, "Выгрузить обновленные файлы на сервер");
+    setConfig("updates", "UPDATES_FTP_LOAD", "", CONFIG_VALUE_PUSHBUTTON, "Загрузить обновления");
 
     setConfigTypeName("password", "Пароль");
     setConfig("password", "PASSWORD1", "Новый пароль", CONFIG_VALUE_PASSWORD, "");

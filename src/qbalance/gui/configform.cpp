@@ -212,6 +212,8 @@ void ConfigForm::buttonPressed(QString type)
         ftpTotalUpload();
     else if (type == "UPDATES_FTP_UPLOAD")
         ftpUpload();
+    else if (type == "UPDATES_FTP_LOAD")
+        ftpLoad();
 }
 
 
@@ -237,7 +239,7 @@ void ConfigForm::changePassword()
 
 void ConfigForm::ftpUpload()
 {
-    app->getUpdates()->getUpdates();
+    app->getUpdates()->updateModified();
     cmdOk();
 }
 
@@ -245,5 +247,12 @@ void ConfigForm::ftpUpload()
 void ConfigForm::ftpTotalUpload()
 {
     app->getUpdates()->putTotalUpdates();
+    cmdOk();
+}
+
+
+void ConfigForm::ftpLoad()
+{
+    app->getUpdates()->updateModified(true);
     cmdOk();
 }

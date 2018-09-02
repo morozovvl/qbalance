@@ -63,6 +63,7 @@ private:
     void changePassword();
     void ftpTotalUpload();
     void ftpUpload();
+    void ftpLoad();
 };
 
 #endif // CONFIGFORM_H
