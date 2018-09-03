@@ -23,7 +23,7 @@ CONFIG(debug) {
     DESTDIR = ./
 }
 
-TARGET = ../../qbalance
+TARGET = ../../qb_main
 CONFIG += designer \
       uitools
 CONFIG -= app_bundle

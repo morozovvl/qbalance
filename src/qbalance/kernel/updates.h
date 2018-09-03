@@ -28,6 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtCore/QFile>
 #include <QtCore/QStringList>
+#include <QtCore/QTimer>
 #include <QtXml/QDomDocument>
 
 
@@ -47,12 +48,13 @@ private:
     QString                 osPath;
     bool                    isGetUpdates;
     int                     updatesCount;
+    QTimer*                 timer;
 
     QStringList         prepareFilesList();
     QStringList         prepareTotalFilesList();
 //    QStringList         getFilesList();
     qulonglong          calculateCRC32(QString);
-    QNetworkRequest     makeNetworkRequest(QString, QString);
+    QNetworkRequest     makeNetworkRequest(QString);
     bool                removeDir(const QString &);
 
 public:
@@ -63,10 +65,12 @@ public:
     void    getUpdates(QStringList);
     void    putTotalUpdates();
     void    putUpdates(QStringList);
-    void    updateModified(bool = false);
 
 private slots:
     void transmissionFinished(QNetworkReply*);
+
+public slots:
+    void    updateModified(bool = true);
 };
 
 #endif // UPDATES_H

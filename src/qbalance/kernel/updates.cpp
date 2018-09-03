@@ -35,12 +35,24 @@ Updates::Updates(TApplication* a, QObject *parent): QObject(parent)
 #endif
     isGetUpdates = false;
     updatesCount = 0;
+    timer = 0;
+    if (app->getConfigValue("UPDATES_FTP_TIMEOUT").toInt() > 0)
+    {
+        timer = new QTimer(this);
+        timer->start(app->getConfigValue("UPDATES_FTP_TIMEOUT").toInt() * 60000);
+        connect(timer, SIGNAL(timeout()), this, SLOT(updateModified()));
+    }
 }
 
 
 Updates::~Updates()
 {
-    delete nwmanager;
+    if (timer != 0)
+    {
+        disconnect(timer, SIGNAL(timeout()), this, SLOT(updateModified()));
+        delete timer;
+        delete nwmanager;
+    }
 }
 
 
@@ -48,6 +60,7 @@ bool Updates::open()
 {
     bool result = true;
     connect(nwmanager, SIGNAL(finished(QNetworkReply*)), this, SLOT(transmissionFinished(QNetworkReply*)));
+    updateModified();
     return result;
 }
 
@@ -70,7 +83,7 @@ void Updates::getUpdates(QStringList filesList)
     {
         foreach (QString fileName, filesList)
         {
-            QNetworkRequest request = makeNetworkRequest("program" + osPath, fileName);
+            QNetworkRequest request = makeNetworkRequest(fileName);
             nwmanager->get(request);
             files.insert(request.url().toString(), "updates/" + fileName);
         }
@@ -89,7 +102,7 @@ void Updates::putUpdates(QStringList filesList)
             QFile* file = new QFile(app->applicationDirPath() + "/" + fileName);
             if (file->open(QIODevice::ReadOnly))
             {
-                QNetworkRequest request = makeNetworkRequest("program" + osPath, fileName);
+                QNetworkRequest request = makeNetworkRequest(fileName);
                 nwmanager->put(request, file);
                 files.insert(request.url().toString(), fileName);
             }
@@ -98,9 +111,9 @@ void Updates::putUpdates(QStringList filesList)
 }
 
 
-QNetworkRequest Updates::makeNetworkRequest(QString path, QString fileName)
+QNetworkRequest Updates::makeNetworkRequest(QString fileName)
 {
-    QString urlString = QString("ftp://%1/%2/%3").arg(app->getConfigValue("UPDATES_FTP_URL").toString()).arg(path).arg(fileName);
+    QString urlString = QString("ftp://%1/%2/%3").arg(app->getConfigValue("UPDATES_FTP_URL").toString()).arg("program" + osPath).arg(fileName);
     QUrl url;
     url.setUrl(urlString);
     url.setUserName(app->getConfigValue("UPDATES_FTP_ADMIN_CLIENT").toString());
@@ -120,7 +133,7 @@ void Updates::updateModified(bool getUpdates)
         updatesCount = 0;
     }
 
-    QNetworkRequest request = makeNetworkRequest("program" + osPath, serverUpdateXMLFile);
+    QNetworkRequest request = makeNetworkRequest(serverUpdateXMLFile);
     nwmanager->get(request);
     files.insert(request.url().toString(), serverUpdateXMLFile);
 }
@@ -170,9 +183,7 @@ void Updates::transmissionFinished(QNetworkReply* reply)
                         putUpdates(filesList);
                 }
                 else if (updatesCount > 1)
-                    app->print(QString("Найдено обновлений: %1").arg(updatesCount - 1));
-
-                // Вычитаем цифру 2, т.к. два файла updates.xml в рабочем каталоге и в каталоге updates - служебные
+                    app->showMessage(QString("Обновлено файлов - %1. Необходимо перезапустить программу.").arg(updatesCount - 1));
             }
         }
     }
@@ -228,10 +239,10 @@ QStringList Updates::prepareTotalFilesList()
     // Составим список файлов
 #if defined(Q_OS_LINUX)
     #define LIB_EXT "*.so*"
-    list.insert("qbalance", "");
+    list.insert("qb_main", "");
 #elif defined(Q_OS_WIN)
     #define LIB_EXT "*.dll"
-    list.insert("qbalance.exe", "");
+    list.insert("qb_main.exe", "");
 #endif
     list.insert(serverUpdateXMLFile, "");
     list.insert("resources.qrc", "");

@@ -529,13 +529,14 @@ void TApplication::initConfig()
     setConfig("params", "PARAMETERS_UL", "Объединить все включенные журналы отладки в одном файле (debug.log)", CONFIG_VALUE_BOOLEAN, false);
 
     setConfigTypeName("updates", "Обновления");
+    setConfig("updates", "UPDATES_NEEDED", "Использовать обновления", CONFIG_VALUE_BOOLEAN, true);
     setConfig("updates", "UPDATES_FTP_URL", "FTP сервер", CONFIG_VALUE_STRING, "vm13720.hv8.ru");
     setConfig("updates", "UPDATES_FTP_PORT", "Порт", CONFIG_VALUE_INTEGER, 21);
     setConfig("updates", "UPDATES_FTP_ADMIN_CLIENT", "Логин клиента-администратора", CONFIG_VALUE_STRING, "ftpclient");
     setConfig("updates", "UPDATES_FTP_ADMIN_CLIENT_PASSWORD", "Пароль клиента-администратора", CONFIG_VALUE_PASSWORD, "");
-    setConfig("updates", "UPDATES_AUTO", "Автоматически выгружать обновления на сервер", CONFIG_VALUE_BOOLEAN, false);
     setConfig("updates", "UPDATES_FTP_CLIENT", "Логин клиента", CONFIG_VALUE_STRING, "ftp");
     setConfig("updates", "UPDATES_FTP_CLIENT_PASSWORD", "Пароль клиента", CONFIG_VALUE_PASSWORD, "");
+    setConfig("updates", "UPDATES_FTP_TIMEOUT", "Проверять обновления каждые (минут)", CONFIG_VALUE_INTEGER, 60);
     setConfig("updates", "UPDATES_FTP_ALL_UPLOAD", "", CONFIG_VALUE_PUSHBUTTON, "Выгрузить все обновляемые файлы на сервер");
     setConfig("updates", "UPDATES_FTP_UPLOAD", "", CONFIG_VALUE_PUSHBUTTON, "Выгрузить обновленные файлы на сервер");
     setConfig("updates", "UPDATES_FTP_LOAD", "", CONFIG_VALUE_PUSHBUTTON, "Загрузить обновления");
@@ -719,8 +720,11 @@ bool TApplication::initApplication()
                     if (!isScriptMode())
                         openPlugins();
 
-                    updates = new Updates(this);
-                    updates->open();
+                    if (getConfigValue("UPDATES_NEEDED").toBool())
+                    {
+                        updates = new Updates(this);
+                        updates->open();
+                    }
 
                     gui->showMenus();
 

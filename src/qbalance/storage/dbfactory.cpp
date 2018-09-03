@@ -2828,7 +2828,7 @@ void DBFactory::saveUpdate(QString value)
 {
     if (app->isSA() && app->getConfigValue("SAVE_DB_UPDATES_TO_LOCAL").toBool())
     {
-        QString templateString = app->applicationDirPath().append("/db_updates/").append(dbName).append("/%1.sql");
+        QString templateString = app->applicationDirPath().append("/updates_db/").append(dbName).append("/%1.sql");
         QString fileName;
         if (updateNum == 0)
         {
@@ -2857,7 +2857,7 @@ void DBFactory::saveUpdate(QString value)
 
 void DBFactory::loadUpdates()
 {
-    QString templateString = app->applicationDirPath().append("/db_updates/").append(dbName).append("/");
+    QString templateString = app->applicationDirPath().append("/updates_db/").append(dbName).append("/");
     int updateNum = getValue("SELECT \"ЗНАЧЕНИЕ\" FROM константы WHERE \"ИМЯ\" = 'Last_DB_Update';").toInt();
     do
     {
@@ -2883,7 +2883,7 @@ void DBFactory::loadUpdates()
 
 int DBFactory::updatesCount()
 {
-    QString templateString = app->applicationDirPath().append("/db_updates/").append(dbName).append("/");
+    QString templateString = app->applicationDirPath().append("/updates_db/").append(dbName).append("/");
     dbUpdatesList = QDir(templateString).entryList(QStringList() << "*.sql", QDir::Files);
     int updateNum = getValue("SELECT \"ЗНАЧЕНИЕ\" FROM константы WHERE \"ИМЯ\" = 'Last_DB_Update';").toInt();
     // Удалим предыдущие скрипты из списка
