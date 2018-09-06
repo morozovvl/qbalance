@@ -63,6 +63,9 @@
                         <distributionFile>
                             <origin>qbalance.sh</origin>
                         </distributionFile>
+                        <distributionFile>
+                            <origin>qb_main</origin>
+                        </distributionFile>
                     </distributionFileList>
                 </folder>
                 <folder>
@@ -101,14 +104,14 @@
                     </distributionFileList>
                 </folder>
                 <folder>
-                    <description>DB_updates</description>
-                    <destination>${installdir}/db_updates</destination>
-                    <name>db_updates</name>
+                    <description>updates_db</description>
+                    <destination>${installdir}/updates_db</destination>
+                    <name>updates_db</name>
                     <platforms>all</platforms>
                     <distributionFileList>
                         <distributionDirectory>
                             <includeFiles>*.sql</includeFiles>
-                            <origin>db_updates/qbalance</origin>
+                            <origin>updates_db/qbalance</origin>
                         </distributionDirectory>
                     </distributionFileList>
                 </folder>

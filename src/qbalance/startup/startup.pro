@@ -11,9 +11,9 @@ QT       -= gui
 unix:TARGET = ../../../qbalance
 win32:TARGET = ../../../../qbalance
 
-CONFIG   += console
-	+= release
-CONFIG   -= app_bundle
+CONFIG  += console
+CONFIG	+= release
+CONFIG  -= app_bundle
 
 TEMPLATE = app
 

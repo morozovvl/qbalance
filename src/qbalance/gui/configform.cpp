@@ -239,20 +239,29 @@ void ConfigForm::changePassword()
 
 void ConfigForm::ftpUpload()
 {
-    app->getUpdates()->updateModified(false);
-    cmdOk();
+    if (app->getUpdates() != 0)
+    {
+        app->getUpdates()->updateModified(false);
+        cmdOk();
+    }
 }
 
 
 void ConfigForm::ftpTotalUpload()
 {
-    app->getUpdates()->putTotalUpdates();
-    cmdOk();
+    if (app->getUpdates() != 0)
+    {
+        app->getUpdates()->putTotalUpdates();
+        cmdOk();
+    }
 }
 
 
 void ConfigForm::ftpLoad()
 {
-    app->getUpdates()->updateModified();
-    cmdOk();
+    if (app->getUpdates() != 0)
+    {
+        app->getUpdates()->updateModified();
+        cmdOk();
+    }
 }

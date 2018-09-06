@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
+#include <QtNetwork/QAbstractNetworkCache>
 #include "updates.h"
 #include "app.h"
 
@@ -27,7 +28,7 @@ Updates::Updates(TApplication* a, QObject *parent): QObject(parent)
     app = a;
     updatesPath = app->applicationDirPath() + "/updates/";
     serverUpdateXMLFile = "updates.xml";
-    nwmanager = new QNetworkAccessManager(app);
+    nwmanager = new QNetworkAccessManager();
 #if defined(Q_OS_LINUX)
     osPath = QString("/linux/%1").arg(QSysInfo::WordSize);
 #elif defined(Q_OS_WIN)
@@ -39,6 +40,7 @@ Updates::Updates(TApplication* a, QObject *parent): QObject(parent)
     if (app->getConfigValue("UPDATES_FTP_TIMEOUT").toInt() > 0)
     {
         timer = new QTimer(this);
+        timer->setSingleShot(false);
         timer->start(app->getConfigValue("UPDATES_FTP_TIMEOUT").toInt() * 60000);
         connect(timer, SIGNAL(timeout()), this, SLOT(updateModified()));
     }
@@ -51,8 +53,9 @@ Updates::~Updates()
     {
         disconnect(timer, SIGNAL(timeout()), this, SLOT(updateModified()));
         delete timer;
-        delete nwmanager;
     }
+    nwmanager->deleteLater();
+    nwmanager = 0;
 }
 
 
@@ -60,7 +63,8 @@ bool Updates::open()
 {
     bool result = true;
     connect(nwmanager, SIGNAL(finished(QNetworkReply*)), this, SLOT(transmissionFinished(QNetworkReply*)));
-    updateModified();
+    if (app->getConfigValue("UPDATES_FTP_TIMEOUT").toInt() > 0)
+        updateModified();
     return result;
 }
 
@@ -68,6 +72,7 @@ bool Updates::open()
 void Updates::close()
 {
     disconnect(nwmanager, SIGNAL(finished(QNetworkReply*)), this, SLOT(transmissionFinished(QNetworkReply*)));
+    nwmanager->deleteLater();\
 }
 
 
@@ -116,26 +121,42 @@ QNetworkRequest Updates::makeNetworkRequest(QString fileName)
     QString urlString = QString("ftp://%1/%2/%3").arg(app->getConfigValue("UPDATES_FTP_URL").toString()).arg("program" + osPath).arg(fileName);
     QUrl url;
     url.setUrl(urlString);
-    url.setUserName(app->getConfigValue("UPDATES_FTP_ADMIN_CLIENT").toString());
-    url.setPassword(app->getConfigValue("UPDATES_FTP_ADMIN_CLIENT_PASSWORD").toString());
+    if (isGetUpdates)       // Если получаем обновления, то получаем их как обычный пользователь
+    {
+        url.setUserName(app->getConfigValue("UPDATES_FTP_CLIENT").toString());
+        url.setPassword(app->getConfigValue("UPDATES_FTP_CLIENT_PASSWORD").toString());
+    }
+    else                    // Если выгружаем обновления на сервер, то устанавливаем соответствующий логин и пароль
+    {
+        url.setUserName(app->getConfigValue("UPDATES_FTP_ADMIN_CLIENT").toString());
+        url.setPassword(app->getConfigValue("UPDATES_FTP_ADMIN_CLIENT_PASSWORD").toString());
+    }
     url.setPort(21);
     return QNetworkRequest(url);
 }
 
 
 void Updates::updateModified(bool getUpdates)
+// true - загрузка с сервера
+// false - выгрузка на сервер
 {
-    isGetUpdates = getUpdates;
-
-    if (isGetUpdates)
+    // Если задан пароль админа FTP, то подразумевается, что загрузка обновлений с сервера не производится, только выгрузка на сервер
+    // Если пароль не задан, то производится только загрузка обновлений с сервера, при условии, что они еще не загружены
+    if ((app->getConfigValue("UPDATES_FTP_ADMIN_CLIENT_PASSWORD").toString().size() > 0 && !getUpdates) ||
+        (app->getConfigValue("UPDATES_FTP_ADMIN_CLIENT_PASSWORD").toString().size() == 0 && getUpdates))
     {
-        removeDir(updatesPath);
-        updatesCount = 0;
-    }
+        isGetUpdates = getUpdates;
 
-    QNetworkRequest request = makeNetworkRequest(serverUpdateXMLFile);
-    nwmanager->get(request);
-    files.insert(request.url().toString(), serverUpdateXMLFile);
+        if (isGetUpdates)
+        {
+            removeDir(updatesPath);
+            updatesCount = 0;
+        }
+
+        QNetworkRequest request = makeNetworkRequest(serverUpdateXMLFile);
+        nwmanager->get(request);
+        files.insert(request.url().toString(), serverUpdateXMLFile);
+    }
 }
 
 
@@ -148,7 +169,10 @@ void Updates::transmissionFinished(QNetworkReply* reply)
         if (reply->error() == QNetworkReply::NoError)
             app->print(QString("Выгружен %1").arg(reply->url().toString(QUrl::RemoveScheme | QUrl::RemoveUserInfo | QUrl::RemovePassword | QUrl::RemovePort)));
         else
+        {
+//            app->print(QString("Ошибка (%1) %2").arg(reply->error()).arg(reply->url().toString()));
             app->print(QString("Ошибка (%1) %2").arg(reply->error()).arg(reply->url().toString(QUrl::RemoveScheme | QUrl::RemoveUserInfo | QUrl::RemovePassword | QUrl::RemovePort)));
+        }
 
         files.remove(urlString);
         if (files.count() == 0)
@@ -167,26 +191,35 @@ void Updates::transmissionFinished(QNetworkReply* reply)
                 file.write(content); // пишем в файл
                 file.close();
             }
+
             files.remove(urlString);
 
+            // Обработку загрузок начнем только если все файлы загружены
             if (files.count() == 0)
             {
+                // Составим список файлов, которые нужно загрузить или выгрузить
                 QStringList filesList = prepareFilesList();
+
                 if (filesList.count() > 0)
                 {
                     if (isGetUpdates)
                     {
-                        updatesCount =  filesList.count();
-                        getUpdates(filesList);
+                        updatesCount =  filesList.count();  // Подсчитаем количество обновленных файлов
+                        getUpdates(filesList);              // Загрузим обновления
                     }
                     else
-                        putUpdates(filesList);
+                    {
+                        putUpdates(filesList);              // Выгрузим обновления на сервер
+                    }
                 }
                 else if (updatesCount > 1)
+                {
                     app->showMessage(QString("Обновлено файлов - %1. Необходимо перезапустить программу.").arg(updatesCount - 1));
+                }
             }
         }
     }
+    reply->close();
     reply->deleteLater();
 }
 
@@ -248,9 +281,9 @@ QStringList Updates::prepareTotalFilesList()
     list.insert("resources.qrc", "");
     list.insert("plugins", LIB_EXT);
     list.insert("plugins/designer", LIB_EXT);
-    list.insert("plugins/imageformats", LIB_EXT);
-    list.insert("plugins/script", LIB_EXT);
-    list.insert("plugins/sqldrivers", LIB_EXT);
+//    list.insert("plugins/imageformats", LIB_EXT);
+//    list.insert("plugins/script", LIB_EXT);
+//    list.insert("plugins/sqldrivers", LIB_EXT);
     list.insert("resources", "*.*");
     QDomElement f;
     QDomElement root = filesList.createElement("root");

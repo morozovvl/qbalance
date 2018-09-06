@@ -29,7 +29,7 @@ DELETE FROM организации;
 DELETE FROM банковские_счета;
 DELETE FROM виды_расходов;
 DELETE FROM заявка;
-DELETE FROM прайс WHERE NOT (КОД_ФИРМЫ = 117);
+DELETE FROM прайс WHERE NOT (КОД_ФИРМЫ = 117 AND COALESCE(КОД_ТОВАР, 0) > 0);
 DELETE FROM карточки;
 DELETE FROM материалы;
 DELETE FROM набор3;

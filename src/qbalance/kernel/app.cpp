@@ -529,10 +529,9 @@ void TApplication::initConfig()
     setConfig("params", "PARAMETERS_UL", "Объединить все включенные журналы отладки в одном файле (debug.log)", CONFIG_VALUE_BOOLEAN, false);
 
     setConfigTypeName("updates", "Обновления");
-    setConfig("updates", "UPDATES_NEEDED", "Использовать обновления", CONFIG_VALUE_BOOLEAN, true);
     setConfig("updates", "UPDATES_FTP_URL", "FTP сервер", CONFIG_VALUE_STRING, "vm13720.hv8.ru");
     setConfig("updates", "UPDATES_FTP_PORT", "Порт", CONFIG_VALUE_INTEGER, 21);
-    setConfig("updates", "UPDATES_FTP_ADMIN_CLIENT", "Логин клиента-администратора", CONFIG_VALUE_STRING, "ftpclient");
+    setConfig("updates", "UPDATES_FTP_ADMIN_CLIENT", "Логин клиента-администратора", CONFIG_VALUE_STRING, "ftpadmin");
     setConfig("updates", "UPDATES_FTP_ADMIN_CLIENT_PASSWORD", "Пароль клиента-администратора", CONFIG_VALUE_PASSWORD, "");
     setConfig("updates", "UPDATES_FTP_CLIENT", "Логин клиента", CONFIG_VALUE_STRING, "ftp");
     setConfig("updates", "UPDATES_FTP_CLIENT_PASSWORD", "Пароль клиента", CONFIG_VALUE_PASSWORD, "");
@@ -720,11 +719,8 @@ bool TApplication::initApplication()
                     if (!isScriptMode())
                         openPlugins();
 
-                    if (getConfigValue("UPDATES_NEEDED").toBool())
-                    {
-                        updates = new Updates(this);
-                        updates->open();
-                    }
+                    updates = new Updates(this);
+                    updates->open();
 
                     gui->showMenus();
 
@@ -809,7 +805,7 @@ void TApplication::close()
     if (updates != 0)
     {
         updates->close();
-        updates->deleteLater();
+        delete updates;
     }
 
     saveMessages();
@@ -1807,8 +1803,7 @@ void TApplication::writeSettings()
     }
     foreach (QString name, getConfigNames())
     {
-        if (getConfigValue(name).toString().size() > 0)
-            settings.setValue(name, getConfigValue(name));
+        settings.setValue(name, getConfigValue(name));
     }
 
     settings.endGroup();

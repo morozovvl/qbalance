@@ -69,7 +69,6 @@ bool  copyRecursively(const QString &srcFilePath, const QString &tgtFilePath)
 
 int main(int argc, char *argv[])
 {
-
     QTextCodec* codec = QTextCodec::codecForName("UTF-8");
     QTextCodec::setCodecForTr(codec);
     QTextCodec::setCodecForCStrings(codec);
@@ -83,14 +82,16 @@ int main(int argc, char *argv[])
         args.append(QString(argv[i]));
     }
 
-    copyRecursively(QCoreApplication::applicationDirPath() + "/updates", QCoreApplication::applicationDirPath());
+    QString currentPath = QCoreApplication::applicationDirPath();
+
+    copyRecursively(currentPath + "/updates", currentPath);
 
     QProcess process;
     process.setProcessChannelMode(QProcess::ForwardedChannels);
 #if defined(Q_OS_LINUX)
-    process.start(QCoreApplication::applicationDirPath() + "/qb_main", args);
+    process.start(currentPath + "/qb_main", args);
 #elif defined(Q_OS_WIN)
-    process.start(QCoreApplication::applicationDirPath() + "/qb_main.exe", args);
+    process.start(currentPath + "/qb_main.exe", args);
 #endif
     process.waitForFinished(-1);
 }

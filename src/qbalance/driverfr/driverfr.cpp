@@ -912,7 +912,8 @@ int DriverFR::processCommand(int command, parameter* p, answer* a)
 {
     int result = -1;
     int attempts = 1;
-    QTime dieTime= QTime::currentTime().addMSecs(app->getConfigValue("FR_DRIVER_MAX_TIMEOUT").toInt() * 1000);
+    int timeOut = app->getConfigValue("FR_DRIVER_MAX_TIMEOUT").toInt() * 1000;
+    QTime dieTime= QTime::currentTime().addMSecs(timeOut);
 
     if (deviceIsReady())
     {
@@ -936,6 +937,7 @@ int DriverFR::processCommand(int command, parameter* p, answer* a)
             }
             if (QTime::currentTime() >= dieTime)    // Время ожидания вышло, прекратим попытки
             {
+                serialPort->writeLog(QString("Result:%1. Истек таймаут %2 мс").arg(result).arg(timeOut));
                 break;
             }
             if ((/*(result < 0) || */(result == 0x50)))
@@ -952,6 +954,7 @@ int DriverFR::processCommand(int command, parameter* p, answer* a)
             }
             else
             {
+                serialPort->writeLog(QString("Result:%1. Прекращена команда").arg(result));
                 break;
             }
         }
