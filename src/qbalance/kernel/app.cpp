@@ -107,6 +107,7 @@ TApplication::TApplication(int & argc, char** argv)
     dirName = "";
     debugToBuffer = true;
     writeDebug = true;
+    trueApplicationName = APPLICATION_NAME;
 }
 
 
@@ -533,6 +534,8 @@ void TApplication::initConfig()
     setConfig("updates", "UPDATES_FTP_PORT", "Порт", CONFIG_VALUE_INTEGER, 21);
     setConfig("updates", "UPDATES_FTP_ADMIN_CLIENT", "Логин клиента-администратора", CONFIG_VALUE_STRING, "ftpadmin");
     setConfig("updates", "UPDATES_FTP_ADMIN_CLIENT_PASSWORD", "Пароль клиента-администратора", CONFIG_VALUE_PASSWORD, "");
+    setConfig("updates", "UPDATES_FTP_PROGRAM", "Обновлять файлы программы", CONFIG_VALUE_BOOLEAN, false);
+    setConfig("updates", "UPDATES_FTP_DB", "Обновлять базу данных", CONFIG_VALUE_BOOLEAN, false);
     setConfig("updates", "UPDATES_FTP_CLIENT", "Логин клиента", CONFIG_VALUE_STRING, "ftp");
     setConfig("updates", "UPDATES_FTP_CLIENT_PASSWORD", "Пароль клиента", CONFIG_VALUE_PASSWORD, "");
     setConfig("updates", "UPDATES_FTP_TIMEOUT", "Проверять обновления каждые (минут)", CONFIG_VALUE_INTEGER, 60);
@@ -734,7 +737,7 @@ bool TApplication::initApplication()
                         int updatesCnt = db->updatesCount();
                         if (updatesCnt > 0)
                         {
-                            if (showYesNo(QString(QObject::trUtf8("Найдено обновлений базы данных: %1. Применить их?")).arg(updatesCnt)) == QMessageBox::Yes)
+//                            if (showYesNo(QString(QObject::trUtf8("Найдено обновлений базы данных: %1. Применить их?")).arg(updatesCnt)) == QMessageBox::Yes)
                                 db->loadUpdates();
                         }
                     }
@@ -2250,4 +2253,10 @@ QString TApplication::OSType()
 Updates* TApplication::getUpdates()
 {
     return updates;
+}
+
+
+QString TApplication::getTrueApplicationName()
+{
+    return trueApplicationName;
 }

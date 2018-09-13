@@ -460,6 +460,7 @@ bool WizardDictionary::setData()
     ScriptEngine::removeScript(scriptFile);
     db->setFile(scriptFile, ScriptFileType, QByteArray().append(textEditor->toPlainText()));
     db->commitTransaction();
+    db->clearUpdateNum();
 
     if (app->getDictionaries()->getDictionariesList()->contains(table))
         app->getDictionaries()->removeDictionary(table);

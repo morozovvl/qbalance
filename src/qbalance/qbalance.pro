@@ -8,6 +8,8 @@
 
 #QMAKE_CXXFLAGS += -std=c++11
 
+APP_NAME = qb_main
+
 include(../qextserialport/src/qextserialport.pri)
 
 QT_DEBUG_PLUGINS=1
@@ -23,7 +25,10 @@ CONFIG(debug) {
     DESTDIR = ./
 }
 
-TARGET = ../../qb_main
+TARGET = ../../$${APP_NAME}
+
+DEFINES += APPLICATION_NAME=\\\"$${APP_NAME}\\\"
+
 CONFIG += designer \
       uitools
 CONFIG -= app_bundle

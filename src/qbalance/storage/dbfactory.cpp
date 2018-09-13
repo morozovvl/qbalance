@@ -2940,3 +2940,9 @@ int DBFactory::getErrorNumber()
 {
     return errorNumber;
 }
+
+
+void DBFactory::clearUpdateNum()
+{
+    updateNum = 0;
+}

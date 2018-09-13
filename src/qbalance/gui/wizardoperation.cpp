@@ -362,6 +362,7 @@ bool WizardOperation::setData()
     ScriptEngine::removeScript(scriptFile);
     db->setFile(scriptFile, ScriptFileType, QByteArray().append(textEditor->toPlainText()));
     db->commitTransaction();
+    db->clearUpdateNum();
 
     if (app->getDocuments(oper) != 0)
         app->removeDocuments(oper);

@@ -296,6 +296,8 @@ public:
     virtual int updatesCount();
     virtual int getErrorNumber();
 
+    void    clearUpdateNum();
+
 
 private:
     TApplication*           app;

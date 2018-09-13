@@ -33,6 +33,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
 class TApplication;
+class DBFactory;
 
 
 class Updates : public QObject
@@ -41,8 +42,11 @@ class Updates : public QObject
 
 private:
     TApplication*           app;
+    DBFactory*              db;
     QString                 updatesPath;
-    QString                 serverUpdateXMLFile;
+    QString                 updatesDBPath;
+    QString                 programUpdateXMLFile;
+    QString                 dbUpdateXMLFile;
     QNetworkAccessManager*  nwmanager;
     QMap<QString, QString>  files;
     QString                 osPath;
@@ -50,11 +54,12 @@ private:
     int                     updatesCount;
     QTimer*                 timer;
 
-    QStringList         prepareFilesList();
-    QStringList         prepareTotalFilesList();
-//    QStringList         getFilesList();
+    QHash<QString, QString> getProgramFilesList();
+    QHash<QString, QString> getDBFilesList();
+    QStringList         prepareFilesList(QString, QString, bool = false);
+    QStringList         prepareTotalFilesList(QString, QHash<QString, QString>);
     qulonglong          calculateCRC32(QString);
-    QNetworkRequest     makeNetworkRequest(QString);
+    QNetworkRequest     makeNetworkRequest(QString, QString);
     bool                removeDir(const QString &);
 
 public:
@@ -62,9 +67,9 @@ public:
     ~Updates();
     bool    open();
     void    close();
-    void    getUpdates(QStringList);
+    void    getUpdates(QString, QString, QStringList);
     void    putTotalUpdates();
-    void    putUpdates(QStringList);
+    void    putUpdates(QString, QStringList);
 
 private slots:
     void transmissionFinished(QNetworkReply*);

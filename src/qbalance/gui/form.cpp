@@ -226,6 +226,7 @@ void Form::createForm(QString fileName, QWidget* pwgt)
     if (buttonCancel != 0)
     {
         connect(buttonCancel, SIGNAL(clicked()), SLOT(cmdCancel()));
+        buttonCancel->hide();
     }
     formWidget->setFocusPolicy(Qt::StrongFocus);
     freeWindow = !appendToMdi;
