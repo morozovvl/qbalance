@@ -117,10 +117,13 @@ void Updates::putTotalUpdates()
     app->print("");
     app->print("Запущена выгрузка всех файлов на сервер FTP");
 
-    putUpdates("program" + osPath, prepareTotalFilesList(programUpdateXMLFile, getProgramFilesList()));
+    // Выгрузим все обновления программы
+    if (app->getConfigValue("UPDATES_FTP_PROGRAM").toBool())
+        putUpdates("program" + osPath, prepareTotalFilesList(programUpdateXMLFile, getProgramFilesList()));
 
-    // Составим список обновлений базы данных
-    putUpdates("", prepareTotalFilesList(updatesDBPath + "/" + dbUpdateXMLFile, getDBFilesList()));
+    // Выгрузим все обновления базы данных
+    if (app->getConfigValue("UPDATES_FTP_DB").toBool())
+        putUpdates("", prepareTotalFilesList(updatesDBPath + "/" + dbUpdateXMLFile, getDBFilesList()));
 }
 
 
@@ -200,21 +203,13 @@ void Updates::updateModified(bool getUpdates)
 
         QNetworkRequest request;
 
-        // Если разрешено обновлять файлы программы
-        if (app->getConfigValue("UPDATES_FTP_PROGRAM").toBool())
-        {
-            request = makeNetworkRequest("program" + osPath, programUpdateXMLFile);
-            nwmanager->get(request);
-            files.insert(request.url().toString(), programUpdateXMLFile);
-        }
+        request = makeNetworkRequest("program" + osPath, programUpdateXMLFile);
+        nwmanager->get(request);
+        files.insert(request.url().toString(), programUpdateXMLFile);
 
-        // Если разрешено обновлять базу данных
-        if (app->getConfigValue("UPDATES_FTP_DB").toBool())
-        {
-            request = makeNetworkRequest(updatesDBPath + "/", dbUpdateXMLFile);
-            nwmanager->get(request);
-            files.insert(request.url().toString(), updatesDBPath + "/" + dbUpdateXMLFile);
-        }
+        request = makeNetworkRequest(updatesDBPath + "/", dbUpdateXMLFile);
+        nwmanager->get(request);
+        files.insert(request.url().toString(), updatesDBPath + "/" + dbUpdateXMLFile);
     }
 }
 
@@ -266,9 +261,11 @@ void Updates::transmissionFinished(QNetworkReply* reply)
                         updatesCount = filesList.count();  // Подсчитаем количество обновленных файлов
                         getUpdates(updatesPath, "program" + osPath, filesList);              // Загрузим обновления
                     }
-                    // Выгрузим обновления
-                    else
+                    // Выгрузим обновления, если разрешено
+                    else if (app->getConfigValue("UPDATES_FTP_PROGRAM").toBool())
+                    {
                         putUpdates("program" + osPath, filesList);              // Выгрузим обновления на сервер
+                    }
                 }
 
                 // Добавим список обновлений базы данных, которые нужно загрузить или выгрузить. В том числе те, которых еще нет в списке
@@ -281,8 +278,8 @@ void Updates::transmissionFinished(QNetworkReply* reply)
                         updatesCount += filesList1.count();  // Подсчитаем количество обновленных файлов
                         getUpdates("", "", filesList1);              // Загрузим обновления
                     }
-                    // Выгрузим обновления
-                    else
+                    // Выгрузим обновления, если разрешено
+                    else if (app->getConfigValue("UPDATES_FTP_DB").toBool())
                     {
                         // Обновим описание файлов
                         prepareTotalFilesList(updatesDBPath + "/" + dbUpdateXMLFile, getDBFilesList());
@@ -300,8 +297,8 @@ void Updates::transmissionFinished(QNetworkReply* reply)
         }
         else
         {
-            app->print(QString("Ошибка (%1) %2").arg(reply->error()).arg(reply->url().toString()));
-//            app->print(QString("Ошибка (%1) %2").arg(reply->error()).arg(reply->url().toString(QUrl::RemoveScheme | QUrl::RemoveUserInfo | QUrl::RemovePassword | QUrl::RemovePort)));
+//            app->print(QString("Ошибка (%1) %2").arg(reply->error()).arg(reply->url().toString()));
+            app->print(QString("Ошибка (%1) %2").arg(reply->error()).arg(reply->url().toString(QUrl::RemoveScheme | QUrl::RemoveUserInfo | QUrl::RemovePassword | QUrl::RemovePort)));
         }
     }
     reply->close();
