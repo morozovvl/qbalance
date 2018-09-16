@@ -103,18 +103,6 @@
                         </distributionDirectory>
                     </distributionFileList>
                 </folder>
-                <folder>
-                    <description>updates_db</description>
-                    <destination>${installdir}/updates_db</destination>
-                    <name>updates_db</name>
-                    <platforms>all</platforms>
-                    <distributionFileList>
-                        <distributionDirectory>
-                            <includeFiles>*.sql</includeFiles>
-                            <origin>updates_db/qbalance</origin>
-                        </distributionDirectory>
-                    </distributionFileList>
-                </folder>
             </folderList>
             <startMenuShortcutList>
                 <startMenuShortcut>

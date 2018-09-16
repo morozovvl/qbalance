@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QDebug>
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlField>
+#include <QtSql/QSqlDriver>
 #include "dbfactory.h"
 #include "../kernel/app.h"
 #include "../gui/passwordform.h"
@@ -324,6 +325,7 @@ bool DBFactory::open(QString login, QString password)
     }
     else
     {
+        errorNumber = 1;    // Предположим, что сервер работает
         setError(db->lastError().text());
         db->setHostName(hostName);
         db->setDatabaseName("postgres");
@@ -332,11 +334,13 @@ bool DBFactory::open(QString login, QString password)
         db->setPassword(password);
         if (db->open())
         {
-            errorNumber = 1;
             db->close();
         }
         else
-            errorNumber = 2;
+        {
+            if (db->lastError().text().contains("could not connect to server"))
+                errorNumber = 2;    // Сервер не работает
+        }
     }
     return false;
 }

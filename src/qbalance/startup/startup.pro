@@ -11,7 +11,7 @@ QT       -= gui
 unix:TARGET = ../../../qbalance
 win32:TARGET = ../../../../qbalance
 
-CONFIG  += console
+#CONFIG  += console
 CONFIG	+= release
 CONFIG  -= app_bundle
 
@@ -27,3 +27,8 @@ win32:OBJECTS_DIR = ../../../.obj
 
 unix:RCC_DIR = ../..
 win32:RCC_DIR = ../..
+
+windows {
+    RC_FILE+=resources.rc
+}
+

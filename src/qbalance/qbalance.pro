@@ -204,7 +204,7 @@ unix {
 }
 
 windows {
-    RC_FILE+=resources.rc
+//    RC_FILE+=resources.rc
     LIBS += ../../qextserialport1.dll
 }
 

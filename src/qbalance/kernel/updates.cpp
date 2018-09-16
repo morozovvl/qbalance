@@ -258,7 +258,7 @@ void Updates::transmissionFinished(QNetworkReply* reply)
                     // Загрузим обновления
                     if (isGetUpdates)
                     {
-                        updatesCount = filesList.count();  // Подсчитаем количество обновленных файлов
+                        updatesCount += filesList.count();  // Подсчитаем количество обновленных файлов
                         getUpdates(updatesPath, "program" + osPath, filesList);              // Загрузим обновления
                     }
                     // Выгрузим обновления, если разрешено
