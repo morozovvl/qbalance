@@ -129,7 +129,7 @@ public:
 // Функции для получения, сохранения данных модели
     Q_INVOKABLE virtual int             getId(int row = -1);
     Q_INVOKABLE virtual QString         getName(int row = -1);
-    Q_INVOKABLE virtual void            setId(int);
+    Q_INVOKABLE virtual bool            setId(int);
     Q_INVOKABLE virtual int             locateId(int);            // Возвращает номер строки с заданным полем КОД
     Q_INVOKABLE virtual int             locateValue(QString, QVariant);  // Возвращает номер строки с заданным значение поля
     Q_INVOKABLE virtual bool            isFieldExists(QString field);

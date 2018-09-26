@@ -570,7 +570,7 @@ int Essence::getId(int row)
 {
     if (row < 0)
         row = getCurrentRow();
-    return getValue(idFieldName, row).toULongLong();
+    return getValue(idFieldName, row).toInt();
 }
 
 
@@ -605,8 +605,9 @@ QString Essence::getName(int row)
 }
 
 
-void Essence::setId(int id)
+bool Essence::setId(int id)
 {
+    bool result = false;
     bool enabled = photoEnabled;
     photoEnabled = false;
     if (getValue(idFieldName) != id)
@@ -620,6 +621,10 @@ void Essence::setId(int id)
         grdTable->setCurrentIndex(grdTable->currentIndex().sibling(0, grdTable->currentIndex().column()));
     }
     photoEnabled = enabled;
+
+    result = (getValue(idFieldName).toInt() == id);
+
+    return result;
 }
 
 

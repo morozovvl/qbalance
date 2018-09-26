@@ -245,10 +245,9 @@ bool DBFactory::execPSql(QStringList comm, QString user, QString password)
     command.append("psql ").append(parameters.join(" "));
 
     connect(proc, SIGNAL(readyReadStandardOutput()), this, SLOT(showPSqlMessage()));
+    connect(proc, SIGNAL(readyReadStandardError()), this, SLOT(showPSqlMessage()));
 
     app->print(command);
-    app->print("Ждите...");
-    app->sleep(100);
 
     app->debug(1, "Init command: " + command);
 
@@ -257,6 +256,7 @@ bool DBFactory::execPSql(QStringList comm, QString user, QString password)
         result = true;
 
     disconnect(proc, SIGNAL(readyReadStandardOutput()), this, SLOT(showPSqlMessage()));
+    disconnect(proc, SIGNAL(readyReadStandardError()), this, SLOT(showPSqlMessage()));
 
     delete proc;
     return result;

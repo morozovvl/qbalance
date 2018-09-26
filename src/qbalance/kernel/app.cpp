@@ -550,6 +550,12 @@ void TApplication::initConfig()
 
     setConfigTypeName("openoffice", "OpenOffice");
     setConfig("openoffice", "OO_PATH", "Каталог OpenOffice", CONFIG_VALUE_STRING, "");
+
+    setConfigTypeName("emailclient", "E-Mail");
+    setConfig("emailclient", "EMAILCLIENT_SERVER_URL", "SMTP сервер", CONFIG_VALUE_STRING, "");
+    setConfig("emailclient", "EMAILCLIENT_SERVER_PORT", "Порт", CONFIG_VALUE_INTEGER, 465);
+    setConfig("emailclient", "EMAILCLIENT_USER_ADDRESS", "Ваш адрес E-mail", CONFIG_VALUE_STRING, "");
+    setConfig("emailclient", "EMAILCLIENT_USER_PASSWORD", "Ваш пароль", CONFIG_VALUE_PASSWORD, "");
 }
 
 
@@ -581,7 +587,10 @@ void TApplication::setConfigValue(QString name, QVariant value)
         if (configs.contains(name))
             entry = configs.value(name);
         entry.value = value;
-        setConfig(entry.type, name, entry.label, entry.valueType, entry.value);
+        if (entry.valueType != CONFIG_VALUE_PUSHBUTTON)
+            setConfig(entry.type, name, entry.label, entry.valueType, entry.value);
+        else
+            setConfig(entry.type, name, entry.label, entry.valueType, getConfigValue(name));
 }
 
 
@@ -950,6 +959,10 @@ void    TApplication::openPlugins()
             cardCodeReader = 0;
         }
     }
+
+    // Запустим почтовый клиент
+    smtpclient = (SmtpClient*)createPlugin("EMailClient");
+
 }
 
 
@@ -1563,6 +1576,7 @@ void TApplication::saveFileToServer(QString file, QString localFile, FileType ty
                                                         // предполагается, что локальный файл свежее того, который в базе
         {
             db->setFile(localFile, type, array, extend);      // Сохранить картинку в расширенную базу
+            db->clearUpdateNum();   // Очистим нумерацию, чтобы информация об обновлениях скидывалась в новый файл
         }
         file1.close();
     }

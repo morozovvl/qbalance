@@ -1,7 +1,7 @@
 <project>
     <shortName>qbalance</shortName>
     <fullName>QBalance</fullName>
-    <version>0.16</version>
+    <version>0.17</version>
     <licenseFile>LICENSE.GPL</licenseFile>
     <logoImage>resources/qbalance.png</logoImage>
     <defaultLanguage>ru</defaultLanguage>
@@ -121,7 +121,7 @@
             <name>doc_component</name>
             <description>Documentation</description>
             <canBeEdited>1</canBeEdited>
-            <detailedDescription>Документация</detailedDescription>
+            <detailedDescription>Документация и примеры</detailedDescription>
             <selected>1</selected>
             <show>1</show>
             <folderList>
@@ -179,11 +179,10 @@
             <description>Installer.Parameter.installdir.description</description>
             <explanation>Installer.Parameter.installdir.explanation</explanation>
             <value></value>
-            <default>${platform_install_prefix}/${product_shortname}-${product_version}</default>
+            <default>${platform_install_prefix}/${product_shortname}</default>
             <allowEmptyValue>0</allowEmptyValue>
-            <ask>yes</ask>
             <cliOptionName>prefix</cliOptionName>
-            <mustBeWritable>yes</mustBeWritable>
+            <mustBeWritable>1</mustBeWritable>
             <mustExist>0</mustExist>
             <width>30</width>
         </directoryParameter>

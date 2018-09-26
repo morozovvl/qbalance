@@ -51,7 +51,7 @@ public:
     Q_INVOKABLE virtual QString objectName();
     Q_INVOKABLE void setQuan(bool q);
     Q_INVOKABLE virtual void setOrderClause(QString = "");
-    Q_INVOKABLE virtual void setId(int);
+    Q_INVOKABLE virtual bool setId(int);
     virtual void        lock(bool = true);
     Q_INVOKABLE virtual void setPhotoPath(QString path);
 };

@@ -179,7 +179,7 @@ void Saldo::setPhotoPath(QString path)
 }
 
 
-void Saldo::setId(int id)
+bool Saldo::setId(int id)
 {
     bool enabled = photoEnabled;
     photoEnabled = false;
@@ -197,4 +197,5 @@ void Saldo::setId(int id)
     quan = q;
     tableModel->selectStatement();
     lock(true);
+    return (rowCount() > 0);
 }

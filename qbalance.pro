@@ -10,5 +10,5 @@ SUBDIRS = src/qextserialport \
           src/qbalance/barcodereader \
           src/qbalance/cardcodereader \
           src/qbalance/driverfr \
-#          src/qbalance/startup \
-          src/qbalance
+          src/qbalance \
+          src/qbalance/emailclient

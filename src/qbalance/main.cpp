@@ -51,11 +51,13 @@ int main(int argc, char *argv[])
 {
 //    mtrace();
 
+    QLocale::setDefault(QLocale(QLocale::Russian, QLocale::RussianFederation));
+
     TApplication application(argc, argv);
 
     application.setOrganizationName("Enterprise");
     application.setApplicationName("qbalance");
-    application.setApplicationVersion("0.16");
+    application.setApplicationVersion("0.17");
 
 #if QT_VERSION < 0x050000
     QTextCodec::setCodecForTr(application.codec());

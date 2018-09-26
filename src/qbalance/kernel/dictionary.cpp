@@ -500,11 +500,12 @@ int Dictionary::getId(int row, bool forceToRefresh)
 }
 
 
-void Dictionary::setId(int id)
+bool Dictionary::setId(int id)
 {
-    if (lsetIdEnabled && getValue(idFieldName) != id)
+    bool result = getValue(idFieldName) == id;  // Проверим, не является ли устанавливаемое значение текущим
+    if (lsetIdEnabled && !result)
     {
-        Essence::setId(id);
+        result = Essence::setId(id);
         if (isSet())            // Если это набор, то переустановим связанные справочники
         {
             foreach (QString dictName, getChildDicts())
@@ -520,6 +521,7 @@ void Dictionary::setId(int id)
         }
         lock(true);
     }
+    return result;
 }
 
 

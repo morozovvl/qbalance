@@ -116,7 +116,7 @@ public:
     QStringList getChildDicts();
     Dictionary* getParentDict();
     void setParentDict(Dictionary* dict);
-    Q_INVOKABLE virtual void            setId(int);
+    Q_INVOKABLE virtual bool            setId(int);
     void    setIdEnabled(bool e);
     Q_INVOKABLE virtual void setForm(QString = "");
     Q_INVOKABLE virtual void updateCurrentRow(int = 0);
