@@ -1,1 +1,0 @@
-﻿ALTER TABLE организации ADD COLUMN "КОД_ВИДЫ_РАСХОДОВ" INTEGER;
