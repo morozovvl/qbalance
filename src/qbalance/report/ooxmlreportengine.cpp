@@ -226,19 +226,17 @@ void OOXMLReportEngine::writeHeader()
         int i = 0;
         for (; i < cells.count(); i++)
         {
-             if (readExpression(i, 1))             // будем читать выражение в ячейке, искать для него данные в контексте печати и записывать эти данные в ячейку
-             {                                     // данные для выражений, которые выглядят как [<таблица...>] и находятся вне тела таблицы, будут браться из первой строки тела таблицы
-                 valFound = true;
-                 break;
-             }
+            readExpression(i);
         }
-        if (i < cells.count() && valFound)         // Нашли может быть еще не все, продолжим
-            valFound = false;
+        i = 0;
+        for (; i < cells.count(); i++)
+        {
+            readExpression(i, 1);
+        }
     }
 
 
 // Пункт 3 (см. комментарий выше)
-
     // Теперь пропустим документ через скрипты, чтобы вычислить выражения
     cells =  doc->elementsByTagName("text:p");    // будем выбирать только те ячейки, которые содержат текст
     for (int i = 0; i < cells.count(); i++)      // просмотрим все ячейки
@@ -273,32 +271,25 @@ strNum - номер текущей строки тела таблицы
         {
             QVariant var;
             QString value;
-            QString sval;
-            QString key;
             // Ячейка относится к таблице
-            value = getTableVariable(cells.at(i).toElement(), tableNameForPrinting);  // проверим, не ячейка ли это тела таблицы
-            sval = value;       // если это тело таблицы, то из контекста печати получим данные для соответствующей строки таблицы для этого выражения
-            key = sval.replace(tableNameForPrinting, QString("%1").arg(tableNameForPrinting)).toLower();
-            var = context->getValue(key, strNum);  // в контексте печати наименования данных хранятся в нижнем регистре
-            if (var.isValid())                                      // если данные имеются
-            {
-                writeCell(cells.at(i), "[" + value + "]", var);     // то запишем их вместо текста шаблона
-                break;
-            }
-            // ячейка не относится к таблице
-            int lpos = cellText.indexOf("]", fpos) + 1; // получим выражение "[<...>]" полностью
+            int lpos = cellText.indexOf("]", fpos) + 1;
             value = cellText.mid(fpos, lpos - fpos);
             value = value.remove("[").remove("]");      // освободим его от квадратных скобок
-            var = context->getValue(value);      // и получим данные для него из контекста печати
-            if (var.isValid())                                      // если данные имеются
-            {
-                writeCell(cells.at(i), "[" + value + "]", var);     // то запишем их вместо текста шаблона
+            if (strNum > 0)
+                var = context->getValue(value, strNum);
+            else
+                var = context->getValue(value);
+
+            if (var.isValid())
+                writeCell(cells.at(i), "[" + value + "]", var);
+            else
                 break;
-            }
-            writeCell(cells.at(i), "[" + value + "]", var);     // Запишем в ячейку пустое выражение
         }
-        result = false;
-        break;  // элементов "[<...>]" в выражении больше нет, выходим
+        else
+        {
+            result = false;
+            break;  // элементов "[<...>]" в выражении больше нет, выходим
+        }
     }
     return result;
 }

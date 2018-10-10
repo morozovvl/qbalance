@@ -1283,8 +1283,8 @@ bool Essence::getFile(QString path, QString fileName, FileType type)
     }
     else
     {   // файл существует локально
-        if (app->getConfigValue("PERMANENT_FRESH_TEST").toBool())
-        {
+//        if (app->getConfigValue("PERMANENT_FRESH_TEST").toBool())
+//        {
             QFile file(fullFileName);
             // Проверим, какой файл свежее, локальный или на сервере
             int diff = app->getSecDiff();
@@ -1318,7 +1318,7 @@ bool Essence::getFile(QString path, QString fileName, FileType type)
                     }
                 }
             }
-        }
+//        }
         result = true;
     }
     return result;

@@ -27,6 +27,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 Updates::Updates(TApplication* a, QObject *parent): QObject(parent)
 {
     app = a;
+    updatesDownloaded = false;
     updatesPath = "updates";
     programUpdateXMLFile = "updates.xml";
     updatesDBPath = "updates_db/" + app->getDBFactory()->getDatabaseName();
@@ -195,7 +196,7 @@ void Updates::updateModified(bool getUpdates)
 
     if (isGetUpdates)
     {
-        if (app->getConfigValue("UPDATES_FTP_ADMIN_CLIENT_PASSWORD").toString().size() == 0)
+        if (app->getConfigValue("UPDATES_FTP_ADMIN_CLIENT_PASSWORD").toString().size() == 0 && !updatesDownloaded)
         {
             removeDir(app->applicationDirPath() + "/" + updatesPath);
             updatesCount = 0;
@@ -204,9 +205,12 @@ void Updates::updateModified(bool getUpdates)
             nwmanager->get(request);
             files.insert(request.url().toString(), programUpdateXMLFile);
 
-            request = makeNetworkRequest(updatesDBPath + "/", dbUpdateXMLFile);
-            nwmanager->get(request);
-            files.insert(request.url().toString(), updatesDBPath + "/" + dbUpdateXMLFile);
+            if (app->isSA())    // Обновления базы данных загружаем только в случае, если мы под учеткой SA
+            {
+                request = makeNetworkRequest(updatesDBPath + "/", dbUpdateXMLFile);
+                nwmanager->get(request);
+                files.insert(request.url().toString(), updatesDBPath + "/" + dbUpdateXMLFile);
+            }
         }
     }
     else
@@ -283,8 +287,8 @@ void Updates::transmissionFinished(QNetworkReply* reply)
                         getUpdates(updatesPath, "program" + osPath, filesList);              // Загрузим обновления
                         app->showMessageOnStatusBar(QString("Найдены обновления файлов программы: %1. Загрузка...").arg(filesList.count()));
                     }
-                    // Выгрузим обновления, если разрешено
                     else if (app->getConfigValue("UPDATES_FTP_PROGRAM").toBool())
+                        // Выгрузим обновления, если разрешено
                     {
                         putUpdates("program" + osPath, filesList);              // Выгрузим обновления на сервер
                     }
@@ -297,6 +301,12 @@ void Updates::transmissionFinished(QNetworkReply* reply)
                     // Загрузим обновления
                     if (isGetUpdates)
                     {
+                        // Уберем те обновления, которые загружать уже не нужно
+                        for (int i = 1; i <= app->getConst("Last_DB_Update").toInt(); i++)
+                        {
+                            filesList1.removeAll(QString("%1/%2.sql").arg(updatesDBPath).arg(i));
+                        }
+
                         updatesCount += filesList1.count();  // Подсчитаем количество обновленных файлов
                         getUpdates("", "", filesList1);              // Загрузим обновления
                         app->showMessageOnStatusBar(QString("Найдены обновления базы данных: %1. Загрузка...").arg(filesList1.count()));
@@ -312,7 +322,10 @@ void Updates::transmissionFinished(QNetworkReply* reply)
                 }
 
                 if (filesList.count() == 0 && filesList1.count() == 0 && updatesCount > 0)
+                {
+                    updatesDownloaded = true;
                     app->showMessage(QString("Обновлено файлов - %1. Необходимо перезапустить программу.").arg(updatesCount));
+                }
             }
         }
         else

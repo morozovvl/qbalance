@@ -53,6 +53,7 @@ private:
     bool                    isGetUpdates;
     int                     updatesCount;
     QTimer*                 timer;
+    bool                    updatesDownloaded;
 
     QHash<QString, QString> getProgramFilesList();
     QHash<QString, QString> getDBFilesList();

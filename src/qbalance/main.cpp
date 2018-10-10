@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
 
     application.setOrganizationName("Enterprise");
     application.setApplicationName("qbalance");
-    application.setApplicationVersion("0.17");
+    application.setApplicationVersion("0.18.3");
 
 #if QT_VERSION < 0x050000
     QTextCodec::setCodecForTr(application.codec());
@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
         TApplication::addLibraryPath(TApplication::applicationDirPath() + "/lib64");
 
         application.debug(0, "\n");
-        application.debug(0, "Program startup.");
+        application.debug(0, QString("Program startup. v.%1").arg(application.applicationVersion()));
 
         // Если в качестве параметра задан скрипт, то приложение работает в скриптовом режиме
         if (application.getScript().size() > 0)

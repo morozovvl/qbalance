@@ -945,12 +945,11 @@ bool ScriptEngine::evaluate()
 
 QScriptValue ScriptEngine::evaluate(QString program)
 {
-    TApplication::exemplar()->debug(3, program);
+    QScriptValue result;
     tryEventLoopExit = false;
-    QScriptEngine::evaluate(program);
+    result = QScriptEngine::evaluate(program);
     tryEventLoopExit = true;
-    TApplication::exemplar()->debug(3, "/" + program);
-    return globalObject().property("scriptResult");
+    return result;
 }
 
 
@@ -1424,26 +1423,25 @@ void ScriptEngine::appendEvent(QString funcName, EventFunction* func)
 QString ScriptEngine::loadScript(QString scriptFile)
 {
     QString result;
-    bool permanentFresh = TApplication::exemplar()->getConfigValue("PERMANENT_FRESH_TEST").toBool();
-    if (permanentFresh)
-        removeScript(scriptFile);
+//    bool permanentFresh = TApplication::exemplar()->getConfigValue("PERMANENT_FRESH_TEST").toBool();
+//    if (permanentFresh)
+    removeScript(scriptFile);
     if (!scripts.contains(scriptFile))
     {
-        QString fullScriptFile = scriptFile;
-        if (!QDir().exists(scriptFile))
-        {
-            QString scriptPath = TApplication::exemplar()->getScriptsPath();
-            Essence::getFile(scriptPath, scriptFile, ScriptFileType);   // Получим скрипт с сервера, при необходимости обновим его
-            fullScriptFile = scriptPath + scriptFile;
-        }
+        QString scriptPath = TApplication::exemplar()->getScriptsPath();
+        QString fullScriptFile = scriptPath + scriptFile;
+
+//        if (!QDir().exists(fullScriptFile)/* || permanentFresh*/)
+        Essence::getFile(scriptPath, scriptFile, ScriptFileType);   // Получим скрипт с сервера, при необходимости обновим его
+
         QFile file(fullScriptFile);
         if (file.open(QIODevice::ReadOnly | QIODevice::Text))
         {
             QString script(file.readAll());
             file.close();
             result = script;
+            scripts.insert(scriptFile, result);
         }
-        scripts.insert(scriptFile, result);
     }
     else
     {

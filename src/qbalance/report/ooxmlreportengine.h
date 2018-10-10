@@ -54,7 +54,7 @@ private:
 
     void writeVariables(int = 0);                                              // Заполняет поля с переменными в шаблоне
     void writeHeader();
-    bool readExpression(int, int);
+    bool readExpression(int, int = 0);
     QString getTableVariable(QDomElement, QString);
     bool writeCell(QDomNode, QString, QVariant);
     void findTables();

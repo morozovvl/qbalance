@@ -954,7 +954,8 @@ int DriverFR::processCommand(int command, parameter* p, answer* a)
             }
             else
             {
-                serialPort->writeLog(QString("Result:%1. Прекращена команда").arg(result));
+                if (result != 0)
+                    serialPort->writeLog(QString("Result:%1").arg(result));
                 break;
             }
         }

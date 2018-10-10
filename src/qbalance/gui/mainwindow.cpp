@@ -218,8 +218,8 @@ void MainWindow::createMenus()
 
     if (app->isSA())
     {
-        saveCustomAct = serviceMenu->addAction(QObject::trUtf8("Сохранить кастомизацию"));
-        connect(saveCustomAct, SIGNAL(triggered()), this, SLOT(saveCustomization()));
+//        saveCustomAct = serviceMenu->addAction(QObject::trUtf8("Сохранить кастомизацию"));
+//        connect(saveCustomAct, SIGNAL(triggered()), this, SLOT(saveCustomization()));
 
         loadFileMenu = serviceMenu->addMenu(QObject::trUtf8("Загрузить файл на сервер"));
 
