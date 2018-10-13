@@ -39,6 +39,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 TableView::TableView(): QTableView()
 {
+    app = 0;
+    parent = 0;
+    tableModel = 0;
+    essence = 0;
+    picture = 0;
 }
 
 
@@ -72,10 +77,6 @@ void TableView::setPicture(Picture* pic)
 void TableView::open()
 {
     name = "tableView";
-    app = 0;
-    essence = 0;
-    picture = 0;
-    tableModel = 0;
     columnsHeadersSeted = false;
     columns.clear();
     columnsSettingsReaded = false;

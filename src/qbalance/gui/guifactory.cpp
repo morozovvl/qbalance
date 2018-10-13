@@ -207,7 +207,7 @@ void GUIFactory::showMenus()
 
 int GUIFactory::showError(QString errorText)
 {
-    Qt::WindowModality WidgetModality;
+    Qt::WindowModality WidgetModality = Qt::WindowModal;
     QWidget* widget = app->activeWindow();
     if (widget == 0)
         widget = app->getMainWindow()->getWorkSpace()->activeSubWindow();

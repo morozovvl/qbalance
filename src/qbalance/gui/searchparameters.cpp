@@ -38,9 +38,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/mycombobox.h"
 
 SearchParameters::SearchParameters(QWidget* parentWidget): QFrame(parentWidget) {
-    dictionaries = 0;
     app = 0;
     gridLayout = 0;
+    parentForm = 0;
+    dictionaries = 0;
 }
 
 

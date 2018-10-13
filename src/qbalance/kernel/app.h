@@ -135,9 +135,10 @@ public:
     Q_INVOKABLE QDate getEndDate();
     QString getLogsPath();
     QString getMessagesLogsPath(QString = "");
-    QString getFormsPath(QString = "");
-    QString getScriptsPath(QString = "");
-    QString getReportsPath(QString = "");
+    QString getFormsPath(QString = "", QString = "");
+    QString getScriptsPath(QString = "", QString = "");
+    QString getReportsPath(QString = "", QString = "");
+    QString getPath(QString, int, QString = "");
     QString getCrashDumpsPath();
     QString getUpdatesPath();
     Q_INVOKABLE QString getPhotosPath(QString = "");
@@ -347,7 +348,7 @@ private:
     QString                 trueApplicationName;
 
     void loadConsts();
-    QString getAnyPath(QString, QString = "");
+    QString getAnyPath(QString, QString = "", QString = "");
     void                    readSettings();
     void                    writeSettings();
     void            setConfigValue(QString name, QVariant value);

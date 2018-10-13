@@ -44,11 +44,12 @@ Form::Form(QObject* par/* = 0*/): QObject(par)
     vbxLayout = 0;
     buttonOk = 0;
     buttonCancel = 0;
+    subWindow = 0;
+
     appendToMdi = true;
     app = TApplication::exemplar();
     db = app->getDBFactory();
     freeWindow = false;
-    subWindow = 0;
     configName = "Form";
 
     // Установим цветовую палитру подсказок

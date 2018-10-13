@@ -55,7 +55,6 @@ protected:
     bool            lAutoSelect;
     bool            lIsSaldo;
     bool            lIsAutoLoaded;
-    QStringList     fieldList;
     virtual void    prepareSelectCurrentRowCommand();
     virtual bool    setTableModel(int = 0);
     bool            locked;

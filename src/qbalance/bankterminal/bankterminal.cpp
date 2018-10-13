@@ -30,13 +30,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 BankTerminal::BankTerminal(QObject *parent) : QObject(parent)
 {
     app = 0;
+    driverFR = 0;
+    termProcess = 0;
+
     path = "";
 #if  defined(Q_OS_LINUX)
     program = "sb_pilot";
 #elif   defined(Q_OS_WIN)
     program = "loadparm.exe";
 #endif
-    termProcess = 0;
     remote = false;
     locked = true;
 }

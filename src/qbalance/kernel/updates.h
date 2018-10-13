@@ -42,7 +42,6 @@ class Updates : public QObject
 
 private:
     TApplication*           app;
-    DBFactory*              db;
     QString                 updatesPath;
     QString                 updatesDBPath;
     QString                 programUpdateXMLFile;

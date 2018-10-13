@@ -152,7 +152,7 @@ public:
     QSqlQuery getDocumentAddQueriesList(int);
 
     // Работа с файлами (скриптами, формами, картинками и т.п.)
-    QByteArray getFile(QString, FileType, bool = false);        // Получить файл из базы. Если последний параметр Истина, то получить из расширенной базы
+    QByteArray getFile(QString, int, bool = false);        // Получить файл из базы. Если последний параметр Истина, то получить из расширенной базы
     qulonglong getFileCheckSum(QString, FileType, bool = false);
     FileInfo getFileInfo(QString, FileType, bool = false);
     QStringList getFilesList(QString, FileType, bool = false);

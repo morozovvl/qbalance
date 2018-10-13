@@ -31,6 +31,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 Table::Table(QString, QObject *parent): QObject(parent)
 {
+    db = 0;
+    tableModel = 0;
 }
 
 
@@ -42,7 +44,6 @@ Table::~Table()
 void Table::postInitialize(QString name, QObject *parent)
 {
     setParent(parent);
-    tableModel = 0;
     opened = false;
     queryTableName = "";
     tableName = name.trimmed().toLower();
@@ -139,7 +140,22 @@ void Table::query(QString filter)
     {
         QString command;
         if (tableName.size() > 0)
-            command = QString("SELECT * FROM %1").arg(tableName);
+        {
+            QString fList;
+            if (manualFieldList.count() > 0)
+            {
+                fieldList = manualFieldList;
+                foreach (QString f, fieldList)
+                {
+                    if (fList.size() > 0)
+                        fList.append(",");
+                    fList.append(f);
+                }
+            }
+            else
+                fList = "*";
+            command = QString("SELECT %1 FROM %2").arg(fList).arg(tableName);
+        }
         else if (sqlCommand.size() > 0)
             command = sqlCommand;
         if (command.size() > 0)
@@ -167,6 +183,7 @@ bool Table::open(QString command)
     if (command.size() > 0)
         sqlCommand = command;
     opened = setTableModel();
+    fieldList = getFieldsList();
     return opened;
 }
 
@@ -212,6 +229,12 @@ QStringList Table::getFieldsList()
         fields << columnsProperties.at(i).column;
     }
     return fields;
+}
+
+
+void Table::setFieldsList(QStringList list)
+{
+    manualFieldList = list;
 }
 
 

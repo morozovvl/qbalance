@@ -24,9 +24,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 BarCodeReader::BarCodeReader(QObject *parent) :
     QObject(parent)
 {
-    serialPort = 0;
-    barCodeString = "";
     app = 0;
+    serialPort = 0;
+
+    barCodeString = "";
 }
 
 

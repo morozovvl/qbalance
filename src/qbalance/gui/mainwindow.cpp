@@ -303,13 +303,14 @@ void MainWindow::saveCustomization()
 void MainWindow::saveFile()
 {
     Dictionary* dict = app->getDictionary("файлы");
-    dict->query("ТИП = 0");
+//    dict->query("ТИП = 0");
     dict->exec();
     if (dict->isFormSelected())
     {
         QString fileName = dict->getName();
-        QByteArray templateFile = app->getDBFactory()->getFile(fileName, ScriptFileType);
-        app->saveFile(app->getScriptsPath(fileName), &templateFile);
+//        QByteArray templateFile = app->getDBFactory()->getFile(fileName, ScriptFileType);
+        QByteArray templateFile = app->getDBFactory()->getFile(fileName, dict->getValue("ТИП").toInt());
+        app->saveFile(app->getPath(fileName, dict->getValue("ТИП").toInt()), &templateFile);
     }
 }
 

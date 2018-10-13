@@ -50,6 +50,8 @@ FormDocument::FormDocument(): FormGrid()
     textEdit = 0;
     buttonQueryAdd = 0;
     queriesMenu = 0;
+    parent = 0;
+    formWidget = 0;
 }
 
 

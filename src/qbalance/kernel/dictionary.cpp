@@ -39,6 +39,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
 {
+    parentDict = 0;
+    parameters = 0;
 }
 
 
@@ -571,11 +573,7 @@ bool Dictionary::open(QString command, QString tName)
         queryTableName = tName;
 
     if (tagName.size() == 0)
-    {
         tagName = tName;
-//        if (sqlCommand.size() == 0)
-//            return true;
-    }
 
     if (dictTitle.size() == 0)
         dictTitle = tagName;
@@ -584,8 +582,6 @@ bool Dictionary::open(QString command, QString tName)
     {
         if (tableName.size() > 0)
         {
-            // Откроем этот справочник
-            fieldList = getFieldsList();
             // Проверим, имеется ли в справочнике полнотекстовый поиск
             foreach (QString fieldName, fieldList)
             {
@@ -621,7 +617,7 @@ bool Dictionary::open(QString command, QString tName)
                 {
                     if (fld.name == idFieldName)
                         keyColumn = i;
-                    else
+                    else if (fieldList.contains(fld.name))
                         tableModel->setUpdateInfo(fld.name, fld.table, fld.name, fld.type, fld.length, fld.precision, i, keyColumn);
                 }
             }

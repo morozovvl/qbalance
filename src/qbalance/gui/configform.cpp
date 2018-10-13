@@ -241,8 +241,8 @@ void ConfigForm::ftpUpload()
 {
     if (app->getUpdates() != 0)
     {
-        app->getUpdates()->updateModified(false);
         cmdOk();
+        app->getUpdates()->updateModified(false);
     }
 }
 
@@ -251,8 +251,8 @@ void ConfigForm::ftpTotalUpload()
 {
     if (app->getUpdates() != 0)
     {
-        app->getUpdates()->putTotalUpdates();
         cmdOk();
+        app->getUpdates()->putTotalUpdates();
     }
 }
 
@@ -261,7 +261,7 @@ void ConfigForm::ftpLoad()
 {
     if (app->getUpdates() != 0)
     {
-        app->getUpdates()->updateModified();
         cmdOk();
+        app->getUpdates()->updateModified();
     }
 }

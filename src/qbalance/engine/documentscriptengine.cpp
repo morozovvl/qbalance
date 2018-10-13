@@ -60,6 +60,7 @@ DocumentScriptEngine::DocumentScriptEngine(QHash<QString, QVariant>* context, Es
 :ScriptEngine(parent)
 {
     reportContext = 0;
+    documents = 0;
     if (context != 0)
         reportContext = new ReportContext(context);
 }

@@ -28,10 +28,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 MyItemDelegate::MyItemDelegate(QObject* par, FormGrid* form)
 : QItemDelegate(par)
 {
+    essence = 0;
+
     columnMask = "";
     delegateType = String;
     setReadOnly(false);
-    essence = 0;
     if (form != 0)
         essence = (Essence*)(form->getParent());
 }

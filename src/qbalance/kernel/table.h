@@ -36,6 +36,7 @@ class Table : public QObject {
 
 private:
     QString                             defineFieldType(QVariant::Type);
+    QStringList                         manualFieldList;
 
 protected:
     DBFactory*                          db;
@@ -49,6 +50,7 @@ protected:
     virtual bool                        setTableModel(int = 0);
     bool                                fullDebugInfo;
     QString                             sqlCommand;
+    QStringList                         fieldList;
 
 
     Table(QString = "", QObject* = 0);
@@ -75,6 +77,8 @@ public:
     virtual QString                     transformSelectStatement(QString string);
 
     Q_INVOKABLE virtual QStringList     getFieldsList();
+    Q_INVOKABLE virtual void            setFieldsList(QStringList);
+
     Q_INVOKABLE virtual QString         getFieldName(int);
     Q_INVOKABLE virtual QString         getTableName();
     Q_INVOKABLE virtual void            setTagName(QString);

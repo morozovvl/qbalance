@@ -30,6 +30,7 @@ Dialog::Dialog(QWidget *parent, Qt::WindowFlags f):
     form = 0;
     buttonOk = 0;
     buttonCancel = 0;
+
     isSelected = false;
     formChanged = false;
     moveCount = 1;

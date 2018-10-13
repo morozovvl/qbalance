@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "updates.h"
 #include "app.h"
 #include "../storage/dbfactory.h"
+#include "dictionary.h"
 
 
 Updates::Updates(TApplication* a, QObject *parent): QObject(parent)
@@ -108,7 +109,12 @@ QHash<QString, QString> Updates::getDBFilesList()
 
     list.insert(updatesDBPath + "/" + dbUpdateXMLFile, "");
     list.insert(updatesDBPath, "*.sql");
-
+/*
+    list.insert(updatesDBPath, "*.js");
+    list.insert(updatesDBPath, "*.qs");
+    list.insert(updatesDBPath, "*.ui");
+    list.insert(updatesDBPath, "*.ods");
+*/
     return list;
 }
 
@@ -121,13 +127,28 @@ void Updates::putTotalUpdates()
         app->print("Запущена выгрузка всех файлов на сервер FTP");
 
         // Выгрузим все обновления программы
-        if (app->getConfigValue("UPDATES_FTP_PROGRAM").toBool())
-            putUpdates("program" + osPath, prepareTotalFilesList(programUpdateXMLFile, getProgramFilesList()));
+//        if (app->getConfigValue("UPDATES_FTP_PROGRAM").toBool())
+//            putUpdates("program" + osPath, prepareTotalFilesList(programUpdateXMLFile, getProgramFilesList()));
 
         // Выгрузим все обновления базы данных
         if (app->getConfigValue("UPDATES_FTP_DB").toBool())
         {
-            putUpdates("", prepareTotalFilesList(updatesDBPath + "/" + dbUpdateXMLFile, getDBFilesList()));
+            // Сохраним все скрипты, формы и шаблоны отчетов
+            Dictionary* dict = app->getDictionary("файлы");
+            dict->setFieldsList(QStringList() << "КОД" << "ИМЯ" << "ТИП");
+            dict->query();
+            for (int i = 0; i < dict->rowCount(); i++)
+            {
+                QString fileName = dict->getValue("ИМЯ", i).toString();
+                if (fileName.size() > 0)
+                {
+                    QByteArray templateFile = app->getDBFactory()->getFile(fileName, dict->getValue("ТИП", i).toInt());
+                    app->saveFile(app->getPath(fileName, dict->getValue("ТИП", i).toInt(), updatesDBPath), &templateFile);
+
+                    app->print("Копирование " + fileName);
+                }
+            }
+//            putUpdates("", prepareTotalFilesList(updatesDBPath + "/" + dbUpdateXMLFile, getDBFilesList()));
         }
     }
 }

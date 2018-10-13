@@ -1607,7 +1607,7 @@ QString DBFactory::getObjectNameCom(const QString& name)
 }
 
 
-QByteArray DBFactory::getFile(QString file, FileType type, bool extend)
+QByteArray DBFactory::getFile(QString file, int type, bool extend)
 {
     QString fileName = file.replace(app->applicationDirPath(), "~");
     if (extend && extDbExist)

@@ -58,6 +58,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 Essence::Essence(QString name, QObject *parent): Table(name, parent)
 {
+    grdTable = 0;
+    tableModel = 0;
+    form = 0;
+    parentForm = 0;
+    scriptEngine = 0;
+    reportScriptEngine = 0;
+    m_networkAccessManager = 0;
 }
 
 

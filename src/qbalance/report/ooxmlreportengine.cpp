@@ -31,6 +31,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 OOXMLReportEngine::OOXMLReportEngine(Essence* ess, DocumentScriptEngine* engine) : ReportEngine(engine)
 {
+    app = 0;
+    context = 0;
+
     app = TApplication::exemplar();
     essence = ess;
     ooxmlEngine = new OOXMLEngine();

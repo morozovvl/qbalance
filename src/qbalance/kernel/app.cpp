@@ -80,7 +80,6 @@ TApplication::TApplication(int & argc, char** argv)
 
     db  = 0;
     gui = 0;
-
     dictionaryList = 0;
     topersList = 0;
     driverFR = 0;
@@ -89,6 +88,7 @@ TApplication::TApplication(int & argc, char** argv)
     cardCodeReader = 0;
     bankTerminal = 0;
     updates = 0;
+    tcpServer = 0;
 
     driverFRisValid = false;
     driverFRlocked = false;
@@ -101,7 +101,6 @@ TApplication::TApplication(int & argc, char** argv)
         Exemplar = this;
     }
     timeIsOut = false;
-    tcpServer = 0;
     scriptMode = false;
     DebugModes.clear();
     dirName = "";
@@ -1004,21 +1003,41 @@ QString TApplication::getMessagesLogsPath(QString fileName)
 }
 
 
-QString TApplication::getFormsPath(QString fileName)
+QString TApplication::getFormsPath(QString fileName, QString prefix)
 {
-    return getAnyPath("/forms", fileName);
+    return getAnyPath("/forms", fileName, prefix);
 }
 
 
-QString TApplication::getScriptsPath(QString fileName)
+QString TApplication::getScriptsPath(QString fileName, QString prefix)
 {
-    return getAnyPath("/scripts", fileName);
+    return getAnyPath("/scripts", fileName, prefix);
 }
 
 
-QString TApplication::getReportsPath(QString fileName)
+QString TApplication::getReportsPath(QString fileName, QString prefix)
 {
-    return getAnyPath("/reports", fileName);
+    return getAnyPath("/reports", fileName, prefix);
+}
+
+
+QString TApplication::getPath(QString fileName, int fType, QString prefix)
+{
+    switch (fType)
+    {
+        case ScriptFileType:
+            return getScriptsPath(fileName, prefix);
+            break;
+        case FormFileType:
+            return getFormsPath(fileName, prefix);
+            break;
+        case ReportTemplateFileType:
+            return getReportsPath(fileName, prefix);
+            break;
+        default:
+            break;
+    }
+    return "";
 }
 
 
@@ -1043,21 +1062,29 @@ QString TApplication::getUpdatesPath()
 }
 
 
-QString TApplication::getAnyPath(QString subPath, QString fName)
+QString TApplication::getAnyPath(QString subPath, QString fName, QString prefix)
 {
-    QString dir = applicationDirPath() + "/data";
-    if (!QDir().exists(dir))
-        QDir().mkdir(dir);
-    if (subPath.left(5) != dir.right(5))
+    QString dir = prefix;
+    if (dir.size() == 0)
     {
-        dir += "/" + getConfigPrefix();
+        dir = applicationDirPath() + "/data";
         if (!QDir().exists(dir))
             QDir().mkdir(dir);
-        dir += subPath;
+        if (subPath.left(5) != dir.right(5))
+        {
+            dir += "/" + getConfigPrefix();
+            if (!QDir().exists(dir))
+                QDir().mkdir(dir);
+            dir += subPath;
+        }
+        else
+        {
+            dir = applicationDirPath() + subPath;
+        }
     }
     else
     {
-        dir = applicationDirPath() + subPath;
+        dir = applicationDirPath() + "/" + prefix + subPath;
     }
     if (!QDir().exists(dir))
         QDir().mkdir(dir);

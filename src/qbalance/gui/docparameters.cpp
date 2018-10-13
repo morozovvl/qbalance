@@ -44,6 +44,7 @@ DocParameters::DocParameters(QWidget* pwgt): QFrame(pwgt)
     dictionaries = 0;
     parentForm = 0;
     strNum = 0;
+
     setLineWidth(2);
     setFrameStyle(QFrame::Panel | QFrame::Raised);
     gridLayout = new QGridLayout(this);

@@ -795,10 +795,8 @@ bool ScriptEngine::open(QString scriptFile)
 {
     loadScriptObjects();
     if (scriptFile.size() > 0)
-    {
         script = loadScript(scriptFile);
-        scriptFileName = scriptFile;
-    }
+    scriptFileName = scriptFile;
     return true;
 }
 

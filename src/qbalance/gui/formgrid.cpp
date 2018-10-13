@@ -48,7 +48,6 @@ FormGrid::FormGrid(QObject* parent/* = 0*/)
 : Form(parent)
 {
     grdTable = 0;
-    grdTables.clear();
     tableLayout = 0;
     imageLayout = 0;
     picture = 0;

@@ -32,6 +32,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 Documents::Documents(int, QObject *parent): Dictionary(parent)
 {
+    currentDocument = 0;
 }
 
 
@@ -114,6 +115,7 @@ bool Documents::add()
         if (strNum > 0)
         {
             int newRow = tableModel->rowCount();
+/*
             if (newRow == 0)
             {
                 query();
@@ -121,12 +123,13 @@ bool Documents::add()
             }
             else
             {
+*/
                 tableModel->insertRow(newRow);          // POSSIBLY MEMORY LEAK
                 grdTable->reset();
                 grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
                 setCurrentRow(newRow);
                 updateCurrentRow(strNum);
-            }
+//            }
             setCurrentDocument(strNum);
             saveOldValues();
             form->setButtons();
