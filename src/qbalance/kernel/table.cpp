@@ -183,7 +183,8 @@ bool Table::open(QString command)
     if (command.size() > 0)
         sqlCommand = command;
     opened = setTableModel();
-    fieldList = getFieldsList();
+    if (opened)
+        fieldList = getFieldsList();
     return opened;
 }
 
