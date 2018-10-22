@@ -1572,11 +1572,11 @@ bool Essence::saveChanges()
     bool lResult = false;
     submit();
     if (db->execCommands())
-    {   // Во время сохранения результатов произошла ошибка
+    {
         updateCurrentRow();
         lResult = true;
     }
-    else
+    else       // Во время сохранения результатов произошла ошибка
         restoreOldValues();
     return lResult;
 }

@@ -1421,15 +1421,16 @@ void ScriptEngine::appendEvent(QString funcName, EventFunction* func)
 QString ScriptEngine::loadScript(QString scriptFile)
 {
     QString result;
-//    bool permanentFresh = TApplication::exemplar()->getConfigValue("PERMANENT_FRESH_TEST").toBool();
-//    if (permanentFresh)
     removeScript(scriptFile);
     if (!scripts.contains(scriptFile))
     {
-        QString scriptPath = TApplication::exemplar()->getScriptsPath();
+        QString scriptPath = QFileInfo(scriptFile).absolutePath();
+        if (scriptPath.size() == 0 || !QDir().exists(scriptFile))
+            scriptPath = TApplication::exemplar()->getScriptsPath();
+        else
+            scriptFile = "/" + QFileInfo(scriptFile).fileName();
         QString fullScriptFile = scriptPath + scriptFile;
 
-//        if (!QDir().exists(fullScriptFile)/* || permanentFresh*/)
         Essence::getFile(scriptPath, scriptFile, ScriptFileType);   // Получим скрипт с сервера, при необходимости обновим его
 
         QFile file(fullScriptFile);
