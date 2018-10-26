@@ -966,27 +966,24 @@ bool Document::setTableModel(int)
         {
             QString field = columnsProperties.value(i).name;
 
-            if (columnsProperties.value(i).level == 0)
-            {
-                if (topersList->at(0).attributes && columnsProperties.value(i).table == attrName)
-                {
-                    if (field == db->getObjectName("атрибуты.код").toUpper())
-                        // Если в списке полей встретилось поле ключа
-                        keyColumn = columnCount;                                    // Запомним номер столбца с ключом
-                }
-                else
-                {
-                    if (field.contains("__"))
-                        field = field.mid(field.indexOf("__") + 2);
-                    if (field == db->getObjectName("проводки.код").toUpper())
-                        // Если в списке полей встретилось поле ключа
-                        keyColumn = columnCount;                                    // Запомним номер столбца с ключом
-                }
+              if (topersList->at(0).attributes && columnsProperties.value(i).table == attrName)
+              {
+                  if (field == db->getObjectName("атрибуты.код").toUpper())
+                      // Если в списке полей встретилось поле ключа
+                      keyColumn = columnCount;                                    // Запомним номер столбца с ключом
+              }
+              else
+              {
+                  if (field.contains("__"))
+                      field = field.mid(field.indexOf("__") + 2);
+                  if (field == db->getObjectName("проводки.код").toUpper())
+                      // Если в списке полей встретилось поле ключа
+                      keyColumn = columnCount;                                    // Запомним номер столбца с ключом
+              }
 
-                if (!columnsProperties.value(i).constReadOnly)
-                    // Если поле входит в список сохраняемых полей
-                    tableModel->setUpdateInfo(columnsProperties.value(i).name, columnsProperties.value(i).table, field, columnsProperties.value(i).type, columnsProperties.value(i).length, columnsProperties.value(i).precision, columnCount, keyColumn);
-            }
+              if (!columnsProperties.value(i).constReadOnly)
+                  // Если поле входит в список сохраняемых полей
+                  tableModel->setUpdateInfo(columnsProperties.value(i).name, columnsProperties.value(i).table, field, columnsProperties.value(i).type, columnsProperties.value(i).length, columnsProperties.value(i).precision, columnCount, keyColumn);
 
             // Создадим список атрибутов документа, которые могут добавляться при добавлении новой строки документа
             if (columnsProperties.value(i).table == attrName)

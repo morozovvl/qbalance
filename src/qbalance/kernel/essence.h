@@ -223,7 +223,7 @@ public:
     Q_INVOKABLE         virtual QString getLocalPhotoFile(QString = "");
     static bool         getFile(QString, QString, FileType);
     virtual void        barCodeReaded(QString);    // прочитана строка со сканера штрих-кода
-    Q_INVOKABLE virtual void        updateCurrentRow(int = 0);
+    virtual void        updateCurrentRow(int = 0);
     virtual QModelIndex getCurrentIndex();
     void setCurrentIndex(QModelIndex);
     Q_INVOKABLE QString         getCurrentFieldName();

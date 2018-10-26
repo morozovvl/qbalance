@@ -1421,19 +1421,19 @@ void ScriptEngine::appendEvent(QString funcName, EventFunction* func)
 QString ScriptEngine::loadScript(QString scriptFile)
 {
     QString result;
-    removeScript(scriptFile);
+//    removeScript(scriptFile);
     if (!scripts.contains(scriptFile))
     {
         QString scriptPath = QFileInfo(scriptFile).absolutePath();
         if (scriptPath.size() == 0 || !QDir().exists(scriptFile))
+        {
             scriptPath = TApplication::exemplar()->getScriptsPath();
+            Essence::getFile(scriptPath, scriptFile, ScriptFileType);   // Получим скрипт с сервера, при необходимости обновим его
+        }
         else
             scriptFile = "/" + QFileInfo(scriptFile).fileName();
-        QString fullScriptFile = scriptPath + scriptFile;
 
-        Essence::getFile(scriptPath, scriptFile, ScriptFileType);   // Получим скрипт с сервера, при необходимости обновим его
-
-        QFile file(fullScriptFile);
+        QFile file(scriptPath + scriptFile);
         if (file.open(QIODevice::ReadOnly | QIODevice::Text))
         {
             QString script(file.readAll());
