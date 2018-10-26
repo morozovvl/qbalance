@@ -60,7 +60,6 @@ DocumentScriptEngine::DocumentScriptEngine(QHash<QString, QVariant>* context, Es
 :ScriptEngine(parent)
 {
     reportContext = 0;
-    documents = 0;
     if (context != 0)
         reportContext = new ReportContext(context);
 }
@@ -87,7 +86,7 @@ void DocumentScriptEngine::loadScriptObjects()
     if (documents != 0)
     {
         globalObject().setProperty("isDocumentScript", true);   // скрипт выполняется в контексте документа
-        globalObject().setProperty("documents", newQObject(documents));
+//        globalObject().setProperty("documents", newQObject(documents));
     }
     else
         globalObject().setProperty("isDocumentScript", false);
