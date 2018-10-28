@@ -273,9 +273,9 @@ void FormDocument::show()
     if (textEdit != 0)
         textEdit->setText(getParent()->getParent()->getValue("описание").toString());
     FormGrid::show();
-    if (parent->getCurrentRow() + 1 > parent->getTableModel()->rowCount())
+    if (parent->getCurrentRow() + 1 > parent->rowCount())
     {
-        grdTable->selectRow(parent->getTableModel()->rowCount() - 1);
+        grdTable->selectRow(parent->rowCount() - 1);
         if (grdTable->columnIsReadOnly())
             grdTable->selectNextColumn();
     }

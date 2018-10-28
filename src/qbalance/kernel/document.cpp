@@ -1025,7 +1025,7 @@ bool Document::showNextDict()
                 dict->lock();
                 lockedDicts.append(dictName);
                 anyShown = true;
-                if (dict->getTableModel()->rowCount() == 0)
+                if (dict->rowCount() == 0)
                 {       // Если в выбранном справочнике нет записей
                     break;
                 }

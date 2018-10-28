@@ -84,10 +84,7 @@ void DocumentScriptEngine::loadScriptObjects()
     globalObject().setProperty("saveVariable", newFunction(saveVariable));
     globalObject().setProperty("restoreVariable", newFunction(restoreVariable));
     if (documents != 0)
-    {
         globalObject().setProperty("isDocumentScript", true);   // скрипт выполняется в контексте документа
-//        globalObject().setProperty("documents", newQObject(documents));
-    }
     else
         globalObject().setProperty("isDocumentScript", false);
 

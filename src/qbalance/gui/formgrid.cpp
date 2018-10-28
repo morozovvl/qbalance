@@ -502,7 +502,7 @@ void FormGrid::cmdView()
 void FormGrid::cmdRequery()
 {
     grdTable->cmdRequery();
-    if (parent->getTableModel()->rowCount() == 0)
+    if (parent->rowCount() == 0)
     {
         app->showMessageOnStatusBar(trUtf8("Ничего не найдено."));
     }
@@ -565,7 +565,7 @@ void FormGrid::setButtons()
 {
     if (parent != 0)
     {
-        if (parent->getTableModel()->rowCount() > 0)
+        if (parent->rowCount() > 0)
         {
             if (buttonAdd != 0)
                 buttonAdd->setEnabled(parent->isInsertable());

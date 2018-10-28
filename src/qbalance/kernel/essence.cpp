@@ -1249,7 +1249,7 @@ void Essence::preparePrintValues()
         }
         // Загрузим основную таблицу в контекст печати
         QStringList fieldsList = getFieldsList();
-        for (int i = 1; i <= getTableModel()->rowCount(); i++)
+        for (int i = 1; i <= rowCount(); i++)
         {
             QSqlRecord rec = getTableModel()->record(i-1);
             foreach(QString field, fieldsList)

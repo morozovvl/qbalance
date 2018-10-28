@@ -715,13 +715,6 @@ ScriptEngine::ScriptEngine(Essence *par) : QScriptEngine()
     document = 0;
     documents = 0;
     scriptFileName = "";
-    if (parent != 0 && parent->getDictionaries() != 0)
-    {
-        Dictionaries* dicts = parent->getDictionaries();
-        document = dicts->getDocument();
-        if (document != 0)
-            documents = document->getParent();
-    }
     isSA = app->isSA();
     script = "";
     tryEventLoopExit = false;
@@ -793,10 +786,20 @@ Document* ScriptEngine::getDocument()
 
 bool ScriptEngine::open(QString scriptFile)
 {
+    if (parent != 0 && parent->getDictionaries() != 0)
+    {
+        Dictionaries* dicts = parent->getDictionaries();
+        document = dicts->getDocument();
+        if (document != 0)
+            documents = document->getParent();
+    }
+
     loadScriptObjects();
+
     if (scriptFile.size() > 0)
         script = loadScript(scriptFile);
     scriptFileName = scriptFile;
+
     return true;
 }
 
@@ -889,12 +892,16 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("setValue", newFunction(setValue));
     globalObject().setProperty("getOldValue", newFunction(getOldValue));
     globalObject().setProperty("quotes", newFunction(quotes));
-    globalObject().setProperty("document", newQObject(document));
-    globalObject().setProperty("documents", newQObject(documents));
     globalObject().setProperty("evaluateScript", newFunction(evaluateScript));
     globalObject().setProperty("SumToString", newFunction(SumToString));
     globalObject().setProperty("debug", newFunction(debug));
     globalObject().setProperty("DateString", newFunction(DateString));
+
+    if (document != 0)
+        globalObject().setProperty("document", newQObject(document));
+
+    if (documents != 0)
+        globalObject().setProperty("documents", newQObject(documents));
 
     foreach (const QString &ext, availableExtensions())
     {

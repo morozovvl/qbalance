@@ -317,7 +317,7 @@ bool Dictionary::add()
                             {
                                 dictName = dict->getName();
                                 dict->query(parameters->getFilter(searchParameters[i].table));
-                                if (dict->getTableModel()->rowCount() == 1)
+                                if (dict->rowCount() == 1)
                                 {
                                     // Далее первый параметр такой хитрый с запросом к БД имени поля, т.к. searchParameters[i].table - всегда в нижнем регистре, а idFieldName - может быть и в верхнем и в нижнем
                                     // поэтому настоящее имя поля код_<имя таблицы> получим путем запроса к БД
