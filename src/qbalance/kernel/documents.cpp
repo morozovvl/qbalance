@@ -177,6 +177,7 @@ void Documents::view()
 
 void Documents::setCurrentDocument(int strNum)
 {
+    setId(strNum);
     currentDocument->setDocId(strNum);
 }
 
