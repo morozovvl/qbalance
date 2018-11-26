@@ -1,0 +1,5 @@
+#!/bin/sh
+
+/home/vladimir/work/qbalance1/qbalance -h localhost -p 5432 -l "sa" -db qbalance -pw 123456 -s loadPrice.js -sp ./price.ods -d3
+
+
