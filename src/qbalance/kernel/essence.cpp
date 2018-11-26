@@ -174,10 +174,12 @@ bool Essence::isPhotoEnabled()
 void Essence::setPhotoPath(QString path)
 {
     photoPath = path;
+/*
     if (photoPath.size() > 0)
         photoEnabled = true;
     else
         photoEnabled = false;
+*/
 }
 
 
@@ -660,8 +662,8 @@ QString Essence::getPhotoPath()
     {
         // Если путь, откуда нужно брать фотографии не установлен, то установим его по умолчанию для данного справочника
         path = db->getDictionaryPhotoPath(tableName);
-        if (path.size() == 0)
-            photoEnabled = false;
+//        if (path.size() == 0)
+//            photoEnabled = false;
         photoPath = path;
         photoPathVerified = true;           // Чтоб больше не спрашивала
     }
@@ -706,7 +708,6 @@ QString Essence::getPhotoFile(QString copyTo)
         // Теперь получим значение идентификатора
         if (tableModel->rowCount() > 0 && photoIdField.size() > 0)
         {
-            pictureUrl = preparePictureUrl();
             localFile = getLocalPhotoFile(getPhotoPath());       // Запомним локальный путь к фотографии на случай обращения к серверу за фотографией
             idValue = getValue(photoIdField).toString().trimmed();
             if (localFile.size() > 0 && photoEnabled)
@@ -730,6 +731,7 @@ QString Essence::getPhotoFile(QString copyTo)
                         }
                         if (!QFile(file).exists())
                         {   // Фотография не найдена на сервере, попробуем получить фотографию из Интернета
+                            pictureUrl = preparePictureUrl();
                             file = pictureUrl;
                             // Если в скриптах указано, откуда брать фотографию
                             if (file.left(4) == "http" && photoPath.size() > 0)  // Имя файла - это адрес в интернете, и указано, куда этот файл будет сохраняться

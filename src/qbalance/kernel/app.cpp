@@ -960,8 +960,18 @@ void    TApplication::openPlugins()
     }
 
     // Запустим почтовый клиент
-    smtpclient = (SmtpClient*)createPlugin("EMailClient");
-
+    /*
+    smtpclient = (EMailClient*)createPlugin("emailclient");
+    if (smtpclient != 0)
+    {
+        if (smtpclient->open())
+        {
+            smtpclient->sendMail();
+            smtpclient->close();
+            smtpclient = 0;
+        }
+    }
+*/
 }
 
 

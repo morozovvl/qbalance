@@ -37,7 +37,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../storage/filetype.h"
 #include "../serialport/qmyextserialport.h"
 #include "../bankterminal/bankterminal.h"
-#include "../../SMTPEmail/src/smtpclient.h"
+#include "../emailclient/emailclient.h"
 #include "updates.h"
 
 
@@ -312,7 +312,7 @@ private:
     BankTerminal*           bankTerminal;
     BarCodeReader*          barCodeReader;
     CardCodeReader*         cardCodeReader;
-    SmtpClient*             smtpclient;
+    EMailClient*            smtpclient;
     bool                    fsWebCamIsValid;
     static QList<QString>       DebugModes;
     static TApplication*    Exemplar;
