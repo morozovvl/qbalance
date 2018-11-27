@@ -1,17 +1,18 @@
 /****************************************************************************
 **
-** Copyright (C) 2008-2009 Nokia Corporation and/or its subsidiary(-ies).
-** All rights reserved.
-** Contact: Nokia Corporation (qt-info@nokia.com)
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
+** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Script Generator project on Qt Labs.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
-** No Commercial Usage
-** This file contains pre-release code and may not be distributed.
-** You may use this file in accordance with the terms and conditions
-** contained in the Technology Preview License Agreement accompanying
-** this package.
+** Commercial License Usage
+** Licensees holding valid commercial Qt licenses may use this file in
+** accordance with the commercial license agreement provided with the
+** Software or, alternatively, in accordance with the terms contained in
+** a written agreement between you and Digia.  For licensing terms and
+** conditions see http://qt.digia.com/licensing.  For further information
+** use the contact form at http://qt.digia.com/contact-us.
 **
 ** GNU Lesser General Public License Usage
 ** Alternatively, this file may be used under the terms of the GNU Lesser
@@ -21,18 +22,17 @@
 ** ensure the GNU Lesser General Public License version 2.1 requirements
 ** will be met: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
 **
-** In addition, as a special exception, Nokia gives you certain additional
-** rights.  These rights are described in the Nokia Qt LGPL Exception
+** In addition, as a special exception, Digia gives you certain additional
+** rights.  These rights are described in the Digia Qt LGPL Exception
 ** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
 **
-** If you have questions regarding the use of this file, please contact
-** Nokia at qt-info@nokia.com.
-**
-**
-**
-**
-**
-**
+** GNU General Public License Usage
+** Alternatively, this file may be used under the terms of the GNU
+** General Public License version 3.0 as published by the Free Software
+** Foundation and appearing in the file LICENSE.GPL included in the
+** packaging of this file.  Please review the following information to
+** ensure the GNU General Public License version 3.0 requirements will be
+** met: http://www.gnu.org/copyleft/gpl.html.
 **
 **
 ** $QT_END_LICENSE$
@@ -167,8 +167,7 @@ void ShellImplGenerator::write(QTextStream &s, const AbstractMetaClass *meta_cla
         s << "    QScriptValue _q_function = __qtscript_self.property(\""
           << scriptFunctionName << "\");" << endl;
         s << "    if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)" << endl
-          << "        || (__qtscript_self.propertyFlags(\"" << scriptFunctionName << "\") & QScriptValue::QObjectMember)" << endl
-          << "        || (_q_function.data().toBool() == true)) {" << endl;
+          << "        || (__qtscript_self.propertyFlags(\"" << scriptFunctionName << "\") & QScriptValue::QObjectMember)) {" << endl;
 
         AbstractMetaArgumentList args = fun->arguments();
         s << "        ";
@@ -190,15 +189,12 @@ void ShellImplGenerator::write(QTextStream &s, const AbstractMetaClass *meta_cla
 
         s << "    } else {" << endl;
 
-        s << "        _q_function.setData(QScriptValue(true));" << endl;
-
         // call the script function
         if (args.size() > 0)
             s << "        QScriptEngine *_q_engine = __qtscript_self.engine();" << endl;
         s << "        ";
         if (fun->type()) {
-            writeTypeInfo(s, fun->type());
-            s << "_q_retval = qscriptvalue_cast<";
+            s << "return qscriptvalue_cast<";
             writeTypeInfo(s, fun->type());
             s << ">(";
         }
@@ -227,11 +223,6 @@ void ShellImplGenerator::write(QTextStream &s, const AbstractMetaClass *meta_cla
         if (fun->type())
             s << ")";
         s << ";" << endl;
-
-        s << "        _q_function.setData(QScriptValue(false));" << endl;
-
-        if (fun->type())
-            s << "        return _q_retval;" << endl;
 
         s << "    }" << endl;
 

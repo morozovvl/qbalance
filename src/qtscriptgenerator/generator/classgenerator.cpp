@@ -1,17 +1,18 @@
 /****************************************************************************
 **
-** Copyright (C) 2008-2009 Nokia Corporation and/or its subsidiary(-ies).
-** All rights reserved.
-** Contact: Nokia Corporation (qt-info@nokia.com)
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
+** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Script Generator project on Qt Labs.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
-** No Commercial Usage
-** This file contains pre-release code and may not be distributed.
-** You may use this file in accordance with the terms and conditions
-** contained in the Technology Preview License Agreement accompanying
-** this package.
+** Commercial License Usage
+** Licensees holding valid commercial Qt licenses may use this file in
+** accordance with the commercial license agreement provided with the
+** Software or, alternatively, in accordance with the terms contained in
+** a written agreement between you and Digia.  For licensing terms and
+** conditions see http://qt.digia.com/licensing.  For further information
+** use the contact form at http://qt.digia.com/contact-us.
 **
 ** GNU Lesser General Public License Usage
 ** Alternatively, this file may be used under the terms of the GNU Lesser
@@ -21,18 +22,17 @@
 ** ensure the GNU Lesser General Public License version 2.1 requirements
 ** will be met: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
 **
-** In addition, as a special exception, Nokia gives you certain additional
-** rights.  These rights are described in the Nokia Qt LGPL Exception
+** In addition, as a special exception, Digia gives you certain additional
+** rights.  These rights are described in the Digia Qt LGPL Exception
 ** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
 **
-** If you have questions regarding the use of this file, please contact
-** Nokia at qt-info@nokia.com.
-**
-**
-**
-**
-**
-**
+** GNU General Public License Usage
+** Alternatively, this file may be used under the terms of the GNU
+** General Public License version 3.0 as published by the Free Software
+** Foundation and appearing in the file LICENSE.GPL included in the
+** packaging of this file.  Please review the following information to
+** ensure the GNU General Public License version 3.0 requirements will be
+** met: http://www.gnu.org/copyleft/gpl.html.
 **
 **
 ** $QT_END_LICENSE$
@@ -47,7 +47,7 @@
 
 #include <qdebug.h>
 
-//#define GENERATOR_NO_PROTECTED_FUNCTIONS
+#define GENERATOR_NO_PROTECTED_FUNCTIONS
 
 ClassGenerator::ClassGenerator(PriGenerator *pri, SetupGenerator *setup) :
     priGenerator(pri),
@@ -186,43 +186,11 @@ static QString builtinTypeTesterFunction(const QString &typeName)
         return QLatin1String("isNumber");
     else if (typeName == QLatin1String("int"))
         return QLatin1String("isNumber");
-    else if (typeName == QLatin1String("unsigned int"))
-        return QLatin1String("isNumber");
     else if (typeName == QLatin1String("uint"))
         return QLatin1String("isNumber");
     else if (typeName == QLatin1String("short"))
         return QLatin1String("isNumber");
     else if (typeName == QLatin1String("unsigned short"))
-        return QLatin1String("isNumber");
-    else if (typeName == QLatin1String("ushort"))
-        return QLatin1String("isNumber");
-    else if (typeName == QLatin1String("long"))
-        return QLatin1String("isNumber");
-    else if (typeName == QLatin1String("unsigned long"))
-        return QLatin1String("isNumber");
-    else if (typeName == QLatin1String("ulong"))
-        return QLatin1String("isNumber");
-    else if (typeName == QLatin1String("qint8"))
-        return QLatin1String("isNumber");
-    else if (typeName == QLatin1String("quint8"))
-        return QLatin1String("isNumber");
-    else if (typeName == QLatin1String("qint16"))
-        return QLatin1String("isNumber");
-    else if (typeName == QLatin1String("quint16"))
-        return QLatin1String("isNumber");
-    else if (typeName == QLatin1String("qint32"))
-        return QLatin1String("isNumber");
-    else if (typeName == QLatin1String("quint32"))
-        return QLatin1String("isNumber");
-    else if (typeName == QLatin1String("qint64"))
-        return QLatin1String("isNumber");
-    else if (typeName == QLatin1String("qlonglong"))
-        return QLatin1String("isNumber");
-    else if (typeName == QLatin1String("quint64"))
-        return QLatin1String("isNumber");
-    else if (typeName == QLatin1String("qulonglong"))
-        return QLatin1String("isNumber");
-    else if (typeName == QLatin1String("qreal"))
         return QLatin1String("isNumber");
     else if (typeName == QLatin1String("bool"))
         return QLatin1String("isBoolean");
@@ -648,8 +616,8 @@ static void writeConstructorForwarding(QTextStream &stream,
     stream << "/** signatures:" << endl;
     foreach (const AbstractMetaFunction *fun, functions) {
         stream << " *     " << fun->signature() << endl;
-    }
-    stream << " */" << endl;
+    } 
+    stream << " */" << endl; 
 #endif
 
     if (/*meta_class->isAbstract() ||*/ (functions.size() == 0)) {
@@ -1045,7 +1013,7 @@ static void writeEnumClass(QTextStream &stream, const AbstractMetaClass *meta_cl
            << "{" << endl
            << "    QVariant thisObj = context->thisObject().toVariant();" << endl
            << "    QVariant otherObj = context->argument(0).toVariant();" << endl
-
+           
            << "    return QScriptValue(engine, ((thisObj.userType() == otherObj.userType()) &&" << endl
            << "                                 (thisObj.value<" << qualifiedFlagsName << ">() == otherObj.value<" << qualifiedFlagsName << ">())));" << endl
            << "}" << endl << endl;
@@ -1084,8 +1052,7 @@ void maybeDeclareMetaType(QTextStream &stream, const QString &typeName,
     if (name.contains(QLatin1Char(','))) {
         // need to expand the Q_DECLARE_METATYPE macro manually,
         // otherwise the compiler will choke
-        stream << "#if QT_VERSION < 0x050000" << endl
-               << "template <> \\" << endl
+        stream << "template <> \\" << endl
                << "struct QMetaTypeId< " << name << " > \\" << endl
                << "{ \\" << endl
                << "    enum { Defined = 1 }; \\" << endl
@@ -1096,23 +1063,7 @@ void maybeDeclareMetaType(QTextStream &stream, const QString &typeName,
                << "            metatype_id = qRegisterMetaType< " << name << " >(\"" << name << "\"); \\" << endl
                << "        return metatype_id; \\" << endl
                << "    } \\" << endl
-               << "};" << endl
-               << "#else // QT_VERSION < 0x050000" << endl
-               << "template <> \\" << endl
-               << "struct QMetaTypeId< " << name << " >" << endl
-               << "{" << endl
-               << "    enum { Defined = 1 };" << endl
-               << "    static int qt_metatype_id()" << endl
-               << "    {" << endl
-               << "        static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0);" << endl
-               << "        if (const int id = metatype_id.loadAcquire())" << endl
-               << "            return id;" << endl
-               << "        const int newId = qRegisterMetaType< " << name << " >(\"" << name << "\", reinterpret_cast< " << name << " *>(quintptr(-1)));" << endl
-               << "        metatype_id.storeRelease(newId);" << endl
-               << "        return newId;" << endl
-               << "    }" << endl
-               << "};" << endl
-               << "#endif" << endl;
+               << "};" << endl;
     } else {
         stream << "Q_DECLARE_METATYPE(" << name << ")" << endl;
     }
@@ -1191,30 +1142,17 @@ void declareEnumMetaTypes(QTextStream &stream, const AbstractMetaClass *meta_cla
         const AbstractMetaEnum *enom = enums.at(i);
         if (shouldIgnoreEnum(enom))
             continue;
-        QString name;
-        if (meta_class->name() == "Global") {
-            name = enom->name();
-        }
-        else {
-            name = QString::fromLatin1("%0::%1").arg(meta_class->qualifiedCppName()).arg(enom->name());
-        }
-
-        if (!enom->typeEntry()->known()) {
-            maybeDeclareMetaType(stream, name, registeredTypeNames);
-        }
-        else {
-            registeredTypeNames << name;
-        }
-
+        if (meta_class->name() == "Global")
+            maybeDeclareMetaType(stream, enom->name(), registeredTypeNames);
+        else
+            maybeDeclareMetaType(stream, QString::fromLatin1("%0::%1")
+                                 .arg(meta_class->qualifiedCppName()).arg(enom->name()),
+                                 registeredTypeNames);
         FlagsTypeEntry *flags = enom->typeEntry()->flags();
         if (flags) {
-            name = QString::fromLatin1("QFlags<%0::%1>").arg(meta_class->qualifiedCppName()).arg(enom->name());
-            if (!flags->known()) {
-                maybeDeclareMetaType(stream, name, registeredTypeNames);
-            }
-            else {
-                registeredTypeNames << name;
-            }
+            maybeDeclareMetaType(stream, QString::fromLatin1("QFlags<%0::%1>")
+                                 .arg(meta_class->qualifiedCppName()).arg(enom->name()),
+                                 registeredTypeNames);
         }
     }
 }
@@ -1240,8 +1178,8 @@ static void writeFunctionForwarding(QTextStream &stream, const AbstractMetaClass
     stream << "/** signatures:" << endl;
     foreach (const AbstractMetaFunction *fun, functions) {
         stream << " *     " << fun->signature() << endl;
-    }
-    stream << " */" << endl;
+    } 
+    stream << " */" << endl; 
 #endif
     QMap<int, AbstractMetaFunctionList> argcToFunctions;
     argcToFunctions = createArgcToFunctionsMap(functions);
@@ -1313,22 +1251,22 @@ static void writePrototypeCall(QTextStream &s, const AbstractMetaClass *meta_cla
     // cast the thisObject to C++ type
     s << "    ";
 #ifndef GENERATOR_NO_PROTECTED_FUNCTIONS
-    if (meta_class->hasOrHadProtectedFunctions())
+    if (meta_class->hasProtectedFunctions())
         s << "qtscript_";
 #endif
     s << meta_class->qualifiedCppName() << "* _q_self = ";
 #ifndef GENERATOR_NO_PROTECTED_FUNCTIONS
-    if (meta_class->hasOrHadProtectedFunctions())
+    if (meta_class->hasProtectedFunctions())
         s << "reinterpret_cast<qtscript_" << meta_class->name() << "*>(";
 #endif
     s << "qscriptvalue_cast<" << meta_class->qualifiedCppName()
       << "*>(context->thisObject())";
 #ifndef GENERATOR_NO_PROTECTED_FUNCTIONS
-    if (meta_class->hasOrHadProtectedFunctions())
+    if (meta_class->hasProtectedFunctions())
         s << ")";
 #endif
     s << ";" << endl
-      << "    if (!_q_self) {" << endl
+      << "    if (!_q_self) {" << endl 
       << "        return context->throwError(QScriptContext::TypeError," << endl
       << "            QString::fromLatin1(\"" << meta_class->name()
       << ".%0(): this object is not a " << meta_class->name() << "\")" << endl
@@ -1526,22 +1464,6 @@ static void writeFunctionSignaturesString(QTextStream &s, const AbstractMetaFunc
     s << "\"";
 }
 
-static void writeFriendlyQMetaTypeIdForProtectedEnums(QTextStream &s, const AbstractMetaClassList &meta_classes, const AbstractMetaClass *meta_class)
-{
-    if (!meta_class)
-        return;
-    // write friendly QMetaTypeId specializations
-    foreach (const AbstractMetaEnum *enom, meta_class->enums()) {
-        if (enom && enom->wasProtected())
-            s << "    friend struct QMetaTypeId< " << meta_class->name() << "::" << enom->name() << " >;" << endl;
-    }
-    // process base classes
-    foreach (const QString base_class_name, meta_class->baseClassNames()) {
-        const AbstractMetaClass *base_class = meta_classes.findClass(base_class_name);
-        writeFriendlyQMetaTypeIdForProtectedEnums(s, meta_classes, base_class);
-    }
-}
-
 /*!
   Writes the whole native binding for the class \a meta_class.
 */
@@ -1691,10 +1613,7 @@ void ClassGenerator::write(QTextStream &stream, const AbstractMetaClass *meta_cl
     stream << "};" << endl << endl;
 
 #ifndef GENERATOR_NO_PROTECTED_FUNCTIONS
-    if (meta_class->hasOrHadProtectedFunctions()) {
-        // prototype_call declaration
-        stream << "static QScriptValue qtscript_" << meta_class->name()
-               << "_prototype_call(QScriptContext *, QScriptEngine *);" << endl << endl;
+    if (meta_class->hasProtectedFunctions()) {
         // write a friendly class
         stream << "class qtscript_" << meta_class->name()
                << " : public " << meta_class->qualifiedCppName() << endl;
@@ -1717,13 +1636,6 @@ void ClassGenerator::write(QTextStream &stream, const AbstractMetaClass *meta_cl
                 }
             }
         }
-        stream << endl;
-        // write prototype_call as friendly function
-        stream << "    friend QScriptValue qtscript_" << meta_class->name()
-               << "_prototype_call(QScriptContext *, QScriptEngine *);" << endl << endl;
-        // write all Q_DECLARE_METATYPE(enum) as friendly classes for all protected enums
-        // in meta_class' hierarchy
-        writeFriendlyQMetaTypeIdForProtectedEnums(stream, m_classes, meta_class);
         stream << "};" << endl;
         stream << endl;
     }

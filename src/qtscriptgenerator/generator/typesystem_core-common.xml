@@ -33,8 +33,6 @@
   <rejection class="" enum-name="QtValidLicenseForOpenVGModule" />
   <rejection class="" enum-name="QtValidLicenseForDeclarativeModule"/>
 
-  <rejection class="QCoreApplication" enum-name="enum_1"/>
-
   <rejection class="QtConcurrent" enum-name="enum_1" />
   <rejection class="QtConcurrent" function-name="operator|" />
 
@@ -423,13 +421,8 @@
     <modify-function signature="escape(const QString&amp;)" remove="all" />
     <modify-function signature="convertFromPlainText(const QString &amp;, Qt::WhiteSpaceMode)" remove="all" />
     <extra-includes>
-      <!-- <include file-name="QGesture" location="global"/> --> <!--### Not needed in Qt 5.0 -->
-      <include file-name="Qt" location="global"/>
+      <include file-name="QGesture" location="global"/>
     </extra-includes>
-    <inject-code class="native" position="beginning">
-    Q_DECLARE_METATYPE(Qt::GestureState)
-    Q_DECLARE_METATYPE(Qt::GestureType)
-    </inject-code>
   </namespace-type>
 
   <enum-type name="QDate::MonthNameType" />
@@ -440,7 +433,6 @@
   <enum-type name="QEasingCurve::Type" />
   <enum-type name="QHistoryState::HistoryType" />
   <enum-type name="QState::ChildMode" />
-  <enum-type name="QState::RestorePolicy" />
   <enum-type name="QStateMachine::Error" />
   <enum-type name="QStateMachine::EventPriority" />
   <enum-type name="QStateMachine::RestorePolicy" />
@@ -480,18 +472,11 @@
   <enum-type name="QFile::FileError"/>
   <enum-type name="QFile::MemoryMapFlags" />
   <enum-type name="QFile::Permission" flags="QFile::Permissions"/>
-  <enum-type name="QFileDevice::FileError"/>
-  <enum-type name="QFileDevice::FileHandleFlag" flags="QFileDevice::FileHandleFlags"/>
-  <enum-type name="QFileDevice::MemoryMapFlags" />
-  <enum-type name="QFileDevice::Permission" flags="QFileDevice::Permissions"/>
   <enum-type name="QIODevice::OpenModeFlag" flags="QIODevice::OpenMode"/>
   <enum-type name="QLibraryInfo::LibraryLocation"/>
-  <enum-type name="QLocale::CurrencySymbolFormat" />
   <enum-type name="QLocale::FormatType"/>
   <enum-type name="QLocale::NumberOption" flags="QLocale::NumberOptions"/>
   <enum-type name="QLocale::MeasurementSystem" />
-  <enum-type name="QLocale::Script" />
-  <enum-type name="QLocale::QuotationStyle" />
   <enum-type name="QMutex::RecursionMode"/>
   <enum-type name="QProcess::ExitStatus"/>
   <enum-type name="QProcess::ProcessChannel"/>
@@ -513,10 +498,8 @@
   <enum-type name="QTimeLine::CurveShape"/>
   <enum-type name="QTimeLine::Direction"/>
   <enum-type name="QTimeLine::State"/>
-  <enum-type name="QUrl::ComponentFormattingOption" flags="QUrl::ComponentFormattingOptions"/>
-<!--  <enum-type name="QUrl::FormattingOption" flags="QUrl::FormattingOptions"/> --> <!--### Not in Qt 5.0 -->
+  <enum-type name="QUrl::FormattingOption" flags="QUrl::FormattingOptions"/>
   <enum-type name="QUrl::ParsingMode"/>
-  <enum-type name="QUrl::UrlFormattingOption"/>
   <enum-type name="QUuid::Variant"/>
   <enum-type name="QUuid::Version"/>
   <enum-type name="Qt::SizeHint" />
@@ -525,7 +508,6 @@
   <enum-type name="Qt::Axis"/>
   <enum-type name="Qt::AnchorAttribute"/>
   <enum-type name="Qt::ApplicationAttribute"/>
-  <enum-type name="Qt::ApplicationState" flags="Qt::ApplicationStates"/>
   <enum-type name="Qt::ArrowType"/>
   <enum-type name="Qt::AspectRatioMode"/>
   <enum-type name="Qt::BGMode"/>
@@ -536,18 +518,15 @@
   <enum-type name="Qt::ConnectionType"/>
   <enum-type name="Qt::ContextMenuPolicy"/>
   <enum-type name="Qt::Corner"/>
-  <enum-type name="Qt::CursorMoveStyle"/>
   <enum-type name="Qt::DayOfWeek"/>
   <enum-type name="Qt::DockWidgetAreaSizes"/>
   <enum-type name="Qt::DropAction" flags="Qt::DropActions"/>
-  <enum-type name="Qt::Edge"/>
   <enum-type name="Qt::FillRule"/>
-  <enum-type name="Qt::FindChildOption" flags="Qt::FindChildOptions"/>
   <enum-type name="Qt::FocusPolicy"/>
   <enum-type name="Qt::FocusReason"/>
   <enum-type name="Qt::GlobalColor"/>
   <enum-type name="Qt::HitTestAccuracy"/>
-  <enum-type name="Qt::InputMethodQuery" flags="Qt::InputMethodQueries"/>
+  <enum-type name="Qt::InputMethodQuery"/>
   <enum-type name="Qt::ItemFlag" flags="Qt::ItemFlags"/>
   <enum-type name="Qt::ItemSelectionMode"/>
   <enum-type name="Qt::KeyboardModifier" flags="Qt::KeyboardModifiers"/>
@@ -559,7 +538,6 @@
   <enum-type name="Qt::PenCapStyle"/>
   <enum-type name="Qt::PenJoinStyle"/>
   <enum-type name="Qt::PenStyle"/>
-  <enum-type name="Qt::ScreenOrientation" flags="Qt::ScreenOrientations"/>
   <enum-type name="Qt::ScrollBarPolicy"/>
   <enum-type name="Qt::ShortcutContext"/>
   <enum-type name="Qt::SortOrder"/>
@@ -567,7 +545,6 @@
   <enum-type name="Qt::TextFlag"/>
   <enum-type name="Qt::TextFormat"/>
   <enum-type name="Qt::TextInteractionFlag" flags="Qt::TextInteractionFlags"/>
-  <enum-type name="Qt::TimerType"/>
   <enum-type name="Qt::TimeSpec"/>
   <enum-type name="Qt::ToolBarAreaSizes"/>
   <enum-type name="Qt::ToolButtonStyle"/>
@@ -656,14 +633,8 @@
     <reject-enum-value name="WA_MacMetalStyle"/>
   </enum-type>
 
-  <value-type name="QProcessEnvironment"/>
+  <value-type name="QProcessEnvironment" />
   <value-type name="QBasicTimer"/>
-  <value-type name="QElapsedTimer">
-    <modify-function signature="operator==(QElapsedTimer)" remove="all"/>
-    <modify-function signature="operator!=(QElapsedTimer)" remove="all"/>
-  </value-type>
-  <enum-type name="QElapsedTimer::ClockType"/>
-
   <value-type name="QByteArrayMatcher">
     <modify-function signature="operator=(QByteArrayMatcher)" remove="all"/>
   </value-type>
@@ -866,10 +837,6 @@
     <!--### Obsolete in 4.3-->
   </value-type>
 
-  <value-type name="QUrlQuery">
-    <modify-function signature="operator=(QUrlQuery)" remove="all"/>
-  </value-type>
-
   <value-type name="QRegExp">
     <extra-includes>
       <include file-name="QStringList" location="global"/>
@@ -987,20 +954,12 @@
     <!-- Can't provide same API and performance -->
   </object-type>
 
-  <object-type name="QFileDevice">
-    <modify-function signature="map(qint64,qint64,QFile::MemoryMapFlags)" remove="all" />
-    <!-- Can't provide same API and performance -->
-    <modify-function signature="unmap(uchar*)" remove="all" />
-    <!-- Can't provide same API and performance -->
-  </object-type>
-
   <object-type name="QIODevice"/>
   <object-type name="QStateMachine::SignalEvent" polymorphic-id-expression="%1-&gt;type() == QEvent::Signal" />
   <object-type name="QStateMachine::WrappedEvent" polymorphic-id-expression="%1-&gt;type() == QEvent::Wrapped" />
 
   <object-type name="QCryptographicHash"/>
   <object-type name="QLibraryInfo"/>
-  <object-type name="QBasicMutex"/>
   <object-type name="QMutex"/>
   <object-type name="QSemaphore"/>
   <object-type name="QSocketNotifier"/>
@@ -1122,7 +1081,6 @@
     <!--### Obsolete in 4.3-->
     <modify-function signature="setReadChannelMode(QProcess::ProcessChannelMode)" remove="all"/>
     <!--### Obsolete in 4.3-->
-    <modify-function signature="error() const" rename="getError"/>
   </object-type>
 
   <object-type name="QSignalMapper">
@@ -1194,7 +1152,6 @@
 
     <extra-includes>
       <include file-name="QVarLengthArray" location="global"/>
-      <include file-name="QThread" location="global"/>
     </extra-includes>
 
   </object-type>
@@ -1202,7 +1159,6 @@
   <object-type name="QCoreApplication">
     <extra-includes>
       <include file-name="QStringList" location="global"/>
-      <include file-name="QAbstractEventDispatcher" location="global"/>
     </extra-includes>
 
     <modify-function signature="argv()" remove="all" />
@@ -1320,7 +1276,7 @@
   </object-type>
 
   <object-type name="QTextStream">
-    <modify-function signature="QTextStream(QByteArray*,QFlags&lt;QIODevice::OpenModeFlag&gt;)">
+    <modify-function signature="QTextStream(QByteArray *, QFlags&lt;QIODevice::OpenModeFlag&gt;)">
       <remove/>
     </modify-function>
     <modify-function signature="QTextStream(QString*,QFlags&lt;QIODevice::OpenModeFlag&gt;)">
@@ -1353,9 +1309,6 @@
     <modify-function signature="operator&lt;&lt;(unsigned short)">
       <remove/>
     </modify-function>
-    <modify-function signature="operator&lt;&lt;(const QLatin1String&amp;)">
-      <remove/>
-    </modify-function>
     <modify-function signature="operator&gt;&gt;(qulonglong&amp;)">
       <remove/>
     </modify-function>
@@ -1378,9 +1331,6 @@
       <remove/>
     </modify-function>
     <modify-function signature="operator&gt;&gt;(QString&amp;)">
-      <remove/>
-    </modify-function>
-    <modify-function signature="operator&gt;&gt;(QLatin1String&amp;)">
       <remove/>
     </modify-function>
 
@@ -1415,7 +1365,7 @@
     <modify-function signature="resultCount()const" remove="all" />
     <modify-function signature="isResultReadyAt(int)const" remove="all" />
   </value-type>
-  <value-type name="QtScriptFuture" java-name="QFuture" generic-class="yes"/>
+  <value-type name="QtScriptFuture" java-name="QFuture" generic-class="yes" />
 
   <object-type name="QFutureWatcherBase">
     <modify-function signature="connectNotify(const char *)" remove="all" />
@@ -1426,7 +1376,7 @@
   <object-type name="QFutureWatcher" generate="no">
     <modify-function signature="future()const" remove="all" />
   </object-type>
-  <object-type name="QtScriptFutureWatcher" java-name="QFutureWatcher" generic-class="yes"/>
+  <object-type name="QtScriptFutureWatcher" java-name="QFutureWatcher" generic-class="yes" />
 
   <object-type name="QFutureSynchronizer" generate="no" />
   <object-type name="QtScriptFutureSynchronizer" generic-class="yes" java-name="QFutureSynchronizer" />
@@ -1438,6 +1388,7 @@
   </object-type>
   <object-type name="QtScriptFutureIterator" generic-class="yes" java-name="QFutureIterator" />
   <object-type name="QRunnable" />
+
 
     <value-type name="QXmlStreamAttribute"/>
     <value-type name="QXmlStreamAttributes"/>

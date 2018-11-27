@@ -1,17 +1,18 @@
 /****************************************************************************
 **
-** Copyright (C) 2008-2009 Nokia Corporation and/or its subsidiary(-ies).
-** All rights reserved.
-** Contact: Nokia Corporation (qt-info@nokia.com)
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
+** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Script Generator project on Qt Labs.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
-** No Commercial Usage
-** This file contains pre-release code and may not be distributed.
-** You may use this file in accordance with the terms and conditions
-** contained in the Technology Preview License Agreement accompanying
-** this package.
+** Commercial License Usage
+** Licensees holding valid commercial Qt licenses may use this file in
+** accordance with the commercial license agreement provided with the
+** Software or, alternatively, in accordance with the terms contained in
+** a written agreement between you and Digia.  For licensing terms and
+** conditions see http://qt.digia.com/licensing.  For further information
+** use the contact form at http://qt.digia.com/contact-us.
 **
 ** GNU Lesser General Public License Usage
 ** Alternatively, this file may be used under the terms of the GNU Lesser
@@ -21,18 +22,17 @@
 ** ensure the GNU Lesser General Public License version 2.1 requirements
 ** will be met: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
 **
-** In addition, as a special exception, Nokia gives you certain additional
-** rights.  These rights are described in the Nokia Qt LGPL Exception
+** In addition, as a special exception, Digia gives you certain additional
+** rights.  These rights are described in the Digia Qt LGPL Exception
 ** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
 **
-** If you have questions regarding the use of this file, please contact
-** Nokia at qt-info@nokia.com.
-**
-**
-**
-**
-**
-**
+** GNU General Public License Usage
+** Alternatively, this file may be used under the terms of the GNU
+** General Public License version 3.0 as published by the Free Software
+** Foundation and appearing in the file LICENSE.GPL included in the
+** packaging of this file.  Please review the following information to
+** ensure the GNU General Public License version 3.0 requirements will be
+** met: http://www.gnu.org/copyleft/gpl.html.
 **
 **
 ** $QT_END_LICENSE$
@@ -64,6 +64,7 @@ void SetupGenerator::generate()
         QList<const AbstractMetaClass*> list = pack.value();
         if (list.isEmpty())
             continue;
+        std::sort(list.begin(), list.end());
 
         QString packName = pack.key();
         QStringList components = packName.split(".");
@@ -255,49 +256,27 @@ void SetupGenerator::generate()
         }
 
         {
-            FileOut pluginFile(m_out_dir + "/generated_cpp/" + packName + "/plugin.h");
-            QTextStream &s = pluginFile.stream;
-
-            if (FileOut::license)
-                writeQtScriptQtBindingsLicense(s);
-
-            s << "#ifndef PLUGIN_H" << endl
-              << "#define PLUGIN_H" << endl << endl;
-
-            s << "#include <QtScript/QScriptExtensionPlugin>" << endl
-              << "#include <QtScript/QScriptValue>" << endl
-              << "#include <QtScript/QScriptEngine>" << endl << endl;
-
-            // declare the init function
-            s << "Q_DECL_HIDDEN void qtscript_initialize_" << packName << "_bindings(QScriptValue &);" << endl << endl;
-
-            // plugin class declaration
-            s << "class " << packName << "_ScriptPlugin : public QScriptExtensionPlugin" << endl
-              << "{" << endl
-              << "    Q_OBJECT" << endl
-              << "#if QT_VERSION >= 0x050000" << endl
-              << "    Q_PLUGIN_METADATA(IID \"org.qt-project.Qt.QScriptExtensionInterface\")" << endl
-              << "#endif" << endl
-              << "public:" << endl
-              << "    QStringList keys() const;" << endl
-              << "    void initialize(const QString &key, QScriptEngine *engine);" << endl
-              << "};" << endl
-              << "" << endl
-              << "#endif // PLUGIN_H" << endl;
-
-            if (pluginFile.done())
-                ++m_num_generated_written;
-            ++m_num_generated;
-        }
-
-        {
             FileOut pluginFile(m_out_dir + "/generated_cpp/" + packName + "/plugin.cpp");
             QTextStream &s = pluginFile.stream;
 
             if (FileOut::license)
                 writeQtScriptQtBindingsLicense(s);
 
-            s << "#include \"plugin.h\"" << endl << endl;
+            s << "#include <QtScript/QScriptExtensionPlugin>" << endl
+              << "#include <QtScript/QScriptValue>" << endl
+              << "#include <QtScript/QScriptEngine>" << endl << endl;
+
+            // declare the init function
+            s << "void qtscript_initialize_" << packName << "_bindings(QScriptValue &);" << endl << endl;
+
+            // plugin class declaration
+            s << "class " << packName << "_ScriptPlugin : public QScriptExtensionPlugin" << endl
+              << "{" << endl
+              << "public:" << endl
+              << "    QStringList keys() const;" << endl
+              << "    void initialize(const QString &key, QScriptEngine *engine);" << endl
+              << "};" << endl
+              << "" << endl;
 
             // keys()
             s << "QStringList " << packName << "_ScriptPlugin::keys() const" << endl
@@ -346,10 +325,8 @@ void SetupGenerator::generate()
               << "    }" << endl
               << "}" << endl << endl;
 
-            s << "#if QT_VERSION < 0x050000" << endl
-              << "Q_EXPORT_STATIC_PLUGIN(" << packName << "_ScriptPlugin)" << endl
-              << "Q_EXPORT_PLUGIN2(qtscript_" << packName.toLower() << ", " << packName << "_ScriptPlugin)" << endl
-              << "#endif" << endl;
+            s << "Q_EXPORT_STATIC_PLUGIN(" << packName << "_ScriptPlugin)" << endl
+              << "Q_EXPORT_PLUGIN2(qtscript_" << packName.toLower() << ", " << packName << "_ScriptPlugin)" << endl;
 
             if (pluginFile.done())
                 ++m_num_generated_written;

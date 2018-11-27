@@ -5,7 +5,6 @@
 
   <rejection class="*" field-name="d_ptr"/>
   <rejection class="*" field-name="d"/>
-  <rejection class="QSurface" field-name="m_reserved"/>
 
   <rejection class="QGenericMatrix"/>  
   <rejection class="QPixmapFilterPrivate"/>
@@ -16,7 +15,6 @@
   <rejection class="QAbstractUndoItem"/>
   <rejection class="QAccessibleApplication"/>
   <rejection class="QBrushData"/>
-  <rejection class="QGraphicsEffectSource"/>
   <rejection class="QImageTextKeyLang"/>
   <rejection class="QItemEditorCreator"/>
   <rejection class="QLibrary"/>
@@ -28,20 +26,9 @@
   <rejection class="QPainterPathPrivate"/>
   <rejection class="QRegionData"/>
   <rejection class="QStandardItemEditorCreator"/>
-  <rejection class="QStyleOptionDockWidgetV2"/>
-  <rejection class="QStyleOptionFrameV2"/>
-  <rejection class="QStyleOptionFrameV3"/>
-  <rejection class="QStyleOptionProgressBarV2"/>
   <rejection class="QStyleOptionQ3DockWindow"/>
   <rejection class="QStyleOptionQ3ListView"/>
   <rejection class="QStyleOptionQ3ListViewItem"/>
-  <rejection class="QStyleOptionTabBarBaseV2"/>
-  <rejection class="QStyleOptionTabV2"/>
-  <rejection class="QStyleOptionTabV3"/>
-  <rejection class="QStyleOptionTabWidgetFrameV2"/>
-  <rejection class="QStyleOptionToolBoxV2"/>
-  <rejection class="QStyleOptionViewItemV2"/>
-  <rejection class="QStyleOptionViewItemV3"/>
   <rejection class="QTextFrameLayoutData"/>
   <rejection class="QUpdateLaterEvent"/>
   <rejection class="QVFbHeader"/>
@@ -109,7 +96,7 @@
   <rejection class="QAbstractTextDocumentLayout" function-name="handlerForObject"/>
   
 
-  <enum-type name="QStyleOptionFrame::FrameFeature" flags="QStyleOptionFrame::FrameFeatures"/>
+  <enum-type name="QStyleOptionTabBarBaseV2::StyleOptionVersion"/>
   <enum-type name="QTabBar::SelectionBehavior"/>
   <enum-type name="QTabBar::ButtonPosition"/>
   <enum-type name="QInputDialog::InputMode"/>
@@ -117,7 +104,6 @@
   <enum-type name="QFontDialog::FontDialogOption" flags="QFontDialog::FontDialogOptions"/>
   <enum-type name="QColorDialog::ColorDialogOption" flags="QColorDialog::ColorDialogOptions"/>
   <enum-type name="QAbstractItemDelegate::EndEditHint"/>
-  <enum-type name="QAbstractItemModel::LayoutChangeHint"/>
   <enum-type name="QAbstractItemView::CursorAction"/>
   <enum-type name="QAbstractItemView::DragDropMode"/>
   <enum-type name="QAbstractItemView::DropIndicatorPosition"/>
@@ -135,18 +121,14 @@
   <enum-type name="QAbstractSpinBox::CorrectionMode"/>
   <enum-type name="QAbstractSpinBox::StepEnabledFlag" flags="QAbstractSpinBox::StepEnabled"/>
   <enum-type name="QAccessible::Event"/>
-  <enum-type name="QAccessible::InterfaceType"/>
   <enum-type name="QAccessible::Method"/>
   <enum-type name="QAccessible::RelationFlag" flags="QAccessible::Relation"/>
   <enum-type name="QAccessible::Role"/>
-  <enum-type name="QAccessible::State"/>
-<!--  <enum-type name="QAccessible::StateFlag" flags="QAccessible::State"/> --> <!--### Not in Qt 5 -->
+  <enum-type name="QAccessible::StateFlag" flags="QAccessible::State"/>
   <enum-type name="QAccessible::Text"/>
-  <enum-type name="QAccessible::TextBoundaryType"/>
   <enum-type name="QDesktopServices::StandardLocation"/>
   <enum-type name="QDirModel::Roles"/>
   <enum-type name="QFont::Capitalization"/>
-  <enum-type name="QFont::HintingPreference"/>
   <enum-type name="QFont::SpacingType"/>
   <enum-type name="QGraphicsItem::CacheMode"/>
   <enum-type name="QMdiArea::AreaOption" flags="QMdiArea::AreaOptions"/>
@@ -162,6 +144,10 @@
   <enum-type name="QPlainTextEdit::LineWrapMode"/>
   <enum-type name="QPrintPreviewWidget::ViewMode"/>
   <enum-type name="QPrintPreviewWidget::ZoomMode"/>
+  <enum-type name="QStyleOptionTabV3::StyleOptionVersion"/>
+  <enum-type name="QStyleOptionFrameV3::StyleOptionVersion"/>
+  <enum-type name="QStyleOptionViewItemV4::StyleOptionVersion"/>
+  <enum-type name="QStyleOptionViewItemV4::ViewItemPosition"/>
 
   <enum-type name="QMdiSubWindow::SubWindowOption" flags="QMdiSubWindow::SubWindowOptions"/>
 
@@ -224,7 +210,6 @@
   <enum-type name="QGraphicsView::ViewportUpdateMode"/>
   <enum-type name="QIcon::Mode"/>
   <enum-type name="QIcon::State"/>
-  <enum-type name="QIconEngine::IconEngineHook"/>
   <enum-type name="QImage::Format"/>
   <enum-type name="QImage::InvertMode"/>
   <enum-type name="QImageIOHandler::ImageOption"/>
@@ -320,10 +305,13 @@
   <enum-type name="QStyleOptionComplex::StyleOptionVersion"/>
   <enum-type name="QStyleOptionDockWidget::StyleOptionType"/>
   <enum-type name="QStyleOptionDockWidget::StyleOptionVersion"/>
+  <enum-type name="QStyleOptionDockWidgetV2::StyleOptionVersion"/>
   <enum-type name="QStyleOptionFocusRect::StyleOptionType"/>
   <enum-type name="QStyleOptionFocusRect::StyleOptionVersion"/>
   <enum-type name="QStyleOptionFrame::StyleOptionType"/>
   <enum-type name="QStyleOptionFrame::StyleOptionVersion"/>
+  <enum-type name="QStyleOptionFrameV2::FrameFeature" flags="QStyleOptionFrameV2::FrameFeatures"/>
+  <enum-type name="QStyleOptionFrameV2::StyleOptionVersion"/>
   <enum-type name="QStyleOptionGraphicsItem::StyleOptionType"/>
   <enum-type name="QStyleOptionGraphicsItem::StyleOptionVersion"/>
   <enum-type name="QStyleOptionGroupBox::StyleOptionType"/>
@@ -339,6 +327,8 @@
   <enum-type name="QStyleOptionMenuItem::StyleOptionVersion"/>
   <enum-type name="QStyleOptionProgressBar::StyleOptionType"/>
   <enum-type name="QStyleOptionProgressBar::StyleOptionVersion"/>
+  <enum-type name="QStyleOptionProgressBarV2::StyleOptionType"/>
+  <enum-type name="QStyleOptionProgressBarV2::StyleOptionVersion"/>
   <enum-type name="QStyleOptionRubberBand::StyleOptionType"/>
   <enum-type name="QStyleOptionRubberBand::StyleOptionVersion"/>
   <enum-type name="QStyleOptionSizeGrip::StyleOptionType"/>
@@ -351,10 +341,10 @@
   <enum-type name="QStyleOptionTab::SelectedPosition"/>
   <enum-type name="QStyleOptionTab::StyleOptionType"/>
   <enum-type name="QStyleOptionTab::StyleOptionVersion"/>
-  <enum-type name="QStyleOptionTab::TabFeature" flags="QStyleOptionTab::TabFeatures"/>
   <enum-type name="QStyleOptionTab::TabPosition"/>
   <enum-type name="QStyleOptionTabBarBase::StyleOptionType"/>
   <enum-type name="QStyleOptionTabBarBase::StyleOptionVersion"/>
+  <enum-type name="QStyleOptionTabV2::StyleOptionVersion"/>
   <enum-type name="QStyleOptionTabWidgetFrame::StyleOptionType"/>
   <enum-type name="QStyleOptionTabWidgetFrame::StyleOptionVersion"/>
   <enum-type name="QStyleOptionTitleBar::StyleOptionType"/>
@@ -363,10 +353,8 @@
   <enum-type name="QStyleOptionToolBar::StyleOptionVersion"/>
   <enum-type name="QStyleOptionToolBar::ToolBarFeature" flags="QStyleOptionToolBar::ToolBarFeatures"/>
   <enum-type name="QStyleOptionToolBar::ToolBarPosition"/>
-  <enum-type name="QStyleOptionToolBox::SelectedPosition"/>
   <enum-type name="QStyleOptionToolBox::StyleOptionType"/>
   <enum-type name="QStyleOptionToolBox::StyleOptionVersion"/>
-  <enum-type name="QStyleOptionToolBox::TabPosition"/>
   <enum-type name="QStyleOptionToolButton::StyleOptionType"/>
   <enum-type name="QStyleOptionToolButton::StyleOptionVersion"/>
   <enum-type name="QStyleOptionToolButton::ToolButtonFeature" flags="QStyleOptionToolButton::ToolButtonFeatures">
@@ -375,8 +363,8 @@
   <enum-type name="QStyleOptionViewItem::Position"/>
   <enum-type name="QStyleOptionViewItem::StyleOptionType"/>
   <enum-type name="QStyleOptionViewItem::StyleOptionVersion"/>
-  <enum-type name="QStyleOptionViewItem::ViewItemFeature" flags="QStyleOptionViewItem::ViewItemFeatures"/>
-  <enum-type name="QStyleOptionViewItem::ViewItemPosition"/>
+  <enum-type name="QStyleOptionViewItemV2::StyleOptionVersion"/>
+  <enum-type name="QStyleOptionViewItemV2::ViewItemFeature" flags="QStyleOptionViewItemV2::ViewItemFeatures"/>
   <enum-type name="QSystemTrayIcon::ActivationReason"/>
   <enum-type name="QSystemTrayIcon::MessageIcon"/>
   <enum-type name="QTabBar::Shape"/>
@@ -385,7 +373,6 @@
   <enum-type name="QTableWidgetItem::ItemType"/>
   <enum-type name="QTabletEvent::PointerType"/>
   <enum-type name="QTabletEvent::TabletDevice"/>
-  <enum-type name="QTextBlockFormat::LineHeightTypes"/>
   <enum-type name="QTextCharFormat::UnderlineStyle"/>
   <enum-type name="QTextCharFormat::VerticalAlignment"/>
   <enum-type name="QTextCursor::MoveMode"/>
@@ -418,6 +405,10 @@
   <enum-type name="QWorkspace::WindowOrder"/>
   <enum-type name="QDoubleValidator::Notation"/>
   <enum-type name="QGraphicsScene::SceneLayer" flags="QGraphicsScene::SceneLayers"/>
+  <enum-type name="QStyleOptionToolBoxV2::SelectedPosition"/>
+  <enum-type name="QStyleOptionToolBoxV2::StyleOptionVersion"/>
+  <enum-type name="QStyleOptionToolBoxV2::TabPosition"/>
+  <enum-type name="QStyleOptionViewItemV3::StyleOptionVersion"/>
   <enum-type name="QTransform::TransformationType"/>
   <enum-type name="QTreeWidgetItem::ChildIndicatorPolicy"/>
   <enum-type name="QWizard::WizardOption" flags="QWizard::WizardOptions"/>
@@ -515,14 +506,15 @@
     <reject-enum-value name="LastFontProperty"/>
   </enum-type>
 
-  <enum-type name="QAction::Priority"/>
-  <enum-type name="QAction::SoftKeyRole"/>
+ <enum-type name="QAction::Priority"/>
+ <enum-type name="QAction::SoftKeyRole"/>
   <enum-type name="QGraphicsEffect::ChangeFlag" flags="QGraphicsEffect::ChangeFlags"/>
   <enum-type name="QGraphicsItem::PanelModality"/>
   <enum-type name="QPinchGesture::WhatChange" flags="QPinchGesture::WhatChanged"/>
   <enum-type name="QStyle::RequestSoftwareInputPanel"/>
   <enum-type name="QSwipeGesture::SwipeDirection"/>
   <enum-type name="QTouchEvent::DeviceType"/>
+  
 
   <value-type name="QPixmapCache::Key"/>
   <value-type name="QTileRules"/>
@@ -533,9 +525,6 @@
 
 
   <value-type name="QTransform">
-    <extra-includes>
-      <include file-name="QTouchDevice" location="global"/>
-    </extra-includes>
     <modify-function signature="operator=(QTransform)" remove="all"/>
     <modify-function signature="map(int,int,int*,int*)const" remove="all"/>
     <modify-function signature="map(qreal,qreal,qreal*,qreal*)const" remove="all"/>
@@ -564,24 +553,60 @@
   <value-type name="QStyleOptionComboBox" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionComboBox::Type &amp;&amp; %1-&gt;version == QStyleOptionComboBox::Version"/>
   <value-type name="QStyleOptionComplex" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionComplex::Type &amp;&amp; %1-&gt;version == QStyleOptionComplex::Version"/>
   <value-type name="QStyleOptionDockWidget" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionDockWidget::Type &amp;&amp; %1-&gt;version == QStyleOptionDockWidget::Version"/>
+  <value-type name="QStyleOptionDockWidgetV2" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionDockWidgetV2::Type &amp;&amp; %1-&gt;version == QStyleOptionDockWidgetV2::Version">
+      <modify-function signature="operator=(QStyleOptionDockWidget)" remove="all"/>
+  </value-type>
   <value-type name="QStyleOptionFocusRect" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionFocusRect::Type &amp;&amp; %1-&gt;version == QStyleOptionFocusRect::Version"/>
   <value-type name="QStyleOptionFrame" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionFrame::Type &amp;&amp; %1-&gt;version == QStyleOptionFrame::Version"/>
+
+  <value-type name="QStyleOptionFrameV2" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionFrameV2::Type &amp;&amp; %1-&gt;version == QStyleOptionFrameV2::Version">
+    <modify-function signature="operator=(QStyleOptionFrame)" remove="all"/>
+  </value-type>
+  <value-type name="QStyleOptionFrameV3" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionFrameV3::Type &amp;&amp; %1-&gt;version == QStyleOptionFrameV3::Version">
+    <modify-function signature="operator=(QStyleOptionFrame)" remove="all"/>
+  </value-type>
 
   <value-type name="QStyleOptionGroupBox" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionGroupBox::Type &amp;&amp; %1-&gt;version == QStyleOptionGroupBox::Version"/>
   <value-type name="QStyleOptionHeader" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionHeader::Type &amp;&amp; %1-&gt;version == QStyleOptionHeader::Version"/>
   <value-type name="QStyleOptionMenuItem" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionMenuItem::Type &amp;&amp; %1-&gt;version == QStyleOptionMenuItem::Version"/>
   <value-type name="QStyleOptionProgressBar" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionProgressBar::Type &amp;&amp; %1-&gt;version == QStyleOptionProgressBar::Version"/>
+
+  <value-type name="QStyleOptionProgressBarV2" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionProgressBarV2::Type &amp;&amp; %1-&gt;version == QStyleOptionProgressBarV2::Version">
+    <modify-function signature="operator=(QStyleOptionProgressBar)" remove="all"/>
+  </value-type>
+
   <value-type name="QStyleOptionRubberBand" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionRubberBand::Type &amp;&amp; %1-&gt;version == QStyleOptionRubberBand::Version"/>
   <value-type name="QStyleOptionSlider" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionSlider::Type &amp;&amp; %1-&gt;version == QStyleOptionSlider::Version"/>
   <value-type name="QStyleOptionSpinBox" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionSpinBox::Type &amp;&amp; %1-&gt;version == QStyleOptionSpinBox::Version"/>
   <value-type name="QStyleOptionTab" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionTab::Type &amp;&amp; %1-&gt;version == QStyleOptionTab::Version"/>
+  <value-type name="QStyleOptionTabV2" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionTabV2::Type &amp;&amp; %1-&gt;version == QStyleOptionTabV2::Version">
+    <modify-function signature="operator=(const QStyleOptionTab &amp;)" remove="all"/>
+  </value-type>
+  <value-type name="QStyleOptionTabV3" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionTabV3::Type &amp;&amp; %1-&gt;version == QStyleOptionTabV3::Version">
+    <modify-function signature="operator=(QStyleOptionTab)" remove="all"/>
+  </value-type>
   <value-type name="QStyleOptionTabBarBase" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionTabBarBase::Type &amp;&amp; %1-&gt;version == QStyleOptionTabBarBase::Version"/>
+  <value-type name="QStyleOptionTabBarBaseV2" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionTabBarBaseV2::Type &amp;&amp; %1-&gt;version == QStyleOptionTabBarBaseV2::Version">
+    <modify-function signature="operator=(QStyleOptionTabBarBase)" remove="all"/>
+  </value-type>
   <value-type name="QStyleOptionTabWidgetFrame" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionTabWidgetFrame::Type &amp;&amp; %1-&gt;version == QStyleOptionTabWidgetFrame::Version"/>
   <value-type name="QStyleOptionTitleBar" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionTitleBar::Type &amp;&amp; %1-&gt;version == QStyleOptionTitleBar::Version"/>
   <value-type name="QStyleOptionToolBar" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionToolBar::Type &amp;&amp; %1-&gt;version == QStyleOptionToolBar::Version"/>
   <value-type name="QStyleOptionToolBox" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionToolBox::Type &amp;&amp; %1-&gt;version == QStyleOptionToolBox::Version"/>
+  <value-type name="QStyleOptionToolBoxV2" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionToolBoxV2::Type &amp;&amp; %1-&gt;version == QStyleOptionToolBoxV2::Version">
+    <modify-function signature="operator=(QStyleOptionToolBox)" remove="all"/>
+  </value-type>
   <value-type name="QStyleOptionToolButton" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionToolButton::Type &amp;&amp; %1-&gt;version == QStyleOptionToolButton::Version"/>
   <value-type name="QStyleOptionViewItem" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionViewItem::Type &amp;&amp; %1-&gt;version == QStyleOptionViewItem::Version"/>
+  <value-type name="QStyleOptionViewItemV2" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionViewItemV2::Type &amp;&amp; %1-&gt;version == QStyleOptionViewItemV2::Version">
+    <modify-function signature="operator=(QStyleOptionViewItem)" remove="all"/>
+  </value-type>
+  <value-type name="QStyleOptionViewItemV3" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionViewItemV3::Type &amp;&amp; %1-&gt;version == QStyleOptionViewItemV3::Version">
+    <modify-function signature="operator=(QStyleOptionViewItem)" remove="all"/>
+  </value-type>
+  <value-type name="QStyleOptionViewItemV4" delete-in-main-thread="yes" polymorphic-id-expression="%1-&gt;type == QStyleOptionViewItemV4::Type &amp;&amp; %1-&gt;version == QStyleOptionViewItemV4::Version">
+    <modify-function signature="operator=(QStyleOptionViewItem)" remove="all"/>
+  </value-type>
   <value-type name="QTextFragment" delete-in-main-thread="yes">
     <modify-function signature="operator=(QTextFragment)" remove="all"/>
   </value-type>
@@ -772,7 +797,6 @@
   </value-type>
 
   <value-type name="QIcon" delete-in-main-thread="yes">
-    <include file-name="QIconEngine" location="global"/>
     <modify-function signature="operator=(QIcon)" remove="all"/>
     <modify-function signature="serialNumber()const" remove="all"/> <!--### Obsolete in 4.3-->
     <modify-function signature="QIcon(QIconEngineV2 *)">
@@ -830,7 +854,7 @@
   <value-type name="QPixmap" delete-in-main-thread="yes">
     <modify-function signature="operator=(QPixmap)" remove="all"/>
     <modify-function signature="operator!()const" remove="all"/>
-    <modify-function signature="QPixmap(const char**)" remove="all"/>
+    <modify-function signature="QPixmap(const char **)" access="private"/>
     <modify-function signature="serialNumber()const" remove="all"/> <!--### Obsolete in 4.3-->
   
     <modify-function signature="loadFromData(const uchar *,uint,const char *,QFlags&lt;Qt::ImageConversionFlag&gt;)" remove="all"/>
@@ -988,9 +1012,6 @@
   </value-type>
 
   <value-type name="QFontInfo" delete-in-main-thread="yes" expense-cost="1" expense-limit="1000">
-    <extra-includes>
-      <include file-name="fontprivate.h" location="local"/>
-    </extra-includes>
     <custom-constructor>
     return new QFontInfo(*copy);
     </custom-constructor>
@@ -1301,9 +1322,6 @@
   </value-type>
 
   <value-type name="QFontMetricsF" delete-in-main-thread="yes" expense-cost="1" expense-limit="1000">
-    <extra-includes>
-      <include file-name="fontprivate.h" location="local"/>
-    </extra-includes>
     <custom-constructor>
         return new QFontMetricsF(*copy);
     </custom-constructor>
@@ -1348,9 +1366,6 @@
    <value-type name="QTextOption::Tab"/>
 
   <value-type name="QFontMetrics" delete-in-main-thread="yes" expense-cost="1" expense-limit="1000">
-    <extra-includes>
-      <include file-name="fontprivate.h" location="local"/>
-    </extra-includes>
     <custom-constructor>
         return new QFontMetrics(*copy);
     </custom-constructor>
@@ -1876,6 +1891,11 @@
         </modify-argument>
     </modify-function>
   </object-type>
+  <object-type name="QIconEngine">
+    <modify-function signature="paint(QPainter*,QRect,QIcon::Mode,QIcon::State)">
+        <modify-argument index="1" invalidate-after-use="yes"/>
+    </modify-function>
+  </object-type>
   <object-type name="QIconEngineV2">
     <modify-function signature="read(QDataStream&amp;)">
         <modify-argument index="1" invalidate-after-use="yes"/>
@@ -1891,22 +1911,6 @@
         </modify-argument>
     </modify-function>
   </object-type>
-
-  <object-type name="QIconEngine">
-    <modify-function signature="paint(QPainter*,QRect,QIcon::Mode,QIcon::State)">
-        <modify-argument index="1" invalidate-after-use="yes"/>
-    </modify-function>
-    <modify-function signature="read(QDataStream&amp;)" remove="all"/>
-    <modify-function signature="write(QDataStream&amp;)const" remove="all"/>
-
-    <modify-function signature="virtual_hook(int,void*)" remove="all"/>
-    <modify-function signature="clone()const">
-        <modify-argument index="return">
-            <define-ownership class="shell" owner="c++"/>
-        </modify-argument>
-    </modify-function>
-  </object-type>
-
   <object-type name="QImageWriter">
   <modify-function signature="setDevice(QIODevice*)">
     <modify-argument index="1">
@@ -2972,10 +2976,8 @@
   <object-type name="QInputDialog">
 
     <modify-function signature="getInt(QWidget*,QString,QString,int,int,int,int,bool*,QFlags&lt;Qt::WindowType&gt;)">
-        <!--
         <rename to="getInt_private"/>
         <access modifier="private"/>
-        -->
         <modify-argument index="4">
             <remove-default-expression/>
         </modify-argument>
@@ -4288,7 +4290,6 @@
   <object-type name="QFileDialog">
     <extra-includes>
         <include file-name="QUrl" location="global"/>
-        <include file-name="QAbstractProxyModel" location="global"/>
     </extra-includes>
 <!--
     <modify-function signature="getOpenFileName(QWidget*,QString,QString,QString,QString*,QFlags&lt;QFileDialog::Option&gt;)">
@@ -4658,7 +4659,6 @@
         <include file-name="QTextBlock" location="global"/>
         <include file-name="QTextFormat" location="global"/>
         <include file-name="QTextCursor" location="global"/>
-        <include file-name="QAbstractTextDocumentLayout" location="global"/>
     </extra-includes>
     <modify-function signature="redo(QTextCursor*)">
         <access modifier="private"/>
@@ -4810,8 +4810,6 @@
 
   <object-type name="QDesktopWidget">
   </object-type>
-
-  <object-type name="QScreen"/>
 
   <object-type name="QFrame">
   </object-type>
@@ -5170,9 +5168,6 @@
         </conversion-rule>            
       </modify-argument>
     </modify-function>
-  </object-type>
-
-  <object-type name="QGuiApplication">
   </object-type>
 
   <object-type name="QApplication">
@@ -5577,6 +5572,7 @@
   <object-type name="QGraphicsColorizeEffect"/>
   <object-type name="QGraphicsDropShadowEffect"/>
   <object-type name="QGraphicsEffect"/>
+  <object-type name="QGraphicsEffectSource"/>
   <object-type name="QGraphicsGrayscaleEffect"/>
   <object-type name="QGraphicsObject">
     <!-- Duplicate function to QObject::children() to override accidental shadowing which is not present in Jambi -->
@@ -5597,23 +5593,7 @@
 <!--  <object-type name="QProxyStyle" /> -->
   <object-type name="QSwipeGesture"/>
   <object-type name="QTouchEvent" polymorphic-id-expression="%1-&gt;type() == QEvent::TouchBegin || %1-&gt;type() == QEvent::TouchUpdate || %1-&gt;type() == QEvent::TouchEnd"/>
-  <enum-type name="QTouchEvent::TouchPoint::InfoFlag"/>
-
-  <object-type name="QTouchDevice">
-    <inject-code class="native" position="beginning">
-    Q_DECLARE_METATYPE(const QTouchDevice*)
-    </inject-code>
-  </object-type>
-  <enum-type name="QTouchDevice::DeviceType"/>
-  <enum-type name="QTouchDevice::CapabilityFlag" flags="QTouchDevice::Capabilities"/>
-  <object-type name="QWindow"/>
-  <rejection class="QWindow" function-name="accessibleRoot"/>
-  <enum-type name="QWindow::AncestorMode"/>
-  <enum-type name="QWindow::Visibility"/>
-  <object-type name="QSurface"/>
-  <enum-type name="QSurface::SurfaceType"/>
-  <enum-type name="QSurface::SurfaceClass"/>
-
+  
   <enum-type name="QGesture::GestureCancelPolicy"/>
   <enum-type name="QGraphicsEffect::PixmapPadMode"/>
   <enum-type name="QGraphicsBlurEffect::BlurHint" flags="QGraphicsBlurEffect::BlurHints"/>

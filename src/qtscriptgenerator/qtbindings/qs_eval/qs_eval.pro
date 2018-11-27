@@ -1,8 +1,4 @@
-greaterThan(QT_MAJOR_VERSION, 4) {
-    QT += widgets
-}
-
-QT += script
+QT = core gui script
 win32: CONFIG += console
 mac:CONFIG -= app_bundle
 SOURCES += main.cpp

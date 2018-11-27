@@ -1,17 +1,18 @@
 /****************************************************************************
 **
-** Copyright (C) 2008-2009 Nokia Corporation and/or its subsidiary(-ies).
-** All rights reserved.
-** Contact: Nokia Corporation (qt-info@nokia.com)
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
+** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Script Generator project on Qt Labs.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
-** No Commercial Usage
-** This file contains pre-release code and may not be distributed.
-** You may use this file in accordance with the terms and conditions
-** contained in the Technology Preview License Agreement accompanying
-** this package.
+** Commercial License Usage
+** Licensees holding valid commercial Qt licenses may use this file in
+** accordance with the commercial license agreement provided with the
+** Software or, alternatively, in accordance with the terms contained in
+** a written agreement between you and Digia.  For licensing terms and
+** conditions see http://qt.digia.com/licensing.  For further information
+** use the contact form at http://qt.digia.com/contact-us.
 **
 ** GNU Lesser General Public License Usage
 ** Alternatively, this file may be used under the terms of the GNU Lesser
@@ -21,18 +22,17 @@
 ** ensure the GNU Lesser General Public License version 2.1 requirements
 ** will be met: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
 **
-** In addition, as a special exception, Nokia gives you certain additional
-** rights.  These rights are described in the Nokia Qt LGPL Exception
+** In addition, as a special exception, Digia gives you certain additional
+** rights.  These rights are described in the Digia Qt LGPL Exception
 ** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
 **
-** If you have questions regarding the use of this file, please contact
-** Nokia at qt-info@nokia.com.
-**
-**
-**
-**
-**
-**
+** GNU General Public License Usage
+** Alternatively, this file may be used under the terms of the GNU
+** General Public License version 3.0 as published by the Free Software
+** Foundation and appearing in the file LICENSE.GPL included in the
+** packaging of this file.  Please review the following information to
+** ensure the GNU General Public License version 3.0 requirements will be
+** met: http://www.gnu.org/copyleft/gpl.html.
 **
 **
 ** $QT_END_LICENSE$
@@ -66,7 +66,7 @@ function CalendarWidget(parent) {
 CalendarWidget.prototype = new QWidget();
 
 CalendarWidget.prototype.localeChanged = function(index) {
-    this.calendar.locale = this.localeCombo.itemData(index);
+    this.calendar.setLocale(this.localeCombo.itemData(index));
 }
 
 CalendarWidget.prototype.firstDayChanged = function(index) {
@@ -95,7 +95,7 @@ CalendarWidget.prototype.minimumDateChanged = function(date) {
 }
 
 CalendarWidget.prototype.maximumDateChanged = function(date) {
-    this.calendar.maximumDate = date;
+    this.calendar.setMaximumDate(date);
     this.minimumDateEdit.setDate(this.calendar.minimumDate);
 }
 
@@ -175,23 +175,26 @@ CalendarWidget.prototype.createGeneralOptionsGroupBox = function() {
     var curLocaleIndex = -1;
     var index = 0;
 
-    for (var i = 0; i <= QLocale.Ugaritic; ++i) {
-        var lang = QLocale.Language(i);
+    
+
+    for (var lang in QLocale.Language) {
         var countries = QLocale.countriesForLanguage(lang);
+            
         for (var country in countries) {
             var label = QLocale.languageToString(lang);
             label += "/";
-            label += QLocale.countryToString(QLocale.Country(country));
+            label += QLocale.countryToString(country);
             var locale = new QLocale(lang, country);
-            if (this.locale.language() == lang && this.locale.country() == country)
+            if (this.locale().language() == lang && this.locale().country() == country)
                 curLocaleIndex = index;
-            this.localeCombo.addItem(label, locale);
+
+            localeCombo.addItem(label, locale);
             ++index;
         }
     }
 
     if (curLocaleIndex != -1)
-        this.localeCombo.setCurrentIndex(curLocaleIndex);
+        localeCombo.setCurrentIndex(curLocaleIndex);
     this.localeLabel = new QLabel(tr("&Locale"));
     this.localeLabel.setBuddy(this.localeCombo);
     

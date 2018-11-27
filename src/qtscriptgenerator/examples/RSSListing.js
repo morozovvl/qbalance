@@ -1,17 +1,18 @@
 /****************************************************************************
 **
-** Copyright (C) 2008-2009 Nokia Corporation and/or its subsidiary(-ies).
-** All rights reserved.
-** Contact: Nokia Corporation (qt-info@nokia.com)
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
+** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Script Generator project on Qt Labs.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
-** No Commercial Usage
-** This file contains pre-release code and may not be distributed.
-** You may use this file in accordance with the terms and conditions
-** contained in the Technology Preview License Agreement accompanying
-** this package.
+** Commercial License Usage
+** Licensees holding valid commercial Qt licenses may use this file in
+** accordance with the commercial license agreement provided with the
+** Software or, alternatively, in accordance with the terms contained in
+** a written agreement between you and Digia.  For licensing terms and
+** conditions see http://qt.digia.com/licensing.  For further information
+** use the contact form at http://qt.digia.com/contact-us.
 **
 ** GNU Lesser General Public License Usage
 ** Alternatively, this file may be used under the terms of the GNU Lesser
@@ -21,18 +22,17 @@
 ** ensure the GNU Lesser General Public License version 2.1 requirements
 ** will be met: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
 **
-** In addition, as a special exception, Nokia gives you certain additional
-** rights.  These rights are described in the Nokia Qt LGPL Exception
+** In addition, as a special exception, Digia gives you certain additional
+** rights.  These rights are described in the Digia Qt LGPL Exception
 ** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
 **
-** If you have questions regarding the use of this file, please contact
-** Nokia at qt-info@nokia.com.
-**
-**
-**
-**
-**
-**
+** GNU General Public License Usage
+** Alternatively, this file may be used under the terms of the GNU
+** General Public License version 3.0 as published by the Free Software
+** Foundation and appearing in the file LICENSE.GPL included in the
+** packaging of this file.  Please review the following information to
+** ensure the GNU General Public License version 3.0 requirements will be
+** met: http://www.gnu.org/copyleft/gpl.html.
 **
 **
 ** $QT_END_LICENSE$
@@ -50,9 +50,10 @@ function RSSListing(parent)
     this.currentTag = "";
     this.linkString = "";
     this.titleString = "";
+    this.connectionId = -1;
 
     this.lineEdit = new QLineEdit(this);
-    this.lineEdit.text = "http://blog.qt.digia.com/feed/";
+    this.lineEdit.text = "http://labs.trolltech.com/blogs/feed";
 
     this.fetchButton = new QPushButton(tr("Fetch"), this);
     this.abortButton = new QPushButton(tr("Abort"), this);
@@ -65,25 +66,27 @@ function RSSListing(parent)
     headerLabels.push(tr("Title"));
     headerLabels.push(tr("Link"));
     this.treeWidget.setHeaderLabels(headerLabels);
-    this.treeWidget.header().resizeMode = QHeaderView.ResizeToContents;
+    this.treeWidget.header().setResizeMode(QHeaderView.ResizeToContents);
 
-    this.manager = new QNetworkAccessManager(this);
+    this.http = new QHttp(this);
+    this.http.readyRead.connect(this, this.readData);
+    this.http.requestFinished.connect(this, this.finished);
 
     this.lineEdit.returnPressed.connect(this, this.fetch);
     this.fetchButton.clicked.connect(this, this.fetch);
-    this.abortButton.clicked.connect(this, this.abort);
+    this.abortButton.clicked.connect(this.http, this.http.abort);
 
     var layout = new QVBoxLayout(this);
 
     var hboxLayout = new QHBoxLayout();
 
     // ### working around problem with addWidget() binding
-    hboxLayout.addWidget(this.lineEdit, 0, 0);
-    hboxLayout.addWidget(this.fetchButton, 0, 0);
-    hboxLayout.addWidget(this.abortButton, 0, 0);
+    hboxLayout.addWidget(this.lineEdit, 0, Qt.AlignLeft);
+    hboxLayout.addWidget(this.fetchButton, 0, Qt.AlignLeft);
+    hboxLayout.addWidget(this.abortButton, 0, Qt.AlignLeft);
 
     layout.addLayout(hboxLayout);
-    layout.addWidget(this.treeWidget, 0, 0);
+    layout.addWidget(this.treeWidget, 0, Qt.AlignLeft);
 
     this.windowTitle = tr("RSS listing example");
     this.resize(640,480);
@@ -102,38 +105,32 @@ RSSListing.prototype.fetch = function()
 
     var url = new QUrl(this.lineEdit.text);
 
-    this.reply = this.manager.get(new QNetworkRequest(url));
-    this.reply.readyRead.connect(this, this.readData);
-    this.reply.finished.connect(this, this.finished);
+    this.http.setHost(url.host());
+    this.connectionId = this.http.get(url.path());
 }
 
-RSSListing.prototype.abort = function()
+RSSListing.prototype.readData = function(resp)
 {
-    if (this.reply)
-        this.reply.abort();
-}
-
-RSSListing.prototype.readData = function()
-{
-    if (this.reply.getError() != QNetworkReply.NoError) {
-        this.abort();
-    } else {
-        this.xml.addData(this.reply.readAll());
+    if (resp.statusCode() != 200)
+        this.http.abort();
+    else {
+        this.xml.addData(this.http.readAll());
         this.parseXml();
     }
 }
 
-RSSListing.prototype.finished = function()
+RSSListing.prototype.finished = function(id, error)
 {
-    if (this.reply.getError() != QNetworkReply.NoError)
+    if (error) {
         print("Received error during HTTP fetch."); // ### qWarning()
-    this.lineEdit.readOnly = false;
-    this.abortButton.enabled = false;
-    this.fetchButton.enabled = true;
-    this.reply.readyRead.disconnect(this, this.readData);
-    this.reply.finished.disconnect(this, this.finished);
-    this.reply.deleteLater();
-    this.reply = null;
+        this.lineEdit.readOnly = false;
+        this.abortButton.enabled = false;
+        this.fetchButton.enabled = true;
+    } else if (id == this.connectionId) {
+        this.lineEdit.readOnly = false;
+        this.abortButton.enabled = false;
+        this.fetchButton.enabled = true;
+    }
 }
 
 RSSListing.prototype.parseXml = function()
@@ -165,7 +162,7 @@ RSSListing.prototype.parseXml = function()
     }
     if (this.xml.hasError() && (this.xml.error() != QXmlStreamReader.PrematureEndOfDocumentError)) {
         print("XML ERROR:", this.xml.lineNumber() + ":", this.xml.errorString());
-        this.abort();
+        this.http.abort();
     }
 }
 
