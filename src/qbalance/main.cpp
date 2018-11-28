@@ -30,21 +30,21 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include "kernel/app.h"
 #include "kernel/dictionaries.h"
-#include "crashhandler/crashhandler.h"
+//#include "crashhandler/crashhandler.h"
 
 //#include <mcheck.h>
 
 
-#if defined(Q_OS_LINUX)
-#define CRASHHANDLER
-#endif
+//#if defined(Q_OS_LINUX)
+//#define CRASHHANDLER
+//#endif
 
 
 // Процедура для создания ошибки сегментирования
-int buggyFunc() {
-    delete reinterpret_cast<QString*>(0xFEE1DEAD);
-    return 0;
-}
+//int buggyFunc() {
+//    delete reinterpret_cast<QString*>(0xFEE1DEAD);
+//    return 0;
+//}
 
 
 int main(int argc, char *argv[])
@@ -65,9 +65,9 @@ int main(int argc, char *argv[])
 #endif
     QTextCodec::setCodecForLocale(application.codec());
 
-#ifdef CRASHHANDLER
-    Breakpad::CrashHandler::instance()->Init(TApplication::exemplar()->getCrashDumpsPath());
-#endif
+//#ifdef CRASHHANDLER
+//    Breakpad::CrashHandler::instance()->Init(TApplication::exemplar()->getCrashDumpsPath());
+//#endif
 
 //    buggyFunc();
 

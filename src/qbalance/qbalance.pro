@@ -183,10 +183,10 @@ unix:RCC_DIR = ../qbalance
 win32:RCC_DIR = ../qbalance
 
 unix {
- INCLUDEPATH = ../google-breakpad/src
- HEADERS += crashhandler/crashhandler.h
- SOURCES += crashhandler/crashhandler.cpp
- LIBS += ../google-breakpad/src/client/linux/libbreakpad_client.a
+# INCLUDEPATH = ../google-breakpad/src
+# HEADERS += crashhandler/crashhandler.h
+# SOURCES += crashhandler/crashhandler.cpp
+# LIBS += ../google-breakpad/src/client/linux/libbreakpad_client.a
  isEmpty(PREFIX) {
   PREFIX =   /usr
   }
