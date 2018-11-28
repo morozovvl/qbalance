@@ -77,7 +77,9 @@ int main(int argc, char *argv[])
         lStart = TApplication::readParameters(argc, argv);    // прочитаем их
     if (lStart)
     {
-        TApplication::addLibraryPath(TApplication::applicationDirPath() + "/lib64");
+        QString libPath = TApplication::applicationDirPath() + "/lib64";
+        if (QDir.exists(libPath))
+            TApplication::addLibraryPath(libPath);
 
         application.debug(0, "\n");
         application.debug(0, QString("Program startup. v.%1").arg(application.applicationVersion()));
