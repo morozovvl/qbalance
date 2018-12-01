@@ -4,13 +4,13 @@
 
 TEMPLATE = subdirs
 SUBDIRS = src/qextserialport \
-#          src/gsl \
-	  src/qbalance/plugins \
+          src/qbalance/plugins \
           src/qbalance/bankterminal \
           src/qbalance/barcodereader \
           src/qbalance/cardcodereader \
           src/qbalance/driverfr \
-          src/qbalance/startup \
           src/qbalance/emailclient \
           src/qbalance
+
+#          src/gsl \
 

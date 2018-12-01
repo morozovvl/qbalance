@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
     if (lStart)
     {
         QString libPath = TApplication::applicationDirPath() + "/lib64";
-        if (QDir.exists(libPath))
+        if (QDir().exists(libPath))
             TApplication::addLibraryPath(libPath);
 
         application.debug(0, "\n");
