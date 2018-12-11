@@ -19,7 +19,7 @@
 #ifndef EMAILADDRESS_H
 #define EMAILADDRESS_H
 
-#include <QObject>
+#include <QtCore/QObject>
 
 #include "smtpexports.h"
 

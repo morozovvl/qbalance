@@ -19,8 +19,8 @@
 #ifndef QUOTEDPRINTABLE_H
 #define QUOTEDPRINTABLE_H
 
-#include <QObject>
-#include <QByteArray>
+#include <QtCore/QObject>
+#include <QtCore/QByteArray>
 
 #include "smtpexports.h"
 

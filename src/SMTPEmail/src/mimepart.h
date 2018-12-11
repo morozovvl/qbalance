@@ -19,7 +19,7 @@
 #ifndef MIMEPART_H
 #define MIMEPART_H
 
-#include <QObject>
+#include <QtCore/QObject>
 #include "mimecontentformatter.h"
 
 #include "smtpexports.h"

@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef EMAILCLIENT_H
 #define EMAILCLIENT_H
 
-#include <QObject>
+#include <QtCore/QObject>
 
 class EMailClient : public QObject
 {

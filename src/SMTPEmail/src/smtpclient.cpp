@@ -19,7 +19,7 @@
 #include "smtpclient.h"
 
 #include <QFileInfo>
-#include <QByteArray>
+#include <QtCore/QByteArray>
 
 
 /* [1] Constructors and destructors */

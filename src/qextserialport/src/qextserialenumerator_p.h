@@ -61,7 +61,7 @@
 #endif /*Q_OS_MAC*/
 
 #if defined(Q_OS_LINUX) && !defined(QESP_NO_UDEV)
-#  include <QSocketNotifier>
+#  include <QtCore/QSocketNotifier>
 extern "C" {
 #  include <libudev.h>
 }

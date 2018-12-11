@@ -19,8 +19,8 @@
 #ifndef MIMECONTENTFORMATTER_H
 #define MIMECONTENTFORMATTER_H
 
-#include <QObject>
-#include <QByteArray>
+#include <QtCore/QObject>
+#include <QtCore/QByteArray>
 
 #include "smtpexports.h"
 

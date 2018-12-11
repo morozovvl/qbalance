@@ -19,7 +19,7 @@
 #ifndef SMTPCLIENT_H
 #define SMTPCLIENT_H
 
-#include <QObject>
+#include <QtCore/QObject>
 #include <QtNetwork/QSslSocket>
 
 #include "mimemessage.h"

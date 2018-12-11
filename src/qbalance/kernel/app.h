@@ -45,6 +45,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define MAX_NET_TIMEOUT                       "MAX_NET_TIMEOUT"
 #define BANK_TERMINAL_PLUGIN_NAME             "bankterminal"
 
+#ifndef APPLICATION_NAME
+    #define APPLICATION_NAME    "qbalance"
+#endif
 
 class Dictionary;
 class Dictionaries;

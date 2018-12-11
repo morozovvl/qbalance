@@ -20,7 +20,7 @@
 #define MIMEFILE_H
 
 #include "mimepart.h"
-#include <QFile>
+#include <QtCore/QFile>
 
 #include "smtpexports.h"
 

@@ -188,11 +188,12 @@ void TableView::currentChanged(const QModelIndex &current, const QModelIndex &pr
 
     if (current.row() != previous.row() && currentChangedScripts)
     {
-        if (essence->isPhotoEnabled())
-            showPhoto();
-
         if (essence != 0)
+        {
             essence->afterRowChanged();
+            if (essence->isPhotoEnabled())
+                showPhoto();
+        }
     }
 }
 

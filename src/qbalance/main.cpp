@@ -30,6 +30,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include "kernel/app.h"
 #include "kernel/dictionaries.h"
+
 //#include "crashhandler/crashhandler.h"
 
 //#include <mcheck.h>
@@ -56,7 +57,6 @@ int main(int argc, char *argv[])
     TApplication application(argc, argv);
 
     application.setOrganizationName("Enterprise");
-    application.setApplicationName("qbalance");
     application.setApplicationVersion("0.18.3");
 
 #if QT_VERSION < 0x050000

@@ -708,10 +708,10 @@ QString Essence::getPhotoFile(QString copyTo)
         // Теперь получим значение идентификатора
         if (tableModel->rowCount() > 0 && photoIdField.size() > 0)
         {
-            localFile = getLocalPhotoFile(getPhotoPath());       // Запомним локальный путь к фотографии на случай обращения к серверу за фотографией
-            idValue = getValue(photoIdField).toString().trimmed();
-            if (localFile.size() > 0 && photoEnabled)
+            if (photoPath.size() > 0 && photoEnabled)
             {
+                localFile = getLocalPhotoFile(getPhotoPath());       // Запомним локальный путь к фотографии на случай обращения к серверу за фотографией
+                idValue = getValue(photoIdField).toString().trimmed();
                 file = getLocalPhotoFile();
                 if (isDictionary && file.size() > 0)
                 {

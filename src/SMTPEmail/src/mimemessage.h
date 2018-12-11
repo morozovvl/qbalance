@@ -22,7 +22,7 @@
 #include "mimepart.h"
 #include "mimemultipart.h"
 #include "emailaddress.h"
-#include <QList>
+#include <QtCore/QList>
 
 #include "smtpexports.h"
 

@@ -19,7 +19,7 @@
 #ifndef MIMEATTACHMENT_H
 #define MIMEATTACHMENT_H
 
-#include <QFile>
+#include <QtCore/QFile>
 #include "mimepart.h"
 #include "mimefile.h"
 
