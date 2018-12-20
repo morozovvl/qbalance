@@ -31,13 +31,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 DBFactory::DBFactory()
 : QObject()
 {
+    db = 0;
+    dbExtend = 0;
     errorText.clear();
     hostName = "localhost";
     port = 5432;
     dbName = "qbalance";
     clearError();
     db = new QSqlDatabase(QSqlDatabase::addDatabase("QPSQL"));
-    dbExtend = new QSqlDatabase(QSqlDatabase::addDatabase("QPSQL", "qt_sql_pictures_connection"));
+    if (db->isValid())
+        dbExtend = new QSqlDatabase(QSqlDatabase::addDatabase("QPSQL", "qt_sql_pictures_connection"));
     extDbExist = true;
     commands.clear();
     dbIsOpened = false;
@@ -304,42 +307,44 @@ bool DBFactory::open()
 bool DBFactory::open(QString login, QString password)
 {
     clearError();
-    db->setHostName(hostName);
-    db->setDatabaseName(dbName);
-    db->setPort(port);
-    db->setUserName(login);
-    db->setPassword(password);
-    if (db->open())
+    if (db->isValid())
     {
-//        dbIsOpened = true;
-        exec("SET SEARCH_PATH TO system, public;");
-        exec(QString("SET CLIENT_ENCODING TO '%1';").arg(TApplication::encoding()));
-        exec("SET DATESTYLE TO ISO, DMY;");
-        exec("SET standard_conforming_strings TO on;");
-
-        currentLogin = login;
-        currentPassword = password;
-
-        pid = getValue("SELECT pg_backend_pid();").toInt();
-        return true;
-    }
-    else
-    {
-        errorNumber = 1;    // Предположим, что сервер работает
-        setError(db->lastError().text());
         db->setHostName(hostName);
-        db->setDatabaseName("postgres");
+        db->setDatabaseName(dbName);
         db->setPort(port);
         db->setUserName(login);
         db->setPassword(password);
         if (db->open())
         {
-            db->close();
+            exec("SET SEARCH_PATH TO system, public;");
+            exec(QString("SET CLIENT_ENCODING TO '%1';").arg(TApplication::encoding()));
+            exec("SET DATESTYLE TO ISO, DMY;");
+            exec("SET standard_conforming_strings TO on;");
+
+            currentLogin = login;
+            currentPassword = password;
+
+            pid = getValue("SELECT pg_backend_pid();").toInt();
+            return true;
         }
         else
         {
-            if (db->lastError().text().contains("could not connect to server"))
-                errorNumber = 2;    // Сервер не работает
+            errorNumber = 1;    // Предположим, что сервер работает
+            setError(db->lastError().text());
+            db->setHostName(hostName);
+            db->setDatabaseName("postgres");
+            db->setPort(port);
+            db->setUserName(login);
+            db->setPassword(password);
+            if (db->open())
+            {
+                db->close();
+            }
+            else
+            {
+                if (db->lastError().text().contains("could not connect to server"))
+                    errorNumber = 2;    // Сервер не работает
+            }
         }
     }
     return false;

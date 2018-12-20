@@ -292,7 +292,7 @@ public:
 
     Q_INVOKABLE virtual void showError(QString);
     Updates*        getUpdates();
-    QString         getTrueApplicationName();
+    static QString         getTrueApplicationName();
 
 
 public slots:
@@ -348,7 +348,7 @@ private:
     bool                    debugToBuffer;
     bool                    writeDebug;
     static  bool            fullDebugInfo;
-    QString                 trueApplicationName;
+    static QString                 trueApplicationName;
 
     void loadConsts();
     QString getAnyPath(QString, QString = "", QString = "");

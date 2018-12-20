@@ -175,7 +175,8 @@ int GUIFactory::openDB()
 }
 
 void GUIFactory::closeDB() {
-    db->close();
+    if (db->isOpened())
+        db->close();
 }
 
 
@@ -282,7 +283,6 @@ bool GUIFactory::open() {
 }
 
 void GUIFactory::close() {
-    closeDB();
     mainWindow->close();
     delete mainWindow;
 }

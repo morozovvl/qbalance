@@ -23,8 +23,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "bankterminal.h"
 #include "../kernel/app.h"
 #include "../kernel/tcpclient.h"
-#include <../driverfr/driverfr.h>
-#include <../kernel/tcpserver.h>
+#include "../driverfr/driverfr.h"
+#include "../kernel/tcpserver.h"
 
 
 BankTerminal::BankTerminal(QObject *parent) : QObject(parent)

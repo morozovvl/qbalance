@@ -68,6 +68,7 @@ bool                TApplication::timeIsOut = false;
 QTimer              TApplication::timer;
 bool                TApplication::loadDefaultConfig = false;
 bool                TApplication::fullDebugInfo = false;                  // По умолчанию выводится неполная отладочная информация (для лучшей читаемости журнала)
+QString             TApplication::trueApplicationName = "qbalance";
 
 
 
@@ -89,6 +90,7 @@ TApplication::TApplication(int & argc, char** argv)
     bankTerminal = 0;
     updates = 0;
     tcpServer = 0;
+    messagesWindow = 0;
 
     driverFRisValid = false;
     driverFRlocked = false;
@@ -106,7 +108,6 @@ TApplication::TApplication(int & argc, char** argv)
     dirName = "";
     debugToBuffer = true;
     writeDebug = true;
-    trueApplicationName = APPLICATION_NAME;
 }
 
 
@@ -708,7 +709,7 @@ bool TApplication::initApplication()
     {
         messagesWindow = new MessageWindow();
 
-        getMainWindow()->setWindowTitle(QString("%1 %2").arg(applicationName()).arg(applicationVersion()));
+        getMainWindow()->setWindowTitle(QString("%1 %2").arg(getTrueApplicationName()).arg(applicationVersion()));
 
         forever         // Будем бесконечно пытаться открыть базу, пока пользователь не откажется
         {
@@ -819,9 +820,12 @@ void TApplication::close()
         delete updates;
     }
 
-    saveMessages();
-    writeSettings();
-    delete messagesWindow;
+    if (messagesWindow != 0)
+    {
+        saveMessages();
+        writeSettings();
+        delete messagesWindow;
+    }
 
     if (driverFR)
     {
@@ -2096,7 +2100,7 @@ bool TApplication::readParameters(int argc, char *argv[])
         if (QString(argv[i]).compare("-?", Qt::CaseInsensitive) == 0 ||
             QString(argv[i]).compare("--help", Qt::CaseInsensitive) == 0)
         {
-            out << QString(QObject::trUtf8("Использование программы: %1 [Параметр]\n")).arg(applicationName());
+            out << QString(QObject::trUtf8("Использование программы: %1 [Параметр]\n")).arg(TApplication::getTrueApplicationName());
             out << QObject::trUtf8("Параметры:\n");
             out << QObject::trUtf8("  -? | --help       - Вывести список параметров запуска программы\n");
             out << QObject::trUtf8("  -v | --version    - Вывести номер версии программы\n");
@@ -2124,7 +2128,7 @@ bool TApplication::readParameters(int argc, char *argv[])
         else if (QString(argv[i]).compare("-v", Qt::CaseInsensitive) == 0 ||
                 QString(argv[i]).compare("--version", Qt::CaseInsensitive) == 0)
         {
-            out << QString(QObject::trUtf8("Название программы: %1\n")).arg(applicationName());
+            out << QString(QObject::trUtf8("Название программы: %1\n")).arg(getTrueApplicationName());
             out << QString(QObject::trUtf8("Версия: %1\n")).arg(applicationVersion());
             out << QString(QObject::trUtf8("Автор: %1\n")).arg(authors());
             lContinue = false;
@@ -2227,7 +2231,7 @@ bool TApplication::readParameters(int argc, char *argv[])
             }
         else
         {
-            out << QString(QObject::trUtf8("Неверный параметр. По команде \"%1 -?\" можно получить список правильных параметров.\n")).arg(applicationName());
+            out << QString(QObject::trUtf8("Неверный параметр. По команде \"%1 -?\" можно получить список правильных параметров.\n")).arg(getTrueApplicationName());
             lContinue = false;
         }
     }

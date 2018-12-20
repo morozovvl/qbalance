@@ -89,10 +89,10 @@ QHash<QString, QString> Updates::getProgramFilesList()
     list.insert(programUpdateXMLFile, "");
     #if defined(Q_OS_LINUX)
         #define LIB_EXT "*.so*"
-        list.insert(app->getTrueApplicationName(), "");
+        list.insert(app->applicationName(), "");
     #elif defined(Q_OS_WIN)
         #define LIB_EXT "*.dll"
-        list.insert(app->getTrueApplicationName() + ".exe", "");
+        list.insert(app->applicationName() + ".exe", "");
     #endif
     list.insert("resources.qrc", "");
     list.insert("plugins", LIB_EXT);
