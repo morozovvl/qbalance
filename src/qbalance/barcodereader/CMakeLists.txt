@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.13)
+#cmake_minimum_required(VERSION 3.13)
+
 set(CMAKE_BUILD_TYPE "Release")
 set(PROJECTNAME barcodereader)
 project(${PROJECTNAME})

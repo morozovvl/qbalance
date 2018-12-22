@@ -82,7 +82,6 @@ int main(int argc, char *argv[])
 //        if (QDir().exists(libPath))
 //            TApplication::addLibraryPath(libPath);
 
-        qDebug() << TApplication::applicationDirPath();
         application.debug(0, "\n");
         application.debug(0, QString("Program startup. v.%1").arg(application.applicationVersion()));
 

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13)
+#cmake_minimum_required(VERSION 3.13)
 set(VERSION "0.19")
 set (PROJECT0 qbalance)
 set (PROJECT1 qb_main)
