@@ -1,9 +1,10 @@
 #cmake_minimum_required(VERSION 3.13)
 
-set(CMAKE_BUILD_TYPE "Release")
+#set(CMAKE_BUILD_TYPE "Release")
 set(PROJECTNAME plugins)
 project(${PROJECTNAME})
 find_package(Qt4 REQUIRED)
+include(${QT_USE_FILE})
 set(SOURCE_ROOT ./)
 aux_source_directory (${SOURCE_ROOT} SOURCES)
 set(LIBRARY_OUTPUT_PATH ${SOURCE_ROOT}/../../../../plugins/designer)

@@ -5,14 +5,6 @@ set (PROJECT1 qb_main)
 
 project (${PROJECT0})
 
-#set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s")
-set(CMAKE_BUILD_TYPE "Release")
-
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-
-find_package (Qt4 REQUIRED)
-
 add_subdirectory(engine)
 add_subdirectory(gui)
 add_subdirectory(kernel)

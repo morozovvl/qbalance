@@ -273,7 +273,7 @@ public:
 
     void    openPlugins();
 
-// Работа с пользователской конфигурацией программы
+// Работа с пользовательской конфигурацией программы
     virtual QVariant        getConfigValue(QString name);
     QStringList     getConfigTypes();
     QString         getConfigTypeName(QString type);
