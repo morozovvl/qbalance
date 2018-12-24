@@ -98,7 +98,8 @@ SOURCES += main.cpp \
     openoffice/ooxmlengine.cpp \
     serialport/qmyextserialport.cpp \
     gui/myvalueeditor.cpp \
-    kernel/updates.cpp
+    kernel/updates.cpp \
+    gui/myuiloader.cpp
 
 HEADERS +=  gui/passwordform.h \
     gui/form.h \
@@ -167,7 +168,8 @@ HEADERS +=  gui/passwordform.h \
     fixed.h \
     storage/filetype.h \
     kernel/ConfigVars.h \
-    kernel/updates.h
+    kernel/updates.h \
+    gui/myuiloader.h
 
 
 RESOURCES += ../../resources.qrc

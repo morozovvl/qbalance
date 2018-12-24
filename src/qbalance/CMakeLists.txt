@@ -17,6 +17,7 @@ add_subdirectory(startup)
 set(SUBDIRS0 startup)
 set(SUBDIRS1 kernel gui report openoffice storage engine serialport)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY})
 
 add_executable(${PROJECT0} ${SUBDIRS0})
 target_link_libraries(${PROJECT0} ${SUBDIRS0} Qt4::QtCore)

@@ -43,6 +43,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/configform.h"
 #include "../gui/messagewindow.h"
 #include "../gui/dialog.h"
+#include "../gui/myuiloader.h"
 #include "../engine/documentscriptengine.h"
 #include "../storage/dbfactory.h"
 #include "../bankterminal/bankterminal.h"
@@ -1140,7 +1141,7 @@ Dialog* TApplication::createForm(QString fileName)
         QFile file(path + fName);
         if (file.exists() && file.open(QIODevice::ReadOnly))
         {
-            QUiLoader formLoader(gui);
+            MyUiLoader formLoader(gui);
             formLoader.setWorkingDirectory(getFormsPath());
             formLoader.clearPluginPaths();
             formLoader.addPluginPath(applicationDirPath() + "/plugins/designer");
@@ -1155,8 +1156,7 @@ Dialog* TApplication::createForm(QString fileName)
                     return 0;
                 }
                 formWidget->setApp(this);
-//                getMainWindow()->appendMdiWindow(formWidget);
-            }
+           }
         }
     }
     return formWidget;
