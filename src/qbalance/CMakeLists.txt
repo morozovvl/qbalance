@@ -38,6 +38,7 @@ set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CP
 
 install(TARGETS ${PROJECT0} ${PROJECT1} DESTINATION applications/${PROJECT0})
 install(DIRECTORY ../../plugins DESTINATION applications/${PROJECT0} FILES_MATCHING PATTERN "*.so*")
-
+file(GLOB INITDB_FILES "../../initdb*.sql")
+install(FILES ${INITDB_FILES} DESTINATION applications/${PROJECT0})
 
 include(CPack)
