@@ -247,7 +247,7 @@ void MainWindow::createMenus()
     wikiQtAct = infoMenu->addAction(QObject::trUtf8("Wiki проекта"));
     connect(wikiQtAct, SIGNAL(triggered()), this, SLOT(wikiQt()));
 
-    vkQtAct = infoMenu->addAction(QObject::trUtf8("Страница ВКонтакте"));
+    vkQtAct = infoMenu->addAction(QObject::trUtf8("Группа ВКонтакте"));
     connect(vkQtAct, SIGNAL(triggered()), this, SLOT(vkQt()));
 
     aboutQtAct = infoMenu->addAction(QObject::trUtf8("О &библиотеке Qt..."));
@@ -460,5 +460,5 @@ void MainWindow::wikiQt()
 
 void MainWindow::vkQt()
 {
-    QDesktopServices::openUrl(QUrl("https://vk.com/club164675831"));
+    QDesktopServices::openUrl(QUrl("https://vk.com/qbalance"));
 }
