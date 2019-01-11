@@ -18,18 +18,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
 #include <QtCore/QDate>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QMessageBox>
 #include <QtCore/QObject>
 #include <QtCore/QTextCodec>
 #include <QtCore/QVariant>
-#include <QtGui/QFileDialog>
-#include <QtGui/QPushButton>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QPushButton>
 #include <QtGui/QPaintEngine>
-#include <QtNetwork/QHttp>
+//#include <QtNetwork/QHttp>
 #include <QtDesigner/QFormBuilder>
-#include <QtGui/QInputDialog>
-#include <QtGui/QWidget>
-#include <QtUiTools/QUiLoader>
+#include <QInputDialog>
+#include <QtWidgets/QWidget>
+#include <QUiLoader>
+#include <QTimer>
 #include "app.h"
 #include "dictionaries.h"
 #include "documents.h"
@@ -89,7 +90,7 @@ TApplication::TApplication(int & argc, char** argv)
     barCodeReaded = false;
     cardCodeReader = 0;
     bankTerminal = 0;
-    updates = 0;
+//    updates = 0;
     tcpServer = 0;
     messagesWindow = 0;
 
@@ -427,9 +428,9 @@ bool TApplication::isSendCommandMode()
 }
 
 
-QMyExtSerialPort* TApplication::getSerialPort(const QString & name, QMyExtSerialPort::QueryMode mode, QObject* parent)
+QMyExtSerialPort* TApplication::getSerialPort(const QString & name, QObject* parent)
 {
-    return new QMyExtSerialPort(name, mode, parent);
+    return new QMyExtSerialPort(name, parent);
 }
 
 
@@ -732,8 +733,8 @@ bool TApplication::initApplication()
                     if (!isScriptMode())
                         openPlugins();
 
-                    updates = new Updates(this);
-                    updates->open();
+//                    updates = new Updates(this);
+//                    updates->open();
 
                     gui->showMenus();
 
@@ -815,11 +816,11 @@ bool TApplication::initApplication()
 
 void TApplication::close()
 {
-    if (updates != 0)
-    {
-        updates->close();
-        delete updates;
-    }
+//    if (updates != 0)
+//    {
+//        updates->close();
+//        delete updates;
+//    }
 
     if (messagesWindow != 0)
     {
@@ -1526,8 +1527,8 @@ int TApplication::runScript(QString scrName)
         if (scriptEngine->open())
         {
             scriptEngine->removeScript(scriptName);
-            scriptEngine->evaluate(QString("evaluateScript(\"%1\")").arg(scriptName)).toInteger();
-            result = scriptEngine->evaluate(QString("scriptResult")).toInteger();
+            scriptEngine->evaluate(QString("evaluateScript(\"%1\")").arg(scriptName)).toInt32();
+            result = scriptEngine->evaluate(QString("scriptResult")).toInt32();
             scriptEngine->close();
         }
         delete scriptEngine;
@@ -2304,12 +2305,12 @@ QString TApplication::OSType()
 #endif
 }
 
-
+/*
 Updates* TApplication::getUpdates()
 {
     return updates;
 }
-
+*/
 
 QString TApplication::getTrueApplicationName()
 {

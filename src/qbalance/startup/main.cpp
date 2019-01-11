@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QTextCodec>
+#include <QtCore/QString>
 
 
 bool  copyRecursively(const QString &srcFilePath, const QString &tgtFilePath)
@@ -68,12 +69,26 @@ bool  copyRecursively(const QString &srcFilePath, const QString &tgtFilePath)
 
 int main(int argc, char *argv[])
 {
-    QTextCodec* codec = QTextCodec::codecForName("UTF-8");
-    QTextCodec::setCodecForTr(codec);
-    QTextCodec::setCodecForCStrings(codec);
-    QTextCodec::setCodecForLocale(codec);
-
     QCoreApplication a(argc, argv);
+
+//    QTextCodec* codec = QTextCodec::codecForName("UTF-8");
+//    QTextCodec::setCodecForTr(codec);
+//    QTextCodec::setCodecForCStrings(codec);
+//    QTextCodec::setCodecForLocale(codec);
+//    QLocale::setDefault(QLocale(QLocale::Russian, QLocale::RussianFederation));
+
+//    TApplication application(argc, argv);
+
+//    application.setOrganizationName("Enterprise");
+//    application.setApplicationVersion(BUILD_NUMBER);
+
+//#if QT_VERSION < 0x050000
+//    QTextCodec::setCodecForTr(a.codec());
+//    QTextCodec::setCodecForCStrings(a.codec());
+//#endif
+//    QTextCodec::setCodecForLocale(codec);
+
+
 
     QStringList args;
     for (int i = 1; i < argc; i++)

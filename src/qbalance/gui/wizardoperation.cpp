@@ -19,8 +19,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QtCore/QDebug>
 #include <QtCore/QVariant>
-#include <QtGui/QHeaderView>
-#include <QtGui/QLabel>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLabel>
 #include "wizardoperation.h"
 #include "mybuttonlineedititemdelegate.h"
 #include "mybooleanitemdelegate.h"
@@ -463,7 +463,7 @@ void WizardOperation::getData()
      // Получим список проводок и полей и заголовков формы документа
      topersList.clear();
      fields.clear();
-     db->getDocumentSqlSelectStatement(oper, &topersList, &fields);
+     Documents::getDocumentSqlSelectStatement(oper, &topersList, &fields);
      db->getColumnsHeaders(QString("Документ%1").arg(oper), &fields);
      getFieldsTable(&fields, fieldsTable);
      sortHeadersList(fieldsTable, &headers);
@@ -781,7 +781,7 @@ void WizardOperation::frameDeactivated(int frameNumber)
                 topersList.append(toperT);
             }
             QList<FieldType> flds;
-            db->getDocumentSqlSelectStatement(oper, &topersList, &flds);
+            Documents::getDocumentSqlSelectStatement(oper, &topersList, &flds);
             getFieldsTable(&flds, fieldsTable);
             prvTableChanged = false;
         }

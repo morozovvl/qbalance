@@ -17,13 +17,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QtGui/QLineEdit>
-#include <QtGui/QTableView>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QTableView>
 #include <QtScript/QScriptContextInfo>
-#include <QtGui/QTableView>
-#include <QtGui/QHeaderView>
-#include <QtGui/QPushButton>
-#include <QtCore/QDebug>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QAbstractItemView>
+//#include <QtCore/QEvent>
+#include <QtSql/QSqlRelationalTableModel>
 #include "../kernel/app.h"
 #include "tableview.h"
 #include "formgrid.h"
@@ -88,18 +89,14 @@ void TableView::open()
     setFocusPolicy(Qt::StrongFocus);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     setObjectName(name);
-#if QT_VERSION >= 0x050000
     horizontalHeader()->setSectionsClickable(false);
-#else
-    horizontalHeader()->setClickable(false);
-#endif
     setSelectionBehavior(QAbstractItemView::SelectRows);
 }
 
 
 void TableView::close()
 {
-    disconnect(tableModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(setCurrentIndex(QModelIndex)));
+//    disconnect(tableModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(setCurrentIndex(QModelIndex)));
     disconnect(essence, SIGNAL(photoLoaded()), this, SLOT(showPhoto()));
 
     writeSettings();
@@ -116,7 +113,7 @@ void TableView::setEssence(Essence* ess)
     QTableView::setModel(tableModel);
 
     connect(essence, SIGNAL(photoLoaded()), this, SLOT(showPhoto()));
-    connect(tableModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(setCurrentIndex(QModelIndex)));
+//    connect(tableModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(setCurrentIndex(QModelIndex)));
 
     setReadOnly(essence->isReadOnly());
     setFormGrid(essence->getForm());
@@ -284,11 +281,7 @@ void TableView::setColumnsHeaders()
             if (fields.count() > 0)
             {
                 QHeaderView* header = horizontalHeader();
-            #if QT_VERSION >= 0x050000
                 header->setSectionsMovable(true);
-            #else
-                header->setMovable(true);
-            #endif
                 header->setSortIndicatorShown(true);
 
                 // Составим список столбцов, у которых поле number в списке fields больше 0

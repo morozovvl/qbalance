@@ -20,7 +20,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #ifndef MYDATEITEMDELEGATE_H
 #define MYDATEITEMDELEGATE_H
-#include <QtDesigner/QDesignerExportWidget>
+//#include <QtDesigner/QDesignerExportWidget>
+#include <QtUiPlugin/QDesignerExportWidget>
 #include <QtCore/QPointer>
 #include "myitemdelegate.h"
 

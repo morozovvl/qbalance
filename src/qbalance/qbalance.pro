@@ -8,20 +8,45 @@
 
 #QMAKE_CXXFLAGS += -std=c++11
 
+greaterThan(QT_MAJOR_VERSION, 4)
+{
+    QT += sql \
+          xml \
+          core \
+          gui \
+          network \
+          script \
+          printsupport \
+          widgets \
+          uitools \
+          serialport \
+          qml \
+          datavisualization
+
+#  DEFINES += HAVE_QT5
+  DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0
+}
+#lessThan(QT_MAJOR_VERSION, 4)
+#{
+#    QT += sql \
+#          xml \
+#          core \
+#          script \
+#          gui \
+#          network \
+#          designer \
+#          uitools
+#}
+
 APP_NAME = qb_main
 
-include(../qextserialport/src/qextserialport.pri)
+#include(../qextserialport/src/qextserialport.pri)
 
-QT_DEBUG_PLUGINS=1
+#QT_DEBUG_PLUGINS=1
 
-QT += sql \
-      xml \
-      core \
-      script \
-      gui \
-      network
 
-CONFIG(debug) {
+CONFIG(debug)
+{
     DESTDIR = ./
 }
 
@@ -29,8 +54,6 @@ TARGET = ../../$${APP_NAME}
 
 DEFINES += APPLICATION_NAME=\\\"$${APP_NAME}\\\"
 
-CONFIG += designer \
-      uitools
 CONFIG -= app_bundle
 TEMPLATE = app
 
@@ -167,9 +190,11 @@ HEADERS +=  gui/passwordform.h \
     mpreal.h \
     fixed.h \
     storage/filetype.h \
-    kernel/ConfigVars.h \
+    kernel/configvars.h \
     kernel/updates.h \
-    gui/myuiloader.h
+    gui/myuiloader.h \
+    version.h
+
 
 
 RESOURCES += ../../resources.qrc

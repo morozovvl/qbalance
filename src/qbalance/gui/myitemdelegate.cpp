@@ -18,7 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
 #include <QtCore/QObject>
-#include <QtGui/QLineEdit>
+#include <QtWidgets/QLineEdit>
 #include "../storage/mysqlrelationaltablemodel.h"
 #include "../kernel/essence.h"
 #include "myitemdelegate.h"
@@ -80,8 +80,8 @@ void MyItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option
 }
 
 
-QStyleOptionViewItemV2 MyItemDelegate::setElementColor(QStyleOptionViewItem option) const {
-    QStyleOptionViewItemV2 opt(option);
+QStyleOptionViewItem MyItemDelegate::setElementColor(QStyleOptionViewItem option) const {
+    QStyleOptionViewItem opt(option);
     if (!readOnly && option.state.testFlag(QStyle::State_HasFocus)) {           // Если делегат можно редактировать и он получил фокус
         QPalette p = opt.palette;
         p.setColor(QPalette::Active, QPalette::Highlight, Qt::darkBlue);        // То установим палитру белые буквы на темно-синем фоне

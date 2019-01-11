@@ -926,7 +926,7 @@ bool Document::setTableModel(int)
 {   // Генерирует заготовку запроса для получения данных для табличной части документа
     // Вызывается 1 раз
     tableModel = new MySqlRelationalTableModel(tableName, this);
-    selectStatement = db->getDocumentSqlSelectStatement(operNumber, topersList, &columnsProperties, &prv1);
+    selectStatement = parent->getDocumentSqlSelectStatement(operNumber, topersList, &columnsProperties, &prv1);
     if (columnsProperties.size() > 0)
     {
         tableModel->setSelectStatement(selectStatement);

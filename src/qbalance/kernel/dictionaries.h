@@ -75,6 +75,8 @@ public:
     Q_INVOKABLE virtual void setOrderClause(QString = "");
     virtual void            prepareSelectCurrentRowCommand() { ; }
     Q_INVOKABLE virtual void setForm(QString = "");
+
+    static QString getDictionarySqlSelectStatement(QString, QString = "");       // Генерирует текст SQL-запроса для справочника
 };
 
 //Q_DECLARE_METATYPE(Dictionaries)

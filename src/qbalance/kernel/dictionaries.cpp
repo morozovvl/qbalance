@@ -348,3 +348,67 @@ void Dictionaries::setOrderClause(QString)
     Table::setOrderClause(db->getObjectNameCom("доступ_к_справочникам.имя"));
 }
 
+
+QString Dictionaries::getDictionarySqlSelectStatement(QString tableName, QString prefix)
+{
+    QString selectList;
+    QString fromList;
+    QString selectStatement;
+    QList<FieldType> columnsProperties;
+    QStringList tables;
+    DBFactory* db = TApplication::exemplar()->getDBFactory();
+    db->getColumnsProperties(&columnsProperties, tableName, tableName, 0);
+    if (columnsProperties.size() > 0)
+    {
+        tables.append(columnsProperties.at(0).table);
+        fromList = db->getObjectNameCom(tableName);
+        FieldType fld, oldFld;
+        for (int i = 0; i < columnsProperties.count(); i++)
+        {
+            fld = columnsProperties.at(i);
+            if (!tables.contains(fld.table))
+            {
+                if (fld.table.left(9) == "документы" && fld.table.size() > 9)
+                {
+                    fromList.append(QString(" LEFT OUTER JOIN \"vw_спрдокументы\" \"%1\" ON \"%2\".\"%3\"=\"%1\".\"%4\"").arg(fld.table)
+                                                                                                 .arg(oldFld.table)
+                                                                                                 .arg(oldFld.name)
+                                                                                                 .arg(fld.name));
+                    QString docAttr = fld.table;
+                    docAttr = QString("докатрибуты%1").arg(docAttr.remove("документы"));
+                    if (db->isTableExists(docAttr))
+                    {
+                        if (!tables.contains(docAttr))
+                        {
+                            fromList.append(QString(" LEFT OUTER JOIN \"%1\" ON \"%1\".\"%2\"=\"%3\".\"%4\"").arg(docAttr)
+                                                                                                             .arg("КОД")
+                                                                                                             .arg(oldFld.table)
+                                                                                                             .arg(oldFld.name));
+                            tables.append(docAttr);
+                        }
+                    }
+                }
+                else
+                    fromList.append(QString(" LEFT OUTER JOIN \"%1\" ON \"%2\".\"%3\"=\"%1\".\"%4\"").arg(fld.table)
+                                                                                                 .arg(oldFld.table)
+                                                                                                 .arg(oldFld.name)
+                                                                                                 .arg(fld.name));
+                tables.append(fld.table);
+            }
+            if (selectList.size() > 0)
+            selectList.append(", ");
+            selectList.append(QString("\"%1\".\"%2\" AS \"%3%4\"").arg(fld.table)
+                                                                  .arg(fld.name)
+                                                                  .arg(prefix.toUpper())
+                                                                  .arg(fld.column.toUpper()));
+            oldFld = fld;
+        }
+        selectStatement.append(QLatin1String("SELECT DISTINCT ")).append(selectList);;
+        selectStatement.append(QLatin1String(" FROM ")).append(fromList);
+    }
+    return selectStatement;
+}
+
+
+
+

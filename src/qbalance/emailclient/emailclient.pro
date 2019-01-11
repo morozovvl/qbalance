@@ -1,4 +1,5 @@
-CONFIG += plugin
+CONFIG += plugin \
+          core
 
 unix:TARGET = ../../../plugins/emailclient
 win32:TARGET = ../../../../plugins/emailclient

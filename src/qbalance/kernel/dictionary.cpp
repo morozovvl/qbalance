@@ -693,7 +693,7 @@ bool Dictionary::setTableModel(int)
         {
             if (Essence::setTableModel(0))
             {
-                tableModel->setSelectStatement(db->getDictionarySqlSelectStatement(tableName));
+                tableModel->setSelectStatement(Dictionaries::getDictionarySqlSelectStatement(tableName));
                 db->getColumnsRestrictions(tableName, &columnsProperties);
                 return true;
             }

@@ -23,9 +23,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtUiTools/QUiLoader>
 #include <QtCore/QTextCodec>
 #include <QtCore/QList>
-#include <QtGui/QPushButton>
-#include <QtGui/QDesktopWidget>
-#include <QtGui/QToolTip>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QDesktopWidget>
+#include <QtWidgets/QToolTip>
 #include <QtCore/QDebug>
 #include "form.h"
 #include "../kernel/app.h"

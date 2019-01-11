@@ -22,8 +22,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QtCore/QObject>
 #include <QtCore/QPointer>
-#include <QtGui/QItemDelegate>
-#include <QtDesigner/QDesignerExportWidget>
+#include <QtWidgets/QItemDelegate>
+//#include <QtDesigner/QDesignerExportWidget>
+#include <QtUiPlugin/QDesignerExportWidget>
 #include "myitemdelegate.h"
 
 class MyLineItemDelegate : public MyItemDelegate {

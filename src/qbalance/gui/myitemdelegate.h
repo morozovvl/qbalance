@@ -21,15 +21,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define MYITEMDELEGATE_H
 
 #include <QtCore/QObject>
-#include <QtGui/QItemDelegate>
+#include <QtWidgets/QItemDelegate>
 #include <QtGui/QPainter>
-#include <QtGui/QStyleOptionViewItem>
-#include <QtGui/QStyleOptionViewItemV2>
+#include <QtWidgets/QStyleOptionViewItem>
+#include <QtWidgets/QStyleOptionViewItem>
 #include <QtCore/QModelIndex>
 #include <QtGui/QPalette>
 #include <QtCore/QVariant>
 #include <QtCore/QPointer>
-#include <QtDesigner/QDesignerExportWidget>
+//#include <QtDesigner/QDesignerExportWidget>
+#include <QtUiPlugin/QDesignerExportWidget>
 
 class FormGrid;
 class Essence;
@@ -65,7 +66,7 @@ protected:
     QString                 columnMask;
     DelegateTypes           delegateType;
     bool                    readOnly;
-    QStyleOptionViewItemV2 setElementColor(QStyleOptionViewItem) const;
+    QStyleOptionViewItem setElementColor(QStyleOptionViewItem) const;
 
 private:
     QString                 fieldName;

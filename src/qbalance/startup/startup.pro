@@ -6,8 +6,6 @@
 
 QT       += core
 
-QT       -= gui
-
 unix:TARGET = ../../../qbalance
 win32:TARGET = ../../../../qbalance
 

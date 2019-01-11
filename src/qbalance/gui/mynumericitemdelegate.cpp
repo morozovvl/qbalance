@@ -18,8 +18,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
 #include <QtGui/QDoubleValidator>
-#include <QtGui/QStyleOptionViewItemV2>
-#include <QtGui/QLineEdit>
+#include <QtWidgets/QStyleOptionViewItem>
+#include <QtWidgets/QLineEdit>
 #include "mynumericitemdelegate.h"
 #include "formgrid.h"
 #include "../kernel/dictionary.h"
@@ -101,7 +101,7 @@ QWidget* MyNumericItemDelegate::createEditor(QWidget*parent, const QStyleOptionV
 
 void MyNumericItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const
 {
-    QStyleOptionViewItemV2 opt;
+    QStyleOptionViewItem opt;
     QLocale locale;
     locale.setNumberOptions(QLocale::OmitGroupSeparator);
     opt = setElementColor(QStyleOptionViewItem(option));

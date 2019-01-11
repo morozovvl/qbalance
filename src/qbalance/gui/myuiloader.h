@@ -2,7 +2,7 @@
 #define MYUILOADER_H
 
 #include <QtUiTools/QUiLoader>
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 
 class MyUiLoader : public QUiLoader
 {

@@ -20,11 +20,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef PICTURE_H
 #define PICTURE_H
 
-#include <QtGui/QFrame>
+#include <QtWidgets/QFrame>
 #include <QtCore/QString>
 #include <QtGui/QImage>
 #include <QtGui/QPaintEvent>
-#include <QtDesigner/QDesignerExportWidget>
+//#include <QtDesigner/QDesignerExportWidget>
+#include <QtUiPlugin/QDesignerExportWidget>
 
 
 class TApplication;

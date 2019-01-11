@@ -20,13 +20,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef TABLEVIEW_H
 #define TABLEVIEW_H
 
-#include <QtGui/QTableView>
-#include <QtGui/QWidget>
-#include <QtGui/QAbstractItemDelegate>
+#include <QtWidgets/QTableView>
+//#include <QtGui/QWidget>
+#include <QtWidgets/QAbstractItemDelegate>
 #include <QtScript/QScriptValue>
 #include <QtScript/QScriptContext>
 #include <QtScript/QScriptEngine>
-#include <QtDesigner/QDesignerExportWidget>
+#include <QtUiPlugin/QDesignerExportWidget>
 
 
 class TApplication;

@@ -20,9 +20,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef MYBUTTONLINEEDITITEMDELEGATE_H
 #define MYBUTTONLINEEDITITEMDELEGATE_H
 
-#include <QtGui/QWidget>
-#include <QtGui/QTableWidget>
-#include <QtGui/QItemDelegate>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QTableWidget>
+#include <QtWidgets/QItemDelegate>
 #include <QtCore/QAbstractItemModel>
 #include "myitemdelegate.h"
 

@@ -18,9 +18,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 #include <QtCore/QHash>
 #include <QtCore/QVariant>
-#include <QtGui/QLabel>
-#include <QtGui/QHeaderView>
-#include "QtGui/QCheckBox"
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QHeaderView>
+#include "QtWidgets/QCheckBox"
 #include "wizarddictionary.h"
 #include "../kernel/app.h"
 #include "mybuttonlineedit.h"

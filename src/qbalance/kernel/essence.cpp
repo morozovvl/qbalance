@@ -25,11 +25,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QDir>
 #include <QtXml/QDomDocument>
 #include <QtXml/QDomElement>
-#include <QtGui/QMessageBox>
-#include <QtGui/QMenu>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QMenu>
 #include <QtCore/QFile>
 #include <QtCore/QTemporaryFile>
 #include <QtCore/QDebug>
+#include <QtCore/QtMath>
 #include <QtGui/QImage>
 //#include <boost/crc.hpp>
 #include "essence.h"
@@ -1299,7 +1300,7 @@ bool Essence::getFile(QString path, QString fileName, FileType type)
             int diff = app->getSecDiff();
             QFileInfo fi(file);
             QDateTime locFileTime = fi.lastModified();
-            locFileTime.addSecs(diff);  // Время модификации локального файла, приведенное к серверному времени
+            locFileTime = locFileTime.addSecs(diff);  // Время модификации локального файла, приведенное к серверному времени
             FileInfo servFileInfo = db->getFileInfo(fileName, type);
             if (file.open(QIODevice::ReadOnly))
             {

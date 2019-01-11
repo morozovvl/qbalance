@@ -26,8 +26,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "searchparametersplugin.h"
 #include "docparametersplugin.h"
 #include "mynumericeditplugin.h"
-
-#include <QtDesigner/QtDesigner>
+//#include <QtDesigner/QtDesigner>
 #include <QtCore/qplugin.h>
 
 class MyPlugins: public QObject, public QDesignerCustomWidgetCollectionInterface {

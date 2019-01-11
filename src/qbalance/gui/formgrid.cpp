@@ -17,21 +17,21 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include <QtSql/QSqlTableModel>
 #include <QtCore/QStringList>
-#include <QtGui/QAbstractItemView>
+#include <QtWidgets/QAbstractItemView>
 #include <QtCore/QModelIndex>
 #include <QtCore/QRect>
 #include <QtGui/QPalette>
 #include <QtGui/QPixmap>
-#include <QtGui/QHBoxLayout>
+#include <QtWidgets/QHBoxLayout>
 #include <QtGui/QPainter>
 #include <QtCore/QUrl>
-#include <QtGui/QHeaderView>
-#include <QtGui/QPushButton>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QPushButton>
 #include <QtCore/QDebug>
-#include <QtGui/QInputDialog>
+#include <QtWidgets/QInputDialog>
 #include "formgrid.h"
 #include "picture.h"
 #include "tableview.h"

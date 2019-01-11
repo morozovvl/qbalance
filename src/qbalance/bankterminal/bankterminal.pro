@@ -1,4 +1,6 @@
-CONFIG += plugin
+CONFIG += plugin \
+          core
+          
 
 unix:TARGET = ../../../plugins/bankterminal
 win32:TARGET = ../../../../plugins/bankterminal

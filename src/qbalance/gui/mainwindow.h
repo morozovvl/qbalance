@@ -20,11 +20,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QtGui/QMdiArea>
-#include <QtGui/QStatusBar>
-#include <QtGui/QMenu>
-#include <QtGui/QToolBar>
-#include <QtGui/QMainWindow>
+#include <QtWidgets/QMdiArea>
+#include <QtWidgets/QStatusBar>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QToolBar>
+#include <QtWidgets/QMainWindow>
 #include "guifactory.h"
 
 class TApplication;

@@ -17,10 +17,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QtGui/QCheckBox>
-#include <QtGui/QStyleOptionButton>
-#include <QtGui/QStyle>
-#include <QtGui/QApplication>
+#include <QtWidgets/QCheckBox>
+#include <QtWidgets/QStyleOptionButton>
+#include <QtWidgets/QStyle>
+#include <QtWidgets/QApplication>
 #include "mybooleanitemdelegate.h"
 //#include "formgrid.h"
 #include "../kernel/dictionary.h"

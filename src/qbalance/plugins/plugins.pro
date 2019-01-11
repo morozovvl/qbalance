@@ -1,11 +1,28 @@
-CONFIG += sql \
-        core \
-        script \
-        gui \
-        xml \
-        network \
-        designer \
-        uitools
+greaterThan(QT_MAJOR_VERSION, 4)
+{
+    QT += sql \
+          xml \
+          core \
+          gui \
+          network \
+          script \
+          printsupport \
+          widgets
+
+  DEFINES += HAVE_QT5
+}
+
+
+#CONFIG += sql \
+#        core \
+#        script \
+#        gui \
+#        xml \
+#        network \
+#        printsupport \
+#        widgets
+#        designer \
+#        uitools
 
 unix:TARGET = ../../../plugins/designer/plugins
 win32:TARGET = ../../../../plugins/designer/plugins

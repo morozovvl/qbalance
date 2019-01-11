@@ -22,22 +22,23 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QtCore/QByteArray>
 #include <QtCore/QQueue>
+#include <QtSerialPort/QSerialPort>
 #include "../../qextserialport/src/qextserialport.h"
 
 class TApplication;
 class TcpClient;
 
 
-class QMyExtSerialPort : public QextSerialPort
+class QMyExtSerialPort : public QSerialPort
 {
     Q_OBJECT
 public:
-    QMyExtSerialPort(const QString & name, QueryMode mode = EventDriven, QObject * parent = 0);
+    QMyExtSerialPort(const QString & name, QObject * parent = 0);
     ~QMyExtSerialPort();
 
     virtual bool open(OpenMode mode);
     virtual void close();
-    virtual qint64 writeData(const char *, qint64, bool = false);
+    qint64 writeData(const char *, qint64, bool = false);
     virtual qint64 writeData(QString, bool = false);
     virtual qint64 readData(char *, qint64, bool = false);
     virtual QByteArray readAll();
@@ -48,7 +49,7 @@ public:
     virtual void    setRemote(bool r);
     virtual void    setMyTimeout(int t);
     virtual void    setBaudRate(int rate);
-    virtual void    setTimeout(long timeOut);
+//    virtual void    setTimeout(long timeOut);
 
     // Работа с TCP соединением
     virtual TcpClient* getTcpClient();

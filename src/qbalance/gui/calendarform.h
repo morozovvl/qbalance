@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef CALENDARFORM_H
 #define CALENDARFORM_H
 
-#include <QtGui/QCalendarWidget>
+#include <QtWidgets/QCalendarWidget>
 #include "form.h"
 
 class TApplication;

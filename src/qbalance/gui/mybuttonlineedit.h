@@ -20,8 +20,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef MYBUTTONLINEEDIT_H
 #define MYBUTTONLINEEDIT_H
 
-#include <QtGui/QLineEdit>
-#include <QtGui/QPushButton>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QPushButton>
 //#include "form.h"
 
 class MyButtonLineEdit : public QWidget
@@ -35,7 +35,7 @@ public:
     void setValue(QString text);
     void setFormOnPushButton(QString (*form)());
 protected:
-    virtual void paintEvent(QPaintEvent*);
+//    virtual void paintEvent(QPaintEvent*);
 private:
     QString         (*buttonForm)();
     QLineEdit*      lineEdit;

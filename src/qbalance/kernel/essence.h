@@ -33,7 +33,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtXml/QDomNode>
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlRecord>
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkConfigurationManager>
 #include <QtNetwork/QNetworkReply>

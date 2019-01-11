@@ -20,25 +20,27 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef APP_H
 #define APP_H
 
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include <QtCore/QHash>
 #include <QtCore/QDate>
 #include <QtCore/QString>
 #include <QtCore/QDir>
 #include <QtCore/QPluginLoader>
 #include <QtCore/QPointer>
-#include <QtUiTools/QtUiTools>
-#include <QtGui/QTextEdit>
-#include <QtGui/QFileDialog>
-#include <QtGui/QMdiSubWindow>
-#include <QtGui/QMessageBox>
+//#include <QtUiTools>
+//#include <QtWidgets/QTextEdit>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QMdiSubWindow>
+#include <QtWidgets/QMessageBox>
+//#include <QPrinter>
 #include <QtSql/QSqlQuery>
+//#include <QVariant>
 #include "configvars.h"
 #include "../storage/filetype.h"
 #include "../serialport/qmyextserialport.h"
 #include "../bankterminal/bankterminal.h"
 #include "../emailclient/emailclient.h"
-#include "updates.h"
+//#include "updates.h"
 
 
 #define FR_NET_DRIVER_TIMEOUT                 "FR_NET_DRIVER_TIMEOUT"
@@ -266,7 +268,7 @@ public:
     ScriptEngine*   getLastScriptStack();
 
     QObject*        createPlugin(QString);
-    virtual QMyExtSerialPort* getSerialPort(const QString & name, QMyExtSerialPort::QueryMode mode = QMyExtSerialPort::EventDriven, QObject * parent = 0);
+    virtual QMyExtSerialPort* getSerialPort(const QString & name, QObject * parent = 0);
     virtual MyProgressDialog* getMyProgressDialog(QString mess);
     QString         getReportFile(QString, bool, QWidget*, QRect);
     QString         getProcessFile(QString, QWidget*, QRect);
@@ -291,7 +293,7 @@ public:
     void                    saveMessages();
 
     Q_INVOKABLE virtual void showError(QString);
-    Updates*        getUpdates();
+//    Updates*        getUpdates();
     static QString         getTrueApplicationName();
 
 
@@ -322,7 +324,7 @@ private:
     DBFactory*              db;
     bool                    barCodeReaded;
     MessageWindow*          messagesWindow;
-    Updates*                updates;
+//    Updates*                updates;
     int                     secDiff;                                // Разница в секундах между временем на этой машине и на сервере
                                                                     // Если число положительное, то время на этих часах отстает
                                                                     // Чтобы получить приблизительное время на сервере

@@ -17,7 +17,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QtGui/QHBoxLayout>
+//#include <QtWidgets/QSizePolicy>
+#include <QHBoxLayout>
 #include <QtGui/QPaintEvent>
 #include <QtGui/QPainter>
 #include "mybuttonlineedit.h"
@@ -60,13 +61,13 @@ void MyButtonLineEdit::setValue(QString text)
     lineEdit->setText(text);
 }
 
-
+/*
 void MyButtonLineEdit::paintEvent(QPaintEvent* event)
 {
     QWidget::paintEvent(event);
     pushButton->setFixedSize(lineEdit->height(), lineEdit->height());
 }
-
+*/
 
 void MyButtonLineEdit::setFormOnPushButton(QString (*form)())
 {

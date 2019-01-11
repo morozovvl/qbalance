@@ -20,7 +20,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef MYTEXTEDIT_H
 #define MYTEXTEDIT_H
 
-#include <QtGui/QTextEdit>
+//#include <QtWidgets/QPrinter>
+#include <QtWidgets/QTextEdit>
 
 class MyTextEdit : public QTextEdit
 {

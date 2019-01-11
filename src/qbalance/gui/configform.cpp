@@ -17,12 +17,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QtGui/QTreeWidgetItem>
-#include <QtGui/QFrame>
-#include <QtGui/QSizePolicy>
-#include <QtGui/QLabel>
-#include <QtGui/QLineEdit>
-#include <QtGui/QGridLayout>
+#include <QtWidgets/QTreeWidgetItem>
+#include <QtWidgets/QFrame>
+#include <QtWidgets/QSizePolicy>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QGridLayout>
 #include "configform.h"
 #include "../kernel/app.h"
 #include "../storage/dbfactory.h"
@@ -208,12 +208,14 @@ void ConfigForm::buttonPressed(QString type)
 {
     if (type == "PASSWORD_BUTTON")
         changePassword();
+/*
     else if (type == "UPDATES_FTP_ALL_UPLOAD")
         ftpTotalUpload();
     else if (type == "UPDATES_FTP_UPLOAD")
         ftpUpload();
     else if (type == "UPDATES_FTP_LOAD")
         ftpLoad();
+*/
 }
 
 
@@ -236,7 +238,7 @@ void ConfigForm::changePassword()
         app->showError("Пароли не совпадают");
 }
 
-
+/*
 void ConfigForm::ftpUpload()
 {
     if (app->getUpdates() != 0)
@@ -265,3 +267,4 @@ void ConfigForm::ftpLoad()
         app->getUpdates()->updateModified();
     }
 }
+*/

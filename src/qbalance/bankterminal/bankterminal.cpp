@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QStringList>
-#include <QtCore/QDebug>
+#include <QtCore/QTextCodec>
 #include "bankterminal.h"
 #include "../kernel/app.h"
 #include "../kernel/tcpclient.h"
@@ -361,3 +361,4 @@ void BankTerminal::setApp(TApplication* a)
 {
     app = a;
 }
+

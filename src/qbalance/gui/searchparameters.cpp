@@ -18,15 +18,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
 #include <QtCore/QString>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QPushButton>
-#include <QtGui/QSizePolicy>
-#include <QtGui/QFrame>
-#include <QtGui/QLayout>
+//#include <QtWidgets/QSizePolicy>
+//#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QSizePolicy>
+#include <QtWidgets/QFrame>
+#include <QtWidgets/QLayout>
 #include <QtGui/QKeyEvent>
-#include <QtGui/QCheckBox>
-#include <QtGui/QLineEdit>
+#include <QtWidgets/QCheckBox>
+#include <QtWidgets/QLineEdit>
 #include "formgrid.h"
 #include "formgridsearch.h"
 #include "searchparameters.h"

@@ -35,7 +35,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
 #include <QtCore/QTextCodec>
+#include <QtCore/QString>
 #include "driverfr.h"
+#include <math.h>
 #include "../kernel/tcpserver.h"
 #include "../kernel/tcpclient.h"
 #include "../kernel/app.h"
@@ -429,7 +431,7 @@ bool DriverFR::open(QString port, int rate, int timeout, int password)
     fr.BaudRate      = rate;
     fr.Timeout       = timeout;
     fr.Password      = password;
-    serialPort = app->getSerialPort(port, QextSerialPort::Polling);
+    serialPort = app->getSerialPort(port);
     if (serialPort != 0)
     {
         // Сначала поищем на удаленном компьютере, т.к. это быстрее
@@ -466,7 +468,7 @@ bool DriverFR::open(QString port, int rate, int timeout, int password)
             remote = false;
             serialPort->setRemote(remote);
             serialPort->setBaudRate(rate);
-            serialPort->setTimeout(timeout);
+//            serialPort->setTimeout(timeout);
 #if  defined(Q_OS_LINUX)
             if (serialPort->open(QIODevice::ReadWrite) && serialPort->isOpen())
 #elif   defined(Q_OS_WIN)
@@ -798,7 +800,7 @@ QVariant DriverFR::getProperty(QString name)
 {
     QVariant result;
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
-    const char* propName = name.toAscii().data();
+    const char* propName = name.toLatin1().data();
     result = fr.property(propName);
 /*
     if (result.type() == QVariant::String)
@@ -815,7 +817,7 @@ bool DriverFR::setProperty(QString name, QVariant value)
 {
     bool result;
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("Windows-1251"));
-    const char* propName = name.toAscii().data();
+    const char* propName = name.toLatin1().data();
     result = fr.setProperty(propName, value);
     QTextCodec::setCodecForLocale(app->codec());
     return result;

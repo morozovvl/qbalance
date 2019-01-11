@@ -1,2 +1,6 @@
-aux_source_directory (. DIR_STARTUP_SRCS)
-add_library (startup ${DIR_STARTUP_SRCS})
+find_package(Qt5Core)
+#set(SOURCE_ROOT ./)
+aux_source_directory (./ SOURCES)
+add_executable(${PROJECT0} main.cpp ${SOURCES})
+target_link_libraries(${PROJECT0} ${SOURCES} Qt5::Core)
+qt5_use_modules(${PROJECT0} Core)

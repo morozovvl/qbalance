@@ -20,7 +20,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef DIALOGPLUGIN_H
 #define DIALOGPLUGIN_H
 
-#include <QtDesigner/QDesignerCustomWidgetInterface>
+//#include <QtDesigner/QDesignerCustomWidgetInterface>
+#include <QtUiPlugin/QDesignerCustomWidgetInterface>
 
 class DialogPlugin : public QObject, public QDesignerCustomWidgetInterface
 {

@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 #include <QtCore/QProcess>
 #include <QtCore/QDebug>
+#include <QTemporaryFile>
 #include "ooxmlengine.h"
 #include "../kernel/app.h"
 

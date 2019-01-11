@@ -1,0 +1,14 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Type=Application
+Name=QBalance
+Exec=/home/vladimir/work/qbalance1/qbalance.sh
+Version=1.0
+Encoding=UTF-8
+GenericName=qbalance
+Comment=
+Icon=/home/vladimir/work/qbalance1/resources/qbalance.png
+Path=
+Terminal=
+MimeType=application/x-executable
+Categories=Other

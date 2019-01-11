@@ -18,15 +18,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
 #include <QtCore/QString>
-#include <QtGui/QMessageBox>
-#include <QtGui/QErrorMessage>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QErrorMessage>
 #include <QtCore/QProcess>
 #include <QtSql/QSqlError>
 
 #include <QtCore/QObject>
 #include <QtCore/QIODevice>
 #include <QtCore/QDir>
-#include <QtGui/QAbstractButton>
+#include <QtWidgets/QAbstractButton>
 #include "guifactory.h"
 #include "connectionform.h"
 #include "mainwindow.h"

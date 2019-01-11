@@ -22,13 +22,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QTextCodec>
 #include <QtCore/QTextStream>
 #include <QtCore/QResource>
-#include <QtGui/QPrinter>
-#include <QtGui/QPrinterInfo>
-#include <QtGui/QPainter>
-#include <QtGui/QPrintEngine>
-#include <QtGui/QStyleFactory>
+//#include <QtWidgets/QPrinter>
+//#include <QtWidgets/QPrinterInfo>
+//#include <QtGui/QPainter>
+//#include <QtWidgets/QPrintEngine>
+#include <QtWidgets/QStyleFactory>
 #include <QtCore/QDebug>
 
+#include "version.h"
 #include "kernel/app.h"
 #include "kernel/dictionaries.h"
 
@@ -58,7 +59,7 @@ int main(int argc, char *argv[])
     TApplication application(argc, argv);
 
     application.setOrganizationName("Enterprise");
-    application.setApplicationVersion("0.19");
+    application.setApplicationVersion(BUILD_NUMBER);
 
 #if QT_VERSION < 0x050000
     QTextCodec::setCodecForTr(application.codec());
@@ -78,9 +79,6 @@ int main(int argc, char *argv[])
         lStart = TApplication::readParameters(argc, argv);    // прочитаем их
     if (lStart)
     {
-//        QString libPath = TApplication::applicationDirPath() + "/lib64";
-//        if (QDir().exists(libPath))
-//            TApplication::addLibraryPath(libPath);
 
         application.debug(0, "\n");
         application.debug(0, QString("Program startup. v.%1").arg(application.applicationVersion()));

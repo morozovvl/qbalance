@@ -20,13 +20,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef SEARCHPARAMETERS_H
 #define SEARCHPARAMETERS_H
 
-#include <QtGui/QFrame>
-#include <QtGui/QVBoxLayout>
+#include <QtWidgets/QFrame>
+#include <QtWidgets/QVBoxLayout>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 #include <QtCore/QObject>
-#include <QtDesigner/QDesignerExportWidget>
+//#include <QtDesigner/QDesignerExportWidget>
+#include <QtUiPlugin/QDesignerExportWidget>
 
 
 class TApplication;

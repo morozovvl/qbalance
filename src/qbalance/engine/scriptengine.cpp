@@ -22,12 +22,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtSql/QSqlQuery>
 #include <QtScript/QScriptValueIterator>
 #include <QtGui/QKeyEvent>
-#include <QtGui/QPushButton>
+#include <QtWidgets/QPushButton>
 #include <QtGui/QKeyEvent>
-#include <QtGui/QFileDialog>
-#include <QtGui/QLineEdit>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QLineEdit>
 #include <QtCore/QStringList>
 #include <QtCore/QDebug>
+#include <QtCore/QTimer>
 #include "scriptengine.h"
 #include "sqlfieldclass.h"
 #include "sqlrecordclass.h"
@@ -820,9 +821,9 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty(sqlQueryClass->name(), sqlQueryClass->constructor());
 
     // Объявим классы для работы с пользовательскими формами
-    qScriptRegisterMetaType(this, DriverFRToScriptValue, DriverFRFromScriptValue);
+//    qScriptRegisterMetaType(this, DriverFRToScriptValue, DriverFRFromScriptValue);
 //    globalObject().setProperty("DriverFR", newQMetaObject(&QObject::staticMetaObject, newFunction(DriverFRConstructor)));
-    qScriptRegisterMetaType(this, BankTerminalToScriptValue, BankTerminalFromScriptValue);
+//    qScriptRegisterMetaType(this, BankTerminalToScriptValue, BankTerminalFromScriptValue);
     qScriptRegisterMetaType(this, EventLoopToScriptValue, EventLoopFromScriptValue);
     globalObject().setProperty("EventLoop", newQMetaObject(&QObject::staticMetaObject, newFunction(EventLoopConstructor)));
     qScriptRegisterMetaType(this, FormToScriptValue, FormFromScriptValue);

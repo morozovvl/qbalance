@@ -248,8 +248,7 @@ void OOXMLReportEngine::writeHeader()
         if (expressionsForEvaluation.contains(cellText))                    // Если значение ячейки находится в списке
         {
             QVariant var = scriptEngine->evaluate(cellText).toVariant();    // то оценим его скриптовым движком
-            if (!scriptEngine->hasUncaughtException())                      // и если не было ошибок...
-                writeCell(cells.at(i), cellText, var);                      // запишем результат оценки вместо текста ячейки
+            writeCell(cells.at(i), cellText, var);                      // запишем результат оценки вместо текста ячейки
         }
     }
 }

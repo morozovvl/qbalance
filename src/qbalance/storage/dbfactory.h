@@ -215,11 +215,6 @@ public:
     void getToperData(int oper, QList<ToperType>* topersList);
     void getToperDictAliases(int oper, QList<ToperType>* topersList, QList<DictType>* dictsList);
 
-    QString getDocumentSqlSelectStatement(int oper,
-                                          QList<ToperType>*,
-                                          QList<FieldType>* = 0,
-                                          int * = 0);     // Генерирует текст SQL-запроса для табличной части документа операции oper
-    QString getDictionarySqlSelectStatement(QString, QString = "");       // Генерирует текст SQL-запроса для справочника
     QSqlQuery getAccounts();
     QVariant getAccountsValue(QString, QString);
 
@@ -297,6 +292,7 @@ public:
     virtual int getErrorNumber();
 
     void    clearUpdateNum();
+    void addColumnProperties(QList<FieldType>*, QString, QString, QString, int, int, bool = false, bool = false, int = 0, int = 0);
 
 
 private:
@@ -340,7 +336,6 @@ private:
     QStringList initializationScriptList(QString = "") const;
     int getTypeId(QString);
     void clearError();
-    void addColumnProperties(QList<FieldType>*, QString, QString, QString, int, int, bool = false, bool = false, int = 0, int = 0);
     bool execPSql(QStringList command, QString user, QString password);
 
 private slots:

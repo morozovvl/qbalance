@@ -18,14 +18,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
 #include <QtCore/QString>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QPushButton>
-#include <QtGui/QSizePolicy>
-#include <QtGui/QFrame>
-#include <QtGui/QLayout>
+//#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QSizePolicy>
+#include <QtWidgets/QFrame>
+#include <QtWidgets/QLayout>
 #include <QtGui/QKeyEvent>
-#include <QtGui/QLineEdit>
+#include <QtWidgets/QLineEdit>
 #include "../definitions.h"
 #include "docparameters.h"
 #include "../kernel/dictionary.h"

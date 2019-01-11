@@ -22,13 +22,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QtCore/QHash>
 #include <QtCore/QList>
-#include <QtGui/QFrame>
+#include <QtWidgets/QFrame>
 #include <QtCore/QString>
 #include <QtCore/QObject>
-#include <QtGui/QWidget>
-#include <QtGui/QVBoxLayout>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QVBoxLayout>
 #include <QtCore/QStringList>
-#include <QtDesigner/QDesignerExportWidget>
+//#include <QtDesigner/QDesignerExportWidget>
+#include <QtUiPlugin/QDesignerExportWidget>
 
 class TApplication;
 class FormDocument;

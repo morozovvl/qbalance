@@ -20,7 +20,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef DOCPARAMETERSPLUGIN_H
 #define DOCPARAMETERSPLUGIN_H
 
-#include <QtDesigner/QDesignerCustomWidgetInterface>
+//#include <QtDesigner/QDesignerCustomWidgetInterface>
+#include <QtUiPlugin/QDesignerCustomWidgetInterface>
 
 class DocParametersPlugin : public QObject, public QDesignerCustomWidgetInterface
 {
