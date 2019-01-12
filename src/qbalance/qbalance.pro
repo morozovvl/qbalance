@@ -122,7 +122,8 @@ SOURCES += main.cpp \
     serialport/qmyextserialport.cpp \
     gui/myvalueeditor.cpp \
     kernel/updates.cpp \
-    gui/myuiloader.cpp
+    gui/myuiloader.cpp \
+    kernel/updates.cpp
 
 HEADERS +=  gui/passwordform.h \
     gui/form.h \
@@ -193,7 +194,8 @@ HEADERS +=  gui/passwordform.h \
     kernel/configvars.h \
     kernel/updates.h \
     gui/myuiloader.h \
-    version.h
+    version.h \
+    kernel/updates.h
 
 
 

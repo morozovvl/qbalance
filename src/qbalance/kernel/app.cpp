@@ -90,7 +90,7 @@ TApplication::TApplication(int & argc, char** argv)
     barCodeReaded = false;
     cardCodeReader = 0;
     bankTerminal = 0;
-//    updates = 0;
+    updates = 0;
     tcpServer = 0;
     messagesWindow = 0;
 
@@ -733,8 +733,8 @@ bool TApplication::initApplication()
                     if (!isScriptMode())
                         openPlugins();
 
-//                    updates = new Updates(this);
-//                    updates->open();
+                    updates = new Updates(this);
+                    updates->open();
 
                     gui->showMenus();
 
@@ -816,11 +816,11 @@ bool TApplication::initApplication()
 
 void TApplication::close()
 {
-//    if (updates != 0)
-//    {
-//        updates->close();
-//        delete updates;
-//    }
+    if (updates != 0)
+    {
+        updates->close();
+        delete updates;
+    }
 
     if (messagesWindow != 0)
     {
@@ -2305,12 +2305,12 @@ QString TApplication::OSType()
 #endif
 }
 
-/*
+
 Updates* TApplication::getUpdates()
 {
     return updates;
 }
-*/
+
 
 QString TApplication::getTrueApplicationName()
 {

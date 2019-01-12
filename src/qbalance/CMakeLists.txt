@@ -25,15 +25,15 @@ add_subdirectory(storage)
 add_subdirectory(report)
 add_subdirectory(openoffice)
 add_subdirectory(serialport)
-#add_subdirectory(startup)
+add_subdirectory(startup)
 
 set(SUBDIRS0 startup)
 set(SUBDIRS1 kernel gui report openoffice storage engine serialport)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY})
 
-#add_executable(${PROJECT0} ${SUBDIRS0})
-#target_link_libraries(${PROJECT0} ${SUBDIRS0} Qt5::Core)
+add_executable(${PROJECT0} ${SUBDIRS0})
+target_link_libraries(${PROJECT0} ${SUBDIRS0} Qt5::Core)
 
 add_executable(${PROJECT1} main.cpp ${SUBDIRS1} ../../resources.qrc)
 target_link_libraries(${PROJECT1} ${SUBDIRS1} Qt5::Widgets Qt5::Core Qt5::Sql Qt5::Script Qt5::Xml Qt5::Network Qt5::UiTools Qt5::SerialPort)

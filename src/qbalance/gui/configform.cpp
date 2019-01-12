@@ -208,14 +208,12 @@ void ConfigForm::buttonPressed(QString type)
 {
     if (type == "PASSWORD_BUTTON")
         changePassword();
-/*
     else if (type == "UPDATES_FTP_ALL_UPLOAD")
         ftpTotalUpload();
     else if (type == "UPDATES_FTP_UPLOAD")
         ftpUpload();
     else if (type == "UPDATES_FTP_LOAD")
         ftpLoad();
-*/
 }
 
 
@@ -238,7 +236,7 @@ void ConfigForm::changePassword()
         app->showError("Пароли не совпадают");
 }
 
-/*
+
 void ConfigForm::ftpUpload()
 {
     if (app->getUpdates() != 0)
@@ -267,4 +265,4 @@ void ConfigForm::ftpLoad()
         app->getUpdates()->updateModified();
     }
 }
-*/
+

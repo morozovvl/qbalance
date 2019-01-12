@@ -1,6 +1,8 @@
+cmake_minimum_required(VERSION 3.13)
+
+set(CMAKE_AUTOMOC ON)
 find_package(Qt5Core)
-#set(SOURCE_ROOT ./)
-aux_source_directory (./ SOURCES)
-add_executable(${PROJECT0} main.cpp ${SOURCES})
-target_link_libraries(${PROJECT0} ${SOURCES} Qt5::Core)
-qt5_use_modules(${PROJECT0} Core)
+
+aux_source_directory (. DIR_STARTUP_SRCS)
+add_library (startup ${DIR_STARTUP_SRCS})
+qt5_use_modules(startup Core)
