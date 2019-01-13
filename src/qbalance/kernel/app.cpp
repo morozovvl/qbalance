@@ -541,9 +541,9 @@ void TApplication::initConfig()
     setConfig("updates", "UPDATES_FTP_CLIENT", "Логин клиента", CONFIG_VALUE_STRING, "ftp");
     setConfig("updates", "UPDATES_FTP_CLIENT_PASSWORD", "Пароль клиента", CONFIG_VALUE_PASSWORD, "");
     setConfig("updates", "UPDATES_FTP_TIMEOUT", "Проверять обновления каждые (минут)", CONFIG_VALUE_INTEGER, 60);
-    setConfig("updates", "UPDATES_FTP_ALL_UPLOAD", "", CONFIG_VALUE_PUSHBUTTON, "Выгрузить все обновляемые файлы на сервер");
-    setConfig("updates", "UPDATES_FTP_UPLOAD", "", CONFIG_VALUE_PUSHBUTTON, "Выгрузить обновленные файлы на сервер");
-    setConfig("updates", "UPDATES_FTP_LOAD", "", CONFIG_VALUE_PUSHBUTTON, "Загрузить обновления");
+    setConfig("updates", "UPDATES_FTP_ALL_UPLOAD", "", CONFIG_VALUE_PUSHBUTTON, "Загрузить все обновляемые файлы на сервер");
+    setConfig("updates", "UPDATES_FTP_UPLOAD", "", CONFIG_VALUE_PUSHBUTTON, "Загрузить обновленные файлы на сервер");
+    setConfig("updates", "UPDATES_FTP_LOAD", "", CONFIG_VALUE_PUSHBUTTON, "Выгрузить обновления");
 
     setConfigTypeName("password", "Пароль");
     setConfig("password", "PASSWORD1", "Новый пароль", CONFIG_VALUE_PASSWORD, "");
@@ -733,14 +733,15 @@ bool TApplication::initApplication()
                     if (!isScriptMode())
                         openPlugins();
 
-                    updates = new Updates(this);
-                    updates->open();
-
                     gui->showMenus();
 
                     // Удалось открыть спосок справочников и типовых операций
                     db->getPeriod(beginDate, endDate);
                     gui->getMainWindow()->showPeriod();
+
+                    // Инициализируем систему обновлений
+                    updates = new Updates(this);
+                    updates->open();
 
                     // Проверим обновления БД, и если надо, применим их
                     if (!isScriptMode() && getConfigValue("ASK_LOAD_UPDATES_TO_DB").toBool())

@@ -59,7 +59,7 @@ private:
                                                                                                     // Сохраняет информацию в XML файле configFile
     qulonglong          calculateCRC32(QString);        // Подсчитывает контрольную сумму файла
     QNetworkRequest     makeNetworkRequest(QString path, QString fileName);     // Формирует запрос на FTP сервер для загрузки/выгрузки файла fileName
-    bool                removeDir(const QString &);
+    bool                removeDir(const QString &);                             // Удаляет каталоги с вложенными подкаталогами
 
 public:
     Updates(TApplication*, QObject *parent = 0);

@@ -45,12 +45,12 @@ Updates::Updates(TApplication* a, QObject *parent): QObject(parent)
     isGetUpdates = false;
     updatesCount = 0;
     timer = 0;
-    if (app->getConfigValue("UPDATES_FTP_TIMEOUT").toInt() > 0)
+    if (app->getConfigValue("UPDATES_FTP_TIMEOUT").toInt() > 0)     // Если задан период проверки на наличие обновлений
     {
         timer = new QTimer(this);
         timer->setSingleShot(false);
-        timer->start(app->getConfigValue("UPDATES_FTP_TIMEOUT").toInt() * 60000);
-        connect(timer, SIGNAL(timeout()), this, SLOT(updateModified()));
+        timer->start(app->getConfigValue("UPDATES_FTP_TIMEOUT").toInt() * 60000);   // Период проверки задан в минутах
+        connect(timer, SIGNAL(timeout()), this, SLOT(updateModified()));            // Будем периодически по таймеру проверять обновления
     }
 }
 
@@ -63,7 +63,6 @@ Updates::~Updates()
         delete timer;
     }
     nwmanager->deleteLater();
-    nwmanager = 0;
 }
 
 
@@ -71,6 +70,8 @@ bool Updates::open()
 {
     bool result = true;
     connect(nwmanager, SIGNAL(finished(QNetworkReply*)), this, SLOT(transmissionFinished(QNetworkReply*)));
+
+    // Если задан период проверки обновлений, то сразу же после запуска программы проверим их
     if (app->getConfigValue("UPDATES_FTP_TIMEOUT").toInt() > 0)
         updateModified();
     return result;
@@ -80,7 +81,7 @@ bool Updates::open()
 void Updates::close()
 {
     disconnect(nwmanager, SIGNAL(finished(QNetworkReply*)), this, SLOT(transmissionFinished(QNetworkReply*)));
-    nwmanager->deleteLater();\
+    nwmanager->deleteLater();
 }
 
 
@@ -347,6 +348,7 @@ void Updates::transmissionFinished(QNetworkReply* reply)
                     }
                 }
 
+                // Если все обновления проверены и загружены, то сообщим об этом пользователю
                 if (filesList.count() == 0 && filesList1.count() == 0 && updatesCount > 0)
                 {
                     updatesDownloaded = true;
@@ -516,12 +518,12 @@ qulonglong Updates::calculateCRC32(QString fileName)
 
 bool Updates::removeDir(const QString & dirName)
 {
-    bool result = true;
+    bool result = false;
     QDir dir(dirName);
 
     if (dir.exists())
     {
-        Q_FOREACH(QFileInfo info, dir.entryInfoList(QDir::NoDotAndDotDot | QDir::System | QDir::Hidden  | QDir::AllDirs | QDir::Files, QDir::DirsFirst))
+        foreach (QFileInfo info, dir.entryInfoList(QDir::NoDotAndDotDot | QDir::System | QDir::Hidden  | QDir::AllDirs | QDir::Files, QDir::DirsFirst))
         {
             if (info.isDir())
                 result = removeDir(info.absoluteFilePath());
@@ -531,7 +533,7 @@ bool Updates::removeDir(const QString & dirName)
             if (!result)
                 return result;
         }
-        result = QDir().rmdir(dirName);
+        QDir().rmdir(dirName);
     }
     return result;
 }
