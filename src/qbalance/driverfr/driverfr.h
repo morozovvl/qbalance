@@ -688,7 +688,7 @@ public:
 
 class DriverFR : public QObject
 {
-    Q_OBJECT
+
 public:
     explicit DriverFR(QObject *parent = 0);
     ~DriverFR();

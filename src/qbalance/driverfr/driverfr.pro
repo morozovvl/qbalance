@@ -10,9 +10,9 @@ DEPENDPATH += .
 INCLUDEPATH += .
 
 HEADERS += driverfr.h \
-            driverfrplugin.h
+           driverfrinterface.h
 SOURCES += driverfr.cpp \
-            driverfrplugin.cpp
+           driverfrinterface.cpp
 
 unix:MOC_DIR = ../../../.moc
 win32:MOC_DIR = ../../../.moc

@@ -27,6 +27,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 class BarCodeReaderPlugin : public BarCodeReader
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "BarCodeReader")
     Q_INTERFACES(BarCodeReader)
 };
 

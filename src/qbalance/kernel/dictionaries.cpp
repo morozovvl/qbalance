@@ -267,6 +267,7 @@ void Dictionaries::view()
 
 void Dictionaries::show()
 {
+    query();
     Dictionary::show();
 }
 

@@ -122,8 +122,7 @@ SOURCES += main.cpp \
     serialport/qmyextserialport.cpp \
     gui/myvalueeditor.cpp \
     kernel/updates.cpp \
-    gui/myuiloader.cpp \
-    kernel/updates.cpp
+    gui/myuiloader.cpp
 
 HEADERS +=  gui/passwordform.h \
     gui/form.h \
@@ -194,9 +193,7 @@ HEADERS +=  gui/passwordform.h \
     kernel/configvars.h \
     kernel/updates.h \
     gui/myuiloader.h \
-    version.h \
-    kernel/updates.h
-
+    version.h
 
 
 RESOURCES += ../../resources.qrc
@@ -234,7 +231,7 @@ unix {
 
 windows {
 #    RC_FILE+=resources.rc
-    LIBS += ../../qextserialport1.dll
+#    LIBS += ../../qextserialport1.dll
 }
 
 OTHER_FILES += \

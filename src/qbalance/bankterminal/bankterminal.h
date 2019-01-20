@@ -58,7 +58,7 @@ class TcpClient;
 
 class BankTerminal : public QObject
 {
-    Q_OBJECT
+//    Q_OBJECT
 public:
     explicit BankTerminal(QObject *parent = 0);
     ~BankTerminal();

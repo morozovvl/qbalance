@@ -21,12 +21,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define CARDCODEREADERPLUGIN_H
 
 #include <QtCore/QObject>
+#include <QtCore/QtPlugin>
 #include <QtCore/qplugin.h>
 #include "cardcodereader.h"
 
 class CardCodeReaderPlugin : public CardCodeReader
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "CardCodeReader")
     Q_INTERFACES(CardCodeReader)
 };
 

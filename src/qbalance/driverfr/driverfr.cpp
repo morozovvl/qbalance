@@ -463,12 +463,10 @@ bool DriverFR::open(QString port, int rate, int timeout, int password)
             serialPort->getTcpClient()->logError();                 // К удаленному фискальнику не удалось подсоединиться
         if (!result)
         {
-            // А теперь поищем фискальник на этом компьютере
-
+            // А теперь поищем фискальник на локальном компьютере
             remote = false;
             serialPort->setRemote(remote);
             serialPort->setBaudRate(rate);
-//            serialPort->setTimeout(timeout);
 #if  defined(Q_OS_LINUX)
             if (serialPort->open(QIODevice::ReadWrite) && serialPort->isOpen())
 #elif   defined(Q_OS_WIN)
@@ -483,6 +481,7 @@ bool DriverFR::open(QString port, int rate, int timeout, int password)
                 DisConnect();
             }
         }
+/*
         if (result)
         {
             serialPort->setRemote(remote);
@@ -492,9 +491,10 @@ bool DriverFR::open(QString port, int rate, int timeout, int password)
                 progressDialog->resize(600, progressDialog->height());
             }
         }
+*/
     }
     if (!result)
-        app->showError(failConnectErrorMessage);
+        app->showError(QString(failConnectErrorMessage).append(" ").append(serialPort->errorString()));
     app->clearMessageOnStatusBar();
     return result;
 }

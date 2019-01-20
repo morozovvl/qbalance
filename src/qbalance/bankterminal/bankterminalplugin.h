@@ -27,7 +27,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 class BankTerminalPlugin : public BankTerminal
 {
     Q_OBJECT
-    Q_INTERFACES(BankTerminal)
+    Q_PLUGIN_METADATA(IID "BankTerminal")
+//    Q_INTERFACES(BankTerminal)
 };
 
 #endif // BANKTERMINALPLUGIN_H

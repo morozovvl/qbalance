@@ -32,10 +32,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 class MyPlugins: public QObject, public QDesignerCustomWidgetCollectionInterface {
     Q_OBJECT
 
-#if QT_VERSION >= 0x050000
-    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QBalance.MyPlugins")
-#endif
-    Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)
+//#if QT_VERSION >= 0x050000
+//    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QBalance.MyPlugins")
+//#endif
+//    Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)
+        Q_PLUGIN_METADATA(IID "MyPlugins")
 
 public:
     MyPlugins(QObject *parent = 0);

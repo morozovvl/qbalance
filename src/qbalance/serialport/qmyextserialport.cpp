@@ -19,17 +19,21 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QDebug>
 #include <QtNetwork/QHostInfo>
 #include <QtCore/QBuffer>
+#include <QtSerialPort/QSerialPortInfo>
 #include <QTimer>
 #include "../kernel/app.h"
 #include "../kernel/tcpclient.h"
 #include "qmyextserialport.h"
 
 
-BaudRateType QMyExtSerialPort::LineSpeedVal[7] = {BAUD2400, BAUD4800, BAUD9600, BAUD19200, BAUD38400, BAUD57600, BAUD115200};
+QSerialPort::BaudRate QMyExtSerialPort::LineSpeedVal[7] = {Baud2400, Baud4800, Baud9600, Baud19200, Baud38400, Baud57600, Baud115200};
 
 
-QMyExtSerialPort::QMyExtSerialPort(const QString& name, QObject* parent): QSerialPort(name, parent)
+QMyExtSerialPort::QMyExtSerialPort(const QString& name, QObject* parent): QSerialPort(parent)
 {
+    QSerialPortInfo port(name);
+    setPort(port);
+
     remote = false;
     outLog = false;
     log = "";
@@ -69,12 +73,6 @@ void QMyExtSerialPort::setBaudRate(int rate)
     QSerialPort::setBaudRate(LineSpeedVal[rate]);
 }
 
-/*
-void QMyExtSerialPort::setTimeout(long timeOut)
-{
-    QSerialPort::setTimeout(timeOut);
-}
-*/
 
 TcpClient* QMyExtSerialPort::getTcpClient()
 {
@@ -104,7 +102,6 @@ void QMyExtSerialPort::close()
     QSerialPort::close();
 }
 
-
 void QMyExtSerialPort::tryReceive()
 {
 
@@ -119,7 +116,6 @@ void QMyExtSerialPort::tryReceive()
         QTimer::singleShot(1, this, SLOT(tryReceive()));
     }
 }
-
 
 qint64 QMyExtSerialPort::readData(char* data, qint64 maxSize, bool fromRemote)
 {
@@ -182,7 +178,7 @@ qint64 QMyExtSerialPort::writeData(const char * data, qint64 maxSize, bool fromR
     writeLog();
     if (!remote)
     {
-        result = QSerialPort::writeData(data, maxSize);
+        result = QSerialPort::write(data, maxSize);
         appendLog(true, QByteArray(data, maxSize).toHex().data(), fromRemote);
     }
     else if (tcpClient != 0 && tcpClient->isValid() && !fromRemote)

@@ -176,6 +176,13 @@ void Documents::view()
 }
 
 
+void Documents::show()
+{
+    query();
+    Dictionary::show();
+}
+
+
 void Documents::setCurrentDocument(int strNum)
 {
     setId(strNum);
