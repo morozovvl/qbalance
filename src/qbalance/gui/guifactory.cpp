@@ -166,11 +166,6 @@ int GUIFactory::openDB()
         connForm->close();
         delete connForm;
     }
-    if (returnCode == 0)
-    {
-        db->initDBFactory();
-        db->exec(QString("SELECT session_variables.set_value('%1', '%2');").arg("client_user_id").arg(QString("%1").arg(key)));
-    }
     return returnCode;
 }
 

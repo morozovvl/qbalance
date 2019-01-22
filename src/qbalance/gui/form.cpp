@@ -456,6 +456,8 @@ void Form::readSettings()
         {
             // Если локальные значения координат и размеров окна прочитать не удалось, попытаемся загрузить их с сервера
 //            app->showMessageOnStatusBar(tr("Загрузка с сервера геометрии окна справочника ") + configName + "...");
+            db->getConfig(configName, &settingValues);
+/*
             QSqlQuery config = db->getConfig();
             config.first();
             while (config.isValid())
@@ -467,6 +469,7 @@ void Form::readSettings()
                 }
                 config.next();
             }
+*/
 //            app->showMessageOnStatusBar("");
             formWidget->setFormChanged(true);
         }

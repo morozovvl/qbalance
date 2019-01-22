@@ -623,7 +623,7 @@ void TableView::readSettings()
     {
         // Если информация о ширине столбца отсутствует в окружении программы, попытаемся прочитать ее из базы
         QHash<QString, int> values;
-        values = app->getDBFactory()->getConfig(configName);
+        app->getDBFactory()->getConfig(configName, &values);
         for (int i = 0; i < values.count(); i++)
         {
             int width = values.value(QString("grid/%1/width").arg(i));

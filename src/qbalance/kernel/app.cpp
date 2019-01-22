@@ -46,7 +46,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/dialog.h"
 #include "../gui/myuiloader.h"
 #include "../engine/documentscriptengine.h"
-#include "../storage/dbfactory.h"
+#include "../storage/postgresdbfactory.h"
+#include "../storage/sqlitedbfactory.h"
 #include "../bankterminal/bankterminal.h"
 #include "../driverfr/driverfr.h"
 #include "../barcodereader/barcodereader.h"
@@ -705,7 +706,8 @@ bool TApplication::initApplication()
     tcpClient = new TcpClient(getConfigValue("REMOTE_HOST").toString(), getConfigValue("REMOTE_PORT").toInt(), this);
     timeOut(getConfigValue(FR_NET_DRIVER_TIMEOUT).toInt());                                  // Подеждем, пока произойдет соенинение с сервером приложения
 
-    db  = new DBFactory();
+//    db  = new PostgresDBFactory();
+    db  = new SQLiteDBFactory();
 
     if (db->getDB()->isValid())
     {
@@ -715,18 +717,19 @@ bool TApplication::initApplication()
 
         forever         // Будем бесконечно пытаться открыть базу, пока пользователь не откажется
         {
-            int result = gui->openDB(); // Попытаемся открыть базу данных
+            int result = db->openDBDialog(); // Попытаемся открыть базу данных
             if (result == 0)
             {   // БД открыть удалось
 
                 setDebugToBuffer(false);
 
-                secDiff = QDateTime::currentDateTime().secsTo(db->getValue("SELECT now();", 0, 0).toDateTime());
                 dictionaryList = Dictionaries::create<Dictionaries>();
                 topersList = Topers::create<Topers>();
 
-                if (dictionaryList->open() && topersList->open())
+                if (dictionaryList->open() || topersList->open())
                 {
+                    secDiff = QDateTime::currentDateTime().secsTo(db->getValue("SELECT now();", 0, 0).toDateTime());
+
                     if (!loadDefaultConfig)
                         readSettings();
 
@@ -793,6 +796,11 @@ bool TApplication::initApplication()
 
                     break;  // Выйдем из бесконечного цикла открытия БД
                 }
+                else
+                {
+                    result = -1;
+                    break;
+                }
             }
             else if (result == -2)
             {   // Произошла ошибка соединения с сервером
@@ -804,7 +812,7 @@ bool TApplication::initApplication()
                         db->createNewDBs(gui->getLastHostName(), gui->getLastDbName(), gui->getLastPort());
                 }
             }
-            else if (result == -1)      // Пользователь нажал кнопку Отмена
+            else
                 break;  // Выйдем из бесконечного цикла открытия БД
         }
     }

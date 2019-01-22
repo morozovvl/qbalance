@@ -467,8 +467,6 @@ bool WizardDictionary::setData()
 
     // Перезагрузим список столбцов
     db->reloadDictionariesPermitions();
-    db->reloadColumnProperties();
-    db->reloadColumnHeaders();
 
     return true;
 }

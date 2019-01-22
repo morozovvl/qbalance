@@ -146,6 +146,8 @@ void MessageWindow::readSettings()
         {
             // Если локальные значения координат и размеров окна прочитать не удалось, попытаемся загрузить их с сервера
 //            app->showMessageOnStatusBar(tr("Загрузка с сервера геометрии окна справочника ") + configName + "...");
+            app->getDBFactory()->getConfig(configName, &settingValues);
+/*
             QSqlQuery config = app->getDBFactory()->getConfig();
             config.first();
             while (config.isValid())
@@ -157,6 +159,7 @@ void MessageWindow::readSettings()
                 }
                 config.next();
             }
+*/
 //            app->showMessageOnStatusBar("");
         }
         settings.endGroup();

@@ -136,114 +136,62 @@ public:
     DBFactory();
     ~DBFactory();
 
-    virtual bool open();
-    virtual bool open(QString, QString);
-    virtual void close();
-    bool isOpened();
-    void initDBFactory();
-    bool createNewDBs(QString, QString, int);
-
-    // Работа с документами
-    int addDoc(int, QDate);
-    bool removeDoc(int);
-    int addDocStr(int, int, QString cParam = "''", int nQuan = 1, int nDocStr = 0);
-    bool removeDocStr(int, int);
-    void saveDocAttribute(int, int, QString);
-    QSqlQuery getDocumentAddQueriesList(int);
-
-    // Работа с файлами (скриптами, формами, картинками и т.п.)
-    QByteArray getFile(QString, int, bool = false);        // Получить файл из базы. Если последний параметр Истина, то получить из расширенной базы
-    qulonglong getFileCheckSum(QString, FileType, bool = false);
-    FileInfo getFileInfo(QString, FileType, bool = false);
-    QStringList getFilesList(QString, FileType, bool = false);
-    bool isFileExist(QString, FileType, bool = false);
-    void removeFile(QString, FileType, bool = false);
-    void setFile(QString, FileType, QByteArray, bool = false);
-    void copyFile(QString, QString, bool = false);
-
-    // Работа с соединением
+    // Работа с соединением к БД
     int getPort();
     QString getHostName();
     QString getLogin();
     void setHostName(QString name);
     void setPort(int portNum);
+    virtual int openDBDialog();
+
+    // Создание и открытие БД
+    virtual bool open();
+    virtual bool open(QString, QString);
+    virtual void close();
+    bool isOpened();
+    virtual void initDBFactory();
+    bool createNewDBs(QString, QString, int);
 
     // Работа с базой
     void setDatabaseName(QString name);
     QString getDatabaseName();
     QSqlDatabase* getDB();
 
-    virtual void getColumnsHeaders(QString, QList<FieldType>*);
+    // Работа со справочниками
+    bool createNewDictionary(QString, QString = "", bool = true);
     virtual QSqlQuery getDictionariesProperties();
     virtual QSqlRecord getDictionariesProperties(QString tableName);
     virtual QString getDictionariesProperties(QString, QString);
-    QSqlQuery getToper(int operNumber);
-    QVariant getTopersProperties(int, QString);
     int getDictionaryId(QString dictName);
     bool removeDictionary(QString);
-    QStringList getFieldsList(QHash<int, FieldType>*);
-    QStringList getFieldsList(QString tableName, int = -1);
-    bool isSet(QString tableName);
-    void getColumnsProperties(QList<FieldType>*, QString = "", QString = "", int = 0);
-    void getColumnsRestrictions(QString, QList<FieldType>*);                    // Устанавливает ограничение на просматриваемые поля исходя из разграничений доступа
-    QString getPhotoDatabase();
+    Q_INVOKABLE QString getDictionaryPhotoPath(QString);
+    void reloadDictionariesPermitions();
+    QSqlQuery* getDictionaries();
     int insertDictDefault(QString tableName, QHash<QString, QVariant>* values);                 // Вставляет в справочник новую строку
     bool removeDictValue(QString, int);                                          // Удаляет строку в указанном справочнике с заданным кодом
-    void insertSaldo(QString , int);                 // Вставляет в сальдо новую строку
-    void setPeriod(QDate, QDate);
-    void getPeriod(QDate&, QDate&);
     void setConstDictId(QString, QVariant, int, int, int);
-    QHash<int, UserInfo> getUserList();
-    Q_INVOKABLE QString getDictionaryPhotoPath(QString);
 
-    // Работа с ошибками
-    Q_INVOKABLE bool exec(QString = "", bool = true, QSqlDatabase* = 0);
-    Q_INVOKABLE void exec(QStringList);
-    Q_INVOKABLE bool execQueryFile(QString, bool = true);
-    bool execSystem(QString command, QString tableName);       // Будет вызываться там, где необходима проверка изменения системных таблиц
-    Q_INVOKABLE QSqlQuery execQuery(QString, bool = true, QSqlDatabase* = 0);
 
-    Q_INVOKABLE virtual QString getObjectName(const QString&);       // транслирует имена объектов БД из "внутренних" в реальные наименования
-    Q_INVOKABLE virtual QString getObjectNameCom(const QString&);                        // то же самое, только результат возвращает в кавычках (применяется при генерации SQL команд)
+    // Работа с бухгалтерскими документами
+    bool    lockDocument(int);
+    void    unlockDocument(int);
+    void clearLockedDocumentList();
 
-    Q_INVOKABLE bool beginTransaction();
-    Q_INVOKABLE void commitTransaction();
-    Q_INVOKABLE void rollbackTransaction();
+    int addDoc(int operNumber, QDate date);                                                             // Создать новый документ по типовой операции operNumber с датой date
+    bool removeDoc(int docId);                                                                          // Удалить документ с идентификатором docId
+    int addDocStr(int operNumber, int docId, QString cParam = "''", int nQuan = 1, int nDocStr = 0);    // Добавить новую строку в документ по типовой операции operNumber
+                                                                                                        // с идентификатором docId. В строке cParam через запятую находится информация об идентификаторах объектов учета,
+                                                                                                        // их количестве, цене и сумме или строка cParam может быть пустой
+                                                                                                        // nQuan - сколько строк вставить, nDocStr - вставить строку с номером
+    bool removeDocStr(int docId, int nDocStr);                                                          // Удалить строку в документе docId под номером nDocStr
+    void saveDocAttribute(int, int, QString);
+    QSqlQuery getDocumentAddQueriesList(int);
 
-    void loadSystemTables();
+    QSqlQuery getToper(int operNumber);
+    QVariant getTopersProperties(int, QString);
 
     void getToperData(int oper, QList<ToperType>* topersList);
     void getToperDictAliases(int oper, QList<ToperType>* topersList, QList<DictType>* dictsList);
-
-    QSqlQuery getAccounts();
-    QVariant getAccountsValue(QString, QString);
-
-    // Функции для сохранения в базе и восстановления конфигураций объектов
-    virtual void setConfig(QString, QString, QString);
-    virtual QSqlQuery getConfig();
-    virtual QHash<QString, int> getConfig(QString);
-
-
-    // Функции для мастера создания новых (свойств старых) справочников
-    bool setTableGuiName(QString tableName, QString menuName, QString formName);
-    bool addTableColumn(QString, QString, QString);
-    bool dropTableColumn(QString, QString);
-    bool renameTableColumn(QString, QString, QString);
-    bool alterTableColumn(QString, QString, QString);
-    bool appendColumnHeader(int, int, QString, QString, int, bool);
-    bool removeColumnHeaders(int);
-    void reloadDictionariesPermitions();
-    void reloadColumnHeaders();
-    void reloadColumnProperties();
-    QSqlQuery* getDictionaries();
-
-    // Функции для мастера работы со справочниками
-    bool createNewDictionary(QString, QString = "", bool = true);
-    Q_INVOKABLE bool isTableExists(QString);
-    bool isView(QString);
-
-
-    // Функции для мастера создания новый (редактирования старых) типовых операций
     bool deleteToper(int operNumber, int operNumber1);          // Удаляет записи о типовой операции в таблице типовых операций
     bool deleteAllToperInfo(int operNumber);                    // Удаляет всю информацию о типовой операции, если по ней уже не созданы документы
     bool addToperPrv(int operNumber,                            // Создает новую проводку для заданной типовой операции
@@ -266,6 +214,67 @@ public:
     QString getToperNumerator(int);                             // Получает значение свойства "нумератор" типовой операции
     bool setToperNumerator(int, QString);                       // Устанавливает значение свойства "нумератор" типовой операции
     void setToperPermition(int operNumber, QString user, bool menu);
+
+    // Работа с файлами (скриптами, формами, картинками и т.п.)
+    QByteArray getFile(QString, int, bool = false);        // Получить файл из базы. Если последний параметр Истина, то получить из расширенной базы
+    qulonglong getFileCheckSum(QString, FileType, bool = false);
+    FileInfo getFileInfo(QString, FileType, bool = false);
+    QStringList getFilesList(QString, FileType, bool = false);
+    bool isFileExist(QString, FileType, bool = false);
+    void removeFile(QString, FileType, bool = false);
+    void setFile(QString, FileType, QByteArray, bool = false);
+    void copyFile(QString, QString, bool = false);
+
+
+    virtual void getColumnsHeaders(QString, QList<FieldType>*);
+    QStringList getFieldsList(QHash<int, FieldType>*);
+    QStringList getFieldsList(QString tableName, int = -1);
+    bool isSet(QString tableName);
+    void getColumnsProperties(QList<FieldType>*, QString = "", QString = "", int = 0);
+    void getColumnsRestrictions(QString, QList<FieldType>*);                    // Устанавливает ограничение на просматриваемые поля исходя из разграничений доступа
+    QString getPhotoDatabase();
+    void insertSaldo(QString , int);                 // Вставляет в сальдо новую строку
+    void setPeriod(QDate, QDate);
+    void getPeriod(QDate&, QDate&);
+    QHash<int, UserInfo> getUserList();
+
+    // Работа с ошибками
+    Q_INVOKABLE bool exec(QString = "", bool = true, QSqlDatabase* = 0);
+    Q_INVOKABLE void exec(QStringList);
+    Q_INVOKABLE bool execQueryFile(QString, bool = true);
+    bool execSystem(QString command, QString tableName);       // Будет вызываться там, где необходима проверка изменения системных таблиц
+    Q_INVOKABLE QSqlQuery execQuery(QString, bool = true, QSqlDatabase* = 0);
+
+    Q_INVOKABLE virtual QString getObjectName(const QString&);       // транслирует имена объектов БД из "внутренних" в реальные наименования
+    Q_INVOKABLE virtual QString getObjectNameCom(const QString&);                        // то же самое, только результат возвращает в кавычках (применяется при генерации SQL команд)
+
+    Q_INVOKABLE bool beginTransaction();
+    Q_INVOKABLE void commitTransaction();
+    Q_INVOKABLE void rollbackTransaction();
+
+    virtual void loadSystemTables();
+
+    QSqlQuery getAccounts();
+    QVariant getAccountsValue(QString, QString);
+
+    // Функции для сохранения в базе и восстановления конфигураций объектов
+    virtual void setConfig(QString, QString, QString);
+    virtual void getConfig(QString, QHash<QString, int> *);
+
+
+    // Функции для мастера создания новых (свойств старых) справочников
+    bool setTableGuiName(QString tableName, QString menuName, QString formName);
+    bool addTableColumn(QString, QString, QString);
+    bool dropTableColumn(QString, QString);
+    bool renameTableColumn(QString, QString, QString);
+    bool alterTableColumn(QString, QString, QString);
+    bool appendColumnHeader(int, int, QString, QString, int, bool);
+    bool removeColumnHeaders(int);
+
+    Q_INVOKABLE bool isTableExists(QString);
+    bool isView(QString);
+
+
     Q_INVOKABLE bool    execCommands();
     Q_INVOKABLE void    clearCommands();
     bool    isExistsCommands();
@@ -282,10 +291,6 @@ public:
 
     void changePassword(QString);
 
-    bool    lockDocument(int);
-    void    unlockDocument(int);
-    void clearLockedDocumentList();
-
     virtual void saveUpdate(QString);
     virtual void loadUpdates();
     virtual int updatesCount();
@@ -294,8 +299,7 @@ public:
     void    clearUpdateNum();
     void addColumnProperties(QList<FieldType>*, QString, QString, QString, int, int, bool = false, bool = false, int = 0, int = 0);
 
-
-private:
+protected:
     TApplication*           app;
     QSqlDatabase*           db;
     QSqlDatabase*           dbExtend;
@@ -337,6 +341,8 @@ private:
     int getTypeId(QString);
     void clearError();
     bool execPSql(QStringList command, QString user, QString password);
+    virtual void reloadColumnProperties();
+    virtual void reloadColumnHeaders();
 
 private slots:
     void showPSqlMessage();
