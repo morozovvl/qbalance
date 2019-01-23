@@ -311,7 +311,6 @@ protected:
     QSqlQuery               columnsHeaders;
     QSqlQuery               config;
     QSqlQuery               accounts;
-    QSqlQuery               topersProperties;
     QSqlQuery               columnsRestrictions;
     QSqlQuery               files;
     QSqlQuery               dictionaries;

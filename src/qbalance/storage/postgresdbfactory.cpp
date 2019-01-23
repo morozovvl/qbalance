@@ -110,13 +110,15 @@ void PostgresDBFactory::loadSystemTables()
     objectTypes = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("типыобъектов")));
 
     config = execQuery("SELECT \"group\", \"name\", \"value\" FROM configs;");
+
     accounts = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("vw_счета")));
-    topersProperties = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("доступ_к_топер")));
+
     columnsRestrictions = execQuery(QString("SELECT %1 FROM %2 WHERE %3=5 AND (%4 ILIKE '\%'||\"current_user\"()::text||'%' OR %4 ILIKE '\%*\%');")
                                                                .arg(getObjectNameCom("доступ.имя"))
                                                                .arg(getObjectNameCom("доступ"))
                                                                .arg(getObjectNameCom("доступ.код_типыобъектов"))
                                                                .arg(getObjectNameCom("доступ.имя_пользователи")));
+
     dictionaries = execQuery(QString("SELECT * FROM %1 ORDER BY %2;").arg(getObjectNameCom("справочники")).arg(getObjectNameCom("справочники.имя")));
 
     QSqlQuery query = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("systables")));

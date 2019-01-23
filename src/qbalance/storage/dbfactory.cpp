@@ -336,7 +336,6 @@ void DBFactory::loadSystemTables()
     objectTypes.clear();
     config.clear();
     accounts.clear();
-    topersProperties.clear();
     columnsRestrictions.clear();
     dictionaries.clear();
 }
@@ -976,18 +975,10 @@ bool DBFactory::dropTableColumn(QString table, QString columnName)
 
 QVariant DBFactory::getTopersProperties(int operNumber, QString columnName)
 {
-    QVariant result;
-    topersProperties.first();
-    while (topersProperties.isValid())
-    {
-        if (topersProperties.record().value("ОПЕР").toInt() == operNumber)
-        {
-            result = topersProperties.record().value(columnName);
-            break;
-        }
-        topersProperties.next();
-    }
-    return result;
+    return getValue(QString("SELECT %1 FROM %2 WHERE %3 = %4;").arg(getObjectNameCom(columnName))
+                                                                .arg(getObjectNameCom("доступ_к_топер"))
+                                                                .arg(getObjectNameCom("топер.опер"))
+                                                                .arg(operNumber));
 }
 
 

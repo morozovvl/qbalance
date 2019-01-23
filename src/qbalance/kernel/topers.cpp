@@ -129,3 +129,10 @@ bool Topers::remove()
     return false;
 }
 
+
+void Topers::setOrderClause(QString)
+{
+    Table::setOrderClause(db->getObjectNameCom("доступ_к_топер.имя"));
+}
+
+

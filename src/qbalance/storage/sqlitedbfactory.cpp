@@ -63,7 +63,7 @@ void SQLiteDBFactory::reloadColumnProperties()
     q.first();
     while (q.isValid())
     {
-        qDebug() << q.record().value("name");
+        qDebug() << q.record().value("name") << q.record().value("type");
         q.next();
     }
 }

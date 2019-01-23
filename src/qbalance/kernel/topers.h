@@ -50,6 +50,7 @@ public:
     Q_INVOKABLE virtual bool add();
     Q_INVOKABLE virtual bool remove();
     Q_INVOKABLE virtual void view();
+    Q_INVOKABLE virtual void setOrderClause(QString = "");
 };
 
 #endif // TOPERS_H
