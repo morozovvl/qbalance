@@ -116,7 +116,7 @@ bool Dictionaries::addDictionary(QString dictName)
     dictName = dictName.trimmed().toLower();
     if (dictName.size() == 0)
         return false;
-    if (!dictionariesList.contains(dictName))
+    if (!dictionariesList.contains(dictName) && db->isTableExists(dictName))
     {             // Если справочник с таким именем не существует, то попробуем его создать
         Dictionary* dict = Dictionary::create<Dictionary>(dictName, this);
 
@@ -129,22 +129,22 @@ bool Dictionaries::addDictionary(QString dictName)
             dict->setDictionaries(this);
 
             // Установим прототипы справочников
-            QSqlQuery* dicts = db->getDictionaries();
-            if (dicts->first())
+            QSqlQuery dicts = db->getDictionaries();
+            if (dicts.first())
             {
                 QString fieldName = db->getObjectName("справочники.имя");
                 do
                 {
-                    if (dicts->record().value(fieldName).toString() == dictName)
+                    if (dicts.record().value(fieldName).toString() == dictName)
                     {
-                        QString prototype = dicts->record().value(db->getObjectName("справочники.прототип")).toString();
+                        QString prototype = dicts.record().value(db->getObjectName("справочники.прототип")).toString();
                         if (prototype.size() > 0)
                             dict->setPrototypeName(prototype);
                         else
                             dict->setPrototypeName(dictName);
                         break;
                     }
-                } while (dicts->next());
+                } while (dicts.next());
             }
 
             // Установим "родителей" локальных справочников

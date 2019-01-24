@@ -42,6 +42,12 @@ int SQLiteDBFactory::openDBDialog()
 }
 
 
+QString SQLiteDBFactory::getConnectionName()
+{
+    return QString("%1").arg(getDatabaseName());
+}
+
+
 void SQLiteDBFactory::loadSystemTables()
 {
     DBFactory::loadSystemTables();

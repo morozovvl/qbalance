@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlField>
 #include <QtSql/QSqlDriver>
+#include <QtCore/QHash>
 #include "dbfactory.h"
 #include "../kernel/app.h"
 #include "../gui/passwordform.h"
@@ -36,7 +37,7 @@ DBFactory::DBFactory()
     updateNum = 0;
     proc = 0;
     dbIsOpened = false;
-    extDbExist = true;
+    extDbExist = false;
 
     errorText.clear();
     //    clearError();
@@ -145,9 +146,10 @@ void DBFactory::getConfig(QString configName, QHash<QString, int> *values)
 }
 
 
-QSqlQuery* DBFactory::getDictionaries()
+QSqlQuery DBFactory::getDictionaries()
 {
-    return &dictionaries;
+    return execQuery(QString("SELECT * FROM %1 ORDER BY %2;").arg(getObjectNameCom("справочники"))
+                                                            .arg(getObjectNameCom("справочники.имя")));
 }
 
 
@@ -337,7 +339,6 @@ void DBFactory::loadSystemTables()
     config.clear();
     accounts.clear();
     columnsRestrictions.clear();
-    dictionaries.clear();
 }
 
 
@@ -1387,19 +1388,25 @@ void DBFactory::setPeriod(QDate begDate, QDate endDate)
 }
 
 
-void DBFactory::getPeriod(QDate& begDate, QDate& endDate)
+bool DBFactory::getPeriod(QDate& begDate, QDate& endDate)
 {
+    bool result = false;
     clearError();
-    QSqlQuery query = execQuery(QString("SELECT %1, %2 FROM %3 WHERE %4='%5';").arg(getObjectNameCom("блокпериоды.начало"))
+    if (isTableExists(getObjectNameCom("блокпериоды")))
+    {
+        QSqlQuery query = execQuery(QString("SELECT %1, %2 FROM %3 WHERE %4='%5';").arg(getObjectNameCom("блокпериоды.начало"))
                                                                                .arg(getObjectNameCom("блокпериоды.конец"))
                                                                                .arg(getObjectNameCom("блокпериоды"))
                                                                                .arg(getObjectNameCom("блокпериоды.пользователь"))
                                                                                .arg(app->getLogin()));
-    if (query.first())
-    {
-        begDate = query.record().field(0).value().toDate();
-        endDate = query.record().field(1).value().toDate();
+        if (query.first())
+        {
+            begDate = query.record().field(0).value().toDate();
+            endDate = query.record().field(1).value().toDate();
+            result = true;
+        }
     }
+    return result;
 }
 
 
@@ -1804,6 +1811,7 @@ void DBFactory::getToperDictAliases(int oper, QList<ToperType>* topersList, QLis
     {
         // Если в документе присутствуют проводки, то в локальный список справочников счетов попадают только справочники из корреспондирующих счетов
         // и не попадают связанные справочники из атрибутов
+
         QStringList prototypes;
         for (int i = 0; i < topersList->count(); i++)
         {
@@ -2252,28 +2260,6 @@ QSqlRecord DBFactory::getRecord(QString command, int row)
 }
 
 
-bool DBFactory::lockDocument(int docId)
-{
-    int id = getValue(QString("SELECT \"PID\" FROM \"блокдокументов\" WHERE \"КОД_ДОКУМЕНТЫ\" = %1;").arg(docId)).toInt();
-    if (id > 0)
-        return false;
-    exec(QString("INSERT INTO \"блокдокументов\" (\"PID\", \"КОД_ДОКУМЕНТЫ\") VALUES (%1, %2);").arg(pid).arg(docId));
-    return true;
-}
-
-
-void DBFactory::unlockDocument(int docId)
-{
-    exec(QString("DELETE FROM \"блокдокументов\" WHERE \"PID\" = %1 AND \"КОД_ДОКУМЕНТЫ\" = %2;").arg(pid).arg(docId));
-}
-
-
-void DBFactory::clearLockedDocumentList()
-{
-    exec(QString("DELETE FROM %1 WHERE %2 IN (SELECT %2 FROM %1 WHERE %2 NOT IN (SELECT pid FROM pg_stat_activity WHERE datname = '%3'))").arg("блокдокументов").arg("\"PID\"").arg(dbName));
-}
-
-
 void DBFactory::saveUpdate(QString value)
 {
     if (app->isSA() && app->getConfigValue("SAVE_DB_UPDATES_TO_LOCAL").toBool())
@@ -2333,28 +2319,32 @@ void DBFactory::loadUpdates()
 
 int DBFactory::updatesCount()
 {
+    QString tableName = getObjectNameCom("константы");
     QString templateString = app->applicationDirPath().append("/updates_db/").append(dbName).append("/");
     dbUpdatesList = QDir(templateString).entryList(QStringList() << "*.sql", QDir::Files);
-    int updateNum = getValue("SELECT \"ЗНАЧЕНИЕ\" FROM константы WHERE \"ИМЯ\" = 'Last_DB_Update';").toInt();
-    // Удалим предыдущие скрипты из списка
-    for (int i = 1; i <= updateNum; i++)
+    if (isTableExists(tableName))
     {
-        QString fileName = QString("%1.sql").arg(i);
-        if (dbUpdatesList.contains(fileName))
+        int updateNum = getValue("SELECT \"ЗНАЧЕНИЕ\" FROM константы WHERE \"ИМЯ\" = 'Last_DB_Update';").toInt();
+        // Удалим предыдущие скрипты из списка
+        for (int i = 1; i <= updateNum; i++)
         {
-            int index = -1;
-            do
+            QString fileName = QString("%1.sql").arg(i);
+            if (dbUpdatesList.contains(fileName))
             {
-                // Удалим файл вида 1-*.sql
-                QString expr = QString("^").append(QString("%1").arg(i)).append("\\D+\\d*\\.sql");
-                index = dbUpdatesList.indexOf(QRegExp(expr));
-                if (index >= 0)
-                    dbUpdatesList.removeAt(index);
-                // Удалим файл вида 1.sql
-                index = dbUpdatesList.indexOf(fileName);
-                if (index >= 0)
-                    dbUpdatesList.removeAt(index);
-            } while (index >= 0);
+                int index = -1;
+                do
+                {
+                    // Удалим файл вида 1-*.sql
+                    QString expr = QString("^").append(QString("%1").arg(i)).append("\\D+\\d*\\.sql");
+                    index = dbUpdatesList.indexOf(QRegExp(expr));
+                    if (index >= 0)
+                        dbUpdatesList.removeAt(index);
+                    // Удалим файл вида 1.sql
+                    index = dbUpdatesList.indexOf(fileName);
+                    if (index >= 0)
+                        dbUpdatesList.removeAt(index);
+                } while (index >= 0);
+            }
         }
     }
     return dbUpdatesList.count();
@@ -2395,4 +2385,10 @@ int DBFactory::getErrorNumber()
 void DBFactory::clearUpdateNum()
 {
     updateNum = 0;
+}
+
+
+int DBFactory::getSecDiff()
+{
+    return 0;
 }

@@ -44,13 +44,16 @@ Table::~Table()
 void Table::postInitialize(QString name, QObject *parent)
 {
     setParent(parent);
-    opened = false;
-    queryTableName = "";
-    tableName = name.trimmed().toLower();
-    tagName = tableName;
     app = TApplication::exemplar();
     db = app->getDBFactory();
     fullDebugInfo = app->getFullDebugInfo();
+    opened = false;
+
+    queryTableName = "";
+    tableName = name.trimmed().toLower();
+    if (!db->isTableExists(tableName))
+        tableName = "";
+    tagName = tableName;
     sqlCommand = "";
 }
 
@@ -130,51 +133,54 @@ QList<FieldType> Table::returnColumnsProperties()
 
 void Table::query(QString filter)
 {
-    tableModel->setFilter(filter);
-    if (tableModel->rowCount() == 0)
-        tableModel->select();
-
-    tableModel->setFullDebugInfo(fullDebugInfo);
-
-    if (!fullDebugInfo)
+    if (tableModel != 0)
     {
-        QString command;
-        if (tableName.size() > 0)
-        {
-            QString fList;
-            if (manualFieldList.count() > 0)
-            {
-                fieldList = manualFieldList;
-                foreach (QString f, fieldList)
-                {
-                    if (fList.size() > 0)
-                        fList.append(",");
-                    fList.append(f);
-                }
-            }
-            else
-                fList = "*";
-            command = QString("SELECT %1 FROM %2").arg(fList).arg(tableName);
-        }
-        else if (sqlCommand.size() > 0)
-            command = sqlCommand;
-        if (command.size() > 0)
-        {
-            if (filter.size() > 0)
-            {
-                if (command.contains(" WHERE "))
-                    command.replace(" WHERE ", QString(" WHERE %1 AND ").arg(filter));
-                else
-                    command.append(QString(" WHERE %1").arg(filter));
-            }
-            if (tableModel->isTestSelect())
-                command.append(QString(" LIMIT 0"));
-            app->debug(1, "Query:(*) " + command);
-        }
-    }
+        tableModel->setFilter(filter);
+        if (tableModel->rowCount() == 0)
+            tableModel->select();
 
-    if (tableModel->lastError().isValid())
-        app->showError(tableModel->lastError().text());
+        tableModel->setFullDebugInfo(fullDebugInfo);
+
+        if (!fullDebugInfo)
+        {
+            QString command;
+            if (tableName.size() > 0)
+            {
+                QString fList;
+                if (manualFieldList.count() > 0)
+                {
+                    fieldList = manualFieldList;
+                    foreach (QString f, fieldList)
+                    {
+                        if (fList.size() > 0)
+                            fList.append(",");
+                        fList.append(f);
+                    }
+                }
+                else
+                    fList = "*";
+                command = QString("SELECT %1 FROM %2").arg(fList).arg(tableName);
+            }
+            else if (sqlCommand.size() > 0)
+                command = sqlCommand;
+            if (command.size() > 0)
+            {
+                if (filter.size() > 0)
+                {
+                    if (command.contains(" WHERE "))
+                        command.replace(" WHERE ", QString(" WHERE %1 AND ").arg(filter));
+                    else
+                        command.append(QString(" WHERE %1").arg(filter));
+                }
+                if (tableModel->isTestSelect())
+                    command.append(QString(" LIMIT 0"));
+                app->debug(1, "Query:(*) " + command);
+            }
+        }
+
+        if (tableModel->lastError().isValid())
+            app->showError(tableModel->lastError().text());
+    }
  }
 
 

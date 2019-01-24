@@ -129,6 +129,7 @@ struct ColumnProperties
     int         precision;
 };
 
+
 class DBFactory : public QObject {
     Q_OBJECT
 
@@ -140,6 +141,7 @@ public:
     int getPort();
     QString getHostName();
     QString getLogin();
+    virtual QString getConnectionName() { return ""; }
     void setHostName(QString name);
     void setPort(int portNum);
     virtual int openDBDialog();
@@ -166,16 +168,16 @@ public:
     bool removeDictionary(QString);
     Q_INVOKABLE QString getDictionaryPhotoPath(QString);
     void reloadDictionariesPermitions();
-    QSqlQuery* getDictionaries();
+    QSqlQuery getDictionaries();
     int insertDictDefault(QString tableName, QHash<QString, QVariant>* values);                 // Вставляет в справочник новую строку
     bool removeDictValue(QString, int);                                          // Удаляет строку в указанном справочнике с заданным кодом
     void setConstDictId(QString, QVariant, int, int, int);
 
 
     // Работа с бухгалтерскими документами
-    bool    lockDocument(int);
-    void    unlockDocument(int);
-    void clearLockedDocumentList();
+    virtual bool    lockDocument(int) { return true; }
+    virtual void    unlockDocument(int) {;}
+    virtual void    clearLockedDocumentList() {;}
 
     int addDoc(int operNumber, QDate date);                                                             // Создать новый документ по типовой операции operNumber с датой date
     bool removeDoc(int docId);                                                                          // Удалить документ с идентификатором docId
@@ -235,7 +237,7 @@ public:
     QString getPhotoDatabase();
     void insertSaldo(QString , int);                 // Вставляет в сальдо новую строку
     void setPeriod(QDate, QDate);
-    void getPeriod(QDate&, QDate&);
+    bool getPeriod(QDate&, QDate&);
     QHash<int, UserInfo> getUserList();
 
     // Работа с ошибками
@@ -298,6 +300,7 @@ public:
 
     void    clearUpdateNum();
     void addColumnProperties(QList<FieldType>*, QString, QString, QString, int, int, bool = false, bool = false, int = 0, int = 0);
+    virtual int getSecDiff();
 
 protected:
     TApplication*           app;
@@ -313,7 +316,6 @@ protected:
     QSqlQuery               accounts;
     QSqlQuery               columnsRestrictions;
     QSqlQuery               files;
-    QSqlQuery               dictionaries;
     QString                 hostName;           // URL сервера
     int                     port;               // порт сервера
     QString                 currentLogin;       // логин, под которым работает пользователь

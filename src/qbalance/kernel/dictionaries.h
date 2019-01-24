@@ -50,6 +50,7 @@ public:
         {
             T* p(new T(parent));
             p->postInitialize(parent);
+            p->open();
             return p;
         }
 
@@ -58,9 +59,9 @@ public:
     Q_INVOKABLE virtual bool addDictionary(QString);
     Q_INVOKABLE virtual bool addSaldo(QString acc);
     Q_INVOKABLE virtual void removeDictionary(QString);
-    virtual void removeAll();
-    QString getDictionaryTitle(QString);
-    virtual void            query(QString filter = "", bool = false);
+    Q_INVOKABLE virtual void removeAll();
+    Q_INVOKABLE QString getDictionaryTitle(QString);
+    Q_INVOKABLE virtual void            query(QString filter = "", bool = false);
     QHash<QString, Dictionary*>* getDictionariesList();
     virtual void cmdOk();
     Q_INVOKABLE virtual bool add();        // Добавление справочника

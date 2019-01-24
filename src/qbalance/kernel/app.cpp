@@ -361,12 +361,6 @@ MessageWindow* TApplication::getMessageWindow()
 }
 
 
-int TApplication::getSecDiff()
-{
-    return secDiff;
-}
-
-
 bool TApplication::isTimeOut()
 {
     return timeIsOut;
@@ -706,8 +700,8 @@ bool TApplication::initApplication()
     tcpClient = new TcpClient(getConfigValue("REMOTE_HOST").toString(), getConfigValue("REMOTE_PORT").toInt(), this);
     timeOut(getConfigValue(FR_NET_DRIVER_TIMEOUT).toInt());                                  // Подеждем, пока произойдет соенинение с сервером приложения
 
-    db  = new PostgresDBFactory();
-//    db  = new SQLiteDBFactory();
+//    db  = new PostgresDBFactory();
+    db  = new SQLiteDBFactory();
 
     if (db->getDB()->isValid())
     {
@@ -726,81 +720,76 @@ bool TApplication::initApplication()
                 dictionaryList = Dictionaries::create<Dictionaries>();
                 topersList = Topers::create<Topers>();
 
-                if (dictionaryList->open() || topersList->open())
-                {
-                    secDiff = QDateTime::currentDateTime().secsTo(db->getValue("SELECT now();", 0, 0).toDateTime());
+                if (!loadDefaultConfig)
+                    readSettings();
 
-                    if (!loadDefaultConfig)
-                        readSettings();
+                if (!isScriptMode())
+                    openPlugins();
 
-                    if (!isScriptMode())
-                        openPlugins();
+                gui->showMenus();
 
-                    gui->showMenus();
-
-                    // Удалось открыть спосок справочников и типовых операций
-                    db->getPeriod(beginDate, endDate);
+                if (db->getPeriod(beginDate, endDate))
                     gui->getMainWindow()->showPeriod();
 
-                    // Инициализируем систему обновлений
-                    updates = new Updates(this);
-                    updates->open();
+                // Инициализируем систему обновлений
+                updates = new Updates(this);
+                updates->open();
 
-                    // Проверим обновления БД, и если надо, применим их
-                    if (!isScriptMode() && getConfigValue("ASK_LOAD_UPDATES_TO_DB").toBool())
-                    {
-                        int updatesCnt = db->updatesCount();
-                        if (updatesCnt > 0)
-                        {
-//                            if (showYesNo(QString(QObject::trUtf8("Найдено обновлений базы данных: %1. Применить их?")).arg(updatesCnt)) == QMessageBox::Yes)
-                                db->loadUpdates();
-                        }
-                    }
-
-                    // Загрузим константы
-
-                    Dictionary* constDict = dictionaryList->getDictionary(db->getObjectName("константы"));
-                    if (constDict != 0)
-                    {
-                        constDict->setPhotoEnabled(false);
-                        constDict->query();
-                    }
-
-                    // Загрузим счета
-                    Dictionary* accDict = dictionaryList->getDictionary(db->getObjectName("счета"));
-                    if (accDict != 0)
-                    {
-                        accDict->setPhotoEnabled(false);
-                    }
-
-                    if (getConfigValue("FR_NEEDED").toBool() && !isScriptMode())
-                    {
-                        if (driverFRisValid)
-                            showMessageOnStatusBar("Найден фискальный регистратор.\n");
-                        else
-                        {
-                            if (driverFR != 0 && driverFR->isLocked())
-                                showMessageOnStatusBar("Фискальный регистратор занят. Не удалось соединиться.\n");
-                            else
-                                showMessageOnStatusBar("Фискальный регистратор не найден.\n");
-                        }
-                    }
-
-                    db->clearLockedDocumentList();
-
-                    lResult = true;     // Приложение удалось открыть
-
-                    getMainWindow()->setWindowTitle(getMainWindow()->windowTitle().append(QString(" - (%1) - %2 %3").arg(getConfigPrefix())
-                                                                                                                    .arg(getLogin())
-                                                                                                                    .arg(username)));
-
-                    break;  // Выйдем из бесконечного цикла открытия БД
-                }
-                else
+                // Проверим обновления БД, и если надо, применим их
+                if (!isScriptMode() && getConfigValue("ASK_LOAD_UPDATES_TO_DB").toBool())
                 {
-                    result = -1;
-                    break;
+                    int updatesCnt = db->updatesCount();
+                    if (updatesCnt > 0)
+                    {
+//                            if (showYesNo(QString(QObject::trUtf8("Найдено обновлений базы данных: %1. Применить их?")).arg(updatesCnt)) == QMessageBox::Yes)
+                            db->loadUpdates();
+                    }
                 }
+
+                // Загрузим константы
+
+                Dictionary* constDict = dictionaryList->getDictionary(db->getObjectName("константы"));
+                if (constDict != 0)
+                {
+                    constDict->setPhotoEnabled(false);
+                    constDict->query();
+                }
+
+                // Загрузим счета
+                Dictionary* accDict = dictionaryList->getDictionary(db->getObjectName("счета"));
+                if (accDict != 0)
+                {
+                    accDict->setPhotoEnabled(false);
+                }
+
+                if (getConfigValue("FR_NEEDED").toBool() && !isScriptMode())
+                {
+                    if (driverFRisValid)
+                        showMessageOnStatusBar("Найден фискальный регистратор.\n");
+                    else
+                    {
+                        if (driverFR != 0 && driverFR->isLocked())
+                            showMessageOnStatusBar("Фискальный регистратор занят. Не удалось соединиться.\n");
+                        else
+                            showMessageOnStatusBar("Фискальный регистратор не найден.\n");
+                    }
+                }
+
+                db->clearLockedDocumentList();
+
+                // Создадим заголовок в главном окне
+                QString title = "";
+                if (getConfigPrefix().size() > 0)
+                    title.append(QString(" - (%1)").arg(getConfigPrefix()));
+                if (getLogin().size() > 0)
+                    title.append(QString(" - %1").arg(getLogin()));
+                if (username.size() > 0)
+                    title.append(QString(" %1").arg(username));
+                getMainWindow()->setWindowTitle(getMainWindow()->windowTitle().append(title));
+
+
+                lResult = true;     // Приложение удалось открыть
+                break;  // Выйдем из бесконечного цикла открытия БД
             }
             else if (result == -2)
             {   // Произошла ошибка соединения с сервером
@@ -1134,7 +1123,7 @@ QString TApplication::getConfigFileName()
 QString TApplication::getConfigPrefix()
 {
     if (db != 0 && db->isOpened())
-        return QString("%1-%2-%3").arg(db->getHostName()).arg(db->getPort()).arg(db->getDatabaseName());
+        return db->getConnectionName();
     return QString();
 }
 

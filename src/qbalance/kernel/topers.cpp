@@ -104,6 +104,13 @@ void Topers::view()
 }
 
 
+void Topers::show()
+{
+    query();
+    Dictionary::show();
+}
+
+
 void Topers::setForm()
 {
     form = new FormGridSearch();

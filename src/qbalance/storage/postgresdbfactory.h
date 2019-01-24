@@ -11,9 +11,17 @@ public:
     virtual int openDBDialog();
     virtual void initDBFactory();
 
+    virtual QString getConnectionName();
+
     virtual void loadSystemTables();
     virtual void reloadColumnHeaders();
     virtual void reloadColumnProperties();
+    virtual int getSecDiff();
+
+    virtual bool    lockDocument(int);
+    virtual void    unlockDocument(int);
+    virtual void    clearLockedDocumentList();
+
 };
 
 #endif // POSTGRESDBFACTORY_H

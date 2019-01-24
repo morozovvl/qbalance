@@ -1297,7 +1297,7 @@ bool Essence::getFile(QString path, QString fileName, FileType type)
 //        {
             QFile file(fullFileName);
             // Проверим, какой файл свежее, локальный или на сервере
-            int diff = app->getSecDiff();
+            int diff = db->getSecDiff();
             QFileInfo fi(file);
             QDateTime locFileTime = fi.lastModified();
             locFileTime = locFileTime.addSecs(diff);  // Время модификации локального файла, приведенное к серверному времени
@@ -1339,12 +1339,15 @@ void Essence::saveOldValues()
 {
     // Сохраним старые значения полей записи
     oldValues.clear();
-    foreach (QString field, tableModel->getFieldsList())
+    if (tableModel != 0)
     {
-        QModelIndex index;
-        index = tableModel->index(getCurrentRow(), tableModel->fieldIndex(field));
-        QVariant val = tableModel->data(index);
-        oldValues.insert(field, val);
+        foreach (QString field, tableModel->getFieldsList())
+        {
+            QModelIndex index;
+            index = tableModel->index(getCurrentRow(), tableModel->fieldIndex(field));
+            QVariant val = tableModel->data(index);
+            oldValues.insert(field, val);
+        }
     }
 }
 

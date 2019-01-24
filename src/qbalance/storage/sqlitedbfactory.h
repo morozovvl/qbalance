@@ -11,6 +11,8 @@ public:
     virtual bool open(QString = "", QString = "");
     virtual int openDBDialog();
 
+    virtual QString getConnectionName();
+
     virtual void loadSystemTables();
     virtual void reloadColumnProperties();
 };

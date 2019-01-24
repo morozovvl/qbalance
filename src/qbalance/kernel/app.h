@@ -231,11 +231,9 @@ public:
     Q_INVOKABLE void clearPrintArrays();
     Q_INVOKABLE int printArrayCount(QString);
     MessageWindow* getMessageWindow();
-    int getSecDiff();
     void    initConfig();
     QString     findFileFromEnv(QString);
     Q_INVOKABLE virtual void timeOut(int);
-//    Q_INVOKABLE void startTimeOut(int);
     Q_INVOKABLE bool isTimeOut();
     Q_INVOKABLE virtual void sleep(int);
 
@@ -325,7 +323,7 @@ private:
     bool                    barCodeReaded;
     MessageWindow*          messagesWindow;
     Updates*                updates;
-    int                     secDiff;                                // Разница в секундах между временем на этой машине и на сервере
+//    int                     secDiff;                                // Разница в секундах между временем на этой машине и на сервере
                                                                     // Если число положительное, то время на этих часах отстает
                                                                     // Чтобы получить приблизительное время на сервере
                                                                     // нужно к текущему времени прибавить эту разницу

@@ -739,29 +739,29 @@ void Dictionary::query(QString defaultFilter, bool exactlyDefaultFilter)
 
     Essence::query(resFilter);
 
-    if (tableModel->rowCount() > 0 && grdTable != 0)
+    if (tableModel != 0)
     {
-        QModelIndex index = getCurrentIndex();
-
-        if (index.row() > tableModel->rowCount() - 1)       // Если старая последняя запись исчезла
-            grdTable->selectRow(tableModel->rowCount() - 1);    // то перейдем на новую последнюю
-        else
+        if (tableModel->rowCount() > 0 && grdTable != 0)
         {
-            if (index.row() < 0)
-            {
-                grdTable->selectRow(0);
-            }
+            QModelIndex index = getCurrentIndex();
+
+            if (index.row() > tableModel->rowCount() - 1)       // Если старая последняя запись исчезла
+                grdTable->selectRow(tableModel->rowCount() - 1);    // то перейдем на новую последнюю
             else
-                grdTable->selectRow(index.row());
+            {
+                if (index.row() < 0)
+                    grdTable->selectRow(0);
+                else
+                    grdTable->selectRow(index.row());
+            }
+        }
+
+        if (tableModel->rowCount() == 1)     // Если включен автоматический выбор позиции и позиция одна, то нажмем кнопку Ok (выберем позицию)
+        {
+            if (lAutoSelect)
+                form->cmdOk();
         }
     }
-
-    if (tableModel->rowCount() == 1)     // Если включен автоматический выбор позиции и позиция одна, то нажмем кнопку Ok (выберем позицию)
-    {
-        if (lAutoSelect)
-            form->cmdOk();
-    }
-
 }
 
 

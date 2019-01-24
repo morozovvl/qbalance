@@ -93,13 +93,14 @@ void PostgresDBFactory::initDBFactory()
     {
         exec(QString("set client_encoding='%1';").arg(TApplication::encoding()), dbExtend);
         exec("set standard_conforming_strings=on;");
+        extDbExist = true;
     }
-    else
-    {
-        extDbExist = false;
-//  Закомментировано: Не сообщать, что расширенная БД (для картинок) отсутствует. Работать без нее
-//        setError(dbExtend->lastError().text());
-    }
+}
+
+
+QString PostgresDBFactory::getConnectionName()
+{
+    return QString("%1-%2-%3").arg(getHostName()).arg(getPort()).arg(getDatabaseName());
 }
 
 
@@ -118,8 +119,6 @@ void PostgresDBFactory::loadSystemTables()
                                                                .arg(getObjectNameCom("доступ"))
                                                                .arg(getObjectNameCom("доступ.код_типыобъектов"))
                                                                .arg(getObjectNameCom("доступ.имя_пользователи")));
-
-    dictionaries = execQuery(QString("SELECT * FROM %1 ORDER BY %2;").arg(getObjectNameCom("справочники")).arg(getObjectNameCom("справочники.имя")));
 
     QSqlQuery query = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("systables")));
     while (query.next())
@@ -164,5 +163,37 @@ void PostgresDBFactory::reloadColumnProperties()
     reloadColumnHeaders();
 }
 
+
+int PostgresDBFactory::getSecDiff()
+{
+    return QDateTime::currentDateTime().secsTo(getValue("SELECT now();", 0, 0).toDateTime());
+}
+
+
+bool PostgresDBFactory::lockDocument(int docId)
+{
+    if (isTableExists("блокдокументов"))
+    {
+        int id = getValue(QString("SELECT \"PID\" FROM \"блокдокументов\" WHERE \"КОД_ДОКУМЕНТЫ\" = %1;").arg(docId)).toInt();
+        if (id > 0)
+            return false;
+        exec(QString("INSERT INTO \"блокдокументов\" (\"PID\", \"КОД_ДОКУМЕНТЫ\") VALUES (%1, %2);").arg(pid).arg(docId));
+    }
+    return true;
+}
+
+
+void PostgresDBFactory::unlockDocument(int docId)
+{
+    if (isTableExists("блокдокументов"))
+        exec(QString("DELETE FROM \"блокдокументов\" WHERE \"PID\" = %1 AND \"КОД_ДОКУМЕНТЫ\" = %2;").arg(pid).arg(docId));
+}
+
+
+void PostgresDBFactory::clearLockedDocumentList()
+{
+    if (isTableExists("блокдокументов"))
+        exec(QString("DELETE FROM %1 WHERE %2 IN (SELECT %2 FROM %1 WHERE %2 NOT IN (SELECT pid FROM pg_stat_activity WHERE datname = '%3'))").arg("блокдокументов").arg("\"PID\"").arg(dbName));
+}
 
 
