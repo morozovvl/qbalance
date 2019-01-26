@@ -51,8 +51,6 @@ void Table::postInitialize(QString name, QObject *parent)
 
     queryTableName = "";
     tableName = name.trimmed().toLower();
-    if (!db->isTableExists(tableName))
-        tableName = "";
     tagName = tableName;
     sqlCommand = "";
 }
@@ -172,6 +170,7 @@ void Table::query(QString filter)
                     else
                         command.append(QString(" WHERE %1").arg(filter));
                 }
+
                 if (tableModel->isTestSelect())
                     command.append(QString(" LIMIT 0"));
                 app->debug(1, "Query:(*) " + command);

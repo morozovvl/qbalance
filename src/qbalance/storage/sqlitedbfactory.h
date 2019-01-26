@@ -14,7 +14,8 @@ public:
     virtual QString getConnectionName();
 
     virtual void loadSystemTables();
-    virtual void reloadColumnProperties();
+
+    virtual void getColumnsProperties(QList<FieldType>*, QString = "", QString = "", int = 0);
 };
 
 #endif // SQLITEDBFACTORY_H

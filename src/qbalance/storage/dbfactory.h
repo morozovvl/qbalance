@@ -232,7 +232,7 @@ public:
     QStringList getFieldsList(QHash<int, FieldType>*);
     QStringList getFieldsList(QString tableName, int = -1);
     bool isSet(QString tableName);
-    void getColumnsProperties(QList<FieldType>*, QString = "", QString = "", int = 0);
+    virtual void getColumnsProperties(QList<FieldType>*, QString = "", QString = "", int = 0) { ; }
     void getColumnsRestrictions(QString, QList<FieldType>*);                    // Устанавливает ограничение на просматриваемые поля исходя из разграничений доступа
     QString getPhotoDatabase();
     void insertSaldo(QString , int);                 // Вставляет в сальдо новую строку
@@ -310,7 +310,6 @@ protected:
     bool                    extDbExist;         // Расширенная ДБ существует
     QSqlQuery               objectTypes;
     QSqlQuery               dictionariesPermitions;     // Таблица доступа к справочникам
-    QSqlQuery               columnsProperties;
     QSqlQuery               columnsHeaders;
     QSqlQuery               config;
     QSqlQuery               accounts;
@@ -342,7 +341,7 @@ protected:
     int getTypeId(QString);
     void clearError();
     bool execPSql(QStringList command, QString user, QString password);
-    virtual void reloadColumnProperties();
+    virtual void reloadColumnProperties() { ; }
     virtual void reloadColumnHeaders();
 
 private slots:

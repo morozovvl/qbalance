@@ -356,15 +356,16 @@ void DBFactory::reloadDictionariesPermitions()
 }
 
 
-void DBFactory::reloadColumnProperties()
-{
-    columnsProperties.clear();
-}
-
-
 void DBFactory::reloadColumnHeaders()
 {
     columnsHeaders.clear();
+    columnsHeaders = execQuery(QString("SELECT lower(%1) AS %1, lower(%2) AS %2, upper(%3) AS %3, %4, %5, %6 FROM %7;").arg(getObjectNameCom("vw_столбцы.базсправочник"))
+                                                                        .arg(getObjectNameCom("vw_столбцы.справочник"))
+                                                                        .arg(getObjectNameCom("vw_столбцы.столбец"))
+                                                                        .arg(getObjectNameCom("vw_столбцы.заголовок"))
+                                                                        .arg(getObjectNameCom("vw_столбцы.номер"))
+                                                                        .arg(getObjectNameCom("vw_столбцы.толькочтение"))
+                                                                        .arg(getObjectNameCom("vw_столбцы")));
 }
 
 
@@ -558,102 +559,6 @@ bool DBFactory::isSet(QString tableName)
             }
     }
     return result;
-}
-
-
-void DBFactory::getColumnsProperties(QList<FieldType>* result, QString table, QString originTable, int level)
-{
-    QString fldTable = table;
-    QString tableAlias = table;
-    if (table.left(9) == "документы" && table.size() > 9)
-    {
-        table = "vw_спрдокументы";
-    }
-
-    for (columnsProperties.first(); columnsProperties.isValid(); columnsProperties.next())
-    {
-        QSqlRecord record = columnsProperties.record();
-        if (QString().compare(record.value("table_name").toString(), table.trimmed(), Qt::CaseInsensitive) == 0)
-        {
-            FieldType fld;
-            fld.table  = tableAlias;
-            fld.name      = record.value("column_name").toString().trimmed();
-            fld.type      = record.value("type").toString().trimmed();
-            fld.length    = record.value("length").toInt();
-            fld.precision = record.value("precision").toInt();
-            fld.constReadOnly = false;
-            if (fld.name == getObjectName("код"))
-                fld.readOnly = true;
-            else
-            {
-                if (level > 0)
-                    fld.readOnly = true;        // Если это связанный справочник, то у него любое поле запрещено изменять напрямую
-                else
-                    fld.readOnly  = record.value("updateable").toString().trimmed().toUpper() == "YES" ? false : true;
-            }
-            fld.level = level;
-            // Если это столбец из связанной таблицы, то наименование столбца приведем к виду "таблица__столбец"
-            if (originTable.size() > 0 && originTable != table)
-                fld.column = fldTable.toUpper() + "__" + fld.name;
-            else
-                fld.column = fld.name;
-            fld.header = fld.column;
-            fld.headerExist = false;        // Пока мы не нашли для столбца заголовок
-            fld.number    = 0;
-            if (table == getObjectName("документы"))
-            {
-                if (fld.column == getObjectName("документы.комментарий"))
-                {
-                    fld.readOnly = false;
-                    fld.constReadOnly = false;
-                }
-                else
-                {
-                    fld.readOnly = true;
-                    fld.constReadOnly = true;
-                }
-            }
-            if (table == getObjectName("проводки"))
-            {
-                if ((fld.column == getObjectName("проводки.дбкод")) ||
-                    (fld.column == getObjectName("проводки.кркод")) ||
-                    (fld.column == getObjectName("проводки.кол")) ||
-                    (fld.column == getObjectName("проводки.цена")) ||
-                    (fld.column == getObjectName("проводки.сумма")))
-                {
-                    fld.readOnly = false;
-                    fld.constReadOnly = false;
-                }
-                else
-                {
-                    fld.readOnly = true;
-                    fld.constReadOnly = true;
-                }
-            }
-            result->append(fld);
-
-            if (fld.name.left(4) == getObjectName("код") + "_" && level == 0)   // обработаем ссылку на связанную таблицу
-            {
-                QString dictName = fld.name;
-                dictName.remove(0, 4);                          // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
-                dictName = dictName.toLower();                  // и переведем в нижний регистр, т.к. имена таблиц в БД могут быть только маленькими буквами
-                int currentRecord = columnsProperties.at();
-                getColumnsProperties(result, dictName, table, level + 1);
-                columnsProperties.seek(currentRecord);
-
-                if (dictName.left(9) == "документы" && dictName.size() > 9)
-                {
-                    QString oper = dictName.remove("документы");
-                    QString dictName = QString("докатрибуты%1").arg(oper);
-                    if (isTableExists(dictName))
-                    {
-                        getColumnsProperties(result, dictName, table, level + 1);
-                        columnsProperties.seek(currentRecord);
-                    }
-                }
-            }
-        }
-    }
 }
 
 
@@ -1169,34 +1074,30 @@ void DBFactory::getColumnsHeaders(QString tableName, QList<FieldType>* fields)
         {
             if (columnsHeaders.record().value(getObjectName("vw_столбцы.базсправочник")).toString().trimmed().toLower() == tableName.toLower())
             {
-//                int number = columnsHeaders.record().value(getObjectName("vw_столбцы.номер")).toInt();
-//                if (number > 0)
-//                {
-                    QString table = columnsHeaders.record().value(getObjectName("vw_столбцы.справочник")).toString().trimmed().toLower();
-                    QString column1 = columnsHeaders.record().value(getObjectName("vw_столбцы.столбец")).toString().toUpper();
+                QString table = columnsHeaders.record().value(getObjectName("vw_столбцы.справочник")).toString().trimmed().toLower();
+                QString column1 = columnsHeaders.record().value(getObjectName("vw_столбцы.столбец")).toString().toUpper();
 
-                    for (int i = 0; i < fields->count(); i++)
+                for (int i = 0; i < fields->count(); i++)
+                {
+                    if ((column1 == fields->at(i).name.toUpper()) &&
+                            ((table == fields->at(i).table.toLower()) ||
+                            (table == "проводки") ||
+                            (table == "документы") ||
+                            (table == "saldo")))
                     {
-                        if ((column1 == fields->at(i).name.toUpper()) &&
-                                ((table == fields->at(i).table.toLower()) ||
-                                 (table == "проводки") ||
-                                (table == "документы") ||
-                                (table == "saldo")))
-                        {
-                            // Заголовок для столбца найден
-                            counter++;
-                            FieldType field = fields->at(i);
-                            field.header = columnsHeaders.record().value(getObjectName("vw_столбцы.заголовок")).toString();
-                            field.number = number;
-                            number++;
-                            field.headerExist = true;   // Для столбца найден заголовок
-                            field.readOnly = columnsHeaders.record().value(getObjectName("vw_столбцы.толькочтение")).toBool();
-                            fields->removeAt(i);
-                            fields->insert(i, field);
-                            break;
-                        }
+                        // Заголовок для столбца найден
+                        counter++;
+                        FieldType field = fields->at(i);
+                        field.header = columnsHeaders.record().value(getObjectName("vw_столбцы.заголовок")).toString();
+                        field.number = number;
+                        number++;
+                        field.headerExist = true;   // Для столбца найден заголовок
+                        field.readOnly = columnsHeaders.record().value(getObjectName("vw_столбцы.толькочтение")).toBool();
+                        fields->removeAt(i);
+                        fields->insert(i, field);
+                        break;
                     }
-//                }
+                }
             }
         }
         if (counter == 0)
@@ -2310,6 +2211,8 @@ void DBFactory::loadUpdates()
             else
                 app->print(reportStr + "Ошибка!");
         }
+        else
+            break;
         dbUpdatesList.removeOne(fileName);
     } while (!dbUpdatesList.empty());
     app->print("");

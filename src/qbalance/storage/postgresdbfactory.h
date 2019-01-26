@@ -14,13 +14,18 @@ public:
     virtual QString getConnectionName();
 
     virtual void loadSystemTables();
-    virtual void reloadColumnHeaders();
+//    virtual void reloadColumnHeaders();
     virtual void reloadColumnProperties();
     virtual int getSecDiff();
 
     virtual bool    lockDocument(int);
     virtual void    unlockDocument(int);
     virtual void    clearLockedDocumentList();
+
+    virtual void getColumnsProperties(QList<FieldType>*, QString, QString, int);
+
+protected:
+    QSqlQuery               columnsProperties;
 
 };
 

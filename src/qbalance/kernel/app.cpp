@@ -700,8 +700,8 @@ bool TApplication::initApplication()
     tcpClient = new TcpClient(getConfigValue("REMOTE_HOST").toString(), getConfigValue("REMOTE_PORT").toInt(), this);
     timeOut(getConfigValue(FR_NET_DRIVER_TIMEOUT).toInt());                                  // Подеждем, пока произойдет соенинение с сервером приложения
 
-//    db  = new PostgresDBFactory();
-    db  = new SQLiteDBFactory();
+    db  = new PostgresDBFactory();
+//  db  = new SQLiteDBFactory();
 
     if (db->getDB()->isValid())
     {

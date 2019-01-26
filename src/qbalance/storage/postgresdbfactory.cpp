@@ -140,7 +140,7 @@ void PostgresDBFactory::loadSystemTables()
     dbIsOpened = true;
 }
 
-
+/*
 void PostgresDBFactory::reloadColumnHeaders()
 {
     DBFactory::reloadColumnHeaders();
@@ -152,11 +152,11 @@ void PostgresDBFactory::reloadColumnHeaders()
                                                                         .arg(getObjectNameCom("vw_столбцы.толькочтение"))
                                                                         .arg(getObjectNameCom("vw_столбцы")));
 }
-
+*/
 
 void PostgresDBFactory::reloadColumnProperties()
 {
-    DBFactory::reloadColumnProperties();
+    columnsProperties.clear();
     columnsProperties = execQuery("SELECT DISTINCT lower(trim(table_name)) AS table_name, ins.ordinal_position::integer - 1 AS \"order\", ins.column_name AS column_name, ins.data_type AS type, COALESCE(ins.character_maximum_length::integer, 0) + COALESCE(ins.numeric_precision::integer, 0) AS length, COALESCE(ins.numeric_scale::integer, 0) AS \"precision\", ins.is_updatable AS updateable " \
                                   "FROM information_schema.columns ins " \
                                   "ORDER BY table_name;");
@@ -195,5 +195,102 @@ void PostgresDBFactory::clearLockedDocumentList()
     if (isTableExists("блокдокументов"))
         exec(QString("DELETE FROM %1 WHERE %2 IN (SELECT %2 FROM %1 WHERE %2 NOT IN (SELECT pid FROM pg_stat_activity WHERE datname = '%3'))").arg("блокдокументов").arg("\"PID\"").arg(dbName));
 }
+
+
+void PostgresDBFactory::getColumnsProperties(QList<FieldType>* result, QString table, QString originTable, int level)
+{
+    QString fldTable = table;
+    QString tableAlias = table;
+    if (table.left(9) == "документы" && table.size() > 9)
+    {
+        table = "vw_спрдокументы";
+    }
+
+    for (columnsProperties.first(); columnsProperties.isValid(); columnsProperties.next())
+    {
+        QSqlRecord record = columnsProperties.record();
+        if (QString().compare(record.value("table_name").toString(), table.trimmed(), Qt::CaseInsensitive) == 0)
+        {
+            FieldType fld;
+            fld.table  = tableAlias;
+            fld.name      = record.value("column_name").toString().trimmed();
+            fld.type      = record.value("type").toString().trimmed();
+            fld.length    = record.value("length").toInt();
+            fld.precision = record.value("precision").toInt();
+            fld.constReadOnly = false;
+            if (fld.name == getObjectName("код"))
+                fld.readOnly = true;
+            else
+            {
+                if (level > 0)
+                    fld.readOnly = true;        // Если это связанный справочник, то у него любое поле запрещено изменять напрямую
+                else
+                    fld.readOnly  = record.value("updateable").toString().trimmed().toUpper() == "YES" ? false : true;
+            }
+            fld.level = level;
+            // Если это столбец из связанной таблицы, то наименование столбца приведем к виду "таблица__столбец"
+            if (originTable.size() > 0 && originTable != table)
+                fld.column = fldTable.toUpper() + "__" + fld.name;
+            else
+                fld.column = fld.name;
+            fld.header = fld.column;
+            fld.headerExist = false;        // Пока мы не нашли для столбца заголовок
+            fld.number    = 0;
+            if (table == getObjectName("документы"))
+            {
+                if (fld.column == getObjectName("документы.комментарий"))
+                {
+                    fld.readOnly = false;
+                    fld.constReadOnly = false;
+                }
+                else
+                {
+                    fld.readOnly = true;
+                    fld.constReadOnly = true;
+                }
+            }
+            if (table == getObjectName("проводки"))
+            {
+                if ((fld.column == getObjectName("проводки.дбкод")) ||
+                    (fld.column == getObjectName("проводки.кркод")) ||
+                    (fld.column == getObjectName("проводки.кол")) ||
+                    (fld.column == getObjectName("проводки.цена")) ||
+                    (fld.column == getObjectName("проводки.сумма")))
+                {
+                    fld.readOnly = false;
+                    fld.constReadOnly = false;
+                }
+                else
+                {
+                    fld.readOnly = true;
+                    fld.constReadOnly = true;
+                }
+            }
+            result->append(fld);
+
+            if (fld.name.left(4) == getObjectName("код") + "_" && level == 0)   // обработаем ссылку на связанную таблицу
+            {
+                QString dictName = fld.name;
+                dictName.remove(0, 4);                          // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
+                dictName = dictName.toLower();                  // и переведем в нижний регистр, т.к. имена таблиц в БД могут быть только маленькими буквами
+                int currentRecord = columnsProperties.at();
+                getColumnsProperties(result, dictName, table, level + 1);
+                columnsProperties.seek(currentRecord);
+
+                if (dictName.left(9) == "документы" && dictName.size() > 9)
+                {
+                    QString oper = dictName.remove("документы");
+                    QString dictName = QString("докатрибуты%1").arg(oper);
+                    if (isTableExists(dictName))
+                    {
+                        getColumnsProperties(result, dictName, table, level + 1);
+                        columnsProperties.seek(currentRecord);
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 
