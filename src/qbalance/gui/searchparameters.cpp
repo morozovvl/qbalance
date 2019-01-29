@@ -270,10 +270,12 @@ QString SearchParameters::getFilter(QString dictName, QString defFilter)
 
                         if (filter.size() > 0)
                             filter.append(" AND ");
+
+                        QString fieldName = "";
                         if (searchParameters[i].table.size() > 0)
-                            filter.append(QString("%1.").arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table)));
-                        filter.append(QString("%1").arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table + "." + searchParameters[i].field)));
-                        filter.append(QString(" ILIKE '%1'").arg(param));
+                            fieldName.append(QString("%1.").arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table)));
+                        fieldName.append(app->getDBFactory()->getObjectNameCom(searchParameters[i].table + "." + searchParameters[i].field));
+                        filter.append(app->getDBFactory()->getILIKEexpression(fieldName, "'" + param + "'"));
                     }
                 }
             }

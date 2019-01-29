@@ -700,8 +700,8 @@ bool TApplication::initApplication()
     tcpClient = new TcpClient(getConfigValue("REMOTE_HOST").toString(), getConfigValue("REMOTE_PORT").toInt(), this);
     timeOut(getConfigValue(FR_NET_DRIVER_TIMEOUT).toInt());                                  // Подеждем, пока произойдет соенинение с сервером приложения
 
-    db  = new PostgresDBFactory();
-//  db  = new SQLiteDBFactory();
+//    db  = new PostgresDBFactory();
+    db  = new SQLiteDBFactory();
 
     if (db->getDB()->isValid())
     {
@@ -786,7 +786,6 @@ bool TApplication::initApplication()
                 if (username.size() > 0)
                     title.append(QString(" %1").arg(username));
                 getMainWindow()->setWindowTitle(getMainWindow()->windowTitle().append(title));
-
 
                 lResult = true;     // Приложение удалось открыть
                 break;  // Выйдем из бесконечного цикла открытия БД

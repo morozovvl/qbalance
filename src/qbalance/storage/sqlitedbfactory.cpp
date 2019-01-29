@@ -4,6 +4,35 @@
 #include <QtSql/QSqlRecord>
 #include "sqlitedbfactory.h"
 #include "../kernel/app.h"
+#include <iostream>
+#include <sqlite3.h>
+
+using namespace std;
+
+
+static void upperFunc(sqlite3_context *context, int argc, sqlite3_value **argv)
+{
+    if( argc != 1 )
+        return;
+    switch(sqlite3_value_type(argv[0]))
+    {
+            case SQLITE_NULL:
+            {
+                    sqlite3_result_text(context, "NULL", 4, SQLITE_STATIC );
+                    break;
+            }
+            case SQLITE_TEXT:
+            {
+
+                    QString wstr((char*)sqlite3_value_text(argv[0]));
+                    QByteArray array = wstr.toUpper().toUtf8();
+                    sqlite3_result_text(context, array.data(), array.size() , SQLITE_TRANSIENT );
+                    break;
+            }
+            default:
+                    sqlite3_result_text(context, "NULL", 4, SQLITE_STATIC );
+            break;
+    }}
 
 
 SQLiteDBFactory::SQLiteDBFactory(): DBFactory()
@@ -23,6 +52,16 @@ bool SQLiteDBFactory::open(QString login, QString password)
         db->setDatabaseName(dbName);
         if (db->open())
         {
+            QVariant v = db->driver()->handle();
+            if (v.isValid() && qstrcmp(v.typeName(), "sqlite3*")==0)
+            {
+                sqlite3 *db_handle = *static_cast<sqlite3 **>(v.data());
+                if (db_handle != 0)
+                { // check that it is not NULL
+                    sqlite3_initialize();
+                    sqlite3_create_function(db_handle, "upper", 1, SQLITE_UTF8, NULL, &upperFunc, NULL, NULL);
+                }
+            }
             return true;
         }
     }
@@ -41,6 +80,12 @@ int SQLiteDBFactory::openDBDialog()
 }
 
 
+QString SQLiteDBFactory::getLogin()
+{
+    return "sa";
+}
+
+
 QString SQLiteDBFactory::getConnectionName()
 {
     return QString("%1").arg(getDatabaseName());
@@ -51,6 +96,15 @@ void SQLiteDBFactory::loadSystemTables()
 {
     DBFactory::loadSystemTables();
 
+    QSqlQuery query = execQuery(QString("SELECT name, type FROM sqlite_master;"));
+    while (query.next())
+    {
+            QString tableName = query.value(0).toString();
+            QString type = query.value(1).toString();
+            if (!tables.contains(tableName))
+                tables.insert(tableName, type);
+    }
+
     reloadDictionariesPermitions();
     dbIsOpened = true;
 }
@@ -58,7 +112,7 @@ void SQLiteDBFactory::loadSystemTables()
 
 void SQLiteDBFactory::getColumnsProperties(QList<FieldType>* result, QString table, QString originTable, int level)
 {
-    QSqlQuery q = execQuery(QString("PRAGMA table_info(%1)").arg(table));
+    QSqlQuery q = execQuery(QString("PRAGMA table_info(%1);").arg(table));
     q.first();
     while (q.isValid())
     {
@@ -167,5 +221,104 @@ void SQLiteDBFactory::getColumnsProperties(QList<FieldType>* result, QString tab
 
         q.next();
     }
-
 }
+
+
+void SQLiteDBFactory::setFile(QString file, FileType type, QByteArray fileData, bool extend)
+{
+    QString fileName = file.replace(app->applicationDirPath(), "~");
+    clearError();
+    qulonglong size = app->calculateCRC32(&fileData);
+    QString text;
+    if (isFileExist(fileName, type, extend))
+    {
+        // Если в базе уже есть такой файл
+        if (!extend)
+            text = QString("UPDATE %1 SET %2 = hex('%10'), %3 = %4, %9 = current_timestamp WHERE %5 = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
+                                                                                  .arg(getObjectNameCom("файлы.значение"))
+                                                                                  .arg(getObjectNameCom("файлы.контрсумма"))
+                                                                                  .arg(size)
+                                                                                  .arg(getObjectNameCom("файлы.имя"))
+                                                                                  .arg(fileName)
+                                                                                  .arg(getObjectNameCom("файлы.тип"))
+                                                                                  .arg(type)
+                                                                                  .arg(getObjectNameCom("файлы.датавремя"))
+                                                                                  .arg(QString(fileData.toHex()));
+         else
+            text = QString("UPDATE %1 SET %2 = hex('%9'), %3 = %4 WHERE %5 = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
+                                                                                  .arg(getObjectNameCom("файлы.значение"))
+                                                                                  .arg(getObjectNameCom("файлы.контрсумма"))
+                                                                                  .arg(size)
+                                                                                  .arg(getObjectNameCom("файлы.имя"))
+                                                                                  .arg(fileName)
+                                                                                  .arg(getObjectNameCom("файлы.тип"))
+                                                                                  .arg(type)
+                                                                                  .arg(QString(fileData.toHex()));
+    }
+    else
+    {
+        text = QString("INSERT INTO %1 (%2, %3, %4, %6) VALUES ('%7', %8, %9, hex('%10'));").arg(getObjectNameCom("файлы"))
+                                                                                  .arg(getObjectNameCom("файлы.имя"))
+                                                                                  .arg(getObjectNameCom("файлы.тип"))
+                                                                                  .arg(getObjectNameCom("файлы.контрсумма"))
+                                                                                  .arg(getObjectNameCom("файлы.значение"))
+                                                                                  .arg(fileName)
+                                                                                  .arg(type)
+                                                                                  .arg(size)
+                                                                                  .arg(QString(fileData.toHex()));
+    }
+    if (text.size() > 0)
+    {
+        app->setWriteDebug(false);         // Не будем записывать в журнал команды сохранения файлов в БД, чтобы уменьшить разрастание журнала
+        exec(text, true, (extend && extDbExist) ? dbExtend : db);
+        app->setWriteDebug(true);
+        if (!extend)
+            saveUpdate(text);
+    }
+}
+
+
+int SQLiteDBFactory::insertDictDefault(QString tableName, QHash<QString, QVariant>* values)
+{
+    int result = -1;
+    QString command;
+    clearError();
+    if (values->size() == 0)
+    {
+        values->insert(getObjectNameCom(tableName + ".ИМЯ"), QVariant(""));
+    }
+    if (values->size() > 0)
+    {
+        QString fieldsList;
+        QString valuesList;
+        foreach (QString key, values->keys())
+        {
+            QString field = getObjectName(tableName + "." + key);
+            field = field.size() > 0 ? field : key;
+            if (fieldsList.size() > 0)
+                fieldsList.append(',');
+            fieldsList.append(field);
+            QString str = values->value(key).toString();
+            str.replace("'", "''");                         // Если в строке встречается апостроф, то заменим его двойным апострофом, иначе сервер не поймет
+            str = "'" + str + "'";
+            if (valuesList.size() > 0)
+                valuesList.append(',');
+            valuesList.append(str);
+        }
+        command = QString("INSERT INTO %1 (%2) VALUES (%3);").arg(getObjectNameCom(tableName))
+                                                                          .arg(fieldsList)
+                                                                          .arg(valuesList);
+    }
+    execQuery(command);
+    result = getValue("SELECT last_insert_rowid();").toInt();
+    if (sysTables.contains(tableName))
+        saveUpdate(command);
+    return result;
+}
+
+
+QString SQLiteDBFactory::getILIKEexpression(QString arg1, QString arg2)
+{
+    return QString("upper(%1) LIKE %2").arg(arg1).arg(arg2.toUpper());
+}
+

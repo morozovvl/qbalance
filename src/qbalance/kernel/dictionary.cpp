@@ -112,9 +112,7 @@ void Dictionary::postInitialize(QString name, QObject *parent)
 
 void Dictionary::queryName(QString filter)
 {
-//    int id = getId();
-    query(QString("\"%1\".\"ИМЯ\" ILIKE '%" + filter + "%'").arg(tableName));
-//    locateId(id);
+    query(db->getILIKEexpression(QString("\"%1\".\"ИМЯ\"").arg(tableName), "'%" + filter + "%'"));
 }
 
 

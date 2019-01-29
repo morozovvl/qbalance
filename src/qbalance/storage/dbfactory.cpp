@@ -353,6 +353,7 @@ void DBFactory::reloadDictionariesPermitions()
     dictionariesPermitions.clear();
     dictionariesPermitions = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("доступ_к_справочникам")));
     reloadColumnProperties();
+    reloadColumnHeaders();
 }
 
 
@@ -1147,49 +1148,6 @@ bool DBFactory::appendColumnHeader(int mainTableId, int tableId, QString column,
 }
 
 
-int DBFactory::insertDictDefault(QString tableName, QHash<QString, QVariant>* values)
-{
-    int result = -1;
-    QString command;
-    clearError();
-    if (values->size() == 0)
-    {
-        values->insert(getObjectNameCom(tableName + ".ИМЯ"), QVariant(""));
-    }
-    if (values->size() > 0)
-    {
-        QString fieldsList;
-        QString valuesList;
-        foreach (QString key, values->keys())
-        {
-            QString field = getObjectName(tableName + "." + key);
-            field = field.size() > 0 ? field : key;
-            if (fieldsList.size() > 0)
-                fieldsList.append(',');
-            fieldsList.append(field);
-            QString str = values->value(key).toString();
-            str.replace("'", "''");                         // Если в строке встречается апостроф, то заменим его двойным апострофом, иначе сервер не поймет
-            str = "'" + str + "'";
-            if (valuesList.size() > 0)
-                valuesList.append(',');
-            valuesList.append(str);
-        }
-        command = QString("INSERT INTO %1 (%2) VALUES (%3) RETURNING %4;").arg(getObjectNameCom(tableName))
-                                                                          .arg(fieldsList)
-                                                                          .arg(valuesList)
-                                                                          .arg(getObjectNameCom(tableName + ".КОД"));
-    }
-    QSqlQuery query = execQuery(command);
-    if (query.first())
-    {
-        result = query.record().field(0).value().toInt();
-    }
-    if (sysTables.contains(tableName))
-        saveUpdate(command);
-    return result;
-}
-
-
 void DBFactory::insertSaldo(QString acc, int id)
 {
     QString command = QString("SELECT %1 FROM %2 WHERE %3 = '%4' AND %5 = %6;").arg(getObjectNameCom("сальдо.САЛЬДО"))
@@ -1583,60 +1541,6 @@ void DBFactory::removeFile(QString fileName, FileType type, bool extend)
                                                                              .arg(getObjectNameCom("файлы.тип"))
                                                                              .arg(type);
     exec(text, true, (extend && extDbExist) ? dbExtend : db);
-}
-
-
-void DBFactory::setFile(QString file, FileType type, QByteArray fileData, bool extend)
-{
-    QString fileName = file.replace(app->applicationDirPath(), "~");
-    clearError();
-    qulonglong size = app->calculateCRC32(&fileData);
-    QString text;
-    if (isFileExist(fileName, type, extend))
-    {
-        // Если в базе уже есть такой файл
-        if (!extend)
-            text = QString("UPDATE %1 SET %2 = decode('%10', 'hex'), %3 = %4, %9 = now() WHERE %5 = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
-                                                                                  .arg(getObjectNameCom("файлы.значение"))
-                                                                                  .arg(getObjectNameCom("файлы.контрсумма"))
-                                                                                  .arg(size)
-                                                                                  .arg(getObjectNameCom("файлы.имя"))
-                                                                                  .arg(fileName)
-                                                                                  .arg(getObjectNameCom("файлы.тип"))
-                                                                                  .arg(type)
-                                                                                  .arg(getObjectNameCom("файлы.датавремя"))
-                                                                                  .arg(QString(fileData.toHex()));
-         else
-            text = QString("UPDATE %1 SET %2 = decode('%9', 'hex'), %3 = %4 WHERE %5 = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
-                                                                                  .arg(getObjectNameCom("файлы.значение"))
-                                                                                  .arg(getObjectNameCom("файлы.контрсумма"))
-                                                                                  .arg(size)
-                                                                                  .arg(getObjectNameCom("файлы.имя"))
-                                                                                  .arg(fileName)
-                                                                                  .arg(getObjectNameCom("файлы.тип"))
-                                                                                  .arg(type)
-                                                                                  .arg(QString(fileData.toHex()));
-    }
-    else
-    {
-        text = QString("INSERT INTO %1 (%2, %3, %4, %6) VALUES ('%7', %8, %9, decode('%10', 'hex'));").arg(getObjectNameCom("файлы"))
-                                                                                  .arg(getObjectNameCom("файлы.имя"))
-                                                                                  .arg(getObjectNameCom("файлы.тип"))
-                                                                                  .arg(getObjectNameCom("файлы.контрсумма"))
-                                                                                  .arg(getObjectNameCom("файлы.значение"))
-                                                                                  .arg(fileName)
-                                                                                  .arg(type)
-                                                                                  .arg(size)
-                                                                                  .arg(QString(fileData.toHex()));
-    }
-    if (text.size() > 0)
-    {
-        app->setWriteDebug(false);         // Не будем записывать в журнал команды сохранения файлов в БД, чтобы уменьшить разрастание журнала
-        exec(text, true, (extend && extDbExist) ? dbExtend : db);
-        app->setWriteDebug(true);
-        if (!extend)
-            saveUpdate(text);
-    }
 }
 
 

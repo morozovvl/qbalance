@@ -140,19 +140,6 @@ void PostgresDBFactory::loadSystemTables()
     dbIsOpened = true;
 }
 
-/*
-void PostgresDBFactory::reloadColumnHeaders()
-{
-    DBFactory::reloadColumnHeaders();
-    columnsHeaders = execQuery(QString("SELECT lower(%1) AS %1, lower(%2) AS %2, upper(%3) AS %3, %4, %5, %6 FROM %7;").arg(getObjectNameCom("vw_столбцы.базсправочник"))
-                                                                        .arg(getObjectNameCom("vw_столбцы.справочник"))
-                                                                        .arg(getObjectNameCom("vw_столбцы.столбец"))
-                                                                        .arg(getObjectNameCom("vw_столбцы.заголовок"))
-                                                                        .arg(getObjectNameCom("vw_столбцы.номер"))
-                                                                        .arg(getObjectNameCom("vw_столбцы.толькочтение"))
-                                                                        .arg(getObjectNameCom("vw_столбцы")));
-}
-*/
 
 void PostgresDBFactory::reloadColumnProperties()
 {
@@ -160,7 +147,6 @@ void PostgresDBFactory::reloadColumnProperties()
     columnsProperties = execQuery("SELECT DISTINCT lower(trim(table_name)) AS table_name, ins.ordinal_position::integer - 1 AS \"order\", ins.column_name AS column_name, ins.data_type AS type, COALESCE(ins.character_maximum_length::integer, 0) + COALESCE(ins.numeric_precision::integer, 0) AS length, COALESCE(ins.numeric_scale::integer, 0) AS \"precision\", ins.is_updatable AS updateable " \
                                   "FROM information_schema.columns ins " \
                                   "ORDER BY table_name;");
-    reloadColumnHeaders();
 }
 
 
@@ -292,5 +278,107 @@ void PostgresDBFactory::getColumnsProperties(QList<FieldType>* result, QString t
     }
 }
 
+
+void PostgresDBFactory::setFile(QString file, FileType type, QByteArray fileData, bool extend)
+{
+    QString fileName = file.replace(app->applicationDirPath(), "~");
+    clearError();
+    qulonglong size = app->calculateCRC32(&fileData);
+    QString text;
+    if (isFileExist(fileName, type, extend))
+    {
+        // Если в базе уже есть такой файл
+        if (!extend)
+            text = QString("UPDATE %1 SET %2 = decode('%10', 'hex'), %3 = %4, %9 = now() WHERE %5 = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
+                                                                                  .arg(getObjectNameCom("файлы.значение"))
+                                                                                  .arg(getObjectNameCom("файлы.контрсумма"))
+                                                                                  .arg(size)
+                                                                                  .arg(getObjectNameCom("файлы.имя"))
+                                                                                  .arg(fileName)
+                                                                                  .arg(getObjectNameCom("файлы.тип"))
+                                                                                  .arg(type)
+                                                                                  .arg(getObjectNameCom("файлы.датавремя"))
+                                                                                  .arg(QString(fileData.toHex()));
+         else
+            text = QString("UPDATE %1 SET %2 = decode('%9', 'hex'), %3 = %4 WHERE %5 = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
+                                                                                  .arg(getObjectNameCom("файлы.значение"))
+                                                                                  .arg(getObjectNameCom("файлы.контрсумма"))
+                                                                                  .arg(size)
+                                                                                  .arg(getObjectNameCom("файлы.имя"))
+                                                                                  .arg(fileName)
+                                                                                  .arg(getObjectNameCom("файлы.тип"))
+                                                                                  .arg(type)
+                                                                                  .arg(QString(fileData.toHex()));
+    }
+    else
+    {
+        text = QString("INSERT INTO %1 (%2, %3, %4, %6) VALUES ('%7', %8, %9, decode('%10', 'hex'));").arg(getObjectNameCom("файлы"))
+                                                                                  .arg(getObjectNameCom("файлы.имя"))
+                                                                                  .arg(getObjectNameCom("файлы.тип"))
+                                                                                  .arg(getObjectNameCom("файлы.контрсумма"))
+                                                                                  .arg(getObjectNameCom("файлы.значение"))
+                                                                                  .arg(fileName)
+                                                                                  .arg(type)
+                                                                                  .arg(size)
+                                                                                  .arg(QString(fileData.toHex()));
+    }
+    if (text.size() > 0)
+    {
+        app->setWriteDebug(false);         // Не будем записывать в журнал команды сохранения файлов в БД, чтобы уменьшить разрастание журнала
+        exec(text, true, (extend && extDbExist) ? dbExtend : db);
+        app->setWriteDebug(true);
+        if (!extend)
+            saveUpdate(text);
+    }
+}
+
+
+int PostgresDBFactory::insertDictDefault(QString tableName, QHash<QString, QVariant>* values)
+{
+    int result = -1;
+    QString command;
+    clearError();
+    if (values->size() == 0)
+    {
+        values->insert(getObjectNameCom(tableName + ".ИМЯ"), QVariant(""));
+    }
+    if (values->size() > 0)
+    {
+        QString fieldsList;
+        QString valuesList;
+        foreach (QString key, values->keys())
+        {
+            QString field = getObjectName(tableName + "." + key);
+            field = field.size() > 0 ? field : key;
+            if (fieldsList.size() > 0)
+                fieldsList.append(',');
+            fieldsList.append(field);
+            QString str = values->value(key).toString();
+            str.replace("'", "''");                         // Если в строке встречается апостроф, то заменим его двойным апострофом, иначе сервер не поймет
+            str = "'" + str + "'";
+            if (valuesList.size() > 0)
+                valuesList.append(',');
+            valuesList.append(str);
+        }
+        command = QString("INSERT INTO %1 (%2) VALUES (%3) RETURNING %4;").arg(getObjectNameCom(tableName))
+                                                                          .arg(fieldsList)
+                                                                          .arg(valuesList)
+                                                                          .arg(getObjectNameCom(tableName + ".КОД"));
+    }
+    QSqlQuery query = execQuery(command);
+    if (query.first())
+    {
+        result = query.record().field(0).value().toInt();
+    }
+    if (sysTables.contains(tableName))
+        saveUpdate(command);
+    return result;
+}
+
+
+QString PostgresDBFactory::getILIKEexpression(QString arg1, QString arg2)
+{
+    return QString("%1 ILIKE %2").arg(arg1).arg(arg2);
+}
 
 

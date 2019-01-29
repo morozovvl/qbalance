@@ -217,7 +217,7 @@ bool Essence::isDeleteable()
 bool Essence::isViewable()
 {
     return lViewable;
-}             // ... кнопок на форме
+}
 
 
 bool Essence::isUpdateable()

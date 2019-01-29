@@ -140,7 +140,7 @@ public:
     // Работа с соединением к БД
     int getPort();
     QString getHostName();
-    QString getLogin();
+    virtual QString getLogin();
     virtual QString getConnectionName() { return ""; }
     void setHostName(QString name);
     void setPort(int portNum);
@@ -169,7 +169,7 @@ public:
     Q_INVOKABLE QString getDictionaryPhotoPath(QString);
     void reloadDictionariesPermitions();
     QSqlQuery getDictionaries();
-    int insertDictDefault(QString tableName, QHash<QString, QVariant>* values);                 // Вставляет в справочник новую строку
+    virtual int insertDictDefault(QString, QHash<QString, QVariant>*) { return -1; }                 // Вставляет в справочник новую строку
     bool removeDictValue(QString, int);                                          // Удаляет строку в указанном справочнике с заданным кодом
     void setConstDictId(QString, QVariant, int, int, int);
 
@@ -224,7 +224,7 @@ public:
     QStringList getFilesList(QString, FileType, bool = false);
     bool isFileExist(QString, FileType, bool = false);
     void removeFile(QString, FileType, bool = false);
-    void setFile(QString, FileType, QByteArray, bool = false);
+    virtual void setFile(QString, FileType, QByteArray, bool = false) { ; }
     void copyFile(QString, QString, bool = false);
 
 
@@ -301,6 +301,7 @@ public:
     void    clearUpdateNum();
     void addColumnProperties(QList<FieldType>*, QString, QString, QString, int, int, bool = false, bool = false, int = 0, int = 0);
     virtual int getSecDiff();
+    virtual QString getILIKEexpression(QString, QString) { return ""; }       // Возвращает аналог выражения ILIKE для разных БД
 
 protected:
     TApplication*           app;

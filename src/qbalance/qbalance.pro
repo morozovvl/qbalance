@@ -247,3 +247,4 @@ OTHER_FILES += \
     ../../README
 
 # LIBS +=  ../../lib64/libmpfr.so
+LIBS += -lsqlite3

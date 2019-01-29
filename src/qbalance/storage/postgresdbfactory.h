@@ -14,15 +14,17 @@ public:
     virtual QString getConnectionName();
 
     virtual void loadSystemTables();
-//    virtual void reloadColumnHeaders();
     virtual void reloadColumnProperties();
     virtual int getSecDiff();
+    virtual void setFile(QString, FileType, QByteArray, bool = false);
+    virtual int insertDictDefault(QString, QHash<QString, QVariant>*);                 // Вставляет в справочник новую строку
 
     virtual bool    lockDocument(int);
     virtual void    unlockDocument(int);
     virtual void    clearLockedDocumentList();
 
     virtual void getColumnsProperties(QList<FieldType>*, QString, QString, int);
+    virtual QString getILIKEexpression(QString, QString);
 
 protected:
     QSqlQuery               columnsProperties;
