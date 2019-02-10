@@ -36,6 +36,7 @@ public:
       MainWindow(GUIFactory*);
       ~MainWindow();
       virtual void open();
+      virtual void close();
       QMdiArea* getWorkSpace() { return workSpace; }
       QStatusBar* getStatusBar() { return statusBar(); }
       virtual void showPeriod();

@@ -20,9 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtWidgets/QMenuBar>
 #include <QtCore/QDebug>
 #include <QtGui/QDesktopServices>
-//#include <QtCore/QEvent>
-//#include <QtWidgets/QPrinter>
-//#include <QEvent>
 #include "../kernel/app.h"
 #include "mainwindow.h"
 #include "dialog.h"
@@ -59,6 +56,13 @@ void MainWindow::open()
 }
 
 
+void MainWindow::close()
+{
+    writeSettings();
+}
+
+
+
 void  MainWindow::showMenus()
 {
     createActions();
@@ -69,8 +73,7 @@ void  MainWindow::showMenus()
 
 void MainWindow::closeEvent()
 {
-    writeSettings();
-    close();
+    QMainWindow::close();
 }
 
 
@@ -388,8 +391,12 @@ void MainWindow::readSettings()
       QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
       if (settings.status() == QSettings::NoError) {
           settings.beginGroup("mainwindow");
-          move(settings.value("x", app->desktop()->screenGeometry().x()).toInt(), settings.value("y", app->desktop()->screenGeometry().y()).toInt());
-          resize(settings.value("width", app->desktop()->screenGeometry().width()).toInt(), settings.value("height", app->desktop()->screenGeometry().height()).toInt());
+          int x = settings.value("x", pos().x()).toInt();
+          int y = settings.value("y", pos().y()).toInt();
+          int w = settings.value("width", size().width()).toInt();
+          int h = settings.value("height", size().height()).toInt();
+          move(x, y);
+          resize(w, h);
           settings.endGroup();
       }
 }

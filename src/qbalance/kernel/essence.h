@@ -243,6 +243,7 @@ public:
     Q_INVOKABLE void    showPhoto();
 
     Q_INVOKABLE void    setCardReaderEnabled(bool);
+    Q_INVOKABLE void    exportData(QString = "", QStringList = QStringList());
 
 signals:
     void                photoLoaded();

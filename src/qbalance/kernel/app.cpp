@@ -700,13 +700,11 @@ bool TApplication::initApplication()
     tcpClient = new TcpClient(getConfigValue("REMOTE_HOST").toString(), getConfigValue("REMOTE_PORT").toInt(), this);
     timeOut(getConfigValue(FR_NET_DRIVER_TIMEOUT).toInt());                                  // Подеждем, пока произойдет соенинение с сервером приложения
 
-//    db  = new PostgresDBFactory();
-    db  = new SQLiteDBFactory();
+    db  = new PostgresDBFactory();
+//    db  = new SQLiteDBFactory();
 
     if (db->getDB()->isValid())
     {
-        messagesWindow = new MessageWindow();
-
         getMainWindow()->setWindowTitle(QString("%1 %2").arg(getTrueApplicationName()).arg(applicationVersion()));
 
         forever         // Будем бесконечно пытаться открыть базу, пока пользователь не откажется
@@ -714,6 +712,10 @@ bool TApplication::initApplication()
             int result = db->openDBDialog(); // Попытаемся открыть базу данных
             if (result == 0)
             {   // БД открыть удалось
+
+                db->clearLockedDocumentList();
+
+                messagesWindow = new MessageWindow();
 
                 setDebugToBuffer(false);
 
@@ -774,8 +776,6 @@ bool TApplication::initApplication()
                             showMessageOnStatusBar("Фискальный регистратор не найден.\n");
                     }
                 }
-
-                db->clearLockedDocumentList();
 
                 // Создадим заголовок в главном окне
                 QString title = "";
@@ -858,10 +858,14 @@ void TApplication::close()
         topersList->close();
         delete topersList;
     }
+    if (db != 0)
+    {
+        db->close();
+        delete db;
+        db = 0;
+    }
     if (gui != 0)
         gui->close();
-    if (db != 0)
-        db->close();
 }
 
 
@@ -1228,7 +1232,6 @@ void TApplication::setDebugMode(int value, bool active)
             DebugModes.removeAll(valName);
     }
 }
-
 
 void TApplication::debug(int mode, const QString& value, bool timeIsEnabled)
 {

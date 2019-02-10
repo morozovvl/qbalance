@@ -20,6 +20,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QDebug>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
+#include <QtSql/QSqlResult>
+#include <QtSql/QSqlDriver>
 #include <QtScript/QScriptValueIterator>
 #include <QtGui/QKeyEvent>
 #include <QtWidgets/QPushButton>
@@ -586,61 +588,6 @@ void TableViewFromScriptValue(const QScriptValue &object, TableView* &out) {
 }
 
 
-// класс QPushButton
-Q_DECLARE_METATYPE(QPushButton*)
-
-QScriptValue QPushButtonConstructor(QScriptContext *, QScriptEngine *engine) {
-     QPushButton* object = new QPushButton();
-     return engine->newQObject(object);
-}
-
-QScriptValue QPushButtonToScriptValue(QScriptEngine *engine, QPushButton* const &in) {
-    return engine->newQObject(in);
-}
-
-void QPushButtonFromScriptValue(const QScriptValue &object, QPushButton* &out) {
-    out = qobject_cast<QPushButton*>(object.toQObject());
-}
-
-
-// класс QFileDialog
-Q_DECLARE_METATYPE(QFileDialog*)
-
-QScriptValue QFileDialogConstructor(QScriptContext *context, QScriptEngine *engine) {
-    QFileDialog* object;
-    if (context->argumentCount() > 0)
-    {
-        if (context->argument(0).isString())
-        {
-            object = new QFileDialog(0,
-                                     context->argument(0).toString(),
-                                     context->argument(1).toString(),
-                                     context->argument(2).toString());
-        }
-        else
-        {
-            object = new QFileDialog(((FormGrid*)context->argument(0).toQObject())->getFormWidget(),
-                                     Qt::SubWindow);
-
-        }
-    }
-    else
-    {
-        object = new QFileDialog(TApplication::exemplar()->getMainWindow()->centralWidget(), Qt::SubWindow);
-    }
-    return engine->newQObject(object);
-}
-
-
-QScriptValue QFileDialogToScriptValue(QScriptEngine *engine, QFileDialog* const &in) {
-    return engine->newQObject(in);
-}
-
-void QFileDialogFromScriptValue(const QScriptValue &object, QFileDialog* &out) {
-    out = qobject_cast<QFileDialog*>(object.toQObject());
-}
-
-
 // класс OOXMLEngine
 Q_DECLARE_METATYPE(OOXMLEngine*)
 
@@ -700,6 +647,82 @@ void CalendarFormFromScriptValue(const QScriptValue &object, CalendarForm* &out)
     out = qobject_cast<CalendarForm*>(object.toQObject());
 }
 
+
+// класс QPushButton
+Q_DECLARE_METATYPE(QPushButton*)
+
+QScriptValue QPushButtonConstructor(QScriptContext *, QScriptEngine *engine) {
+     QPushButton* object = new QPushButton();
+     return engine->newQObject(object);
+}
+
+QScriptValue QPushButtonToScriptValue(QScriptEngine *engine, QPushButton* const &in) {
+    return engine->newQObject(in);
+}
+
+void QPushButtonFromScriptValue(const QScriptValue &object, QPushButton* &out) {
+    out = qobject_cast<QPushButton*>(object.toQObject());
+}
+
+
+// класс QFileDialog
+Q_DECLARE_METATYPE(QFileDialog*)
+
+QScriptValue QFileDialogConstructor(QScriptContext *context, QScriptEngine *engine) {
+    QFileDialog* object;
+    if (context->argumentCount() > 0)
+    {
+        if (context->argument(0).isString())
+        {
+            object = new QFileDialog(0,
+                                     context->argument(0).toString(),
+                                     context->argument(1).toString(),
+                                     context->argument(2).toString());
+        }
+        else
+        {
+            object = new QFileDialog(((FormGrid*)context->argument(0).toQObject())->getFormWidget(),
+                                     Qt::SubWindow);
+
+        }
+    }
+    else
+    {
+        object = new QFileDialog(TApplication::exemplar()->getMainWindow()->centralWidget(), Qt::SubWindow);
+    }
+    return engine->newQObject(object);
+}
+
+
+QScriptValue QFileDialogToScriptValue(QScriptEngine *engine, QFileDialog* const &in) {
+    return engine->newQObject(in);
+}
+
+void QFileDialogFromScriptValue(const QScriptValue &object, QFileDialog* &out) {
+    out = qobject_cast<QFileDialog*>(object.toQObject());
+}
+
+/*
+// класс QSqlQuery
+Q_DECLARE_METATYPE(QSqlQuery*)
+
+QScriptValue QSqlQueryConstructor(QScriptContext *context, QScriptEngine *engine) {
+    if (context->argument(0).isString())
+    {
+        return engine->toScriptValue(QSqlQuery(context->argument(0).toString()));
+    }
+    return QScriptValue();
+}
+
+QScriptValue QSqlQueryToScriptValue(QScriptEngine *engine, QSqlQuery* const &in) {
+    return engine->toScriptValue(in);
+}
+
+void QSqlQueryFromScriptValue(const QScriptValue &object, QSqlQuery* &out) {
+//    out = qobject_cast<QSqlQuery*>(object.engine()->fromScriptValue(object));
+    QSqlQuery* p = qobject_cast<QSqlQuery*>(object.engine()->fromScriptValue(object));
+}
+*/
 
 //================================================================================================
 // Реализация класса

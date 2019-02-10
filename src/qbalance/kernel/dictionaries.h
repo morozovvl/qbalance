@@ -68,8 +68,6 @@ public:
     Q_INVOKABLE virtual bool remove(bool = false);     // Удаление справочника
     Q_INVOKABLE virtual void show();                // Показать форму в немодальном режиме
     Q_INVOKABLE virtual void view();                    // Исправление свойств справочника
-    Q_INVOKABLE virtual bool open();
-    Q_INVOKABLE virtual void close();
     void    setDocument(Document* doc);
     Document* getDocument();
     bool        isSaldoExist();

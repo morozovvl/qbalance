@@ -337,7 +337,7 @@ void Form::checkVisibility()
         int y = getSubWindow()->y();
         int w = getSubWindow()->width();
         int h = getSubWindow()->height();
-        if (x >= app->getMainWindow()->centralWidget()->width())        // Если координата X уползла за пределы видимости
+        if (x < 0 || x >= app->getMainWindow()->centralWidget()->width())        // Если координата X уползла за пределы видимости
         {
             if (w > app->getMainWindow()->centralWidget()->width())     // Если ширина окна превышает ширину центрального виджета
                 w = app->getMainWindow()->centralWidget()->width();
@@ -345,7 +345,7 @@ void Form::checkVisibility()
             if (x < 0)
                 x = 0;
         }
-        if (y >= app->getMainWindow()->centralWidget()->height())        // Если координата Y уползла за пределы видимости
+        if (y < 0 || y >= app->getMainWindow()->centralWidget()->height())        // Если координата Y уползла за пределы видимости
         {
             if (h > app->getMainWindow()->centralWidget()->height())     // Если высота окна превышает высоту центрального виджета
                 h = app->getMainWindow()->centralWidget()->height();
@@ -452,36 +452,20 @@ void Form::readSettings()
             settingValues.insert("width", settings.value("width").toInt());
             settingValues.insert("height", settings.value("height").toInt());
         }
-        else
-        {
-            // Если локальные значения координат и размеров окна прочитать не удалось, попытаемся загрузить их с сервера
-//            app->showMessageOnStatusBar(tr("Загрузка с сервера геометрии окна справочника ") + configName + "...");
-            db->getConfig(configName, &settingValues);
-/*
-            QSqlQuery config = db->getConfig();
-            config.first();
-            while (config.isValid())
-            {
-                if (config.record().value("group").toString() == configName)
-                {
-                    settingValues.remove(config.record().value("name").toString());
-                    settingValues.insert(config.record().value("name").toString(), config.record().value("value").toInt());
-                }
-                config.next();
-            }
-*/
-//            app->showMessageOnStatusBar("");
-            formWidget->setFormChanged(true);
-        }
         settings.endGroup();
-
-        int x = settingValues.value("x", 0);
-        int y = settingValues.value("y", 0);
-        int w = settingValues.value("width", 400);
-        int h = settingValues.value("height", 200);
-
-        widget->setGeometry(x, y, w, h);
     }
+    if (settingValues.count() == 0)
+    {
+        db->getConfig(configName, &settingValues);
+        formWidget->setFormChanged(true);
+    }
+
+    int x = settingValues.value("x", 0);
+    int y = settingValues.value("y", 0);
+    int w = settingValues.value("width", 400);
+    int h = settingValues.value("height", 200);
+
+    widget->setGeometry(x, y, w, h);
 }
 
 

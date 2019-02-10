@@ -37,6 +37,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/app.h"
 #include "../kernel/document.h"
 #include "../kernel/dictionaries.h"
+#include "../gui/myprogressdialog.h"
 #include "../gui/form.h"
 #include "../gui/formgridsearch.h"
 #include "../gui/mainwindow.h"
@@ -1586,4 +1587,52 @@ bool Essence::saveChanges()
         restoreOldValues();
     return lResult;
 }
+
+
+void Essence::exportData(QString fileName, QStringList fieldsList)
+{
+    QStringList fList = fieldsList.count() > 0 ? fieldsList : fieldList;
+    QString fieldListCommand;
+    MyProgressDialog* progressDialog;
+
+    progressDialog = app->getMyProgressDialog(trUtf8("Ожидайте окончания экспорта данных..."));
+    progressDialog->resize(600, progressDialog->height());
+    progressDialog->show();
+
+    for (int i = 0; i < fList.count(); i++)
+    {
+        if (fieldListCommand.size() > 0)
+            fieldListCommand.append(",");
+        fieldListCommand.append(fList.at(i));
+    }
+
+    QSqlQuery query = db->execQuery(QString("SELECT %1 FROM %2 ORDER BY %3").arg(fieldListCommand).arg(tableName).arg(idFieldName));
+    progressDialog->setMaximum(query.size());
+
+    if (query.first())
+    {
+        int i = 0;
+        do
+        {
+            QString commandValues;
+            for (int j = 0; i < query.record().count(); j++)
+            {
+                if (commandValues.size() > 0)
+                    commandValues.append(",");
+                commandValues.append(tableModel->prepareValueToWrite(columnsProperties.at(j).name, query.record().value(j), columnsProperties.at(j).precision));
+            }
+
+            QString command(QString("INSERT INTO %1 (%2) VALUES (%3);").arg(tableName).arg(fieldListCommand));
+            qDebug() << command;
+            progressDialog->setValue(i);
+
+            i++;
+        } while (query.next());
+    }
+
+    progressDialog->hide();
+    delete progressDialog;
+}
+
+
 

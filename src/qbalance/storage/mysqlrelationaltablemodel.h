@@ -74,6 +74,7 @@ public:
     virtual bool updateRowInTable(int, const QSqlRecord&);
     virtual void setUpdateInfo(QString originField, QString table, QString field, QString type, int length, int prec, int fieldColumn, int keyFieldColumn);
     virtual bool prepareCommand(const QModelIndex&);        // Готовит SQL команды для сохранения изменений
+    QString prepareValueToWrite(QString, QVariant, int);
 
 // Прочие функции
     virtual QStringList getFieldsList() const;

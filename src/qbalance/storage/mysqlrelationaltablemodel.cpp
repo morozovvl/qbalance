@@ -269,90 +269,30 @@ void MySqlRelationalTableModel::setUpdateInfo(QString originField, QString table
 
 bool MySqlRelationalTableModel::prepareCommand(const QModelIndex& index)
 {
-    bool write = true;
     if (editStrategy() == QSqlTableModel::OnManualSubmit)
     {
-        if (updateInfo.contains(index.column()))
+        int columnIndex = index.column();
+        int rowIndex = index.row();
+        if (updateInfo.contains(columnIndex))
         {
             QString value;
-            QString fieldName = updateInfo.value(index.column()).originField;
-            int length = updateInfo.value(index.column()).length;
-            QVariant recValue = ((Essence*)parent)->getValue(fieldName, index.row());
+            QString fieldName = updateInfo.value(columnIndex).originField;
+            QVariant recValue = ((Essence*)parent)->getValue(fieldName, rowIndex);
             // Возьмем исходное значение из модели, которое необходимо сохранить в базу
             // Определим его тип для того, чтобы правильно подготовить текст команды сохранения для сервера
-            QString type = updateInfo.value(index.column()).type.toUpper();
-            if (type == "CHARACTER" || type == "CHARACTER VARYING")
-            {
-                value = recValue.toString().trimmed().left(length);
-                value.replace("'", "''");
-                value = QString("'%1'").arg(value);
-            }
-            else if (type == "TEXT")
-            {
-                value = QString("'%1'").arg(recValue.toString().trimmed());
-            }
-            else if (type == "DATE")
-            {
-                value = recValue.toString();
-                if (value.size() == 0)
-                    write = false;
-                else
-                    value = QString("'%1'").arg(value);
-            }
-            else if (type == "DATETIME")
-            {
-                value = recValue.toString();
-                if (value.size() == 0)
-                    write = false;
-                else
-                    value = QString("'%1'").arg(value);
-            }
-            else if (type.left(9) == "TIMESTAMP")
-            {
-                value = recValue.toString();
-                if (value.size() == 0)
-                    write = false;
-                else
-                    value = QString("'%1'").arg(value);
-            }
-            else if (type == "BYTEA")
-            {
-                value = recValue.toByteArray().toHex();
-                if (value.size() == 0)
-                    write = false;
-                else
-                    value = QString("'%1'").arg(value);
-            }
-            else if (type == "NUMERIC")
-            {
-                value = recValue.toString();
-                if (value.size() == 0)
-                    write = false;
-                else
-                {
-                    int prec = updateInfo.value(index.column()).precision;
-                    value = QString("%1").arg(value.toDouble(), 0, 'f', prec);
-                }
-            }
-            else if (type == "INTEGER")
-            {
-                value = recValue.toString();
-                if (value.size() == 0)
-                    write = false;
-            }
-            else
-            {
-                value = QString("%1").arg(recValue.toString().trimmed());
-            }
+            QString type = updateInfo.value(columnIndex).type.toUpper();
+
+            value = prepareValueToWrite(type, recValue, updateInfo.value(columnIndex).precision);
+
             // Сгенерируем для сервера команду сохранения значения из модели
-            if (write)
+            if (value.size() > 0)
             {
-                int id = record(index.row()).value(updateInfo.value(index.column()).keyFieldColumn).toInt();
+                int id = record(rowIndex).value(updateInfo.value(columnIndex).keyFieldColumn).toInt();
                 if (id > 0)
                 {
                     UpdateValues values;
-                    values.table = updateInfo.value(index.column()).table;
-                    values.field = updateInfo.value(index.column()).field;
+                    values.table = updateInfo.value(columnIndex).table;
+                    values.field = updateInfo.value(columnIndex).field;
                     values.value = value;
                     values.recId = id;
                     db->appendCommand(values);
@@ -361,6 +301,45 @@ bool MySqlRelationalTableModel::prepareCommand(const QModelIndex& index)
         }
     }
     return true;
+}
+
+
+QString MySqlRelationalTableModel::prepareValueToWrite(QString type, QVariant recValue, int prec)
+{
+    QString value = "";
+
+    if (type == "CHARACTER" || type == "CHARACTER VARYING" || type == "TEXT")
+    {
+        value = recValue.toString();
+        if (value.size() > 0)
+        {
+            value.replace("'", "''");
+            value = QString("'%1'").arg(value);
+        }
+    }
+    else if (type == "DATE" || type == "DATETIME" || type.left(9) == "TIMESTAMP")
+    {
+        value = recValue.toString();
+        if (value.size() > 0)
+            value = QString("'%1'").arg(value);
+    }
+    else if (type == "BYTEA")
+    {
+        value = recValue.toByteArray().toHex();
+        if (value.size() > 0)
+            value = QString("'%1'").arg(value);
+    }
+    else if (type == "NUMERIC")
+    {
+        value = recValue.toString();
+        if (value.size() > 0)
+            value = QString("%1").arg(value.toDouble(), 0, 'f', prec);
+    }
+    else
+    {
+        value = recValue.toString();
+    }
+    return value;
 }
 
 

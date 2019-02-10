@@ -30,7 +30,7 @@ private:
     void removeDocument(int opNumber);
 
 protected:
-    virtual void setForm();
+    Q_INVOKABLE virtual void setForm(QString = "");
 
     Topers(QObject *parent = 0);
     virtual void postInitialize(QObject *parent = 0);
@@ -43,6 +43,7 @@ public:
         {
             T* p(new T(parent));
             p->postInitialize(parent);
+            p->open();
             return p;
         }
 

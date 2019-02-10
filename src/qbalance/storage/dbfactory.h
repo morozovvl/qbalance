@@ -168,7 +168,6 @@ public:
     bool removeDictionary(QString);
     Q_INVOKABLE QString getDictionaryPhotoPath(QString);
     void reloadDictionariesPermitions();
-    QSqlQuery getDictionaries();
     virtual int insertDictDefault(QString, QHash<QString, QVariant>*) { return -1; }                 // Вставляет в справочник новую строку
     bool removeDictValue(QString, int);                                          // Удаляет строку в указанном справочнике с заданным кодом
     void setConstDictId(QString, QVariant, int, int, int);
@@ -302,6 +301,7 @@ public:
     void addColumnProperties(QList<FieldType>*, QString, QString, QString, int, int, bool = false, bool = false, int = 0, int = 0);
     virtual int getSecDiff();
     virtual QString getILIKEexpression(QString, QString) { return ""; }       // Возвращает аналог выражения ILIKE для разных БД
+    QString getDictPrototype(QString);
 
 protected:
     TApplication*           app;
@@ -333,6 +333,8 @@ protected:
     int                     updateNum;
     QPointer<QProcess>      proc;
     int                     errorNumber;
+    int                     secDiff;
+    QHash<QString, QString>   dictsPrototypes;
 
     void setError(QString);
     void initObjectNames();

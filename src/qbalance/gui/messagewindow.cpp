@@ -27,11 +27,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../storage/dbfactory.h"
 
 
-MessageWindow::MessageWindow() :
-    QObject()
+MessageWindow::MessageWindow() : QObject()
 {
     subWindow = 0;
     app = TApplication::exemplar();
+    configName = "messagesWindow";
     textEditor = new QTextEdit();
     textEditor->setParent(subWindow);
     textEditor->setWindowTitle(QObject::trUtf8("Сообщения"));
@@ -108,18 +108,7 @@ void MessageWindow::hide()
 
 void MessageWindow::readSettings()
 {
-    QString configName = "messagesWindow";
     QHash<QString, int> settingValues;
-
-    // Загрузим значения по умолчанию
-    int defY = app->getMainWindow()->centralWidget()->height() * 0.6;
-    int defHeight = app->getMainWindow()->centralWidget()->height() - defY;
-
-    settingValues.insert("x", 0);
-    settingValues.insert("y", defY);
-    settingValues.insert("width", app->getMainWindow()->centralWidget()->width());
-    settingValues.insert("height", defHeight);
-
 
     QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
     if (settings.status() == QSettings::NoError)
@@ -132,92 +121,73 @@ void MessageWindow::readSettings()
             settings.value("width", 0).toInt() > 0 &&
             settings.value("height", 0).toInt() > 0)
         {
-            settingValues.remove("x");
             settingValues.insert("x", settings.value("x").toInt());
-            settingValues.remove("y");
             settingValues.insert("y", settings.value("y").toInt());
-            settingValues.remove("width");
             settingValues.insert("width", settings.value("width").toInt());
-            settingValues.remove("height");
             settingValues.insert("height", settings.value("height").toInt());
-
-        }
-        else
-        {
-            // Если локальные значения координат и размеров окна прочитать не удалось, попытаемся загрузить их с сервера
-//            app->showMessageOnStatusBar(tr("Загрузка с сервера геометрии окна справочника ") + configName + "...");
-            app->getDBFactory()->getConfig(configName, &settingValues);
-/*
-            QSqlQuery config = app->getDBFactory()->getConfig();
-            config.first();
-            while (config.isValid())
-            {
-                if (config.record().value("group").toString() == configName)
-                {
-                    settingValues.remove(config.record().value("name").toString());
-                    settingValues.insert(config.record().value("name").toString(), config.record().value("value").toInt());
-                }
-                config.next();
-            }
-*/
-//            app->showMessageOnStatusBar("");
         }
         settings.endGroup();
-
-        int x = settingValues.value("x");
-        int y = settingValues.value("y");
-        int w = settingValues.value("width");
-        int h = settingValues.value("height");
-
-        if (subWindow != 0)
-            subWindow->setGeometry(x, y, w, h);
-        else
-            textEditor->setGeometry(x, y, w, h);
     }
+    if (settingValues.count() == 0)
+        app->getDBFactory()->getConfig(configName, &settingValues);
+    if (settingValues.count() == 0)
+    {
+        // Загрузим значения по умолчанию
+        int defY = app->getMainWindow()->centralWidget()->height() * 0.6;
+        int defHeight = app->getMainWindow()->centralWidget()->height() - defY;
+
+        settingValues.insert("x", 0);
+        settingValues.insert("y", defY);
+        settingValues.insert("width", app->getMainWindow()->centralWidget()->width());
+        settingValues.insert("height", defHeight);
+    }
+
+    int x = settingValues.value("x");
+    int y = settingValues.value("y");
+    int w = settingValues.value("width");
+    int h = settingValues.value("height");
+
+    if (subWindow != 0)
+        subWindow->setGeometry(x, y, w, h);
+    else
+        textEditor->setGeometry(x, y, w, h);
 }
 
 
 void MessageWindow::writeSettings()
 {
-    QString configName = "messagesWindow";
     // Сохраним данные локально, на компьютере пользователя
-    QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
-    settings.beginGroup(configName);
+    int x, y, w, h;
     if (subWindow != 0)
     {
-        settings.setValue("x", subWindow->x());
-        settings.setValue("y", subWindow->y());
-        settings.setValue("width", subWindow->frameGeometry().width());
-        settings.setValue("height", subWindow->frameGeometry().height());
+        x = subWindow->geometry().x();
+        y = subWindow->geometry().y();
+        w = subWindow->geometry().width();
+        h = subWindow->geometry().height();
     }
     else
     {
-        settings.setValue("x", textEditor->x());
-        settings.setValue("y", textEditor->y());
-        settings.setValue("width", textEditor->frameGeometry().width());
-        settings.setValue("height", textEditor->frameGeometry().height());
+        x = textEditor->geometry().x();
+        y = textEditor->geometry().y();
+        w = textEditor->geometry().width();
+        h = textEditor->geometry().height();
     }
+
+    QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
+    settings.beginGroup(configName);
+    settings.setValue("x", x);
+    settings.setValue("y", y);
+    settings.setValue("width", w);
+    settings.setValue("height", h);
     settings.endGroup();
 
     // И если работает пользователь SA, то сохраним конфигурацию окна на сервере
     if (app->isSA() && app->getConfigValue("SAVE_FORM_CONFIG_TO_DB").toBool())
     {
-//        app->showMessageOnStatusBar(tr("Сохранение на сервере геометрии окна справочника ") + configName + "...");
-        if (subWindow != 0)
-        {
-            app->getDBFactory()->setConfig(configName, "x", QString("%1").arg(subWindow->geometry().x()));
-            app->getDBFactory()->setConfig(configName, "y", QString("%1").arg(subWindow->geometry().y()));
-            app->getDBFactory()->setConfig(configName, "width", QString("%1").arg(subWindow->geometry().width()));
-            app->getDBFactory()->setConfig(configName, "height", QString("%1").arg(subWindow->geometry().height()));
-        }
-        else
-        {
-            app->getDBFactory()->setConfig(configName, "x", QString("%1").arg(textEditor->geometry().x()));
-            app->getDBFactory()->setConfig(configName, "y", QString("%1").arg(textEditor->geometry().y()));
-            app->getDBFactory()->setConfig(configName, "width", QString("%1").arg(textEditor->geometry().width()));
-            app->getDBFactory()->setConfig(configName, "height", QString("%1").arg(textEditor->geometry().height()));
-        }
-//        app->showMessageOnStatusBar("");
+        app->getDBFactory()->setConfig(configName, "x", QString("%1").arg(x));
+        app->getDBFactory()->setConfig(configName, "y", QString("%1").arg(y));
+        app->getDBFactory()->setConfig(configName, "width", QString("%1").arg(w));
+        app->getDBFactory()->setConfig(configName, "height", QString("%1").arg(h));
     }
 }
 

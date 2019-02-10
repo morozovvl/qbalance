@@ -306,4 +306,3 @@ void Table::setTagName(QString name)
     tagName = name;
 }
 
-

@@ -81,7 +81,7 @@ int GUIFactory::openDB()
     QHash<int, UserInfo> users;
     int key = 0;
 
-
+    app->setWriteDebug(false);
     db = app->getDBFactory();
     if (TApplication::host.size() > 0 &&
         TApplication::port != 0 &&
@@ -101,6 +101,7 @@ int GUIFactory::openDB()
                 if (users.value(key).loginName == TApplication::username ||
                     users.value(key).loginName + " " + users.value(key).userName == TApplication::username)
                 {
+                    app->setWriteDebug(true);
                     if (db->open(users.value(key).loginName, TApplication::password))
                     {
                         returnCode = 0;
@@ -144,6 +145,7 @@ int GUIFactory::openDB()
                         }
                     }
                     QString password = frm->getPassword();
+                    app->setWriteDebug(true);
                     if (db->open(login, password))
                     {
                         app->password = password;

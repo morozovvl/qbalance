@@ -109,7 +109,6 @@ int ConnectionForm::exec(DBFactory* d)
 {
     bool lResult;
     db = d;
-    readDefaultSettings();
     readSettings(pcmbConnection->itemText(pcmbConnection->currentIndex()));
     gotoCenter();
     lResult = Form::exec();
@@ -174,7 +173,7 @@ void ConnectionForm::readConnectionsList()
           {
               pcmbConnection->addItem(connectionName);
           }
-          readSettings(pcmbConnection->currentText());
+          readDefaultSettings();
     }
 }
 

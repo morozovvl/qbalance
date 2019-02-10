@@ -20,7 +20,6 @@ int PostgresDBFactory::openDBDialog()
     if (result == 0)
     {
         initDBFactory();
-//        db->exec(QString("SELECT session_variables.set_value('%1', '%2');").arg("client_user_id").arg(QString("%1").arg(key)));
     }
     return result;
 }
@@ -31,11 +30,14 @@ bool PostgresDBFactory::open(QString login, QString password)
     clearError();
     if (db->isValid())
     {
+        currentLogin = login;
+        currentPassword = password;
+
         db->setHostName(hostName);
         db->setDatabaseName(dbName);
         db->setPort(port);
-        db->setUserName(login);
-        db->setPassword(password);
+        db->setUserName(currentLogin);
+        db->setPassword(currentPassword);
         if (db->open())
         {
             exec("SET SEARCH_PATH TO system, public;");
@@ -43,10 +45,24 @@ bool PostgresDBFactory::open(QString login, QString password)
             exec("SET DATESTYLE TO ISO, DMY;");
             exec("SET standard_conforming_strings TO on;");
 
-            currentLogin = login;
-            currentPassword = password;
+            // Откроем базу с картинками
+            dbExtend->setHostName(hostName);
+            dbExtend->setDatabaseName(dbName + "_extend");
+            dbExtend->setPort(port);
+            dbExtend->setUserName(currentLogin);
+            dbExtend->setPassword(currentPassword);
+            if (dbExtend->open())
+            {
+                 exec("SET SEARCH_PATH TO system, public;", dbExtend);
+                 exec(QString("SET CLIENT_ENCODING TO '%1';").arg(TApplication::encoding()), dbExtend);
+                 exec("SET DATESTYLE TO ISO, DMY;", dbExtend);
+                 exec("SET standard_conforming_strings TO on;", dbExtend);
+
+                 extDbExist = true;
+            }
 
             pid = getValue("SELECT pg_backend_pid();").toInt();
+            secDiff = QDateTime::currentDateTime().secsTo(getValue("SELECT now();", 0, 0).toDateTime());
             return true;
         }
         else
@@ -76,13 +92,7 @@ bool PostgresDBFactory::open(QString login, QString password)
 void PostgresDBFactory::initDBFactory()
 {
     DBFactory::initDBFactory();
-    files = execQuery(QString("SELECT %1, %2, %3, %4, %5 FROM %6;").arg(getObjectNameCom("файлы.код"))
-                                                               .arg(getObjectNameCom("файлы.имя"))
-                                                               .arg(getObjectNameCom("файлы.тип"))
-                                                               .arg(getObjectNameCom("файлы.контрсумма"))
-                                                               .arg(getObjectNameCom("файлы.датавремя"))
-                                                               .arg(getObjectNameCom("файлы")));
-
+/*
    // Откроем базу с картинками
     dbExtend->setHostName(hostName);
     dbExtend->setDatabaseName(dbName + "_extend");
@@ -95,6 +105,7 @@ void PostgresDBFactory::initDBFactory()
         exec("set standard_conforming_strings=on;");
         extDbExist = true;
     }
+*/
 }
 
 
@@ -119,6 +130,13 @@ void PostgresDBFactory::loadSystemTables()
                                                                .arg(getObjectNameCom("доступ"))
                                                                .arg(getObjectNameCom("доступ.код_типыобъектов"))
                                                                .arg(getObjectNameCom("доступ.имя_пользователи")));
+
+    files = execQuery(QString("SELECT %1, %2, %3, %4, %5 FROM %6;").arg(getObjectNameCom("файлы.код"))
+                                                               .arg(getObjectNameCom("файлы.имя"))
+                                                               .arg(getObjectNameCom("файлы.тип"))
+                                                               .arg(getObjectNameCom("файлы.контрсумма"))
+                                                               .arg(getObjectNameCom("файлы.датавремя"))
+                                                               .arg(getObjectNameCom("файлы")));
 
     QSqlQuery query = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("systables")));
     while (query.next())
@@ -152,7 +170,7 @@ void PostgresDBFactory::reloadColumnProperties()
 
 int PostgresDBFactory::getSecDiff()
 {
-    return QDateTime::currentDateTime().secsTo(getValue("SELECT now();", 0, 0).toDateTime());
+    return secDiff;
 }
 
 

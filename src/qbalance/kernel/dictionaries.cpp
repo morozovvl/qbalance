@@ -127,25 +127,7 @@ bool Dictionaries::addDictionary(QString dictName)
             dictionariesList.insert(dictName, dict);
             dictionariesNamesList.insert(0, dictName);
             dict->setDictionaries(this);
-
-            // Установим прототипы справочников
-            QSqlQuery dicts = db->getDictionaries();
-            if (dicts.first())
-            {
-                QString fieldName = db->getObjectName("справочники.имя");
-                do
-                {
-                    if (dicts.record().value(fieldName).toString() == dictName)
-                    {
-                        QString prototype = dicts.record().value(db->getObjectName("справочники.прототип")).toString();
-                        if (prototype.size() > 0)
-                            dict->setPrototypeName(prototype);
-                        else
-                            dict->setPrototypeName(dictName);
-                        break;
-                    }
-                } while (dicts.next());
-            }
+            dict->setPrototypeName(db->getDictPrototype(dictName));
 
             // Установим "родителей" локальных справочников
             foreach(QString dictName, dictionariesList.keys())
@@ -286,30 +268,14 @@ bool Dictionaries::remove(bool noAsk)
 }
 
 
-bool Dictionaries::open()
-{
-    if (Dictionary::open())
-    {
-        return true;
-    }
-    return false;
-}
-
-
-void Dictionaries::close()
-{
-    removeAll();
-    Dictionary::close();
-}
-
-
 void Dictionaries::query(QString, bool)
 {
     Dictionary::query(QString("%1=true").arg(db->getObjectNameCom("доступ_к_справочникам.меню")));
 }
 
 
-void Dictionaries::cmdOk() {
+void Dictionaries::cmdOk()
+{
     Dictionary::cmdOk();
     QString dictName = getValue(db->getObjectName("доступ_к_справочникам.справочник")).toString().trimmed();
     if (dictName.size() > 0) {

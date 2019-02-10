@@ -28,8 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/dictionaries.h"
 
 
-DBFactory::DBFactory()
-: QObject()
+DBFactory::DBFactory() : QObject()
 {
     app = TApplication::exemplar();
     db = 0;
@@ -46,6 +45,7 @@ DBFactory::DBFactory()
     hostName = "localhost";
     port = 0;
     dbName = "qbalance";
+    secDiff;
 }
 
 
@@ -143,13 +143,6 @@ void DBFactory::getConfig(QString configName, QHash<QString, int> *values)
         }
         config.next();
     }
-}
-
-
-QSqlQuery DBFactory::getDictionaries()
-{
-    return execQuery(QString("SELECT * FROM %1 ORDER BY %2;").arg(getObjectNameCom("справочники"))
-                                                            .arg(getObjectNameCom("справочники.имя")));
 }
 
 
@@ -339,6 +332,19 @@ void DBFactory::loadSystemTables()
     config.clear();
     accounts.clear();
     columnsRestrictions.clear();
+
+    // Установим прототипы справочников
+    QSqlQuery dicts = execQuery(QString("SELECT * FROM %1 ORDER BY %2;").arg(getObjectNameCom("справочники"))
+                                           .arg(getObjectNameCom("справочники.имя")));
+    QString fieldName = getObjectName("справочники.имя");
+    QString prototypeFieldName = getObjectName("справочники.прототип");
+    if (dicts.first())
+    {
+        do
+        {
+            dictsPrototypes.insert(dicts.record().value(fieldName).toString(), dicts.record().value(prototypeFieldName).toString());
+        } while (dicts.next());
+    }
 }
 
 
@@ -1251,7 +1257,7 @@ bool DBFactory::getPeriod(QDate& begDate, QDate& endDate)
 {
     bool result = false;
     clearError();
-    if (isTableExists(getObjectNameCom("блокпериоды")))
+    if (isTableExists(getObjectName("блокпериоды")))
     {
         QSqlQuery query = execQuery(QString("SELECT %1, %2 FROM %3 WHERE %4='%5';").arg(getObjectNameCom("блокпериоды.начало"))
                                                                                .arg(getObjectNameCom("блокпериоды.конец"))
@@ -2197,5 +2203,11 @@ void DBFactory::clearUpdateNum()
 
 int DBFactory::getSecDiff()
 {
-    return 0;
+    return secDiff;
+}
+
+
+QString DBFactory::getDictPrototype(QString dictName)
+{
+    return dictsPrototypes[dictName];
 }

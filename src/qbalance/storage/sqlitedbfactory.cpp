@@ -31,8 +31,35 @@ static void upperFunc(sqlite3_context *context, int argc, sqlite3_value **argv)
             }
             default:
                     sqlite3_result_text(context, "NULL", 4, SQLITE_STATIC );
-            break;
-    }}
+                    break;
+    }
+}
+
+
+static void lowerFunc(sqlite3_context *context, int argc, sqlite3_value **argv)
+{
+    if( argc != 1 )
+        return;
+    switch(sqlite3_value_type(argv[0]))
+    {
+            case SQLITE_NULL:
+            {
+                    sqlite3_result_text(context, "NULL", 4, SQLITE_STATIC );
+                    break;
+            }
+            case SQLITE_TEXT:
+            {
+
+                    QString wstr((char*)sqlite3_value_text(argv[0]));
+                    QByteArray array = wstr.toLower().toUtf8();
+                    sqlite3_result_text(context, array.data(), array.size() , SQLITE_TRANSIENT );
+                    break;
+            }
+            default:
+                    sqlite3_result_text(context, "NULL", 4, SQLITE_STATIC );
+                    break;
+    }
+}
 
 
 SQLiteDBFactory::SQLiteDBFactory(): DBFactory()
@@ -57,9 +84,17 @@ bool SQLiteDBFactory::open(QString login, QString password)
             {
                 sqlite3 *db_handle = *static_cast<sqlite3 **>(v.data());
                 if (db_handle != 0)
-                { // check that it is not NULL
+                {
                     sqlite3_initialize();
+
                     sqlite3_create_function(db_handle, "upper", 1, SQLITE_UTF8, NULL, &upperFunc, NULL, NULL);
+                    sqlite3_create_function(db_handle, "UPPER", 1, SQLITE_UTF8, NULL, &upperFunc, NULL, NULL);
+                    sqlite3_create_function(db_handle, "Upper", 1, SQLITE_UTF8, NULL, &upperFunc, NULL, NULL);
+
+                    sqlite3_create_function(db_handle, "lower", 1, SQLITE_UTF8, NULL, &lowerFunc, NULL, NULL);
+                    sqlite3_create_function(db_handle, "LOWER", 1, SQLITE_UTF8, NULL, &lowerFunc, NULL, NULL);
+                    sqlite3_create_function(db_handle, "Lower", 1, SQLITE_UTF8, NULL, &lowerFunc, NULL, NULL);
+
                 }
             }
             return true;

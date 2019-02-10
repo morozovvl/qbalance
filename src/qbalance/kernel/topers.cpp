@@ -49,12 +49,14 @@ void Topers::postInitialize(QObject* parent)
     scriptEngineEnabled = false;
 }
 
-void Topers::cmdOk() {
+void Topers::cmdOk()
+{
     addDocument(getValue("опер").toInt());
 }
 
 
-void Topers::addDocument(int opNumber) {
+void Topers::addDocument(int opNumber)
+{
     if (opNumber > 0) {
         Documents* doc = TApplication::exemplar()->getDocuments(opNumber);
         if (doc != 0) {
@@ -64,7 +66,8 @@ void Topers::addDocument(int opNumber) {
 }
 
 
-void Topers::removeDocument(int opNumber) {
+void Topers::removeDocument(int opNumber)
+{
     if (opNumber > 0) {
         TApplication::exemplar()->removeDocuments(opNumber);
     }
@@ -111,8 +114,14 @@ void Topers::show()
 }
 
 
-void Topers::setForm()
+void Topers::setForm(QString)
 {
+    if (form != 0)
+    {
+        form->close();
+        delete form;
+    }
+
     form = new FormGridSearch();
 
     form->appendToolTip("buttonOk",         trUtf8("Открыть список документов"));
@@ -139,7 +148,7 @@ bool Topers::remove()
 
 void Topers::setOrderClause(QString)
 {
-    Table::setOrderClause(db->getObjectNameCom("доступ_к_топер.имя"));
+//    Table::setOrderClause(db->getObjectNameCom("доступ_к_топер.имя"));
 }
 
 

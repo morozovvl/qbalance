@@ -48,6 +48,7 @@ private:
     QMdiSubWindow*  subWindow;
     TApplication*   app;
     bool            needShow;
+    QString         configName;
 
     void readSettings();
     void writeSettings();
