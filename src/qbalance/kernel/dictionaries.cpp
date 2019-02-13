@@ -116,7 +116,7 @@ bool Dictionaries::addDictionary(QString dictName)
     dictName = dictName.trimmed().toLower();
     if (dictName.size() == 0)
         return false;
-    if (!dictionariesList.contains(dictName) && db->isTableExists(dictName))
+    if (!dictionariesList.contains(dictName))
     {             // Если справочник с таким именем не существует, то попробуем его создать
         Dictionary* dict = Dictionary::create<Dictionary>(dictName, this);
 

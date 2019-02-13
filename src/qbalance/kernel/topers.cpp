@@ -148,7 +148,7 @@ bool Topers::remove()
 
 void Topers::setOrderClause(QString)
 {
-//    Table::setOrderClause(db->getObjectNameCom("доступ_к_топер.имя"));
+    Table::setOrderClause(db->getObjectNameCom("доступ_к_топер.имя"));
 }
 
 

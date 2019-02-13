@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "dictionaries.h"
 #include "../kernel/app.h"
 #include "../kernel/document.h"
+#include "../kernel/essence.h"
 #include "../gui/mainwindow.h"
 #include "../gui/formdocument.h"
 #include "../gui/formgridsearch.h"

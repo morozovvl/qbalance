@@ -41,7 +41,7 @@ class DBFactory;
 
 class Form: public QObject
 {
-    Q_OBJECT
+//    Q_OBJECT
 public:
     Form(QObject* parent = 0);
     ~Form();

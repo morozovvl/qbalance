@@ -357,3 +357,27 @@ QString SQLiteDBFactory::getILIKEexpression(QString arg1, QString arg2)
     return QString("upper(%1) LIKE %2").arg(arg1).arg(arg2.toUpper());
 }
 
+
+bool SQLiteDBFactory::getPeriod(QDate& begDate, QDate& endDate)
+{
+    bool result = false;
+    clearError();
+    if (isTableExists(getObjectName("блокпериоды")))
+    {
+        QSqlQuery query = execQuery(QString("SELECT %1, %2 FROM %3 WHERE %4='%5';").arg(getObjectNameCom("блокпериоды.начало"))
+                                                                               .arg(getObjectNameCom("блокпериоды.конец"))
+                                                                               .arg(getObjectNameCom("блокпериоды"))
+                                                                               .arg(getObjectNameCom("блокпериоды.пользователь"))
+                                                                               .arg(app->getLogin()));
+        if (query.first())
+        {
+            begDate = QDate().fromString(query.record().field(0).value().toString(), "dd.MM.yy");
+            endDate = QDate().fromString(query.record().field(1).value().toString(), "dd.MM.yy");
+            result = true;
+        }
+    }
+    return result;
+}
+
+
+

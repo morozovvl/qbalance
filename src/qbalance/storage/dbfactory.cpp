@@ -45,7 +45,7 @@ DBFactory::DBFactory() : QObject()
     hostName = "localhost";
     port = 0;
     dbName = "qbalance";
-    secDiff;
+    secDiff = 0;
 }
 
 

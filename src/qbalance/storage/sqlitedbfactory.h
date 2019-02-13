@@ -19,6 +19,8 @@ public:
     virtual void setFile(QString, FileType, QByteArray, bool = false);
     virtual int insertDictDefault(QString, QHash<QString, QVariant>*);                 // Вставляет в справочник новую строку
     virtual QString getILIKEexpression(QString, QString);
+
+    virtual bool getPeriod(QDate&, QDate&);
 };
 
 #endif // SQLITEDBFACTORY_H

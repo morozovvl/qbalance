@@ -236,7 +236,7 @@ public:
     QString getPhotoDatabase();
     void insertSaldo(QString , int);                 // Вставляет в сальдо новую строку
     void setPeriod(QDate, QDate);
-    bool getPeriod(QDate&, QDate&);
+    virtual bool getPeriod(QDate&, QDate&);
     QHash<int, UserInfo> getUserList();
 
     // Работа с ошибками
