@@ -17,17 +17,13 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 #include <QtCore/QVariant>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QComboBox>
-#include <QtWidgets/QCheckBox>
-#include <QtWidgets/QPushButton>
 #include "myvalueeditor.h"
 #include "../kernel/app.h"
 
 MyValueEditor::MyValueEditor(ConfigEntry& val, ConfigForm* confForm, QWidget *parent): QWidget(parent)
 {
     value = &val;
-    widget = 0;
+    widget = nullptr;
     configForm = confForm;
 
     if (value->valueType == CONFIG_VALUE_BOUND)

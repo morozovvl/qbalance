@@ -20,9 +20,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef MYCOMBOBOX_H
 #define MYCOMBOBOX_H
 
-#include <QtWidgets/QComboBox>
-//#include <QtDesigner/QDesignerExportWidget>
-#include <QtUiPlugin/QDesignerExportWidget>
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QWidget>
+    #include <QtGui/QComboBox>
+    #include <QtDesigner/QDesignerExportWidget>
+#else
+    #include <QtWidgets/QWidget>
+    #include <QtWidgets/QComboBox>
+    #include <QtUiPlugin/QDesignerExportWidget>
+#endif
+
 
 class SearchParameters;
 

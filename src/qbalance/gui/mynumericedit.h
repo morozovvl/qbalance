@@ -20,12 +20,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef NUMERICEDIT_H
 #define NUMERICEDIT_H
 
-#include <QtWidgets/QLineEdit>
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QLineEdit>
+    #include <QtGui/QWidget>
+    #include <QtGui/QAbstractItemDelegate>
+    #include <QtDesigner/QDesignerExportWidget>
+#else
+    #include <QtWidgets/QLineEdit>
+    #include <QtWidgets/QWidget>
+    #include <QtWidgets/QAbstractItemDelegate>
+    #include <QtUiPlugin/QDesignerExportWidget>
+#endif
+
 #include <QtCore/QVariant>
-#include <QtWidgets/QWidget>
-#include <QtWidgets/QAbstractItemDelegate>
 //#include <QtDesigner/QDesignerExportWidget>
-#include <QtUiPlugin/QDesignerExportWidget>
 
 class MyNumericEdit : public QLineEdit {
     Q_OBJECT

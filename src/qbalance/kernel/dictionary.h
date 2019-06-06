@@ -62,8 +62,8 @@ protected:
     bool            exact;          // Значение справочника должно быть определено при добавлении строки в документ
     SearchParameters* parameters;
 
-    Dictionary(QObject* = 0);
-    Dictionary(QString, QObject* = 0);
+    Dictionary(QObject* = nullptr);
+    Dictionary(QString, QObject* = nullptr);
     virtual void postInitialize(QString, QObject*);
 
 public:

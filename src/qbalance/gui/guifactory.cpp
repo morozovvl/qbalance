@@ -17,16 +17,25 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QMessageBox>
+    #include <QtGui/QErrorMessage>
+    #include <QtGui/QAbstractButton>
+#else
+    #include <QtWidgets/QMessageBox>
+    #include <QtWidgets/QErrorMessage>
+    #include <QtWidgets/QAbstractButton>
+#endif
+
 #include <QtCore/QString>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QErrorMessage>
 #include <QtCore/QProcess>
 #include <QtSql/QSqlError>
 
 #include <QtCore/QObject>
 #include <QtCore/QIODevice>
 #include <QtCore/QDir>
-#include <QtWidgets/QAbstractButton>
 #include "guifactory.h"
 #include "connectionform.h"
 #include "mainwindow.h"
@@ -39,8 +48,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 GUIFactory::GUIFactory()
 {
-    db = 0;
-    mainWindow = 0;
+    db = nullptr;
+    mainWindow = nullptr;
     app = TApplication::exemplar();
 }
 
@@ -207,10 +216,10 @@ int GUIFactory::showError(QString errorText)
 {
     Qt::WindowModality WidgetModality = Qt::WindowModal;
     QWidget* widget = app->activeWindow();
-    if (widget == 0)
+    if (widget == nullptr)
         widget = app->getMainWindow()->getWorkSpace()->activeSubWindow();
 
-    if (widget != 0)
+    if (widget != nullptr)
     {
         WidgetModality = widget->windowModality();
         widget->setWindowModality(Qt::NonModal);
@@ -223,7 +232,7 @@ int GUIFactory::showError(QString errorText)
     msgBox.setWindowTitle("Ошибка!");
     msgBox.exec();
 
-    if (widget != 0)
+    if (widget != nullptr)
     {
         widget->setWindowModality(WidgetModality);
         widget->activateWindow();
@@ -234,8 +243,8 @@ int GUIFactory::showError(QString errorText)
 
 int GUIFactory::showMessage(QString message, QString question, QMessageBox::StandardButtons buttons, QMessageBox::StandardButton defButton) {
     int result = 0;
-    QMdiSubWindow* window = 0;
-    if (mainWindow != 0)
+    QMdiSubWindow* window = nullptr;
+    if (mainWindow != nullptr)
         window = mainWindow->getWorkSpace()->activeSubWindow();
     QMessageBox msgBox(window);
     msgBox.setWindowModality(Qt::ApplicationModal);
@@ -261,7 +270,7 @@ int GUIFactory::showMessage(QString message, QString question, QMessageBox::Stan
     msgBox.activateWindow();
     msgBox.raise();
     result = msgBox.exec();
-    if (window != 0)
+    if (window != nullptr)
         mainWindow->getWorkSpace()->setActiveSubWindow(window);
     return result;
 }

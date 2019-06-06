@@ -1,5 +1,6 @@
 CONFIG += plugin \
-          core
+          core \
+          script
           
 
 unix:TARGET = ../../../plugins/bankterminal

@@ -20,12 +20,25 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef PICTURE_H
 #define PICTURE_H
 
-#include <QtWidgets/QFrame>
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QApplication>
+    #include <QtGui/QDesktopWidget>
+    #include <QtGui/QMenu>
+    #include <QtGui/QFrame>
+    #include <QtDesigner/QDesignerExportWidget>
+#else
+    #include <QtWidgets/QApplication>
+    #include <QtWidgets/QDesktopWidget>
+    #include <QtWidgets/QMenu>
+    #include <QtWidgets/QFrame>
+    #include <QtUiPlugin/QDesignerExportWidget>
+#endif
+
 #include <QtCore/QString>
 #include <QtGui/QImage>
 #include <QtGui/QPaintEvent>
-//#include <QtDesigner/QDesignerExportWidget>
-#include <QtUiPlugin/QDesignerExportWidget>
 
 
 class TApplication;

@@ -123,20 +123,11 @@ void PostgresDBFactory::loadSystemTables()
 
     config = execQuery("SELECT \"group\", \"name\", \"value\" FROM configs;");
 
-    accounts = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("vw_счета")));
-
     columnsRestrictions = execQuery(QString("SELECT %1 FROM %2 WHERE %3=5 AND (%4 ILIKE '\%'||\"current_user\"()::text||'%' OR %4 ILIKE '\%*\%');")
                                                                .arg(getObjectNameCom("доступ.имя"))
                                                                .arg(getObjectNameCom("доступ"))
                                                                .arg(getObjectNameCom("доступ.код_типыобъектов"))
                                                                .arg(getObjectNameCom("доступ.имя_пользователи")));
-
-    files = execQuery(QString("SELECT %1, %2, %3, %4, %5 FROM %6;").arg(getObjectNameCom("файлы.код"))
-                                                               .arg(getObjectNameCom("файлы.имя"))
-                                                               .arg(getObjectNameCom("файлы.тип"))
-                                                               .arg(getObjectNameCom("файлы.контрсумма"))
-                                                               .arg(getObjectNameCom("файлы.датавремя"))
-                                                               .arg(getObjectNameCom("файлы")));
 
     QSqlQuery query = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("systables")));
     while (query.next())
@@ -297,60 +288,6 @@ void PostgresDBFactory::getColumnsProperties(QList<FieldType>* result, QString t
 }
 
 
-void PostgresDBFactory::setFile(QString file, FileType type, QByteArray fileData, bool extend)
-{
-    QString fileName = file.replace(app->applicationDirPath(), "~");
-    clearError();
-    qulonglong size = app->calculateCRC32(&fileData);
-    QString text;
-    if (isFileExist(fileName, type, extend))
-    {
-        // Если в базе уже есть такой файл
-        if (!extend)
-            text = QString("UPDATE %1 SET %2 = decode('%10', 'hex'), %3 = %4, %9 = now() WHERE %5 = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
-                                                                                  .arg(getObjectNameCom("файлы.значение"))
-                                                                                  .arg(getObjectNameCom("файлы.контрсумма"))
-                                                                                  .arg(size)
-                                                                                  .arg(getObjectNameCom("файлы.имя"))
-                                                                                  .arg(fileName)
-                                                                                  .arg(getObjectNameCom("файлы.тип"))
-                                                                                  .arg(type)
-                                                                                  .arg(getObjectNameCom("файлы.датавремя"))
-                                                                                  .arg(QString(fileData.toHex()));
-         else
-            text = QString("UPDATE %1 SET %2 = decode('%9', 'hex'), %3 = %4 WHERE %5 = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
-                                                                                  .arg(getObjectNameCom("файлы.значение"))
-                                                                                  .arg(getObjectNameCom("файлы.контрсумма"))
-                                                                                  .arg(size)
-                                                                                  .arg(getObjectNameCom("файлы.имя"))
-                                                                                  .arg(fileName)
-                                                                                  .arg(getObjectNameCom("файлы.тип"))
-                                                                                  .arg(type)
-                                                                                  .arg(QString(fileData.toHex()));
-    }
-    else
-    {
-        text = QString("INSERT INTO %1 (%2, %3, %4, %6) VALUES ('%7', %8, %9, decode('%10', 'hex'));").arg(getObjectNameCom("файлы"))
-                                                                                  .arg(getObjectNameCom("файлы.имя"))
-                                                                                  .arg(getObjectNameCom("файлы.тип"))
-                                                                                  .arg(getObjectNameCom("файлы.контрсумма"))
-                                                                                  .arg(getObjectNameCom("файлы.значение"))
-                                                                                  .arg(fileName)
-                                                                                  .arg(type)
-                                                                                  .arg(size)
-                                                                                  .arg(QString(fileData.toHex()));
-    }
-    if (text.size() > 0)
-    {
-        app->setWriteDebug(false);         // Не будем записывать в журнал команды сохранения файлов в БД, чтобы уменьшить разрастание журнала
-        exec(text, true, (extend && extDbExist) ? dbExtend : db);
-        app->setWriteDebug(true);
-        if (!extend)
-            saveUpdate(text);
-    }
-}
-
-
 int PostgresDBFactory::insertDictDefault(QString tableName, QHash<QString, QVariant>* values)
 {
     int result = -1;
@@ -398,5 +335,147 @@ QString PostgresDBFactory::getILIKEexpression(QString arg1, QString arg2)
 {
     return QString("%1 ILIKE %2").arg(arg1).arg(arg2);
 }
+
+
+bool PostgresDBFactory::createNewDictionary(QString tName, QString tTitle/* = ""*/, bool menu)
+{
+    if (!isTableExists(tName))
+    {   // Если такой таблицы нет, то добавим ее
+        QString command = QString("CREATE TABLE \"%1\" ("    \
+                                  "%2 SERIAL NOT NULL," \
+                                  "%3 CHARACTER VARYING(100) DEFAULT ''::CHARACTER VARYING)" \
+                                  "WITH (OIDS=FALSE);" \
+                                  "REVOKE ALL ON \"%1\" FROM PUBLIC;"    \
+                                  "GRANT ALL ON \"%1\" TO %4;" \
+                                  "ALTER TABLE \"%1\" ADD CONSTRAINT \"%1_pkey\" PRIMARY KEY(%2);")
+                                  .arg(tName)
+                                  .arg(getObjectNameCom("код"))
+                                  .arg(getObjectNameCom("имя"))
+                                  .arg(getLogin());
+        if (exec(command))
+        {
+            command = QString("INSERT INTO %1 (%2, %3, %4, %5) VALUES (%6, %7, '%8', '%9');")
+                        .arg(getObjectNameCom("доступ"))
+                        .arg(getObjectNameCom("доступ.меню"))
+                        .arg(getObjectNameCom("доступ.код_типыобъектов"))
+                        .arg(getObjectNameCom("доступ.имя_пользователи"))
+                        .arg(getObjectNameCom("доступ.имя"))
+                        .arg(menu ? getTrueValue() : getFalseValue())
+                        .arg(getTypeId(getObjectName("типыобъектов.справочник")))
+                        .arg(getLogin())
+                        .arg(tName);
+            if (exec(command))
+            {
+                command = QString("INSERT INTO %1 (%2, %3, %4) VALUES ('%5', '%6', '%6');")
+                            .arg(getObjectNameCom("справочники"))
+                            .arg(getObjectNameCom("справочники.имя"))
+                            .arg(getObjectNameCom("справочники.имя_в_списке"))
+                            .arg(getObjectNameCom("справочники.комментарий"))
+                            .arg(tName)
+                            .arg(tTitle);
+                if (exec(command))
+                {
+                    command = QString("CREATE TRIGGER \"testdeleting_%1\" "  \
+                                      "BEFORE DELETE ON \"%1\" " \
+                                      "FOR EACH ROW " \
+                                      "EXECUTE PROCEDURE testdeletingdictobject();")
+                                    .arg(tName);
+                    if (exec(command))
+                    {
+                        command = QString("CREATE TRIGGER \"testinserting_%1\" "  \
+                                          "BEFORE INSERT ON \"%1\" " \
+                                          "FOR EACH ROW " \
+                                          "EXECUTE PROCEDURE testinsertingid();")
+                                        .arg(tName);
+                        if (exec(command))
+                        {
+                            command = QString("CREATE TRIGGER \"testupdating_%1\" "  \
+                                              "BEFORE UPDATE ON \"%1\" " \
+                                              "FOR EACH ROW " \
+                                              "EXECUTE PROCEDURE testupdatingid();")
+                                            .arg(tName);
+                            if (exec(command))
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+        return false;
+    }
+    return true;
+}
+
+
+int PostgresDBFactory::getInsertReturningId(QString tableName, QString columns, QString values)
+{
+    return getValue(QString("INSERT INTO %1 (%2) VALUES (%3) RETURNING %4;")
+                    .arg(getObjectNameCom(tableName))
+                    .arg(columns)
+                    .arg(values)
+                    .arg(getObjectNameCom(tableName + ".КОД"))).toInt();
+}
+
+
+void PostgresDBFactory::setFile(QString file, FileType type, QByteArray fileData, bool extend)
+{
+    QString fileName = file.replace(app->applicationDirPath(), "~");
+    clearError();
+    qulonglong size = app->calculateCRC32(&fileData);
+    QString text;
+    if (isFileExist(fileName, type, extend))
+    {
+        // Если в базе уже есть такой файл
+        if (!extend)
+            text = QString("UPDATE %1 SET %2 = decode('%10', 'hex'), %3 = %4, %9 = %11 WHERE %5 = '%6' AND %7 = %8;")
+                        .arg(getObjectNameCom("файлы"))
+                        .arg(getObjectNameCom("файлы.значение"))
+                        .arg(getObjectNameCom("файлы.контрсумма"))
+                        .arg(size)
+                        .arg(getObjectNameCom("файлы.имя"))
+                        .arg(fileName)
+                        .arg(getObjectNameCom("файлы.тип"))
+                        .arg(type)
+                        .arg(getObjectNameCom("файлы.датавремя"))
+                        .arg(QString(fileData.toHex()))
+                        .arg(getCurrentTimeStamp());
+         else
+            text = QString("UPDATE %1 SET %2 = decode('%9', 'hex'), %3 = %4 WHERE %5 = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
+                                                                                  .arg(getObjectNameCom("файлы.значение"))
+                                                                                  .arg(getObjectNameCom("файлы.контрсумма"))
+                                                                                  .arg(size)
+                                                                                  .arg(getObjectNameCom("файлы.имя"))
+                                                                                  .arg(fileName)
+                                                                                  .arg(getObjectNameCom("файлы.тип"))
+                                                                                  .arg(type)
+                                                                                  .arg(QString(fileData.toHex()));
+    }
+    else
+    {
+        text = QString("INSERT INTO %1 (%2, %3, %4, %6) VALUES ('%7', %8, %9, decode('%10', 'hex'));").arg(getObjectNameCom("файлы"))
+                                                                                  .arg(getObjectNameCom("файлы.имя"))
+                                                                                  .arg(getObjectNameCom("файлы.тип"))
+                                                                                  .arg(getObjectNameCom("файлы.контрсумма"))
+                                                                                  .arg(getObjectNameCom("файлы.значение"))
+                                                                                  .arg(fileName)
+                                                                                  .arg(type)
+                                                                                  .arg(size)
+                                                                                  .arg(QString(fileData.toHex()));
+    }
+    if (text.size() > 0)
+    {
+        app->setWriteDebug(false);         // Не будем записывать в журнал команды сохранения файлов в БД, чтобы уменьшить разрастание журнала
+        exec(text, true, (extend && extDbExist) ? dbExtend : db);
+        app->setWriteDebug(true);
+        if (!extend)
+            saveUpdate(text);
+    }
+}
+
+
+
 
 

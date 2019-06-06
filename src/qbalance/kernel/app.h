@@ -20,25 +20,36 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef APP_H
 #define APP_H
 
-#include <QtWidgets/QApplication>
+#include <QtCore/QtGlobal>
+#if QT_VERSION < 0x050000
+    #include <QtGui/QApplication>
+    #include <QtGui/QFileDialog>
+    #include <QtGui/QMdiSubWindow>
+    #include <QtGui/QMessageBox>
+#else
+    #include <QtCore/QApplication>
+    #include <QtWidgets/QFileDialog>
+    #include <QtWidgets/QMdiSubWindow>
+    #include <QtWidgets/QMessageBox>
+#endif
+
+#include <QtCore/QVariant>
 #include <QtCore/QHash>
 #include <QtCore/QDate>
 #include <QtCore/QString>
 #include <QtCore/QDir>
 #include <QtCore/QPluginLoader>
 #include <QtCore/QPointer>
+#include <QtCore/QProcess>
 //#include <QtUiTools>
 //#include <QtWidgets/QTextEdit>
-#include <QtWidgets/QFileDialog>
-#include <QtWidgets/QMdiSubWindow>
-#include <QtWidgets/QMessageBox>
 //#include <QPrinter>
 #include <QtSql/QSqlQuery>
 //#include <QVariant>
 #include "configvars.h"
 #include "../storage/filetype.h"
 #include "../serialport/qmyextserialport.h"
-#include "../bankterminal/bankterminal.h"
+//#include "../bankterminal/bankterminal.h"
 #include "../emailclient/emailclient.h"
 #include "updates.h"
 
@@ -243,7 +254,7 @@ public:
     void saveCustomization();
     void printReportWithoutCleaning();
     Q_INVOKABLE virtual int runScript(QString);
-    Q_INVOKABLE void printReport(QString, QSqlQuery* = 0);
+    Q_INVOKABLE void printReport(QString, QSqlQuery* = nullptr);
     Q_INVOKABLE void printReport(QString, Dictionary*);
     Q_INVOKABLE QString getScript();                                  // Вернуть название скрипта, заданного в параметрах при запуске программы
     Q_INVOKABLE QString getScriptParameter(int = 0);
@@ -266,7 +277,7 @@ public:
     ScriptEngine*   getLastScriptStack();
 
     QObject*        createPlugin(QString);
-    virtual QMyExtSerialPort* getSerialPort(const QString & name, QObject * parent = 0);
+    virtual QMyExtSerialPort* getSerialPort(const QString & name, QMyExtSerialPort::QueryMode mode = QMyExtSerialPort::EventDriven, QObject * parent = 0);
     virtual MyProgressDialog* getMyProgressDialog(QString mess);
     QString         getReportFile(QString, bool, QWidget*, QRect);
     QString         getProcessFile(QString, QWidget*, QRect);

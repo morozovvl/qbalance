@@ -59,7 +59,7 @@ void Topers::addDocument(int opNumber)
 {
     if (opNumber > 0) {
         Documents* doc = TApplication::exemplar()->getDocuments(opNumber);
-        if (doc != 0) {
+        if (doc != nullptr) {
             doc->show();
         }
     }
@@ -116,7 +116,7 @@ void Topers::show()
 
 void Topers::setForm(QString)
 {
-    if (form != 0)
+    if (form != nullptr)
     {
         form->close();
         delete form;

@@ -19,8 +19,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QtCore/QDebug>
 #include <QtCore/QVariant>
-#include <QtWidgets/QHeaderView>
-#include <QtWidgets/QLabel>
 #include "wizardoperation.h"
 #include "mybuttonlineedititemdelegate.h"
 #include "mybooleanitemdelegate.h"
@@ -106,7 +104,7 @@ WizardOperation::~WizardOperation()
 }
 
 
-bool WizardOperation::open(QWidget* pwgt, int op/* = 0*/)
+bool WizardOperation::open(QWidget* pwgt, int op/* = nullptr*/)
 {
     if (op == 0)
         op = db->getNewToper();
@@ -118,7 +116,7 @@ bool WizardOperation::open(QWidget* pwgt, int op/* = 0*/)
 void WizardOperation::initFrames()
 {
     // Добавим страницы мастера
-    QVBoxLayout* layout = 0;
+    QVBoxLayout* layout = nullptr;
     layout = new QVBoxLayout();
 
     // 1-я страница
@@ -249,48 +247,48 @@ bool WizardOperation::setData()
 
             dbAcc = "";
             item = prvTable->item(i, debetField);
-            if (item != 0)
+            if (item != nullptr)
                 dbAcc = item->text().trimmed();
 
             item = prvTable->item(i, dbConstField);
-            if (item != 0)
+            if (item != nullptr)
                 dbConstAcc = item->text().compare("true") == 0 ? true : false;
 
             item = prvTable->item(i, dbVisible);
-            if (item != 0)
+            if (item != nullptr)
                 dbVisib = item->text().compare("true") == 0 ? true : false;
 
             item = prvTable->item(i, dbSalVisField);
-            if (item != 0)
+            if (item != nullptr)
                 dbSalVisible = item->text().compare("true") == 0 ? true : false;
 
             crAcc = "";
             item = prvTable->item(i, creditField);
-            if (item != 0)
+            if (item != nullptr)
                 crAcc = item->text().trimmed();
 
             item = prvTable->item(i, crConstField);
-            if (item != 0)
+            if (item != nullptr)
                 crConstAcc = item->text().compare("true") == 0 ? true : false;
 
             item = prvTable->item(i, crVisible);
-            if (item != 0)
+            if (item != nullptr)
                 crVisib = item->text().compare("true") == 0 ? true : false;
 
             item = prvTable->item(i, crSalVisField);
-            if (item != 0)
+            if (item != nullptr)
                 crSalVisible = item->text().compare("true") == 0 ? true : false;
 
             item = prvTable->item(i, freeField);
-            if (item != 0)
+            if (item != nullptr)
                 freePrv = item->text().compare("true") == 0 ? true : false;
 
             item = prvTable->item(i, attrField);
-            if (item != 0)
+            if (item != nullptr)
                 attribute = item->text().compare("true") == 0 ? true : false;
 
             QString itog;
-            if (prvTable->item(i, itogField) != 0)
+            if (prvTable->item(i, itogField) != nullptr)
                 itog = prvTable->item(i, itogField)->text().trimmed();
             if (!db->addToperPrv(oper,
                                  i+1,
@@ -364,8 +362,7 @@ bool WizardOperation::setData()
     db->commitTransaction();
     db->clearUpdateNum();
 
-    if (app->getDocuments(oper) != 0)
-        app->removeDocuments(oper);
+    app->removeDocuments(oper);
 
     // Перезагрузим список столбцов
     db->loadSystemTables();
@@ -402,9 +399,10 @@ void WizardOperation::getData()
                                                       << QObject::trUtf8("Итоги")
                                                       << QObject::trUtf8("Независим.")
                                                       << QObject::trUtf8("Атрибуты"));
-     for (int i = 0; i < prvs.size(); i++)
-     {
-         prvs.seek(i);
+    int i = 0;
+    if (prvs.first())
+    {
+        do {
          QTableWidgetItem* item = new QTableWidgetItem(prvs.record().value(db->getObjectName("топер.дбсчет")).toString());
          prvTable->setItem(i, debetField, item);
          item = new QTableWidgetItem(prvs.record().value(db->getObjectName("топер.дбпост")).toString());
@@ -427,6 +425,8 @@ void WizardOperation::getData()
          prvTable->setItem(i, freeField, item);
          item = new QTableWidgetItem(prvs.record().value(db->getObjectName("топер.атрибуты")).toString());
          prvTable->setItem(i, attrField, item);
+         i++;
+        } while (prvs.next());
      }
      MyButtonLineEditItemDelegate* dbEditDelegate = new MyButtonLineEditItemDelegate(getFormWidget());
      dbEditDelegate->setFormOnPushButton(&showAccounts);
@@ -758,25 +758,25 @@ void WizardOperation::frameDeactivated(int frameNumber)
                 QTableWidgetItem* item;
                 toperT.number = i + 1;
                 item = prvTable->item(i, debetField);
-                if (item != 0)
+                if (item != nullptr)
                     toperT.dbAcc = item->text().trimmed();
                 item = prvTable->item(i, dbConstField);
-                if (item != 0)
+                if (item != nullptr)
                     toperT.dbConst = (QString(item->text()).compare("true") == 0) ? true : false;
                 item = prvTable->item(i, dbSalVisField);
-                if (item != 0)
+                if (item != nullptr)
                     toperT.dbSaldoVisible = (QString(item->text()).compare("true") == 0) ? true : false;
                 item = prvTable->item(i, creditField);
-                if (item != 0)
+                if (item != nullptr)
                     toperT.crAcc = item->text().trimmed();
                 item = prvTable->item(i, crConstField);
-                if (item != 0)
+                if (item != nullptr)
                     toperT.crConst = (QString(item->text()).compare("true") == 0) ? true : false;
                 item = prvTable->item(i, itogField);
                 item = prvTable->item(i, crSalVisField);
-                if (item != 0)
+                if (item != nullptr)
                     toperT.crSaldoVisible = (QString(item->text()).compare("true") == 0) ? true : false;
-                if (item != 0)
+                if (item != nullptr)
                     toperT.itog = item->text().trimmed();
                 topersList.append(toperT);
             }
@@ -855,7 +855,7 @@ void WizardOperation::generateScripts()
                 stream << QObject::trUtf8("var кол = getValue(\"P1__КОЛ\");") << endl;
                 stream << QObject::trUtf8("var цена = getValue(\"P1__ЦЕНА\");") << endl;
                 stream << QObject::trUtf8("var сумма = getValue(\"P1__СУММА\");") << endl;
-                stream << QObject::trUtf8("if (getCurrentFieldName() == \"P1__СУММА\" && кол != 0)") << endl;
+                stream << QObject::trUtf8("if (getCurrentFieldName() == \"P1__СУММА\" && кол != nullptr)") << endl;
                 stream << QObject::trUtf8("   цена = сумма / кол;") << endl;
                 stream << QObject::trUtf8("else") << endl;
                 stream << QObject::trUtf8("   сумма = кол * цена;") << endl;

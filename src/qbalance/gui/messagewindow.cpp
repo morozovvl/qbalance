@@ -17,8 +17,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-//#include <QtWidgets/QPrinter>
-#include <QtWidgets/QTextEdit>
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QTextEdit>
+#else
+    #include <QtWidgets/QTextEdit>
+#endif
+
 #include <QtSql/QSqlQuery>
 #include <QSettings>
 #include "messagewindow.h"
@@ -29,7 +35,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 MessageWindow::MessageWindow() : QObject()
 {
-    subWindow = 0;
+    subWindow = nullptr;
     app = TApplication::exemplar();
     configName = "messagesWindow";
     textEditor = new QTextEdit();
@@ -38,7 +44,7 @@ MessageWindow::MessageWindow() : QObject()
 
     if (app->getMainWindow()->isVisible() && !app->isScriptMode())
     {
-        if (subWindow == 0)
+        if (subWindow == nullptr)
             subWindow = app->getMainWindow()->appendMdiWindow(textEditor);
     }
 
@@ -50,10 +56,10 @@ MessageWindow::MessageWindow() : QObject()
 MessageWindow::~MessageWindow()
 {
     writeSettings();
-    if (subWindow != 0)
+    if (subWindow != nullptr)
     {
         app->getMainWindow()->removeMdiWindow(subWindow);
-        subWindow = 0;
+        subWindow = nullptr;
     }
     delete textEditor;
 }
@@ -80,7 +86,7 @@ void MessageWindow::show()
 {
     if (app->getMainWindow()->isVisible() && !app->isScriptMode())
     {
-        if (subWindow != 0)
+        if (subWindow != nullptr)
         {
             textEditor->show();
             subWindow->show();
@@ -98,7 +104,7 @@ void MessageWindow::show()
 
 void MessageWindow::hide()
 {
-    if (subWindow != 0)
+    if (subWindow != nullptr)
     {
         subWindow->hide();
     }
@@ -147,7 +153,7 @@ void MessageWindow::readSettings()
     int w = settingValues.value("width");
     int h = settingValues.value("height");
 
-    if (subWindow != 0)
+    if (subWindow != nullptr)
         subWindow->setGeometry(x, y, w, h);
     else
         textEditor->setGeometry(x, y, w, h);
@@ -158,7 +164,7 @@ void MessageWindow::writeSettings()
 {
     // Сохраним данные локально, на компьютере пользователя
     int x, y, w, h;
-    if (subWindow != 0)
+    if (subWindow != nullptr)
     {
         x = subWindow->geometry().x();
         y = subWindow->geometry().y();

@@ -34,6 +34,17 @@ MyProgressDialog::MyProgressDialog(QString title, QWidget *parent): QProgressDia
 }
 
 
+MyProgressDialog::~MyProgressDialog()
+{
+}
+
+
+void MyProgressDialog::setValue(int value)
+{
+    QProgressDialog::setValue(value);
+}
+
+
 void MyProgressDialog::keyPressEvent(QKeyEvent* event)
 {
     if (event->key() == Qt::Key_Escape)
@@ -43,6 +54,12 @@ void MyProgressDialog::keyPressEvent(QKeyEvent* event)
     }
     else
         QProgressDialog::keyPressEvent(event);
+}
+
+
+void MyProgressDialog::show()
+{
+    QProgressDialog::show();
 }
 
 

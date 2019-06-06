@@ -20,11 +20,24 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QtWidgets/QMdiArea>
-#include <QtWidgets/QStatusBar>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QToolBar>
-#include <QtWidgets/QMainWindow>
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QMenuBar>
+    #include <QtGui/QMdiArea>
+    #include <QtGui/QStatusBar>
+    #include <QtGui/QMenu>
+    #include <QtGui/QToolBar>
+    #include <QtGui/QMainWindow>
+#else
+    #include <QtWidgets/QMenuBar>
+    #include <QtWidgets/QMdiArea>
+    #include <QtWidgets/QStatusBar>
+    #include <QtWidgets/QMenu>
+    #include <QtWidgets/QToolBar>
+    #include <QtWidgets/QMainWindow>
+#endif
+
 #include "guifactory.h"
 
 class TApplication;

@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../bankterminal/bankterminal.h"
 
 
-TcpServer::TcpServer(int nPort, QObject *parent /* = 0*/):   QObject(parent)
+TcpServer::TcpServer(int nPort, QObject *parent /* = nullptr*/):   QObject(parent)
 {
     app = (TApplication*)parent;
     m_nNextBlockSize = 0;
@@ -137,7 +137,7 @@ void TcpServer::sendToClient(QTcpSocket* pSocket, QString str)
 void TcpServer::processRequest(QTcpSocket* pClientSocket, QString str)
 {
     QString resStr;
-    if (app != 0 && app->getDrvFR() != 0)
+    if (app != 0 && app->getDrvFR() != nullptr)
     {
         app->debug(5, QString("From %1: %2").arg(pClientSocket->peerAddress().toString()).arg(str));
         if (str.left(4) == "=fr=" && app->drvFRisValid())

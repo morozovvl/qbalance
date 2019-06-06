@@ -1,6 +1,7 @@
 #ifndef DRIVERFRINTERFACE_H
 #define DRIVERFRINTERFACE_H
 
+#include <QtCore/QtGlobal>
 #include <QtCore/QObject>
 #include <QtCore/QMetaObject>
 #include <QtCore/QMetaProperty>
@@ -14,7 +15,11 @@ class QMyExtSerialPort;
 class DriverFRInterface: public DriverFR
 {
         Q_OBJECT
+
+#if QT_VERSION >= 0x050000
         Q_PLUGIN_METADATA(IID "DriverFR")
+#endif
+
         Q_INTERFACES(DriverFR)
 
 public:

@@ -16,7 +16,6 @@ public:
     virtual void loadSystemTables();
     virtual void reloadColumnProperties();
     virtual int getSecDiff();
-    virtual void setFile(QString, FileType, QByteArray, bool = false);
     virtual int insertDictDefault(QString, QHash<QString, QVariant>*);                 // Вставляет в справочник новую строку
 
     virtual bool    lockDocument(int);
@@ -25,6 +24,12 @@ public:
 
     virtual void getColumnsProperties(QList<FieldType>*, QString, QString, int);
     virtual QString getILIKEexpression(QString, QString);
+
+    virtual bool createNewDictionary(QString, QString = "", bool = true);
+
+    Q_INVOKABLE virtual int getInsertReturningId(QString, QString, QString);
+
+    virtual void setFile(QString, FileType, QByteArray, bool = false);
 
 protected:
     QSqlQuery               columnsProperties;

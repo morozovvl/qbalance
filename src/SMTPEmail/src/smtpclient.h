@@ -69,40 +69,40 @@ public:
 
     /* [2] Getters and Setters */
 
-    const QString& getHost() const;
-    void setHost(const QString &host);
+    virtual const QString& getHost() const;
+    virtual void setHost(const QString &host);
 
-    int getPort() const;
-    void setPort(int port);
+    virtual int getPort() const;
+    virtual void setPort(int port);
 
-    const QString& getName() const;
-    void setName(const QString &name);
+    virtual const QString& getName() const;
+    virtual void setName(const QString &name);
 
-    ConnectionType getConnectionType() const;
-    void setConnectionType(ConnectionType ct);
+    virtual ConnectionType getConnectionType() const;
+    virtual void setConnectionType(ConnectionType ct);
 
-    const QString & getUser() const;
-    void setUser(const QString &user);
+    virtual const QString & getUser() const;
+    virtual void setUser(const QString &user);
 
-    const QString & getPassword() const;
-    void setPassword(const QString &password);
+    virtual const QString & getPassword() const;
+    virtual void setPassword(const QString &password);
 
-    SmtpClient::AuthMethod getAuthMethod() const;
-    void setAuthMethod(AuthMethod method);
+    virtual SmtpClient::AuthMethod getAuthMethod() const;
+    virtual void setAuthMethod(AuthMethod method);
 
-    const QString & getResponseText() const;
-    int getResponseCode() const;
+    virtual const QString & getResponseText() const;
+    virtual int getResponseCode() const;
 
-    int getConnectionTimeout() const;
-    void setConnectionTimeout(int msec);
+    virtual int getConnectionTimeout() const;
+    virtual void setConnectionTimeout(int msec);
 
-    int getResponseTimeout() const;
-    void setResponseTimeout(int msec);
+    virtual int getResponseTimeout() const;
+    virtual void setResponseTimeout(int msec);
     
-    int getSendMessageTimeout() const;
-    void setSendMessageTimeout(int msec);
+    virtual int getSendMessageTimeout() const;
+    virtual void setSendMessageTimeout(int msec);
 
-    QTcpSocket* getSocket();
+    virtual QTcpSocket* getSocket();
 
 
     /* [2] --- */
@@ -110,14 +110,14 @@ public:
 
     /* [3] Public methods */
 
-    bool connectToHost();
+    virtual bool connectToHost();
 
-    bool login();
-    bool login(const QString &user, const QString &password, AuthMethod method = AuthLogin);
+    virtual bool login();
+    virtual bool login(const QString &user, const QString &password, AuthMethod method = AuthLogin);
 
-    bool sendMail(MimeMessage& email);
+    virtual bool sendMail(MimeMessage& email);
 
-    void quit();
+    virtual void quit();
 
 
     /* [3] --- */
@@ -154,9 +154,9 @@ protected:
 
     /* [5] Protected methods */
 
-    void waitForResponse();
+    virtual void waitForResponse();
 
-    void sendMessage(const QString &text);
+    virtual void sendMessage(const QString &text);
 
     /* [5] --- */
 
@@ -164,9 +164,9 @@ protected slots:
 
     /* [6] Protected slots */
 
-    void socketStateChanged(QAbstractSocket::SocketState state);
-    void socketError(QAbstractSocket::SocketError error);
-    void socketReadyRead();
+    virtual void socketStateChanged(QAbstractSocket::SocketState state);
+    virtual void socketError(QAbstractSocket::SocketError error);
+    virtual void socketReadyRead();
 
     /* [6] --- */
 
@@ -175,7 +175,7 @@ signals:
 
     /* [7] Signals */
 
-    void smtpError(SmtpClient::SmtpError e);
+    virtual void smtpError(SmtpClient::SmtpError e);
 
     /* [7] --- */
 

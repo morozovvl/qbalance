@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef BANKTERMINALPLUGIN_H
 #define BANKTERMINALPLUGIN_H
 
+#include <QtCore/QtGlobal>
 #include <QtCore/QObject>
 #include <QtCore/qplugin.h>
 #include "bankterminal.h"
@@ -27,8 +28,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 class BankTerminalPlugin : public BankTerminal
 {
     Q_OBJECT
+
+#if QT_VERSION >= 0x050000
     Q_PLUGIN_METADATA(IID "BankTerminal")
-//    Q_INTERFACES(BankTerminal)
+#endif
+
+    Q_INTERFACES(BankTerminal)
 };
 
 #endif // BANKTERMINALPLUGIN_H

@@ -22,9 +22,21 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #define CONNECTION_GROUP_NAME   "connections"
 
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QComboBox>
+    #include <QtGui/QLineEdit>
+    #include <QtGui/QLabel>
+    #include <QtGui/QPushButton>
+#else
+    #include <QtWidgets/QComboBox>
+    #include <QtWidgets/QLineEdit>
+    #include <QtWidgets/QLabel>
+    #include <QtWidgets/QPushButton>
+#endif
+
 #include <QtCore/QString>
-#include <QtWidgets/QComboBox>
-#include <QtWidgets/QLineEdit>
 #include "form.h"
 
 class TApplication;

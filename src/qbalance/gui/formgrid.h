@@ -20,13 +20,21 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef FORMGRID_H
 #define FORMGRID_H
 
-#include <QtWidgets/QTableView>
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QTableView>
+    #include <QtGui/QItemDelegate>
+#else
+    #include <QtWidgets/QTableView>
+    #include <QtWidgets/QItemDelegate>
+#endif
+
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlIndex>
 #include <QtCore/QVariant>
 #include <QtCore/QPointer>
-#include <QtWidgets/QItemDelegate>
 #include "../storage/mysqlrelationaltablemodel.h"
 #include "form.h"
 

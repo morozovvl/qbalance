@@ -17,15 +17,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
+#include <QtCore/QtGlobal>
+
 #include <QtCore/QString>
 //#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QSizePolicy>
-#include <QtWidgets/QFrame>
-#include <QtWidgets/QLayout>
 #include <QtGui/QKeyEvent>
-#include <QtWidgets/QLineEdit>
 #include "../definitions.h"
 #include "docparameters.h"
 #include "../kernel/dictionary.h"
@@ -40,9 +36,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 DocParameters::DocParameters(QWidget* pwgt): QFrame(pwgt)
 {
-    app = 0;            // По умолчанию нет ссылки на приложение. Ссылку устанавливает само приложение
-    dictionaries = 0;
-    parentForm = 0;
+    app = nullptr;            // По умолчанию нет ссылки на приложение. Ссылку устанавливает само приложение
+    dictionaries = nullptr;
+    parentForm = nullptr;
     strNum = 0;
 
     setLineWidth(2);
@@ -96,7 +92,7 @@ void DocParameters::addString(QString name)
     gridLayout->addWidget(button, strNum, 2, 1, 1);
     connect(button, SIGNAL(clicked()), this, SLOT(dictionaryButtonPressed()));        // При нажатии этой кнопки будем показывать связанный справочник
     lineEdit->setObjectName(name);
-    if (app != 0)
+    if (app != nullptr)
     {
         QString labelName = app->getDBFactory()->getDictionariesProperties(name, __NAME_IN_FORM__);
         if (labelName.size() == 0)
@@ -140,7 +136,7 @@ void DocParameters::dictionaryButtonPressed()
 
 void DocParameters::showText(QString dictName)
 {   // На форме документа выводит текущие значения поля ИМЯ постоянных справочников
-    if (dictionaries != 0)
+    if (dictionaries != nullptr)
     {
         QLineEdit* lineEdit = this->findChild<QLineEdit*>(dictName);
         lineEdit->setText(dictionaries->value(dictName)->getValue(programNameFieldName).toString().trimmed());

@@ -80,8 +80,8 @@ public:
 
     static QString getDocumentSqlSelectStatement(int oper,
                                           QList<ToperType>*,
-                                          QList<FieldType>* = 0,
-                                          int * = 0);     // Генерирует текст SQL-запроса для табличной части документа операции oper
+                                          QList<FieldType>* = nullptr,
+                                          int * = nullptr);     // Генерирует текст SQL-запроса для табличной части документа операции oper
 };
 
 #endif // DOCUMENTS_H

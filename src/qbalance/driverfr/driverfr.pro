@@ -1,5 +1,7 @@
-CONFIG += plugin
-CONFIG += debug
+CONFIG += plugin \
+        widgets \
+        core
+
 
 unix:TARGET = ../../../plugins/driverfr
 win32:TARGET = ../../../../plugins/driverfr

@@ -31,8 +31,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 Table::Table(QString, QObject *parent): QObject(parent)
 {
-    db = 0;
-    tableModel = 0;
+    db = nullptr;
+    tableModel = nullptr;
 }
 
 
@@ -131,7 +131,7 @@ QList<FieldType> Table::returnColumnsProperties()
 
 void Table::query(QString filter)
 {
-    if (tableModel != 0)
+    if (tableModel != nullptr)
     {
         tableModel->setFilter(filter);
         if (tableModel->rowCount() == 0)
@@ -189,14 +189,18 @@ bool Table::open(QString command)
         sqlCommand = command;
     opened = setTableModel();
     if (opened)
+    {
         fieldList = getFieldsList();
+        if (fieldList.count() == 0)
+            opened = false;
+    }
     return opened;
 }
 
 
 void Table::close()
 {
-    if (tableModel != 0)
+    if (tableModel != nullptr)
     {
         tableModel->clear();
         delete tableModel;
@@ -220,7 +224,7 @@ bool Table::setTableModel(int level)
 
 void Table::setOrderClause(QString sort)
 {
-    if (tableModel != 0)
+    if (tableModel != nullptr)
         tableModel->setOrderClause(sort);
 }
 
@@ -287,6 +291,9 @@ QString Table::defineFieldType(QVariant::Type type)
             break;
         case QVariant::Bool:
             result = "BOOLEAN";
+            break;
+        case QVariant::Invalid:
+            result = "CHARACTER VARYING";
             break;
         default:
             app->showError(QString("Не найден тип %1 в методе <QString Table::defineFieldType(QVariant::Type type)>. Необходимо поправить исходный код.").arg(type));

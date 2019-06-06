@@ -8,8 +8,25 @@
 
 #QMAKE_CXXFLAGS += -std=c++11
 
-greaterThan(QT_MAJOR_VERSION, 4)
-{
+DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0
+
+#greaterThan(QT_MAJOR_VERSION, 5)
+#{
+#    QT += sql \
+#          xml \
+#          core \
+#          gui \
+#          network \
+#          script \
+#          printsupport \
+#          widgets \
+#          uitools \
+#          serialport \
+#          qml
+#}
+
+#greaterThan(QT_MAJOR_VERSION, 4)
+#{
     QT += sql \
           xml \
           core \
@@ -17,44 +34,20 @@ greaterThan(QT_MAJOR_VERSION, 4)
           network \
           script \
           printsupport \
-          widgets \
-          uitools \
-          serialport \
-          qml \
-          datavisualization
-
-#  DEFINES += HAVE_QT5
-  DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0
-}
-#lessThan(QT_MAJOR_VERSION, 4)
-#{
-#    QT += sql \
-#          xml \
-#          core \
-#          script \
-#          gui \
-#          network \
-#          designer \
-#          uitools
+          widgets
+    include(../qextserialport/src/qextserialport.pri)
+    CONFIG += designer \
+              uitools
 #}
 
+
 APP_NAME = qb_main
-
-#include(../qextserialport/src/qextserialport.pri)
-
-#QT_DEBUG_PLUGINS=1
-
-
-CONFIG(debug)
-{
-    DESTDIR = ./
-}
 
 TARGET = ../../$${APP_NAME}
 
 DEFINES += APPLICATION_NAME=\\\"$${APP_NAME}\\\"
 
-CONFIG -= app_bundle
+CONFIG -= app_bundle shared
 TEMPLATE = app
 
 
@@ -118,6 +111,7 @@ SOURCES += main.cpp \
     engine/sqlfieldprototype.cpp \
     engine/eventloop.cpp \
     engine/documentscriptengine.cpp \
+#    engine/qfileinfoprototype.cpp \
     openoffice/ooxmlengine.cpp \
     serialport/qmyextserialport.cpp \
     gui/myvalueeditor.cpp \
@@ -185,6 +179,7 @@ HEADERS +=  gui/passwordform.h \
     engine/sqlfieldprototype.h \
     engine/eventloop.h \
     engine/documentscriptengine.h \
+#    engine/qfileinfoprototype.h \
     openoffice/ooxmlengine.h \
     serialport/qmyextserialport.h \
     gui/myvalueeditor.h \
@@ -231,11 +226,13 @@ unix {
  icons.files =  qbalance.png
  INSTALLS +=  target  desktop  icons
 # LIBS += ../../lib/libqextserialport.so
+    LIBS += /usr/lib64/libsqlite3.so
 }
 
 windows {
 #    RC_FILE+=resources.rc
 #    LIBS += ../../qextserialport1.dll
+    LIBS += ../../sqlite3.dll
 }
 
 OTHER_FILES += \
@@ -247,4 +244,3 @@ OTHER_FILES += \
     ../../README
 
 # LIBS +=  ../../lib64/libmpfr.so
-LIBS += -lsqlite3

@@ -33,7 +33,7 @@ class OOXMLReportEngine : public ReportEngine
 {
     Q_OBJECT
 public:
-    OOXMLReportEngine(Essence*, DocumentScriptEngine* = 0);
+    OOXMLReportEngine(Essence*, DocumentScriptEngine* = nullptr);
     ~OOXMLReportEngine();
     virtual bool open();
     virtual bool open(QString name, ReportContext* context, bool = false, int = 1, QString = "");

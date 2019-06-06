@@ -17,15 +17,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
+#include <QtCore/QtGlobal>
+
 #include <QtCore/QObject>
 #include <QtCore/QTextStream>
 #include <QtCore/QResource>
 #include <QtUiTools/QUiLoader>
 #include <QtCore/QTextCodec>
 #include <QtCore/QList>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QDesktopWidget>
-#include <QtWidgets/QToolTip>
 #include <QtCore/QDebug>
 #include "form.h"
 #include "../kernel/app.h"
@@ -36,15 +35,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "dialog.h"
 
 
-Form::Form(QObject* par/* = 0*/): QObject(par)
+Form::Form(QObject* par/* = nullptr*/): QObject(par)
 {
-    parent = 0;
-    formWidget = 0;
-    cmdButtonLayout = 0;
-    vbxLayout = 0;
-    buttonOk = 0;
-    buttonCancel = 0;
-    subWindow = 0;
+    parent = nullptr;
+    formWidget = nullptr;
+    cmdButtonLayout = nullptr;
+    vbxLayout = nullptr;
+    buttonOk = nullptr;
+    buttonCancel = nullptr;
+    subWindow = nullptr;
 
     appendToMdi = true;
     app = TApplication::exemplar();
@@ -62,7 +61,7 @@ Form::Form(QObject* par/* = 0*/): QObject(par)
 
 Form::~Form()
 {
-    if (formWidget != 0)
+    if (formWidget != nullptr)
     {
         if (defaultForm)
             delete formWidget;
@@ -93,7 +92,7 @@ bool Form::open(QWidget* pwgt, Essence* par, QString fName)
     }
 
     // Подключим обработчик кард-ридера
-    if (parent != 0)
+    if (parent != nullptr)
     {
         connect(app, SIGNAL(cardCodeReaded(QString)), parent, SLOT(cardCodeReaded(QString)));
     }
@@ -171,20 +170,20 @@ void Form::buttonPressedSignalSend()
 
 void Form::createForm(QString fileName, QWidget* pwgt)
 {
-    if (parent != 0)
+    if (parent != nullptr)
     {
         configName = getParent()->getTagName();
     }
     setObjectName(configName);
     uiCreated = false;
-    formWidget = 0;
+    formWidget = nullptr;
     defaultForm = true;
     script = "";
     if (fileName != "mainform")
     {
         formWidget = app->createForm(fileName);
     }
-    if (formWidget != 0)
+    if (formWidget != nullptr)
     {   // Если была найдена нестандартная пользовательская форма
         formWidget->setApp(app);
         formWidget->setParent(pwgt);
@@ -220,11 +219,11 @@ void Form::createForm(QString fileName, QWidget* pwgt)
         formWidget->setLayout(vbxLayout);
     }
 
-    if (buttonOk != 0)
+    if (buttonOk != nullptr)
     {
         connect(buttonOk, SIGNAL(clicked()), SLOT(cmdOk()));
     }
-    if (buttonCancel != 0)
+    if (buttonCancel != nullptr)
     {
         connect(buttonCancel, SIGNAL(clicked()), SLOT(cmdCancel()));
         buttonCancel->hide();
@@ -239,7 +238,7 @@ void Form::createForm(QString fileName, QWidget* pwgt)
 void Form::cmdOk()
 {
     lSelected = true;
-    if (parent != 0)
+    if (parent != nullptr)
     {
         parent->hide();
         parent->cmdOk();
@@ -252,7 +251,7 @@ void Form::cmdOk()
 void Form::cmdCancel()
 {
     lSelected = false;
-    if (parent != 0)
+    if (parent != nullptr)
     {
         parent->cmdCancel();
         parent->hide();
@@ -264,17 +263,17 @@ void Form::cmdCancel()
 
 int Form::exec()
 {
-    if (formWidget != 0)
+    if (formWidget != nullptr)
     {
         lSelected = false;
-        if (subWindow != 0)
+        if (subWindow != nullptr)
         {
             int x = (app->getMainWindow()->width() - subWindow->width()) / 2;
             int y = (app->getMainWindow()->height() - subWindow->height()) / 2;
             int w = subWindow->width();
             int h = subWindow->height();
             app->getMainWindow()->removeMdiWindow(subWindow);
-            subWindow = 0;
+            subWindow = nullptr;
             formWidget->setGeometry(x, y, w, h);
             formWidget->setParent(app->getMainWindow());
             formWidget->setWindowFlags(Qt::Dialog);
@@ -283,7 +282,7 @@ int Form::exec()
         formWidget->exec();
         formWidget->done(0);
         getSubWindow();
-        if (activeWidget != 0)
+        if (activeWidget != nullptr)
             activeWidget->activateWindow();
         return lSelected;
     }
@@ -293,12 +292,12 @@ int Form::exec()
 
 void Form::show()
 {
-    if (formWidget != 0)
+    if (formWidget != nullptr)
     {
         lSelected = false;
         checkVisibility();
         formWidget->show();
-        if (getSubWindow() != 0)
+        if (getSubWindow() != nullptr)
         {
             subWindow->show();
             activateSubWindow();
@@ -309,16 +308,16 @@ void Form::show()
 
 QMdiSubWindow* Form::getSubWindow()
 {
-    if (app != 0 && !freeWindow)
+    if (app != nullptr && !freeWindow)
     {
-        if (subWindow == 0)
+        if (subWindow == nullptr)
         {
             subWindow = app->getMainWindow()->appendMdiWindow(formWidget);
             subWindow->setGeometry(formWidget->rect());
         }
         return subWindow;
     }
-    return 0;
+    return nullptr;
 }
 
 
@@ -331,7 +330,7 @@ void Form::activateSubWindow()
 void Form::checkVisibility()
 {
     // Проверим, не уползло ли окно за пределы видимости. Если оно за пределами видимости, то вернем его
-    if (getSubWindow() != 0)
+    if (getSubWindow() != nullptr)
     {
         int x = getSubWindow()->x();
         int y = getSubWindow()->y();
@@ -360,11 +359,11 @@ void Form::checkVisibility()
 
 void Form::hide()
 {
-    if (formWidget != 0)
+    if (formWidget != nullptr)
     {
         if (!freeWindow)
         {
-            if (subWindow != 0)
+            if (subWindow != nullptr)
                 subWindow->hide();
         }
         formWidget->hide();
@@ -374,10 +373,10 @@ void Form::hide()
 
 void Form::gotoCenter()
 {   // Переместить форму в центр родительского виджета
-    if (formWidget != 0)
+    if (formWidget != nullptr)
     {
         QRect rect;
-        if (formWidget->parentWidget() != 0)
+        if (formWidget->parentWidget() != nullptr)
             rect = formWidget->parentWidget()->geometry();
         else
             rect = app->desktop()->screen()->geometry();
@@ -413,7 +412,7 @@ void Form::keyPressEvent(QKeyEvent *event)
     event->setAccepted(false);
     // Попробуем отдать обработку события скриптам
     ScriptEngine* engine = parent->getScriptEngine();
-    if (engine != 0)
+    if (engine != nullptr)
     {
         bool result = engine->eventKeyPressed(event->key(), event->modifiers());
         if (result)
@@ -431,7 +430,7 @@ void Form::readSettings()
     // Установим координаты и размеры окна
     QWidget* widget;
     widget = getSubWindow();
-    if (widget == 0)
+    if (widget == nullptr)
         widget = formWidget;
 
     QHash<QString, int> settingValues;
@@ -473,7 +472,7 @@ void Form::writeSettings()
 {
     // Сохраним координаты и размеры окна
     QWidget* widget = (QWidget*)getSubWindow();
-    if (widget == 0)
+    if (widget == nullptr)
         widget = (QWidget*)formWidget;
 
     // Сохраним данные локально, на компьютере пользователя

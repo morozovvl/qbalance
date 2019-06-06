@@ -17,12 +17,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QTableView>
+#include <QtCore/QtGlobal>
+
 #include <QtScript/QScriptContextInfo>
-#include <QtWidgets/QHeaderView>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QAbstractItemView>
 //#include <QtCore/QEvent>
 #include <QtSql/QSqlRelationalTableModel>
 #include "../kernel/app.h"
@@ -40,11 +37,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 TableView::TableView(): QTableView()
 {
-    app = 0;
-    parent = 0;
-    tableModel = 0;
-    essence = 0;
-    picture = 0;
+    app = nullptr;
+    parent = nullptr;
+    tableModel = nullptr;
+    essence = nullptr;
+    picture = nullptr;
 }
 
 
@@ -89,14 +86,20 @@ void TableView::open()
     setFocusPolicy(Qt::StrongFocus);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     setObjectName(name);
+
+#if QT_VERSION >= 0x050000
     horizontalHeader()->setSectionsClickable(false);
+#else
+    horizontalHeader()->setClickable(false);
+#endif
+
     setSelectionBehavior(QAbstractItemView::SelectRows);
 }
 
 
 void TableView::close()
 {
-//    disconnect(tableModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(setCurrentIndex(QModelIndex)));
+    disconnect(tableModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)), this, SLOT(setCurrentIndex(QModelIndex)));
     disconnect(essence, SIGNAL(photoLoaded()), this, SLOT(showPhoto()));
 
     writeSettings();
@@ -113,7 +116,7 @@ void TableView::setEssence(Essence* ess)
     QTableView::setModel(tableModel);
 
     connect(essence, SIGNAL(photoLoaded()), this, SLOT(showPhoto()));
-//    connect(tableModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(setCurrentIndex(QModelIndex)));
+    connect(tableModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)), this, SLOT(setCurrentIndex(QModelIndex)));
 
     setReadOnly(essence->isReadOnly());
     setFormGrid(essence->getForm());
@@ -160,7 +163,7 @@ void TableView::setCurrentFocus()
 
 void TableView::cmdView()
 {
-    if (picture != 0)
+    if (picture != nullptr)
         picture->hide();
     essence->view();
 }
@@ -177,7 +180,7 @@ void TableView::currentChanged(const QModelIndex &current, const QModelIndex &pr
 {
     if (current.row() != previous.row())
     {
-        if (essence != 0)
+        if (essence != nullptr)
             essence->beforeRowChanged();
     }
 
@@ -185,7 +188,7 @@ void TableView::currentChanged(const QModelIndex &current, const QModelIndex &pr
 
     if (current.row() != previous.row() && currentChangedScripts)
     {
-        if (essence != 0)
+        if (essence != nullptr)
         {
             essence->afterRowChanged();
             if (essence->isPhotoEnabled())
@@ -204,7 +207,7 @@ void TableView::keyPressEvent(QKeyEvent* event)
         return;
     }
     event->setAccepted(false);
-    if (parent != 0)
+    if (parent != nullptr)
     {
         if (event->modifiers() != Qt::ControlModifier)
         {
@@ -273,7 +276,7 @@ void TableView::restoreCurrentIndex(QModelIndex index)
 
 void TableView::setColumnsHeaders()
 {
-    if (parent != 0)
+    if (parent != nullptr)
     {
         if (!columnsHeadersSeted)
         {
@@ -281,7 +284,13 @@ void TableView::setColumnsHeaders()
             if (fields.count() > 0)
             {
                 QHeaderView* header = horizontalHeader();
+
+#if QT_VERSION >= 0x050000
                 header->setSectionsMovable(true);
+#else
+                header->setMovable(true);
+#endif
+
                 header->setSortIndicatorShown(true);
 
                 // Составим список столбцов, у которых поле number в списке fields больше 0
@@ -290,7 +299,7 @@ void TableView::setColumnsHeaders()
                     if (fields.at(i).number > 0)
                     {
                         MyItemDelegate* delegate = getColumnDelegate(fields.at(i));
-                        if (delegate != 0)
+                        if (delegate != nullptr)
                         {
                             delegate->setFieldName(fields.at(i).column);
                             setItemDelegateForColumn(i, delegate);
@@ -383,7 +392,7 @@ void TableView::showAllGridSections()
 
 MyItemDelegate* TableView::getColumnDelegate(FieldType fld)
 {
-    MyItemDelegate* result = 0;
+    MyItemDelegate* result = nullptr;
     if (fld.type.toUpper() == "NUMERIC" ||
         fld.type.toUpper() == "INTEGER")
     {     // для числовых полей зададим свой самодельный делегат
@@ -413,7 +422,7 @@ MyItemDelegate* TableView::getColumnDelegate(FieldType fld)
             }
         }
     }
-    if (result != 0)
+    if (result != nullptr)
     {
         result->setReadOnly(fld.readOnly);
     }
@@ -534,7 +543,7 @@ void TableView::selectPreviousColumn()
 void TableView::showPhoto()
 {
     QString photoFileName = "";
-    if (picture != 0 && essence != 0)
+    if (picture != 0 && essence != nullptr)
     {
         if (tableModel->rowCount() > 0)
         {
@@ -565,13 +574,13 @@ void TableView::calculate()
 
 void TableView::setReadOnly(bool ro)
 {
-    if (parent != 0)
+    if (parent != nullptr)
     {
         app->getDBFactory()->getColumnsHeaders(essence->getTagName(), &fields);
         for (int i = 0; i < fields.count(); i++)
         {
             MyItemDelegate* delegate = (MyItemDelegate*)itemDelegateForColumn(i);
-            if (delegate != 0)
+            if (delegate != nullptr)
             {
                 if (ro)
                     delegate->setReadOnly(ro);

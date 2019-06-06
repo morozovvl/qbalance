@@ -21,22 +21,30 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef MYPROGRESSDIALOG_H
 #define MYPROGRESSDIALOG_H
 
-#include <QtWidgets/QProgressDialog>
+#include <QtCore/QtGlobal>
+#if QT_VERSION < 0x050000
+    #include <QtGui/QProgressDialog>
+#else
+    #include <QtWidgets/QProgressDialog>
+#endif
 
 class MyProgressDialog : public QProgressDialog
 {
     Q_OBJECT
 public:
-    MyProgressDialog(QString = "", QWidget* = 0);
-    Q_INVOKABLE void setTitle(QString);
-    Q_INVOKABLE bool isEscapeKeyPressed();
+    MyProgressDialog(QString = "", QWidget* = nullptr);
+    ~MyProgressDialog();
+    Q_INVOKABLE virtual void setTitle(QString);
+    Q_INVOKABLE virtual bool isEscapeKeyPressed();
+    Q_INVOKABLE virtual void setValue(int);
 
 public slots:
       //Slot that is called when cancel Button is Clicked
+    virtual void show();
     virtual void hide();
 
 protected:
-    void keyPressEvent(QKeyEvent*);
+    virtual void keyPressEvent(QKeyEvent*);
 
 private:
     bool    escapeKeyPressed;

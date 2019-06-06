@@ -17,7 +17,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QtWidgets/QMenuBar>
+#include <QtCore/QtGlobal>
+
 #include <QtCore/QDebug>
 #include <QtGui/QDesktopServices>
 #include "../kernel/app.h"
@@ -416,7 +417,7 @@ void MainWindow::writeSettings()
 
 QMdiSubWindow* MainWindow::appendMdiWindow(QWidget* dialogWidget)
 {
-    if (dialogWidget != 0)
+    if (dialogWidget != nullptr)
     {
         // Сначала попытаемся найти окно QMdiSubWindow, в котором виджет dialogWidget отображался ранее
         foreach (QMdiSubWindow *subWindow, workSpace->subWindowList()) {
@@ -437,7 +438,7 @@ QMdiSubWindow* MainWindow::appendMdiWindow(QWidget* dialogWidget)
 
 QMdiSubWindow* MainWindow::findMdiWindow(QWidget* dialogWidget)
 {
-    if (dialogWidget != 0)
+    if (dialogWidget != nullptr)
     {
         foreach (QMdiSubWindow *subWindow, workSpace->subWindowList()) {
             Dialog* widget = qobject_cast<Dialog*>(subWindow->widget());
@@ -451,7 +452,7 @@ QMdiSubWindow* MainWindow::findMdiWindow(QWidget* dialogWidget)
 
 void MainWindow::removeMdiWindow(QMdiSubWindow* subWindow)
 {
-    if (subWindow != 0)
+    if (subWindow != nullptr)
     {
         workSpace->setActiveSubWindow(subWindow);
         subWindow->setWidget(0);    // Обнулим указатель на виджет, чтобы при удалении подокна оно одновременно не удалило и виджет

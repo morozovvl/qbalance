@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
 #include <QHBoxLayout>
-#include <QtWidgets/QLayout>
 #include "mybuttonlineedititemdelegate.h"
 #include "mybuttonlineedit.h"
 #include "../kernel/dictionary.h"
@@ -40,7 +39,7 @@ QWidget* MyButtonLineEditItemDelegate::createEditor(QWidget* parent, const QStyl
     MyButtonLineEdit* editorWidget = new MyButtonLineEdit(parent);
     if (!readOnly)
     {
-        if (essence != 0)
+        if (essence != nullptr)
         {
             essence->saveOldValues();
             disconnect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));

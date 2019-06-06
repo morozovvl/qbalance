@@ -16,43 +16,61 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
+#include <QtCore/QtGlobal>
+
 #include <QtCore/QDebug>
 #include <QtNetwork/QHostInfo>
 #include <QtCore/QBuffer>
-#include <QtSerialPort/QSerialPortInfo>
 #include <QTimer>
 #include "../kernel/app.h"
 #include "../kernel/tcpclient.h"
 #include "qmyextserialport.h"
 
 
-QSerialPort::BaudRate QMyExtSerialPort::LineSpeedVal[7] = {Baud2400, Baud4800, Baud9600, Baud19200, Baud38400, Baud57600, Baud115200};
+#if QT_VERSION >= 0x050000
+    QSerialPort::BaudRate QMyExtSerialPort::LineSpeedVal[7] = {Baud2400, Baud4800, Baud9600, Baud19200, Baud38400, Baud57600, Baud115200};
 
+    QMyExtSerialPort::QMyExtSerialPort(const QString& name, QueryMode, QObject* parent): QSerialPort(parent)
+    {
+        QSerialPortInfo port(name);
+        setPort(port);
+        remote = false;
+        outLog = false;
+        log = "";
+        app = TApplication::exemplar();
+        tryReceiveExit = false;
+        timeOut = app->getConfigValue("FR_DRIVER_MAX_TIMEOUT").toInt() * 1000;
+        tcpClient = app->getTcpClient();
+    }
+#else
+    BaudRateType QMyExtSerialPort::LineSpeedVal[7] = {BAUD2400, BAUD4800, BAUD9600, BAUD19200, BAUD38400, BAUD57600, BAUD115200};
+    QMyExtSerialPort::QMyExtSerialPort(const QString& name, QueryMode mode, QObject* parent): QextSerialPort(name, mode, parent)
+    {
+        remote = false;
+        outLog = false;
+        log = "";
+        app = TApplication::exemplar();
+        tryReceiveExit = false;
+        timeOut = app->getConfigValue("FR_DRIVER_MAX_TIMEOUT").toInt() * 1000;
+        tcpClient = app->getTcpClient();
+    }
+#endif
 
-QMyExtSerialPort::QMyExtSerialPort(const QString& name, QObject* parent): QSerialPort(parent)
-{
-    QSerialPortInfo port(name);
-    setPort(port);
-
-    remote = false;
-    outLog = false;
-    log = "";
-    app = TApplication::exemplar();
-    tryReceiveExit = false;
-    timeOut = app->getConfigValue("FR_DRIVER_MAX_TIMEOUT").toInt() * 1000;
-    tcpClient = app->getTcpClient();
-}
 
 
 QMyExtSerialPort::~QMyExtSerialPort()
 {
-    tcpClient = 0;
+    tcpClient = nullptr;
 }
 
 
 QByteArray QMyExtSerialPort::readAll()
 {
+#if QT_VERSION >= 0x050000
     return QSerialPort::readAll();
+#else
+    return QextSerialPort::readAll();
+#endif
 }
 
 
@@ -70,7 +88,11 @@ void QMyExtSerialPort::setMyTimeout(int t)
 
 void QMyExtSerialPort::setBaudRate(int rate)
 {
+#if QT_VERSION >= 0x050000
     QSerialPort::setBaudRate(LineSpeedVal[rate]);
+#else
+    QextSerialPort::setBaudRate(LineSpeedVal[rate]);
+#endif
 }
 
 
@@ -88,24 +110,39 @@ QString QMyExtSerialPort::getLog()
 
 bool QMyExtSerialPort::open(OpenMode mode)
 {
+#if QT_VERSION >= 0x050000
     setFlowControl(QSerialPort::NoFlowControl);
     setParity(QSerialPort::NoParity);
     setDataBits(QSerialPort::Data8);
     setStopBits(QSerialPort::TwoStop);
     bool result = QSerialPort::open(mode);
+#else
+    setFlowControl(FLOW_OFF);
+    setParity(PAR_NONE);
+    setDataBits(DATA_8);
+    setStopBits(STOP_2);
+    bool result = QextSerialPort::open(mode);
+ #endif
     return result;
 }
 
 
 void QMyExtSerialPort::close()
 {
+#if QT_VERSION >= 0x050000
     QSerialPort::close();
+#else
+    QextSerialPort::close();
+#endif
 }
 
 void QMyExtSerialPort::tryReceive()
 {
-
+#if QT_VERSION >= 0x050000
     QByteArray result = QSerialPort::readAll();
+#else
+    QByteArray result = QextSerialPort::readAll();
+#endif
     if (result.size() > 0)
     {
         for (int i = 0; i < result.size(); i++)
@@ -178,7 +215,13 @@ qint64 QMyExtSerialPort::writeData(const char * data, qint64 maxSize, bool fromR
     writeLog();
     if (!remote)
     {
+
+#if QT_VERSION >= 0x050000
         result = QSerialPort::write(data, maxSize);
+#else
+        result = QextSerialPort::writeData(data, maxSize);
+#endif
+
         appendLog(true, QByteArray(data, maxSize).toHex().data(), fromRemote);
     }
     else if (tcpClient != 0 && tcpClient->isValid() && !fromRemote)

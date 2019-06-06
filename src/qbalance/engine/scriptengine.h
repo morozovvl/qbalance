@@ -20,6 +20,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef SCRIPTENGINE_H
 #define SCRIPTENGINE_H
 
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QPushButton>
+    #include <QtGui/QFileDialog>
+    #include <QtGui/QLineEdit>
+#else
+    #include <QtWidgets/QPushButton>
+    #include <QtWidgets/QFileDialog>
+    #include <QtWidgets/QLineEdit>
+#endif
+
+
 #include <QtScript/QScriptValue>
 #include <QtScript/QScriptEngine>
 #include <QtGui/QKeyEvent>

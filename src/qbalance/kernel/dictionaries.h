@@ -36,7 +36,7 @@ private:
     bool        lIsSaldoExist;
 
 protected:
-    Dictionaries(QObject* = 0);
+    Dictionaries(QObject* = nullptr);
     virtual void postInitialize(QObject*);
 
 public:
@@ -44,6 +44,8 @@ public:
     QList<QString>              dictionariesNamesList;                    // Список справочников в порядке создания
 
     ~Dictionaries();
+
+    Q_INVOKABLE virtual void close();
 
     template <class T>
         static T* create(QObject *parent = 0)

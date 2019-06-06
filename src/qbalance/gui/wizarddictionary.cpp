@@ -18,9 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 #include <QtCore/QHash>
 #include <QtCore/QVariant>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QHeaderView>
-#include "QtWidgets/QCheckBox"
 #include "wizarddictionary.h"
 #include "../kernel/app.h"
 #include "mybuttonlineedit.h"
@@ -48,7 +45,7 @@ enum dictFieldsEnums {tableField = 0,
                       editableField = 7};
 
 
-WizardDictionary* WizardDictionary::Exemplar   = 0;
+WizardDictionary* WizardDictionary::Exemplar   = nullptr;
 
 
 QString showTypesForm()
@@ -80,8 +77,8 @@ QString showTypesForm()
 
 WizardDictionary::WizardDictionary(bool addDict): WizardForm()
 {
-    tableName = 0;
-    tableMenuName = 0;
+    tableName = nullptr;
+    tableMenuName = nullptr;
     addDictionary = addDict;
     tableName = new QLineEdit();
     tableMenuName = new QLineEdit();

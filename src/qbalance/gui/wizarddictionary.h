@@ -20,11 +20,24 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef WIZARDDICTIONARY_H
 #define WIZARDDICTIONARY_H
 
-//#include <QtWidgets/QPrinter>
-#include <QtWidgets/QCheckBox>
-#include <QtWidgets/QTableWidget>
-#include <QtWidgets/QListWidget>
-#include <QtWidgets/QTextEdit>
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QCheckBox>
+    #include <QtGui/QTableWidget>
+    #include <QtGui/QListWidget>
+    #include <QtGui/QTextEdit>
+    #include <QtGui/QLabel>
+    #include <QtGui/QHeaderView>
+#else
+    #include <QtWidgets/QCheckBox>
+    #include <QtWidgets/QTableWidget>
+    #include <QtWidgets/QListWidget>
+    #include <QtWidgets/QTextEdit>
+    #include <QtWidgets/QLabel>
+    #include <QtWidgets/QHeaderView>
+#endif
+
 #include "wizardform.h"
 
 

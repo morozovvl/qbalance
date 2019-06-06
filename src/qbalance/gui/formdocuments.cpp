@@ -17,9 +17,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
+#include <QtCore/QtGlobal>
+
 #include <QtCore/QObject>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QPushButton>
 #include "dialog.h"
 #include "formgrid.h"
 #include "formdocuments.h"
@@ -30,7 +30,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 FormDocuments::FormDocuments(): FormGrid()
 {
-    itogNumeric = 0;
+    itogNumeric = nullptr;
 }
 
 
@@ -39,7 +39,7 @@ FormDocuments::~FormDocuments()
 }
 
 
-void FormDocuments::createForm(QString fileName, QWidget* pwgt/* = 0*/)
+void FormDocuments::createForm(QString fileName, QWidget* pwgt/* = nullptr*/)
 {
     FormGrid::createForm(fileName, pwgt);
     if (defaultForm)

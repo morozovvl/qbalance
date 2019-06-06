@@ -20,11 +20,26 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef FORMDOCUMENT_H
 #define FORMDOCUMENT_H
 
-//#include <QtWidgets/QPrinter>
-#include <QtWidgets/QWidget>
-#include <QtWidgets/QDateEdit>
-#include <QtWidgets/QTextEdit>
-#include <QtWidgets/QPushButton>
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QPushButton>
+    #include <QtGui/QLabel>
+    #include <QtGui/QMenu>
+    #include <QtGui/QWidget>
+    #include <QtGui/QDateEdit>
+    #include <QtGui/QTextEdit>
+    #include <QtGui/QPushButton>
+#else
+    #include <QtWidgets/QPushButton>
+    #include <QtWidgets/QLabel>
+    #include <QtWidgets/QMenu>
+    #include <QtWidgets/QWidget>
+    #include <QtWidgets/QDateEdit>
+    #include <QtWidgets/QTextEdit>
+    #include <QtWidgets/QPushButton>
+#endif
+
 #include "formgrid.h"
 
 
@@ -64,7 +79,7 @@ private:
     MyNumericEdit*    itogNumeric;
     QMenu*          queriesMenu;
     QTextEdit*      textEdit;
-    virtual void createForm(QString, QWidget* pwgt = 0);
+    virtual void createForm(QString, QWidget* pwgt = nullptr);
 //    virtual QDomElement createWidgetsStructure();
 
 private slots:

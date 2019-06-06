@@ -31,10 +31,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 DBFactory::DBFactory() : QObject()
 {
     app = TApplication::exemplar();
-    db = 0;
-    dbExtend = 0;
+    db = nullptr;
+    dbExtend = nullptr;
     updateNum = 0;
-    proc = 0;
+    proc = nullptr;
     dbIsOpened = false;
     extDbExist = false;
 
@@ -345,6 +345,16 @@ void DBFactory::loadSystemTables()
             dictsPrototypes.insert(dicts.record().value(fieldName).toString(), dicts.record().value(prototypeFieldName).toString());
         } while (dicts.next());
     }
+
+    files = execQuery(QString("SELECT %1, %2, %3, %4, %5 FROM %6;").arg(getObjectNameCom("файлы.код"))
+                                                               .arg(getObjectNameCom("файлы.имя"))
+                                                               .arg(getObjectNameCom("файлы.тип"))
+                                                               .arg(getObjectNameCom("файлы.контрсумма"))
+                                                               .arg(getObjectNameCom("файлы.датавремя"))
+                                                               .arg(getObjectNameCom("файлы")));
+
+    accounts = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("vw_счета")));
+
 }
 
 
@@ -380,12 +390,12 @@ void DBFactory::close()
 {
     clearError();
 
-    if(db != 0 && db->isOpen())
+    if(db != nullptr && db->isOpen())
     {
         db->close();
     }
 
-    if(dbExtend != 0 && dbExtend->isOpen())
+    if(dbExtend != nullptr && dbExtend->isOpen())
     {
         dbExtend->close();
     }
@@ -398,7 +408,7 @@ bool DBFactory::exec(QString str, bool showError, QSqlDatabase* db)
 
     clearError();
     QSqlQuery* query;
-    if (db != 0 && db->isValid())
+    if (db != nullptr && db->isValid())
         query = new QSqlQuery(*db);
     else
         query = new QSqlQuery();
@@ -453,7 +463,7 @@ QSqlQuery DBFactory::execQuery(QString str, bool showError, QSqlDatabase* extDb)
     clearError();
     QSqlQuery result;
     QSqlQuery* query;
-    if (extDb != 0 && extDb->isValid())
+    if (extDb != nullptr && extDb->isValid())
         query = new QSqlQuery(*extDb);
     else
         query = new QSqlQuery(*db);
@@ -462,6 +472,7 @@ QSqlQuery DBFactory::execQuery(QString str, bool showError, QSqlDatabase* extDb)
     {
         setError(query->lastError().text());
     }
+    query->first();
     result = *query;
     delete query;
     return result;
@@ -473,12 +484,16 @@ QHash<int, UserInfo> DBFactory::getUserList()
     QHash<int, UserInfo> result;
     clearError();
     QSqlQuery query = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("пр_пользователи")));
-    while (query.next())
+    if (query.first())
     {
-        UserInfo u;
-        u.loginName = query.value(1).toString();
-        u.userName = query.value(2).toString().trimmed();
-        result.insert(query.value(0).toInt(), u);
+        do
+        {
+            UserInfo u;
+            u.loginName = query.value(1).toString();
+            u.userName = query.value(2).toString().trimmed();
+            result.insert(query.value(0).toInt(), u);
+        }
+        while (query.next());
     }
     return result;
 }
@@ -714,79 +729,6 @@ bool DBFactory::isTableExists(QString tName)
 }
 
 
-bool DBFactory::createNewDictionary(QString tName, QString tTitle/* = ""*/, bool menu)
-{
-    if (!isTableExists(tName))
-    {   // Если такой таблицы нет, то добавим ее
-        QString command = QString("CREATE TABLE \"%1\" ("    \
-                                  "%2 SERIAL NOT NULL," \
-                                  "%3 CHARACTER VARYING(100) DEFAULT ''::CHARACTER VARYING)" \
-                                  "WITH (OIDS=FALSE);" \
-                                  "REVOKE ALL ON \"%1\" FROM PUBLIC;"    \
-                                  "GRANT ALL ON \"%1\" TO %4;" \
-                                  "ALTER TABLE \"%1\" ADD CONSTRAINT \"%1_pkey\" PRIMARY KEY(%2);")
-                                  .arg(tName)
-                                  .arg(getObjectNameCom("код"))
-                                  .arg(getObjectNameCom("имя"))
-                                  .arg(getLogin());
-        if (exec(command))
-        {
-            command = QString("INSERT INTO %1 (%2, %3, %4, %5) VALUES (%6, %7, '%8', '%9');")
-                        .arg(getObjectNameCom("доступ"))
-                        .arg(getObjectNameCom("доступ.меню"))
-                        .arg(getObjectNameCom("доступ.код_типыобъектов"))
-                        .arg(getObjectNameCom("доступ.имя_пользователи"))
-                        .arg(getObjectNameCom("доступ.имя"))
-                        .arg(menu ? "true" : "false")
-                        .arg(getTypeId(getObjectName("типыобъектов.справочник")))
-                        .arg(getLogin())
-                        .arg(tName);
-            if (exec(command))
-            {
-                command = QString("INSERT INTO %1 (%2, %3, %4) VALUES ('%5', '%6', '%6');")
-                            .arg(getObjectNameCom("справочники"))
-                            .arg(getObjectNameCom("справочники.имя"))
-                            .arg(getObjectNameCom("справочники.имя_в_списке"))
-                            .arg(getObjectNameCom("справочники.комментарий"))
-                            .arg(tName)
-                            .arg(tTitle);
-                if (exec(command))
-                {
-                    command = QString("CREATE TRIGGER \"testdeleting_%1\" "  \
-                                      "BEFORE DELETE ON \"%1\" " \
-                                      "FOR EACH ROW " \
-                                      "EXECUTE PROCEDURE testdeletingdictobject();")
-                                    .arg(tName);
-                    if (exec(command))
-                    {
-                        command = QString("CREATE TRIGGER \"testinserting_%1\" "  \
-                                          "BEFORE INSERT ON \"%1\" " \
-                                          "FOR EACH ROW " \
-                                          "EXECUTE PROCEDURE testinsertingid();")
-                                        .arg(tName);
-                        if (exec(command))
-                        {
-                            command = QString("CREATE TRIGGER \"testupdating_%1\" "  \
-                                              "BEFORE UPDATE ON \"%1\" " \
-                                              "FOR EACH ROW " \
-                                              "EXECUTE PROCEDURE testupdatingid();")
-                                            .arg(tName);
-                            if (exec(command))
-                            {
-                                return true;
-                            }
-                        }
-                    }
-                }
-
-            }
-        }
-        return false;
-    }
-    return true;
-}
-
-
 bool DBFactory::removeDictionary(QString tName)
 {
     if (isTableExists(tName))
@@ -898,10 +840,11 @@ QVariant DBFactory::getTopersProperties(int operNumber, QString columnName)
 QSqlQuery DBFactory::getToper(int operNumber)
 {
     clearError();
-    return execQuery(QString("SELECT * FROM %1 WHERE %2 = %3 ORDER BY %4;").arg(getObjectNameCom("топер"))
-                                                                           .arg(getObjectNameCom("топер.опер"))
-                                                                           .arg(operNumber)
-                                                                           .arg(getObjectNameCom("топер.номер")));
+    QString command = QString("SELECT * FROM %1 WHERE %2 = %3 ORDER BY %4;").arg(getObjectNameCom("топер"))
+            .arg(getObjectNameCom("топер.опер"))
+            .arg(operNumber)
+            .arg(getObjectNameCom("топер.номер"));
+    return execQuery(command);
 }
 
 
@@ -982,16 +925,16 @@ bool DBFactory::addToperPrv(int operNumber, int operNumber1, QString name, QStri
                                                      .arg(operNumber1)
                                                      .arg(name)
                                                      .arg(dbAcc)
-                                                     .arg(dbAccConst ? "true" : "false")
-                                                     .arg(dbVisible ? "true" : "false")
-                                                     .arg(dbSalVisible ? "true" : "false")
+                                                     .arg(dbAccConst ? getTrueValue() : getFalseValue())
+                                                     .arg(dbVisible ? getTrueValue() : getFalseValue())
+                                                     .arg(dbSalVisible ? getTrueValue() : getFalseValue())
                                                      .arg(crAcc)
-                                                     .arg(crAccConst ? "true" : "false")
-                                                     .arg(crVisible ? "true" : "false")
-                                                     .arg(crSalVisible ? "true" : "false")
+                                                     .arg(crAccConst ? getTrueValue() : getFalseValue())
+                                                     .arg(crVisible ? getTrueValue() : getFalseValue())
+                                                     .arg(crSalVisible ? getTrueValue() : getFalseValue())
                                                      .arg(itog)
-                                                     .arg(freePrv ? "true" : "false")
-                                                     .arg(attribute ? "true" : "false");
+                                                     .arg(freePrv ? getTrueValue() : getFalseValue())
+                                                     .arg(attribute ? getTrueValue() : getFalseValue());
     }
     else
     {
@@ -1016,16 +959,16 @@ bool DBFactory::addToperPrv(int operNumber, int operNumber1, QString name, QStri
                                                                                                  .arg(number)
                                                                                                  .arg(name)
                                                                                                  .arg(dbAcc)
-                                                                                                 .arg(dbAccConst ? "true" : "false")
-                                                                                                 .arg(dbVisible ? "true" : "false")
-                                                                                                 .arg(dbSalVisible ? "true" : "false")
+                                                                                                 .arg(dbAccConst ? getTrueValue() : getFalseValue())
+                                                                                                 .arg(dbVisible ? getTrueValue() : getFalseValue())
+                                                                                                 .arg(dbSalVisible ? getTrueValue() : getFalseValue())
                                                                                                  .arg(crAcc)
-                                                                                                 .arg(crAccConst ? "true" : "false")
-                                                                                                 .arg(crVisible ? "true" : "false")
-                                                                                                 .arg(crSalVisible ? "true" : "false")
+                                                                                                 .arg(crAccConst ? getTrueValue() : getFalseValue())
+                                                                                                 .arg(crVisible ? getTrueValue() : getFalseValue())
+                                                                                                 .arg(crSalVisible ? getTrueValue() : getFalseValue())
                                                                                                  .arg(itog)
-                                                                                                 .arg(freePrv ? "true" : "false")
-                                                                                                 .arg(attribute ? "true" : "false");
+                                                                                                 .arg(freePrv ? getTrueValue() : getFalseValue())
+                                                                                                 .arg(attribute ? getTrueValue() : getFalseValue());
     }
     return execSystem(command, "топер");
 }
@@ -1148,7 +1091,7 @@ bool DBFactory::appendColumnHeader(int mainTableId, int tableId, QString column,
             .arg(column)
             .arg(header)
             .arg(number)
-            .arg(readOnly ? "true" : "false")
+            .arg(readOnly ? getTrueValue() : getFalseValue())
             .arg(tableId);
     return execSystem(command, "столбцы");
 }
@@ -1188,20 +1131,15 @@ int DBFactory::addDoc(int operNumber, QDate date)
 {
     int result = 0;
     clearError();
-    QString command = QString("SELECT sp_InsertDoc(%1,'%2');").arg(operNumber).arg(date.toString(app->dateFormat()));
-    QSqlQuery query = execQuery(command);
-    if (query.first())
-    {
-        result = query.record().field(0).value().toInt();
-    }
+    result = getValue(QString("SELECT sp_InsertDoc(%1,'%2');").arg(operNumber).arg(date.toString(app->dateFormat()))).toInt();
     return result;
 }
 
 
-bool DBFactory::removeDoc(int docId)
+void DBFactory::removeDoc(int docId)
 {
     clearError();
-    return exec(QString("SELECT sp_DeleteDoc(%1);").arg(docId));
+    exec(QString("SELECT sp_DeleteDoc(%1);").arg(docId));
 }
 
 
@@ -1209,12 +1147,7 @@ int DBFactory::addDocStr(int operNumber, int docId, QString cParam, int nQuan, i
 {
     int result = 0;
     clearError();
-    QString command = QString("SELECT sp_InsertDocStr(%1,%2,'%3'::character varying,%4,%5);").arg(operNumber).arg(docId).arg(cParam).arg(nQuan).arg(nDocStr);
-    QSqlQuery query = execQuery(command);
-    if (query.first())
-    {
-        result = query.record().field(0).value().toInt();
-    }
+    result = getValue(QString("SELECT sp_InsertDocStr(%1,%2,'%3'::character varying,%4,%5);").arg(operNumber).arg(docId).arg(cParam).arg(nQuan).arg(nDocStr)).toInt();
     return result;
 }
 
@@ -1244,9 +1177,9 @@ void DBFactory::setPeriod(QDate begDate, QDate endDate)
     clearError();
     QString command = QString("UPDATE %1 SET %2='%3', %4='%5' WHERE %6='%7';").arg(getObjectNameCom("блокпериоды"))
                                                                  .arg(getObjectNameCom("блокпериоды.начало"))
-                                                                 .arg(begDate.toString(Qt::LocaleDate))
+                                                                 .arg(begDate.toString("dd.MM.yyyy"))
                                                                  .arg(getObjectNameCom("блокпериоды.конец"))
-                                                                 .arg(endDate.toString(Qt::LocaleDate))
+                                                                 .arg(endDate.toString("dd.MM.yyyy"))
                                                                  .arg(getObjectNameCom("блокпериоды.пользователь"))
                                                                  .arg(app->getLogin());
     exec(command);
@@ -1507,14 +1440,21 @@ QStringList DBFactory::getFilesList(QString fileName, FileType type, bool extend
 
 bool DBFactory::isFileExist(QString fileName, FileType type, bool extend)
 {
-    if (extend && extDbExist)
-    {
+//    if (extend && extDbExist)
+//    {
         QString text = QString("SELECT count(*) FROM %1 WHERE %2 = '%3' AND %4 = %5;").arg(getObjectNameCom("файлы"))
                                                                               .arg(getObjectNameCom("файлы.имя"))
                                                                               .arg(fileName)
                                                                               .arg(getObjectNameCom("файлы.тип"))
                                                                               .arg(type);
-        QSqlQuery query = execQuery(text, true, dbExtend);
+
+        QSqlQuery query;
+
+        if (extend && extDbExist)
+            query = execQuery(text, true, dbExtend);
+        else
+            query = execQuery(text);
+
         query.first();
         if (query.isValid())
         {
@@ -1523,6 +1463,7 @@ bool DBFactory::isFileExist(QString fileName, FileType type, bool extend)
                 return true;
         }
         return false;
+/*
     }
     files.first();
     while (files.isValid())
@@ -1535,6 +1476,7 @@ bool DBFactory::isFileExist(QString fileName, FileType type, bool extend)
         files.next();
     }
     return false;
+*/
 }
 
 
@@ -1673,7 +1615,7 @@ void DBFactory::getToperDictAliases(int oper, QList<ToperType>* topersList, QLis
                 }
                 accounts.next();
             }
-            if (!accFounded && toperT.crAcc.size() > 0)
+            if (!accFounded)
                 app->showError(QString(QObject::trUtf8("Не найден счет %1 в справочнике счетов").arg(toperT.crAcc)));
 
             accounts.first();
@@ -1727,7 +1669,7 @@ void DBFactory::getToperDictAliases(int oper, QList<ToperType>* topersList, QLis
                 }
                 accounts.next();
             }
-            if (!accFounded && toperT.dbAcc.size() > 0)
+            if (!accFounded)
                 app->showError(QString(QObject::trUtf8("Не найден счет %1 в справочнике счетов").arg(toperT.dbAcc)));
 
             topersList->removeAt(i);
@@ -1780,7 +1722,7 @@ bool DBFactory::setToperSignleString(int operNumber, bool singleString)
     {   // Если операция существует
         return execSystem(QString("UPDATE %1 SET %2 = %3 WHERE %4 = %5 AND (%6 = 0 OR %6 = 1);").arg(getObjectNameCom("топер"))
                                                                               .arg(getObjectNameCom("топер.однаоперация"))
-                                                                              .arg(singleString ? "true" : "false")
+                                                                              .arg(singleString ? getTrueValue() : getFalseValue())
                                                                               .arg(getObjectNameCom("топер.опер"))
                                                                               .arg(operNumber)
                                                                               .arg(getObjectNameCom("топер.номер")),
@@ -1842,7 +1784,7 @@ void DBFactory::setToperPermition(int operNumber, QString user, bool menu) {
     {   // Если операция существует
         command = QString("UPDATE %1 SET %2 = %3 WHERE %4 = %5 AND %6 = '%7' AND %8 = '%9';").arg(getObjectNameCom("доступ"))
                                                                                              .arg(getObjectNameCom("доступ.меню"))
-                                                                                             .arg(menu ? "true" : "false")
+                                                                                             .arg(menu ? getTrueValue() : getFalseValue())
                                                                                              .arg(getObjectNameCom("доступ.код_типыобъектов"))
                                                                                              .arg(getTypeId("топер"))
                                                                                              .arg(getObjectNameCom("доступ.имя"))
@@ -1861,7 +1803,7 @@ void DBFactory::setToperPermition(int operNumber, QString user, bool menu) {
                                                                                          .arg(getTypeId("топер"))
                                                                                          .arg(operNumber)
                                                                                          .arg(user)
-                                                                                         .arg(menu ? "true" : "false");
+                                                                                         .arg(menu ? getTrueValue() : getFalseValue());
         execSystem(command, "доступ");
     }
 
@@ -2210,4 +2152,34 @@ int DBFactory::getSecDiff()
 QString DBFactory::getDictPrototype(QString dictName)
 {
     return dictsPrototypes[dictName];
+}
+
+
+bool DBFactory::createNewDictionary(QString, QString , bool)
+{
+    return true;
+}
+
+
+QString DBFactory::getTrueValue()
+{
+    return "true";
+}
+
+
+QString DBFactory::getFalseValue()
+{
+    return "false";
+}
+
+
+QString DBFactory::getCurrentTimeStamp()
+{
+    return "CURRENT_TIMESTAMP";
+}
+
+
+QString DBFactory::driverName()
+{
+    return db->driverName();
 }

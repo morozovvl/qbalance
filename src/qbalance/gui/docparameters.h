@@ -20,16 +20,34 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef DOCPARAMETERS_H
 #define DOCPARAMETERS_H
 
+#include <QtCore/QtGlobal>
+#if QT_VERSION < 0x050000
+    #include <QtGui/QLabel>
+    #include <QtGui/QPushButton>
+    #include <QtGui/QSizePolicy>
+    #include <QtGui/QLayout>
+    #include <QtGui/QLineEdit>
+    #include <QtGui/QFrame>
+    #include <QtGui/QWidget>
+    #include <QtGui/QVBoxLayout>
+    #include <QtDesigner/QDesignerExportWidget>
+#else
+    #include <QtWidgets/QLabel>
+    #include <QtWidgets/QPushButton>
+    #include <QtWidgets/QSizePolicy>
+    #include <QtWidgets/QFrame>
+    #include <QtWidgets/QLayout>
+    #include <QtWidgets/QLineEdit>
+    #include <QtWidgets/QWidget>
+    #include <QtWidgets/QVBoxLayout>
+    #include <QtUiPlugin/QDesignerExportWidget>
+#endif
+
 #include <QtCore/QHash>
 #include <QtCore/QList>
-#include <QtWidgets/QFrame>
 #include <QtCore/QString>
 #include <QtCore/QObject>
-#include <QtWidgets/QWidget>
-#include <QtWidgets/QVBoxLayout>
 #include <QtCore/QStringList>
-//#include <QtDesigner/QDesignerExportWidget>
-#include <QtUiPlugin/QDesignerExportWidget>
 
 class TApplication;
 class FormDocument;

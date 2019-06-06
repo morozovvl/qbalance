@@ -20,15 +20,29 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef MYBOOLEANITEMDELEGATE_H
 #define MYBOOLEANITEMDELEGATE_H
 
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QStyleOptionButton>
+    #include <QtGui/QStyle>
+    #include <QtGui/QApplication>
+    #include <QtGui/QItemDelegate>
+    #include <QtGui/QCheckBox>
+#else
+    #include <QtWidgets/QStyleOptionButton>
+    #include <QtWidgets/QStyle>
+    #include <QtWidgets/QApplication>
+    #include <QtWidgets/QItemDelegate>
+    #include <QtWidgets/QCheckBox>
+#endif
+
 #include <QtCore/QPointer>
-#include <QtWidgets/QItemDelegate>
-#include <QtWidgets/QCheckBox>
 #include "myitemdelegate.h"
 
 class MyBooleanItemDelegate : public MyItemDelegate {
     Q_OBJECT
 public:
-    MyBooleanItemDelegate(QObject*, FormGrid* = 0);
+    MyBooleanItemDelegate(QObject*, FormGrid* = nullptr);
     virtual QWidget* createEditor(QWidget*, const QStyleOptionViewItem &, const QModelIndex &) const;
     virtual void paint(QPainter*, const QStyleOptionViewItem&, const QModelIndex&) const;
 };

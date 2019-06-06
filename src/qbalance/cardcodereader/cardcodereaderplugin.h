@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef CARDCODEREADERPLUGIN_H
 #define CARDCODEREADERPLUGIN_H
 
+#include <QtCore/QtGlobal>
 #include <QtCore/QObject>
 #include <QtCore/QtPlugin>
 #include <QtCore/qplugin.h>
@@ -28,7 +29,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 class CardCodeReaderPlugin : public CardCodeReader
 {
     Q_OBJECT
+
+#if QT_VERSION >= 0x050000
     Q_PLUGIN_METADATA(IID "CardCodeReader")
+#endif
+
     Q_INTERFACES(CardCodeReader)
 };
 

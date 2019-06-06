@@ -154,7 +154,7 @@ QString str0_999(QString strP_100, QString strP_10, QString strP_1, int strSex) 
 QScriptValue SumToString(QScriptContext* context, QScriptEngine* engine) {
     QString sResult = "";
     QScriptValue sumNum = context->argument(0);
-    if (!sumNum.isNull() && sumNum.toNumber() != 0) {
+    if (!sumNum.isNull() && sumNum.toNumber() != 0.0) {
         if (qAbs(sumNum.toInt32()) < 1000000000) {
             long long int nSumNum = int(sumNum.toInt32());
             int nCop = QVariant((sumNum.toNumber() - nSumNum) * 100).toInt();

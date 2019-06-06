@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef BARCODEREADERPLUGIN_H
 #define BARCODEREADERPLUGIN_H
 
+#include <QtCore/QtGlobal>
 #include <QtCore/QObject>
 #include <QtCore/qplugin.h>
 #include "barcodereader.h"
@@ -27,7 +28,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 class BarCodeReaderPlugin : public BarCodeReader
 {
     Q_OBJECT
+
+#if QT_VERSION >= 0x050000
     Q_PLUGIN_METADATA(IID "BarCodeReader")
+#endif
+
     Q_INTERFACES(BarCodeReader)
 };
 

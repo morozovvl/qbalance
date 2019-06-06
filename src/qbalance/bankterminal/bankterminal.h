@@ -83,8 +83,8 @@ private:
     bool            remote;
     bool            locked;     // Банковский терминал заблокирован на период работы с клиентом
 
-    bool    testResult();
-    void    printSlip();
+    virtual bool    testResult();
+    virtual void    printSlip();
 };
 
 Q_DECLARE_INTERFACE(BankTerminal, "org.QBalance.BankTerminal")

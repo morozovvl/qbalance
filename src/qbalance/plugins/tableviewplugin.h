@@ -20,8 +20,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef TABLEVIEWPLUGIN_H
 #define TABLEVIEWPLUGIN_H
 
-//#include <QtDesigner/QDesignerCustomWidgetInterface>
-#include <QtUiPlugin/QDesignerCustomWidgetInterface>
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtDesigner/QDesignerCustomWidgetInterface>
+#else
+    #include <QtUiPlugin/QDesignerCustomWidgetInterface>
+#endif
 
 class TableViewPlugin : public QObject, public QDesignerCustomWidgetInterface
 {

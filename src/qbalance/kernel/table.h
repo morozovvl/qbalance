@@ -53,7 +53,7 @@ protected:
     QStringList                         fieldList;
 
 
-    Table(QString = "", QObject* = 0);
+    Table(QString = "", QObject* = nullptr);
     virtual void postInitialize(QString, QObject*);
 
 public:

@@ -20,14 +20,36 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef SEARCHPARAMETERS_H
 #define SEARCHPARAMETERS_H
 
-#include <QtWidgets/QFrame>
-#include <QtWidgets/QVBoxLayout>
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QLabel>
+    #include <QtGui/QPushButton>
+    #include <QtGui/QSizePolicy>
+    #include <QtGui/QFrame>
+    #include <QtGui/QLayout>
+    #include <QtGui/QCheckBox>
+    #include <QtGui/QLineEdit>
+    #include <QtGui/QVBoxLayout>
+    #include <QtGui/QWidget>
+    #include <QtDesigner/QDesignerExportWidget>
+#else
+    #include <QtWidgets/QLabel>
+    #include <QtWidgets/QPushButton>
+    #include <QtWidgets/QSizePolicy>
+    #include <QtWidgets/QFrame>
+    #include <QtWidgets/QLayout>
+    #include <QtWidgets/QCheckBox>
+    #include <QtWidgets/QLineEdit>
+    #include <QtWidgets/QVBoxLayout>
+    #include <QtWidgets/QWidget>
+    #include <QtUiPlugin/QDesignerExportWidget>
+#endif
+
 #include <QtCore/QString>
 #include <QtCore/QStringList>
-#include <QtWidgets/QWidget>
 #include <QtCore/QObject>
 //#include <QtDesigner/QDesignerExportWidget>
-#include <QtUiPlugin/QDesignerExportWidget>
 
 
 class TApplication;

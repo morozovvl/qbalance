@@ -24,17 +24,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtSql/QSqlDriver>
 #include <QtScript/QScriptValueIterator>
 #include <QtGui/QKeyEvent>
-#include <QtWidgets/QPushButton>
 #include <QtGui/QKeyEvent>
-#include <QtWidgets/QFileDialog>
-#include <QtWidgets/QLineEdit>
 #include <QtCore/QStringList>
 #include <QtCore/QDebug>
 #include <QtCore/QTimer>
+#include <QtCore/QFileInfo>
+#include <QtXml/QDomElement>
 #include "scriptengine.h"
 #include "sqlfieldclass.h"
 #include "sqlrecordclass.h"
 #include "sqlqueryclass.h"
+//#include "qfileinfoprototype.h"
 #include "../kernel/app.h"
 #include "../kernel/dictionary.h"
 #include "../kernel/document.h"
@@ -55,9 +55,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../bankterminal/bankterminal.h"
 #include "../openoffice/ooxmlengine.h"
 
+
 #include "eventloop.h"
 #include "reportcontextfunctions.h"
 #include "reportcontext.h"
+#include "fileinfoclass.h"
 
 
 Q_DECLARE_METATYPE(Dialog*)
@@ -72,7 +74,7 @@ bool ScriptEngine::isSA = false;
 bool isNumeric(ScriptEngine* engine, QString field = "")
 {
     QString fieldName;
-    if (engine->getParent() != 0)
+    if (engine->getParent() != nullptr)
     {
         if (field.size() == 0)
             fieldName = (engine->getParent())->getCurrentFieldName();
@@ -222,7 +224,7 @@ QScriptValue getOldValue(QScriptContext* context, QScriptEngine* engine)
     {
         QScriptValue value;
         QString command;
-        if (isNumeric((ScriptEngine*)engine))
+        if (isNumeric(static_cast<ScriptEngine*>(engine)))
             command = QString("parseFloat(table.getOldValue(%1))").arg(fieldName.toString() != "undefined" ? "'" + fieldName.toString() + "'" : "");
         else
             command = QString("table.getOldValue('%1')").arg(fieldName.toString());
@@ -242,7 +244,7 @@ QScriptValue getDictionary(QScriptContext* context, QScriptEngine* engine)
     QScriptValue dictName = context->argument(0);
     if (dictName.isString())
     {
-        if (((ScriptEngine*)engine)->getDocument() != 0)
+        if ((static_cast<ScriptEngine*>(engine))->getDocument() != nullptr)
         {
             if (engine->evaluate("document").isValid())
             {
@@ -328,33 +330,38 @@ QScriptValue DateString(QScriptContext* context, QScriptEngine*)
 
 // класс DriverFR
 Q_DECLARE_METATYPE(DriverFR*)
-/*
+
 QScriptValue DriverFRConstructor(QScriptContext *, QScriptEngine *engine) {
 //    DriverFR *object = new DriverFR(TApplication::exemplar());
-    DriverFR *object = (DriverFR*)(TApplication::exemplar()->createPlugin("DriverFR"));
+    DriverFR *object = static_cast<DriverFR*>(TApplication::exemplar()->createPlugin("DriverFR"));
     return engine->newQObject(object);
 }
-*/
 
 QScriptValue DriverFRToScriptValue(QScriptEngine *engine, DriverFR* const &in) {
     return engine->newQObject(in);
 }
 
 void DriverFRFromScriptValue(const QScriptValue &object, DriverFR* &out) {
-    out = (DriverFR*)(object.toQObject());
+    out = qobject_cast<DriverFR*>(object.toQObject());
 }
 
 
 // класс BankTerminal
 Q_DECLARE_METATYPE(BankTerminal*)
 
+QScriptValue BankTerminalConstructor(QScriptContext *, QScriptEngine *engine) {
+    BankTerminal *object = static_cast<BankTerminal*>(TApplication::exemplar()->createPlugin(BANK_TERMINAL_PLUGIN_NAME));
+    return engine->newQObject(object);
+}
+
 QScriptValue BankTerminalToScriptValue(QScriptEngine *engine, BankTerminal* const &in) {
     return engine->newQObject(in);
 }
 
 void BankTerminalFromScriptValue(const QScriptValue &object, BankTerminal* &out) {
-    out = (BankTerminal*)(object.toQObject());
+    out = qobject_cast<BankTerminal*>(object.toQObject());
 }
+
 
 // класс EventLoop
 Q_DECLARE_METATYPE(EventLoop*)
@@ -523,7 +530,7 @@ Q_DECLARE_METATYPE(Form*)
 
 QScriptValue FormConstructor(QScriptContext *context, QScriptEngine *engine) {
      Form *object = new Form();
-     object->open(TApplication::exemplar()->getMainWindow()->centralWidget(), 0, context->argument(0).toString());
+     object->open(TApplication::exemplar()->getMainWindow()->centralWidget(), nullptr, context->argument(0).toString());
      object->setButtonsSignals();
      return engine->newQObject(object);
 }
@@ -533,7 +540,7 @@ QScriptValue FormToScriptValue(QScriptEngine *engine, Form* const &in) {
 }
 
 void FormFromScriptValue(const QScriptValue &object, Form* &out) {
-    out = qobject_cast<Form*>(object.toQObject());
+    out = static_cast<Form*>(object.toQObject());
 }
 
 
@@ -542,7 +549,7 @@ Q_DECLARE_METATYPE(FormGrid*)
 
 QScriptValue FormGridConstructor(QScriptContext *context, QScriptEngine *engine) {
      FormGrid *object = new FormGrid();
-     object->open(TApplication::exemplar()->getMainWindow()->centralWidget(), 0, context->argument(0).toString());
+     object->open(TApplication::exemplar()->getMainWindow()->centralWidget(), nullptr, context->argument(0).toString());
      object->setButtonsSignals();
      return engine->newQObject(object);
 }
@@ -561,7 +568,7 @@ Q_DECLARE_METATYPE(FormGridSearch*)
 
 QScriptValue FormGridSearchConstructor(QScriptContext *context, QScriptEngine *engine) {
      FormGridSearch *object = new FormGridSearch();
-     object->open(TApplication::exemplar()->getMainWindow()->centralWidget(), 0, context->argument(0).toString());
+     object->open(TApplication::exemplar()->getMainWindow()->centralWidget(), nullptr, context->argument(0).toString());
      object->setButtonsSignals();
      return engine->newQObject(object);
 }
@@ -668,20 +675,21 @@ void QPushButtonFromScriptValue(const QScriptValue &object, QPushButton* &out) {
 // класс QFileDialog
 Q_DECLARE_METATYPE(QFileDialog*)
 
-QScriptValue QFileDialogConstructor(QScriptContext *context, QScriptEngine *engine) {
+QScriptValue QFileDialogConstructor(QScriptContext *context, QScriptEngine *engine)
+{
     QFileDialog* object;
     if (context->argumentCount() > 0)
     {
         if (context->argument(0).isString())
         {
-            object = new QFileDialog(0,
+            object = new QFileDialog(nullptr,
                                      context->argument(0).toString(),
                                      context->argument(1).toString(),
                                      context->argument(2).toString());
         }
         else
         {
-            object = new QFileDialog(((FormGrid*)context->argument(0).toQObject())->getFormWidget(),
+            object = new QFileDialog((static_cast<FormGrid*>(context->argument(0).toQObject())->getFormWidget()),
                                      Qt::SubWindow);
 
         }
@@ -694,13 +702,16 @@ QScriptValue QFileDialogConstructor(QScriptContext *context, QScriptEngine *engi
 }
 
 
-QScriptValue QFileDialogToScriptValue(QScriptEngine *engine, QFileDialog* const &in) {
+QScriptValue QFileDialogToScriptValue(QScriptEngine *engine, QFileDialog* const &in)
+{
     return engine->newQObject(in);
 }
 
-void QFileDialogFromScriptValue(const QScriptValue &object, QFileDialog* &out) {
+void QFileDialogFromScriptValue(const QScriptValue &object, QFileDialog* &out)
+{
     out = qobject_cast<QFileDialog*>(object.toQObject());
 }
+
 
 /*
 // класс QSqlQuery
@@ -736,8 +747,8 @@ ScriptEngine::ScriptEngine(Essence *par) : QScriptEngine()
     errorMessage = "";
     lastErrorMessage = "";
     app = TApplication::exemplar();
-    document = 0;
-    documents = 0;
+    document = nullptr;
+    documents = nullptr;
     scriptFileName = "";
     isSA = app->isSA();
     script = "";
@@ -810,11 +821,11 @@ Document* ScriptEngine::getDocument()
 
 bool ScriptEngine::open(QString scriptFile)
 {
-    if (parent != 0 && parent->getDictionaries() != 0)
+    if (parent != nullptr && parent->getDictionaries() != nullptr)
     {
         Dictionaries* dicts = parent->getDictionaries();
         document = dicts->getDocument();
-        if (document != 0)
+        if (document != nullptr)
             documents = document->getParent();
     }
 
@@ -837,6 +848,13 @@ void ScriptEngine::close()
 void ScriptEngine::loadScriptObjects()
 {
     installTranslatorFunctions(currentContext()->thisObject());
+/*
+    const int typeId1 = qRegisterMetaType<QFileInfo>("QFileInfo");
+    QScriptValue prototype1 = newQObject(new QFileInfoPrototype);
+    setDefaultPrototype(typeId1, prototype1);
+    QScriptValue creator1 = newFunction(QFileInfoPrototype::construct, prototype1);
+    globalObject().setProperty(QLatin1String("QFileInfo"), creator1);
+*/
 
     // Объявим классы для работы с БД
     globalObject().setProperty(sqlRecordClass->name(), sqlRecordClass->constructor());
@@ -845,9 +863,10 @@ void ScriptEngine::loadScriptObjects()
 
     // Объявим классы для работы с пользовательскими формами
     qScriptRegisterMetaType(this, DriverFRToScriptValue, DriverFRFromScriptValue);
-//    globalObject().setProperty("DriverFR", newQMetaObject(&QObject::staticMetaObject, newFunction(DriverFRConstructor)));
-    globalObject().setProperty("DriverFR", newQObject(app->getDrvFR()));
+    globalObject().setProperty("DriverFR", newQMetaObject(&QObject::staticMetaObject, newFunction(DriverFRConstructor)));
+//    globalObject().setProperty("DriverFR", newQObject(app->getDrvFR()));
     qScriptRegisterMetaType(this, BankTerminalToScriptValue, BankTerminalFromScriptValue);
+    globalObject().setProperty("BankTerminal", newQMetaObject(&QObject::staticMetaObject, newFunction(BankTerminalConstructor)));
     qScriptRegisterMetaType(this, EventLoopToScriptValue, EventLoopFromScriptValue);
     globalObject().setProperty("EventLoop", newQMetaObject(&QObject::staticMetaObject, newFunction(EventLoopConstructor)));
     qScriptRegisterMetaType(this, FormToScriptValue, FormFromScriptValue);
@@ -892,9 +911,9 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("ProgressDialog", newQMetaObject(&QObject::staticMetaObject, newFunction(MyProgressDialogConstructor)));
 
     // Объявим глобальные переменные и объекты
-    if (parent != 0)
+    if (parent != nullptr)
     {
-        globalObject().setProperty("form", newQObject(((Document*)getParent())->getForm()));
+        globalObject().setProperty("form", newQObject((static_cast<Document*>(getParent()))->getForm()));
         globalObject().setProperty("table", newQObject(getParent()));
     }
     else
@@ -922,10 +941,10 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("debug", newFunction(debug));
     globalObject().setProperty("DateString", newFunction(DateString));
 
-    if (document != 0)
+    if (document != nullptr)
         globalObject().setProperty("document", newQObject(document));
 
-    if (documents != 0)
+    if (documents != nullptr)
         globalObject().setProperty("documents", newQObject(documents));
 
     foreach (const QString &ext, availableExtensions())
@@ -956,7 +975,7 @@ bool ScriptEngine::evaluate()
             if (globalObject().property("EventKeyPressed").isValid() && !app->isScriptMode())
             {
                 // Соединим сигнал нажатия кнопки на форме со слотом обработчика нажатий кнопки в скриптах, если он есть
-                if (getParent() != 0)
+                if (getParent() != nullptr)
                 {
                     qScriptConnect((getParent())->getFormWidget()->getForm(),
                                    SIGNAL(keyPressed(QKeyEvent*)),
@@ -988,7 +1007,7 @@ void ScriptEngine::eventInitForm(Form* form)
 {
     QString eventName = "EventInitForm";
     QScriptValueList args;
-    args << newQObject((FormGrid*)form);
+    args << newQObject(static_cast<FormGrid*>(form));
     scriptCall(eventName, currentContext()->thisObject(), args);
 }
 
@@ -997,7 +1016,7 @@ void ScriptEngine::eventBeforeShowForm(Form* form)
 {
     QString eventName = "EventBeforeShowForm";
     QScriptValueList args;
-    args << newQObject((FormGrid*)form);
+    args << newQObject(static_cast<FormGrid*>(form));
     scriptCall(eventName, currentContext()->thisObject(), args);
 }
 
@@ -1006,7 +1025,7 @@ void ScriptEngine::eventAfterShowForm(Form* form)
 {
     QString eventName = "EventAfterShowForm";
     QScriptValueList args;
-    args << newQObject((FormGrid*)form);
+    args << newQObject(static_cast<FormGrid*>(form));
     scriptCall(eventName, currentContext()->thisObject(), args);
 }
 
@@ -1018,7 +1037,7 @@ bool ScriptEngine::eventBeforeHideForm(Form* form)
     QScriptValue res;
     QString eventName = "EventBeforeHideForm";
     QScriptValueList args;
-    args << newQObject((FormGrid*)form);
+    args << newQObject(static_cast<FormGrid*>(form));
     res = scriptCall(eventName, currentContext()->thisObject(), args);
     if (res.toString() != "undefined")
         result = res.toBool();
@@ -1030,7 +1049,7 @@ void ScriptEngine::eventAfterHideForm(Form* form)
 {
     QString eventName = "EventAfterHideForm";
     QScriptValueList args;
-    args << newQObject((FormGrid*)form);
+    args << newQObject(static_cast<FormGrid*>(form));
     scriptCall(eventName, currentContext()->thisObject(), args);
 }
 
@@ -1039,7 +1058,7 @@ void ScriptEngine::eventCloseForm(Form* form)
 {
     QString eventName = "EventCloseForm";
     QScriptValueList args;
-    args << newQObject((FormGrid*)form);
+    args << newQObject(static_cast<FormGrid*>(form));
     scriptCall(eventName, currentContext()->thisObject(), args);
 }
 
@@ -1048,7 +1067,7 @@ void ScriptEngine::eventImport(Form* form)
 {
     QString eventName = "EventImport";
     QScriptValueList args;
-    args << newQObject((FormGrid*)form);
+    args << newQObject(static_cast<FormGrid*>(form));
     scriptCall(eventName, currentContext()->thisObject(), args);
 }
 
@@ -1057,7 +1076,7 @@ void ScriptEngine::eventExport(Form* form)
 {
     QString eventName = "EventExport";
     QScriptValueList args;
-    args << newQObject((FormGrid*)form);
+    args << newQObject(static_cast<FormGrid*>(form));
     scriptCall(eventName, currentContext()->thisObject(), args);
 }
 
@@ -1388,12 +1407,12 @@ QHash<QString, EventFunction>* ScriptEngine::getEventsList()
     func.body = "";
 
     func.comment = QObject::trUtf8("Событие происходит после изменения ячейки в таблице");
-    if (document != 0 && document->isQuanAccount())
+    if (document != nullptr && document->isQuanAccount())
     {
         func.body = "var кол = getValue(\"P1__КОЛ\");\n"
                     "var цена = getValue(\"P1__ЦЕНА\");\n"
                     "var сумма = getValue(\"P1__СУММА\");\n"
-                    "if (getCurrentFieldName() == \"P1__СУММА\" && кол != 0)\n"
+                    "if (getCurrentFieldName() == \"P1__СУММА\" && кол != nullptr)\n"
                     "  цена = сумма / кол;\n"
                     "else\n"
                     "   сумма = кол * цена;\n"

@@ -17,8 +17,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-//#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QLabel>
+#include <QtCore/QtGlobal>
+
 #include "../kernel/app.h"
 #include "../kernel/dictionary.h"
 #include "formgridsearch.h"
@@ -28,9 +28,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #define LABEL_SEARCH_PARAMETERS     QObject::trUtf8("Параметры для поиска:")
 
-FormGridSearch::FormGridSearch(QObject* parent/* = 0*/) : FormGrid(parent)
+FormGridSearch::FormGridSearch(QObject* parent/* = nullptr*/) : FormGrid(parent)
 {
-    parameters = 0;
+    parameters = nullptr;
 }
 
 
@@ -45,13 +45,13 @@ SearchParameters* FormGridSearch::getSearchParameters()
 }
 
 
-void FormGridSearch::createForm(QString fileName, QWidget* pwgt/* = 0*/)
+void FormGridSearch::createForm(QString fileName, QWidget* pwgt/* = nullptr*/)
 {
     FormGrid::createForm(fileName, pwgt);
     formWidget->resize(600, formWidget->height());
     if (defaultForm)
     {
-        if (vbxLayout != 0)
+        if (vbxLayout != nullptr)
         {
             parameters = new SearchParameters();
             parameters->setObjectName("searchParameters");
@@ -61,7 +61,7 @@ void FormGridSearch::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     {
         parameters = (SearchParameters*)formWidget->findChild("searchParameters");
     }
-    if (parameters != 0)
+    if (parameters != nullptr)
     {
         parameters->setDictionaries(((Dictionary*)parent)->getDictionaries());
         parameters->setParent(formWidget);
@@ -86,7 +86,7 @@ void FormGridSearch::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         {
             if (defaultForm)
                 delete parameters;
-            parameters = 0;
+            parameters = nullptr;
         }
     }
 }
@@ -96,11 +96,11 @@ void FormGridSearch::close()
 {
     if (defaultForm)
     {
-        if (parameters != 0)
+        if (parameters != nullptr)
         {
             parameters->close();
             delete parameters;
-            parameters = 0;
+            parameters = nullptr;
         }
     }
     FormGrid::close();
@@ -115,7 +115,7 @@ void FormGridSearch::setParameter(QString tableName, QString parameter)
 
 QString FormGridSearch::getFilter()
 {
-    if (parameters != 0)
+    if (parameters != nullptr)
         return parameters->getFilter();
     return QString();
 }
@@ -123,7 +123,7 @@ QString FormGridSearch::getFilter()
 
 QString FormGridSearch::getFilter(QString dictName, QString filter)
 {
-    if (parameters != 0)
+    if (parameters != nullptr)
         return parameters->getFilter(dictName, filter);
     return QString();
 }
@@ -131,7 +131,7 @@ QString FormGridSearch::getFilter(QString dictName, QString filter)
 
 QString FormGridSearch::getSearchValue(QString dictName)
 {
-    if (parameters != 0)
+    if (parameters != nullptr)
         return parameters->getSearchValue(dictName);
     return QString();
 }
@@ -139,7 +139,7 @@ QString FormGridSearch::getSearchValue(QString dictName)
 
 void FormGridSearch::activateWidget()
 {
-    if (parameters != 0)
+    if (parameters != nullptr)
         parameters->setFocus();
 }
 

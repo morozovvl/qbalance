@@ -20,8 +20,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef FORMDOCUMENTS_H
 #define FORMDOCUMENTS_H
 
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QLabel>
+#else
+    #include <QtWidgets/QLabel>
+#endif
+
 #include "formgrid.h"
-//#include "mynumericedit.h"
 
 class MyNumericEdit;
 

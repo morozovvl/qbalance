@@ -20,17 +20,26 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef MYLINEITEMDELEGATE_H
 #define MYLINEITEMDELEGATE_H
 
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QLineEdit>
+    #include <QtGui/QItemDelegate>
+    #include <QtDesigner/QDesignerExportWidget>
+#else
+    #include <QtWidgets/QLineEdit>
+    #include <QtWidgets/QItemDelegate>
+    #include <QtUiPlugin/QDesignerExportWidget>
+#endif
+
 #include <QtCore/QObject>
 #include <QtCore/QPointer>
-#include <QtWidgets/QItemDelegate>
-//#include <QtDesigner/QDesignerExportWidget>
-#include <QtUiPlugin/QDesignerExportWidget>
 #include "myitemdelegate.h"
 
 class MyLineItemDelegate : public MyItemDelegate {
     Q_OBJECT
 public:
-    MyLineItemDelegate(QObject*, FormGrid* = 0);
+    MyLineItemDelegate(QObject*, FormGrid* = nullptr);
     virtual void    setMaxLength(int l);
     virtual QWidget* createEditor(QWidget*, const QStyleOptionViewItem &, const QModelIndex &) const;
 private:

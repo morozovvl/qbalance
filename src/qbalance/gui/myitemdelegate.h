@@ -20,17 +20,28 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef MYITEMDELEGATE_H
 #define MYITEMDELEGATE_H
 
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QLineEdit>
+    #include <QtGui/QItemDelegate>
+    #include <QtGui/QStyleOptionViewItem>
+    #include <QtGui/QStyleOptionViewItem>
+    #include <QtDesigner/QDesignerExportWidget>
+#else
+    #include <QtWidgets/QLineEdit>
+    #include <QtWidgets/QItemDelegate>
+    #include <QtWidgets/QStyleOptionViewItem>
+    #include <QtWidgets/QStyleOptionViewItem>
+    #include <QtUiPlugin/QDesignerExportWidget>
+#endif
+
 #include <QtCore/QObject>
-#include <QtWidgets/QItemDelegate>
 #include <QtGui/QPainter>
-#include <QtWidgets/QStyleOptionViewItem>
-#include <QtWidgets/QStyleOptionViewItem>
 #include <QtCore/QModelIndex>
 #include <QtGui/QPalette>
 #include <QtCore/QVariant>
 #include <QtCore/QPointer>
-//#include <QtDesigner/QDesignerExportWidget>
-#include <QtUiPlugin/QDesignerExportWidget>
 
 class FormGrid;
 class Essence;
@@ -47,7 +58,7 @@ class MyItemDelegate : public QItemDelegate {
     Q_OBJECT
 
 public:
-    MyItemDelegate(QObject*, FormGrid* = 0);
+    MyItemDelegate(QObject*, FormGrid* = nullptr);
     ~MyItemDelegate();
     virtual void paint(QPainter*, const QStyleOptionViewItem&, const QModelIndex&) const;
     virtual void setColumnMask(const QString mask = "");

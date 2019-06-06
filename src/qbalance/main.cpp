@@ -17,7 +17,15 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 // Пример параметров для запуска из консоли
-//-h 192.168.0.1 -p 5432 -l "sa Морозов Владимир Александрович" -db enterprise -pw ******** -d1 -d4 -d5
+//-h 192.168.0.1 -p 5432 -l "sa" -db enterprise -pw ******** -d1 -d4 -d5
+
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QStyleFactory>
+#else
+    #include <QtWidgets/QStyleFactory>
+#endif
 
 #include <QtCore/QTextCodec>
 #include <QtCore/QTextStream>
@@ -26,8 +34,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //#include <QtWidgets/QPrinterInfo>
 //#include <QtGui/QPainter>
 //#include <QtWidgets/QPrintEngine>
-#include <QtWidgets/QStyleFactory>
 #include <QtCore/QDebug>
+#include <QtCore/QLibraryInfo>
 
 #include "version.h"
 #include "kernel/app.h"
@@ -55,7 +63,14 @@ int main(int argc, char *argv[])
 //    mtrace();
 
     QLocale::setDefault(QLocale(QLocale::Russian, QLocale::RussianFederation));
-
+/*
+    QStringList paths = TApplication::libraryPaths();
+    paths.append(".");
+    paths.append("imageformats");
+    paths.append("platforms");
+    paths.append("sqldrivers");
+    TApplication::setLibraryPaths(paths);
+*/
     TApplication application(argc, argv);
 
     application.setOrganizationName("Enterprise");
@@ -73,10 +88,12 @@ int main(int argc, char *argv[])
 
 //    buggyFunc();
 
-    int lResult = 0;            // по умолчанию программа возвращает 0
-    bool lStart = true;         // по умолчанию программа запускается
-    if (argc > 1)                               // были заданы какие-то аргументы
-        lStart = TApplication::readParameters(argc, argv);    // прочитаем их
+    int lResult = 0;
+    bool lStart = true;
+
+    if (argc > 1)
+        lStart = TApplication::readParameters(argc, argv);
+
     if (lStart)
     {
 
@@ -91,7 +108,7 @@ int main(int argc, char *argv[])
         {
             TApplication::setStyle(QStyleFactory::create("plastique"));
             if (application.open())
-            {       // Если приложение удалось создать
+            {
 
                 if (application.isScriptMode())
                 {
@@ -109,13 +126,13 @@ int main(int argc, char *argv[])
                 }
                 else
                 {
-                    application.show();         // Откроем приложение
+                    application.show();
                     if (application.initApplication())
                     {
                         lResult = application.exec();
                     }
                 }
-                application.close();            // Закроем приложение
+                application.close();
             }
         }
         else

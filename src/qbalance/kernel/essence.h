@@ -29,11 +29,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtSql/QSqlTableModel>
 #include <QtCore/QProcess>
 #include <QtCore/QPointer>
+#include <qmath.h>
 
 #include <QtXml/QDomNode>
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlRecord>
-#include <QtWidgets/QDialog>
+#include <QtGui/QDialog>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkConfigurationManager>
 #include <QtNetwork/QNetworkReply>
@@ -110,7 +111,7 @@ protected:
     void                closeScriptEngine();
     bool                isDocumentLoading();
 
-    Essence(QString = "", QObject* = 0);
+    Essence(QString = "", QObject* = nullptr);
     virtual void postInitialize(QString, QObject*);
 
 public:

@@ -20,10 +20,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef PASSWORDFORM_H
 #define PASSWORDFORM_H
 
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QComboBox>
+    #include <QtGui/QLineEdit>
+    #include <QtGui/QFormLayout>
+    #include <QtGui/QLabel>
+#else
+    #include <QtWidgets/QComboBox>
+    #include <QtWidgets/QLineEdit>
+    #include <QtWidgets/QFormLayout>
+    #include <QtWidgets/QLabel>
+#endif
+
 #include <QtCore/QString>
 #include <QtCore/QStringList>
-#include <QtWidgets/QComboBox>
-#include <QtWidgets/QLineEdit>
 
 #include "form.h"
 

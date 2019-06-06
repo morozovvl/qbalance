@@ -48,7 +48,7 @@ class MySqlRelationalTableModel : public QSqlRelationalTableModel {
     Q_OBJECT
 
 public:
-    MySqlRelationalTableModel(QString, Table* = 0);
+    MySqlRelationalTableModel(QString, Table* = nullptr);
     ~MySqlRelationalTableModel();
 
 // Функции, помогающие усовершенствовать механизм создания реляционных отношений

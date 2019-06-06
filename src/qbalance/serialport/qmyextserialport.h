@@ -20,20 +20,30 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef QMYEXTSERIALPORT_H
 #define QMYEXTSERIALPORT_H
 
+#include <QtCore/QtGlobal>
+#if QT_VERSION < 0x050000
+    #include "../../qextserialport/src/qextserialport.h"
+#else
+    #include <QtSerialPort/QSerialPort>
+#endif
+
 #include <QtCore/QByteArray>
 #include <QtCore/QQueue>
-#include <QtSerialPort/QSerialPort>
-//#include "../../qextserialport/src/qextserialport.h"
+
 
 class TApplication;
 class TcpClient;
 
 
-class QMyExtSerialPort : public QSerialPort
+#if QT_VERSION < 0x050000
+    class QMyExtSerialPort : public QextSerialPort
+#else
+    class QMyExtSerialPort : public QSerialPort
+#endif
 {
     Q_OBJECT
 public:
-    QMyExtSerialPort(const QString & name, QObject * parent = 0);
+    QMyExtSerialPort(const QString & name, QueryMode mode, QObject * parent = 0);
     ~QMyExtSerialPort();
 
     virtual bool open(OpenMode mode);
@@ -68,7 +78,12 @@ private:
     QQueue<unsigned char> buffer;
     bool                tryReceiveExit;
     int                 timeOut;
+
+#if QT_VERSION < 0x050000
+    static BaudRateType LineSpeedVal[7];
+#else
     static QSerialPort::BaudRate LineSpeedVal[7];
+#endif
 
     void appendLog(bool, QString, bool = false);
 };

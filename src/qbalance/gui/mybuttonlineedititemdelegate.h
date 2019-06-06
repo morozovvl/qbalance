@@ -20,9 +20,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef MYBUTTONLINEEDITITEMDELEGATE_H
 #define MYBUTTONLINEEDITITEMDELEGATE_H
 
-#include <QtWidgets/QWidget>
-#include <QtWidgets/QTableWidget>
-#include <QtWidgets/QItemDelegate>
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QWidget>
+    #include <QtGui/QTableWidget>
+    #include <QtGui/QItemDelegate>
+#else
+    #include <QtWidgets/QWidget>
+    #include <QtWidgets/QTableWidget>
+    #include <QtWidgets/QItemDelegate>
+#endif
+
 #include <QtCore/QAbstractItemModel>
 #include "myitemdelegate.h"
 
@@ -31,7 +40,7 @@ class MyButtonLineEditItemDelegate : public MyItemDelegate
 {
     Q_OBJECT
 public:
-    MyButtonLineEditItemDelegate(QObject*, FormGrid* = 0);
+    MyButtonLineEditItemDelegate(QObject*, FormGrid* = nullptr);
     virtual QWidget* createEditor(QWidget*, const QStyleOptionViewItem &, const QModelIndex &) const;
     virtual void setEditorData(QWidget* editor, const QModelIndex &index) const;
     virtual void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex &index) const;

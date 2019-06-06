@@ -18,18 +18,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
 #include <QtCore/QDate>
-#include <QtWidgets/QMessageBox>
 #include <QtCore/QObject>
 #include <QtCore/QTextCodec>
 #include <QtCore/QVariant>
-#include <QtWidgets/QFileDialog>
-#include <QtWidgets/QPushButton>
 #include <QtGui/QPaintEngine>
-//#include <QtNetwork/QHttp>
 #include <QtDesigner/QFormBuilder>
 #include <QInputDialog>
-#include <QtWidgets/QWidget>
-#include <QUiLoader>
 #include <QTimer>
 #include "app.h"
 #include "dictionaries.h"
@@ -56,7 +50,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
 QList<QString>      TApplication::DebugModes;
-TApplication*       TApplication::Exemplar   = 0;
+TApplication*       TApplication::Exemplar   = nullptr;
 QString             TApplication::username         = "";
 QString             TApplication::password         = "";
 QString             TApplication::host             = "";
@@ -66,7 +60,7 @@ QString             TApplication::script           = "";
 QStringList         TApplication::scriptParameter;
 bool                TApplication::serverMode = false;
 bool                TApplication::sendCommandMode = false;
-GUIFactory*         TApplication::gui          = 0;
+GUIFactory*         TApplication::gui          = nullptr;
 bool                TApplication::timeIsOut = false;
 QTimer              TApplication::timer;
 bool                TApplication::loadDefaultConfig = false;
@@ -82,18 +76,18 @@ TApplication::TApplication(int & argc, char** argv)
 {
     setWindowIcon(QIcon(":qbalance.ico"));
 
-    db  = 0;
-    gui = 0;
-    dictionaryList = 0;
-    topersList = 0;
-    driverFR = 0;
-    barCodeReader = 0;
+    db  = nullptr;
+    gui = nullptr;
+    dictionaryList = nullptr;
+    topersList = nullptr;
+    driverFR = nullptr;
+    barCodeReader = nullptr;
     barCodeReaded = false;
-    cardCodeReader = 0;
-    bankTerminal = 0;
-    updates = 0;
-    tcpServer = 0;
-    messagesWindow = 0;
+    cardCodeReader = nullptr;
+    bankTerminal = nullptr;
+    updates = nullptr;
+    tcpServer = nullptr;
+    messagesWindow = nullptr;
 
     driverFRisValid = false;
     driverFRlocked = false;
@@ -423,9 +417,9 @@ bool TApplication::isSendCommandMode()
 }
 
 
-QMyExtSerialPort* TApplication::getSerialPort(const QString & name, QObject* parent)
+QMyExtSerialPort* TApplication::getSerialPort(const QString & name, QMyExtSerialPort::QueryMode mode, QObject* parent)
 {
-    return new QMyExtSerialPort(name, parent);
+    return new QMyExtSerialPort(name, mode, parent);
 }
 
 
@@ -632,7 +626,7 @@ Documents* TApplication::getDocuments(int opNumber) {
 
         Documents* doc = Documents::create<Documents>(opNumber);
         if (!doc->open())
-            return 0;
+            return nullptr;
         doc->query();
         doc->setCurrentRow(doc->rowCount() - 1);
         documents.insert(operName, doc);
@@ -643,9 +637,11 @@ Documents* TApplication::getDocuments(int opNumber) {
 
 void TApplication::removeDocuments(int opNumber) {
     QString operName = QString("oper%1").arg(opNumber);
-    if (documents.contains(operName)) {
+    if (documents.contains(operName))
+    {
         Documents* doc = documents.value(operName);
         doc->close();
+        delete doc;
         documents.remove(operName);
     }
 }
@@ -705,6 +701,8 @@ bool TApplication::initApplication()
 
     if (db->getDB()->isValid())
     {
+        messagesWindow = new MessageWindow();
+
         getMainWindow()->setWindowTitle(QString("%1 %2").arg(getTrueApplicationName()).arg(applicationVersion()));
 
         forever         // Будем бесконечно пытаться открыть базу, пока пользователь не откажется
@@ -714,8 +712,6 @@ bool TApplication::initApplication()
             {   // БД открыть удалось
 
                 db->clearLockedDocumentList();
-
-                messagesWindow = new MessageWindow();
 
                 setDebugToBuffer(false);
 
@@ -751,7 +747,7 @@ bool TApplication::initApplication()
                 // Загрузим константы
 
                 Dictionary* constDict = dictionaryList->getDictionary(db->getObjectName("константы"));
-                if (constDict != 0)
+                if (constDict != nullptr)
                 {
                     constDict->setPhotoEnabled(false);
                     constDict->query();
@@ -759,7 +755,7 @@ bool TApplication::initApplication()
 
                 // Загрузим счета
                 Dictionary* accDict = dictionaryList->getDictionary(db->getObjectName("счета"));
-                if (accDict != 0)
+                if (accDict != nullptr)
                 {
                     accDict->setPhotoEnabled(false);
                 }
@@ -770,7 +766,7 @@ bool TApplication::initApplication()
                         showMessageOnStatusBar("Найден фискальный регистратор.\n");
                     else
                     {
-                        if (driverFR != 0 && driverFR->isLocked())
+                        if (driverFR != nullptr && driverFR->isLocked())
                             showMessageOnStatusBar("Фискальный регистратор занят. Не удалось соединиться.\n");
                         else
                             showMessageOnStatusBar("Фискальный регистратор не найден.\n");
@@ -813,13 +809,13 @@ bool TApplication::initApplication()
 
 void TApplication::close()
 {
-    if (updates != 0)
+    if (updates != nullptr)
     {
         updates->close();
         delete updates;
     }
 
-    if (messagesWindow != 0)
+    if (messagesWindow != nullptr)
     {
         saveMessages();
         writeSettings();
@@ -832,10 +828,10 @@ void TApplication::close()
         delete driverFR;
     }
 
-    if (tcpServer != 0)
+    if (tcpServer != nullptr)
         delete tcpServer;
 
-    if (tcpClient != 0)
+    if (tcpClient != nullptr)
         delete tcpClient;
 
     if (documents.count() > 0)
@@ -848,23 +844,23 @@ void TApplication::close()
             documents.remove(operName);
         }
     }
-    if (dictionaryList != 0)
+    if (dictionaryList != nullptr)
     {
         dictionaryList->close();
         delete dictionaryList;
     }
-    if (topersList != 0)
+    if (topersList != nullptr)
     {
         topersList->close();
         delete topersList;
     }
-    if (db != 0)
+    if (db != nullptr)
     {
         db->close();
         delete db;
-        db = 0;
+        db = nullptr;
     }
-    if (gui != 0)
+    if (gui != nullptr)
         gui->close();
 }
 
@@ -874,8 +870,8 @@ void    TApplication::openPlugins()
     // Если нужно и если есть соответствующий плагин, попытаемся открыть драйвер фискального регистратора
     if (getConfigValue("FR_NEEDED").toBool())
     {
-        driverFR = (DriverFR*)createPlugin("driverfr");
-        if (driverFR != 0)
+        driverFR = static_cast<DriverFR*>(createPlugin("driverfr"));
+        if (driverFR != nullptr)
         {
             driverFR->setApp(this);
             if (driverFR->open(getConfigValue("FR_DRIVER_PORT").toString(),
@@ -891,8 +887,8 @@ void    TApplication::openPlugins()
     // Запустим сканер штрих-кодов, если есть его плагин
     if (getConfigValue("BAR_CODE_READER_NEEDED").toBool())
     {
-        barCodeReader = (BarCodeReader*)createPlugin("barcodereader");
-        if (barCodeReader != 0)
+        barCodeReader = static_cast<BarCodeReader*>(createPlugin("barcodereader"));
+        if (barCodeReader != nullptr)
         {
             barCodeReader->setApp(this);
             if (!barCodeReader->open(getConfigValue("BAR_CODE_READER_PORT").toString(),
@@ -900,16 +896,16 @@ void    TApplication::openPlugins()
                                      getConfigValue("BAR_CODE_READER_TIMEOUT").toInt()))
             {
                 barCodeReader->close();
-                barCodeReader = 0;
+                barCodeReader = nullptr;
             }
         }
     }
     else
     {
-        if (barCodeReader != 0)
+        if (barCodeReader != nullptr)
         {
             barCodeReader->close();
-            barCodeReader = 0;
+            barCodeReader = nullptr;
         }
     }
 
@@ -917,8 +913,8 @@ void    TApplication::openPlugins()
     // Запустим банковский терминал, если есть плагин
     if (getConfigValue(BANK_TERMINAL_NEEDED).toBool())
     {
-        bankTerminal = (BankTerminal*)createPlugin(BANK_TERMINAL_PLUGIN_NAME);
-        if (bankTerminal != 0)
+        bankTerminal = static_cast<BankTerminal*>(createPlugin(BANK_TERMINAL_PLUGIN_NAME));
+        if (bankTerminal != nullptr)
         {
             bankTerminal->setApp(this);
             bankTerminal->getDefaultConfigs(BANK_TERMINAL_PLUGIN_NAME);
@@ -926,31 +922,31 @@ void    TApplication::openPlugins()
             if (!bankTerminal->open())
             {
                 bankTerminal->close();
-                bankTerminal = 0;
+                bankTerminal = nullptr;
             }
         }
     }
     else
     {
-        if (bankTerminal != 0)
+        if (bankTerminal != nullptr)
         {
             bankTerminal->removeConfigs();
             bankTerminal->close();
-            bankTerminal = 0;
+            bankTerminal = nullptr;
         }
     }
 
     // Запустим считыватель магнитных карт, если есть его плагин
     if (getConfigValue("CARD_READER_NEEDED").toBool())
     {
-        cardCodeReader = (CardCodeReader*)createPlugin("cardcodereader");
-        if (cardCodeReader != 0)
+        cardCodeReader = static_cast<CardCodeReader*>(createPlugin("cardcodereader"));
+        if (cardCodeReader != nullptr)
         {
             cardCodeReader->setApp(this);
             if (!cardCodeReader->open())
             {
                 cardCodeReader->close();
-                cardCodeReader = 0;
+                cardCodeReader = nullptr;
             }
             else
                 connect(cardCodeReader, SIGNAL(cardCodeReaded(QString)), this, SIGNAL(cardCodeReaded(QString)));
@@ -958,24 +954,24 @@ void    TApplication::openPlugins()
     }
     else
     {
-        if (cardCodeReader != 0)
+        if (cardCodeReader != nullptr)
         {
             disconnect(cardCodeReader, SIGNAL(cardCodeReaded(QString)), this, SIGNAL(cardCodeReaded(QString)));
             cardCodeReader->close();
-            cardCodeReader = 0;
+            cardCodeReader = nullptr;
         }
     }
 
     // Запустим почтовый клиент
     /*
     smtpclient = (EMailClient*)createPlugin("emailclient");
-    if (smtpclient != 0)
+    if (smtpclient != nullptr)
     {
         if (smtpclient->open())
         {
             smtpclient->sendMail();
             smtpclient->close();
-            smtpclient = 0;
+            smtpclient = nullptr;
         }
     }
 */
@@ -1044,13 +1040,10 @@ QString TApplication::getPath(QString fileName, int fType, QString prefix)
     {
         case ScriptFileType:
             return getScriptsPath(fileName, prefix);
-            break;
         case FormFileType:
             return getFormsPath(fileName, prefix);
-            break;
         case ReportTemplateFileType:
             return getReportsPath(fileName, prefix);
-            break;
         default:
             break;
     }
@@ -1125,7 +1118,7 @@ QString TApplication::getConfigFileName()
 
 QString TApplication::getConfigPrefix()
 {
-    if (db != 0 && db->isOpened())
+    if (db != nullptr && db->isOpened())
         return db->getConnectionName();
     return QString();
 }
@@ -1133,7 +1126,7 @@ QString TApplication::getConfigPrefix()
 
 Dialog* TApplication::createForm(QString fileName)
 {
-    QPointer<Dialog> formWidget = 0;
+    QPointer<Dialog> formWidget = nullptr;
     QString path = getFormsPath();
     QString fName = fileName + ".ui";
     if (!Essence::getFile(path, fName, FormFileType))
@@ -1148,14 +1141,14 @@ Dialog* TApplication::createForm(QString fileName)
             formLoader.clearPluginPaths();
             formLoader.addPluginPath(applicationDirPath() + "/plugins/designer");
 
-            formWidget = (Dialog*)(formLoader.load(&file));
+            formWidget = static_cast<Dialog*>(formLoader.load(&file));
             file.close();
-            if (formWidget != 0)
+            if (formWidget != nullptr)
             {
                 if (QString::compare(formWidget->metaObject()->className(), "Dialog",  Qt::CaseSensitive) != 0)
                 {
                     showError(QString(QObject::trUtf8("Загружаемая форма %1 должна иметь тип Dialog.")).arg(fileName));
-                    return 0;
+                    return nullptr;
                 }
                 formWidget->setApp(this);
            }
@@ -1167,7 +1160,7 @@ Dialog* TApplication::createForm(QString fileName)
 
 QObject* TApplication::createPlugin(QString fileName)
 {
-    QObject* result = 0;
+    QObject* result = nullptr;
     QString pluginFile = applicationDirPath() + "/plugins/";
 #if defined(Q_OS_LINUX)
     pluginFile.append(QString("lib%1.so").arg(fileName));
@@ -1193,10 +1186,10 @@ QObject* TApplication::createPlugin(QString fileName)
 Form* TApplication::createNewForm(QString fileName)
 {
     Form* form = new Form();
-    if (form->open(getMainWindow()->centralWidget(), 0, fileName))
+    if (form->open(getMainWindow()->centralWidget(), nullptr, fileName))
         return form;
     delete form;
-    return 0;
+    return nullptr;
 }
 
 
@@ -1384,7 +1377,7 @@ QVariant TApplication::getConst(QString valueName, bool refresh)
 
     // Откроем справочник констант
     Dictionary* dict = dictionaryList->getDictionary(constDictionaryName);
-    if (dict != 0)
+    if (dict != nullptr)
     {
         for (int i = 0; i < dict->rowCount(); i++)
         {
@@ -1414,7 +1407,7 @@ void TApplication::setConst(QString valueName, QVariant value)
 
     // Откроем справочник констант
     Dictionary* dict = getDictionary(constDictionaryName);
-    if (dict != 0)
+    if (dict != nullptr)
     {
         for (int i = 0; i < dict->rowCount(); i++)
         {
@@ -1446,7 +1439,7 @@ QProcess* TApplication::runProcess(QString command, QString progName, bool show_
     if ((!ooProcess->waitForStarted(1000)) && (ooProcess->state() == QProcess::NotRunning) && show_Error)
     {   // Подождем 1 секунду и если процесс не запустился
         showError(QString(QObject::trUtf8("Не удалось запустить %1 ")).arg(progName.size() > 0 ? progName : QObject::trUtf8("программу")));                   // выдадим сообщение об ошибке
-        return 0;
+        return nullptr;
     }
     return ooProcess;
 }
@@ -1570,10 +1563,10 @@ int TApplication::runScript(QString scrName)
 void TApplication::barCodeReadyRead(QString barCodeString)
 {
     barCodeReaded = true;
-    Dialog* dialog = 0;
-    if (getActiveSubWindow() != 0)
-        dialog = (Dialog*)(getActiveSubWindow()->widget());
-    if (dialog != 0)
+    Dialog* dialog = nullptr;
+    if (getActiveSubWindow() != nullptr)
+        dialog = static_cast<Dialog*>(getActiveSubWindow()->widget());
+    if (dialog != nullptr)
     {
         if (QString(dialog->metaObject()->className()).compare("Dialog") == 0)
             dialog->getForm()->getParent()->barCodeReaded(barCodeString.trimmed());
@@ -1586,7 +1579,7 @@ void TApplication::readCardReader(QKeyEvent* keyEvent)
 {
     if (getConfigValue("CARD_READER_NEEDED").toBool())
     {
-        if (cardCodeReader != 0)
+        if (cardCodeReader != nullptr)
             cardCodeReader->readCardReader(keyEvent);
     }
 }
@@ -1598,7 +1591,7 @@ void TApplication::capturePhoto(QString fileName, QString deviceName)
     {
         QString localFile = applicationDirPath() + "/shot.jpg";
         QProcess* proc = runProcess(QString("fswebcam %1 -r 640x480 --jpeg 85 %2").arg(deviceName.size() != 0 ? "-d " + deviceName : "").arg(localFile), "fswebcam", false);
-        if (proc != 0 && waitProcessEnd(proc))
+        if (proc != nullptr && waitProcessEnd(proc))
             saveFileToServer(localFile, fileName, PictureFileType, true);
         fsWebCamIsValid = false;        // Утилита fsWebCam не установлена, не будем больше пытаться ее запускать
     }
@@ -1953,7 +1946,7 @@ QString TApplication::getReportFile(QString tagName, bool autoPrint, QWidget* fo
     else
     {
         QAction* action = menu->exec(formWidget->mapToGlobal(formWidget->mapToGlobal(QPoint(rect.x() + 100, rect.y()-menu->height()))));
-        if (action != 0)
+        if (action != nullptr)
         {
             if (action == newReportAct)
             {
@@ -2030,7 +2023,7 @@ QString TApplication::getProcessFile(QString tagName, QWidget* formWidget, QRect
         }
     }
     QAction* action = menu->exec(formWidget->mapToGlobal(formWidget->mapToGlobal(QPoint(rect.x() + 100, rect.y()-menu->height()))));
-    if (action != 0)
+    if (action != nullptr)
     {
         if (action == newProcessAct)
         {
@@ -2062,7 +2055,7 @@ QString TApplication::getProcessFile(QString tagName, QWidget* formWidget, QRect
 bool TApplication::bankTerminalIsValid()
 {
     bool result = true;
-    if (bankTerminal == 0)
+    if (bankTerminal == nullptr)
     {
         result = false;
     }
@@ -2252,7 +2245,7 @@ void TApplication::printReport(QString fileName, QSqlQuery* query)
         Dictionary* dict = Dictionary::create<Dictionary>();
         if (dict->open("SELECT 0", ""))      // Пустой запрос
         {
-            if (query != 0)
+            if (query != nullptr)
             {
                 dict->appendPrintValues("данные", query);
             }
@@ -2272,14 +2265,14 @@ void TApplication::printReport(QString fileName, Dictionary* dict)
 
 qulonglong TApplication::calculateCRC32(QByteArray* array)
 {
-    if (array != 0)
+    if (array != nullptr)
     {
         unsigned long crc_table[256];
         unsigned long crc;
-        char *buf = array->data();
-        unsigned long len = array->count();
+        char* buf = array->data();
+        int len = array->count();
 
-        for (int i = 0; i < 256; i++)
+        for (unsigned long i = 0; i < 256; i++)
         {
             crc = i;
             for (int j = 0; j < 8; j++)
@@ -2289,7 +2282,7 @@ qulonglong TApplication::calculateCRC32(QByteArray* array)
 
         crc = 0xFFFFFFFFUL;
         while (len--)
-            crc = crc_table[(crc ^ *buf++) & 0xFF] ^ (crc >> 8);
+            crc = crc_table[(crc ^ static_cast<unsigned long>(*buf++)) & 0xFF] ^ (crc >> 8);
         return crc ^ 0xFFFFFFFFUL;
     }
     return 0;

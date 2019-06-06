@@ -20,14 +20,26 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef FORM_H
 #define FORM_H
 
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QPushButton>
+    #include <QtGui/QDesktopWidget>
+    #include <QtGui/QToolTip>
+    #include <QtGui/QMdiSubWindow>
+#else
+    #include <QtWidgets/QPushButton>
+    #include <QtWidgets/QDesktopWidget>
+    #include <QtWidgets/QToolTip>
+    #include <QtWidgets/QMdiSubWindow>
+#endif
+
 #include <QtXml/QDomDocument>
 #include <QtCore/QSettings>
 #include <QtCore/QUuid>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QtScript/QScriptValue>
-#include <QtWidgets/QMdiSubWindow>
-#include <QtWidgets/QPushButton>
 //#include <QtWidgets/QPrinter>
 //#include "mainwindow.h"
 //#include "../kernel/essence.h"
@@ -41,25 +53,25 @@ class DBFactory;
 
 class Form: public QObject
 {
-//    Q_OBJECT
+    Q_OBJECT
 public:
     Form(QObject* parent = 0);
     ~Form();
-    Q_INVOKABLE virtual bool open(QWidget* = 0, Essence* = 0, QString = "");
+    Q_INVOKABLE virtual bool open(QWidget* = nullptr, Essence* = nullptr, QString = "");
     Q_INVOKABLE virtual void close();
-    Q_INVOKABLE Dialog* getFormWidget();
-    Q_INVOKABLE bool isVisible();
+    Q_INVOKABLE virtual Dialog* getFormWidget();
+    Q_INVOKABLE virtual bool isVisible();
     Q_INVOKABLE virtual Dictionary* getParent();
     Q_INVOKABLE virtual bool isFormSelected();
     virtual QString getConfigName();
-    void appendToolTip(QString name, QString value);
+    virtual void appendToolTip(QString name, QString value);
     virtual void keyPressEvent(QKeyEvent*);
 
-    void setButtonsSignals();
-    Q_INVOKABLE bool isDefaultForm();
+    virtual void setButtonsSignals();
+    Q_INVOKABLE virtual bool isDefaultForm();
 
-    Q_INVOKABLE QPushButton* getButtonOk();
-    Q_INVOKABLE QPushButton* getButtonCancel();
+    Q_INVOKABLE virtual QPushButton* getButtonOk();
+    Q_INVOKABLE virtual QPushButton* getButtonCancel();
     Q_INVOKABLE virtual void setEnabled(bool) { ; }
     virtual void activateWidget() { ; }
     virtual void activateSubWindow();
@@ -68,8 +80,8 @@ public:
     Q_INVOKABLE virtual QMdiSubWindow*     getSubWindow();
     virtual TApplication*      getApp();
 
-    Q_INVOKABLE QString getFormTitle();
-    Q_INVOKABLE void setFormTitle(QString);
+    Q_INVOKABLE virtual QString getFormTitle();
+    Q_INVOKABLE virtual void setFormTitle(QString);
 
 public slots:
     Q_INVOKABLE virtual int exec();

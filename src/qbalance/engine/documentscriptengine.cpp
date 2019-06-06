@@ -49,18 +49,18 @@ QScriptValue restoreVariable(QScriptContext* context, QScriptEngine* engine) {
 
 
 
-DocumentScriptEngine::DocumentScriptEngine(Essence* parent/* = 0*/)
+DocumentScriptEngine::DocumentScriptEngine(Essence* parent/* = nullptr*/)
 :ScriptEngine(parent)
 {
-    reportContext = 0;
+    reportContext = nullptr;
 }
 
 
-DocumentScriptEngine::DocumentScriptEngine(QHash<QString, QVariant>* context, Essence *parent/* = 0*/)
+DocumentScriptEngine::DocumentScriptEngine(QHash<QString, QVariant>* context, Essence *parent/* = nullptr*/)
 :ScriptEngine(parent)
 {
-    reportContext = 0;
-    if (context != 0)
+    reportContext = nullptr;
+    if (context != nullptr)
         reportContext = new ReportContext(context);
 }
 
@@ -83,13 +83,13 @@ void DocumentScriptEngine::loadScriptObjects()
     globalObject().setProperty("getSaldo", newFunction(getSaldo));
     globalObject().setProperty("saveVariable", newFunction(saveVariable));
     globalObject().setProperty("restoreVariable", newFunction(restoreVariable));
-    if (documents != 0)
+    if (documents != nullptr)
         globalObject().setProperty("isDocumentScript", true);   // скрипт выполняется в контексте документа
     else
         globalObject().setProperty("isDocumentScript", false);
 
     // инициализируем глобальные объекты скрипта печати
-    if (reportContext != 0)
+    if (reportContext != nullptr)
     {
         globalObject().setProperty("reportContext", newQObject(reportContext));
     }

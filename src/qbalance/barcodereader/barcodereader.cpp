@@ -16,7 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
-#include "../../qextserialport/src/qextserialport.h"
 #include "barcodereader.h"
 #include "../kernel/app.h"
 
@@ -24,8 +23,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 BarCodeReader::BarCodeReader(QObject *parent) :
     QObject(parent)
 {
-    app = 0;
-    serialPort = 0;
+    app = nullptr;
+    serialPort = nullptr;
 
     barCodeString = "";
 }
@@ -42,13 +41,13 @@ void BarCodeReader::setApp(TApplication* a)
 }
 
 
-bool BarCodeReader::open(QString port, int rate, int timeout)
+bool BarCodeReader::open(QString port, int rate, int)
 {
     bool result = false;
-    if (app != 0)
+    if (app != nullptr)
     {
         serialPort = app->getSerialPort(port);
-        if (serialPort != 0)
+        if (serialPort != nullptr)
         {
             serialPort->setBaudRate(rate);
 //            serialPort->setTimeout(timeout);
@@ -66,7 +65,7 @@ bool BarCodeReader::open(QString port, int rate, int timeout)
 void BarCodeReader::close()
 {
     serialPort->close();
-    if (serialPort != 0)
+    if (serialPort != nullptr)
         delete serialPort;
 }
 

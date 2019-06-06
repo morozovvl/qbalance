@@ -17,19 +17,22 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QtWidgets/QPushButton>
+#include <QtCore/QtGlobal>
+
 #include "../kernel/app.h"
 #include "dialog.h"
 #include "mainwindow.h"
+#include "form.h"
+#include <QDebug>
 
 
 Dialog::Dialog(QWidget *parent, Qt::WindowFlags f):
     QDialog(parent, f)
 {
-    app = 0;
-    form = 0;
-    buttonOk = 0;
-    buttonCancel = 0;
+    app = nullptr;
+    form = nullptr;
+    buttonOk = nullptr;
+    buttonCancel = nullptr;
 
     isSelected = false;
     formChanged = false;
@@ -60,13 +63,13 @@ void Dialog::setApp(TApplication* a)
     setParent(app->getMainWindow(), Qt::Dialog);
 
 //    buttonOk = (QPushButton*)this->findChild("buttonOk");
-//    if (buttonOk != 0)
+//    if (buttonOk != nullptr)
 //    {
 //        connect(buttonOk, SIGNAL(clicked()), this, SLOT(cmdOk()));
 //    }
 
     buttonCancel = (QPushButton*)this->findChild("buttonCancel");
-    if (buttonCancel != 0)
+    if (buttonCancel != nullptr)
     {
         connect(buttonCancel, SIGNAL(clicked()), this, SLOT(cmdCancel()));
     }
@@ -76,7 +79,7 @@ void Dialog::setApp(TApplication* a)
 void Dialog::cmdOk()
 {
     isSelected = true;
-    if (form != 0)
+    if (form != nullptr)
         form->cmdOk();
     else
         accept();
@@ -86,7 +89,7 @@ void Dialog::cmdOk()
 void Dialog::cmdCancel()
 {
     isSelected = false;
-    if (form != 0)
+    if (form != nullptr)
         form->cmdCancel();
     else
         accept();
@@ -95,7 +98,7 @@ void Dialog::cmdCancel()
 
 bool Dialog::isFormSelected()
 {
-    if (form != 0)
+    if (form != nullptr)
         return form->isFormSelected();
     return isSelected;
 }
@@ -105,7 +108,7 @@ void Dialog::showEvent(QShowEvent* event)
 {
     isSelected = false;
     QDialog::showEvent(event);
-    if (form != 0)
+    if (form != nullptr)
         form->activateWidget();
 }
 
@@ -165,9 +168,7 @@ void Dialog::resizeEvent(QResizeEvent* event)
 {
     QWidget::resizeEvent(event);
     if (event->oldSize().isValid() && event->size() != event->oldSize())
-    {
         formChanged = true;
-    }
 }
 
 

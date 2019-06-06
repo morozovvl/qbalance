@@ -17,9 +17,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
+#include <QtCore/QtGlobal>
+
 #include <QtGui/QIntValidator>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QPushButton>
 #include <QtCore/QSettings>
 #include <QtCore/QStringList>
 #include "connectionform.h"
@@ -28,7 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../storage/dbfactory.h"
 
 
-ConnectionForm::ConnectionForm(QObject* parent/* = 0*/): Form(parent)
+ConnectionForm::ConnectionForm(QObject* parent/* = nullptr*/): Form(parent)
 {
     appendToMdi = false;        // Не добавлять окно к многооконному интерфейсу
     configName = "ConnectionForm";
@@ -75,11 +75,11 @@ void ConnectionForm::initForm(QString hostName, QString dbName, int portNum, boo
     ptopLayout->addWidget(ptxtPort, 2, 1);
     ptopLayout->addWidget(ptxtDatabase, 3, 1);
     QVBoxLayout* vbxLayout = (QVBoxLayout*)formWidget->findChild("vbxLayout");
-    if (vbxLayout != 0)
+    if (vbxLayout != nullptr)
     {
         vbxLayout->insertLayout(0, ptopLayout);
         QHBoxLayout* cmdButtonLayout = (QHBoxLayout*)formWidget->findChild("cmdButtonLayout");
-        if (cmdButtonLayout != 0)
+        if (cmdButtonLayout != nullptr)
         {
             QPushButton* buttonDelete = new QPushButton();
             buttonDelete->setObjectName("buttonDelete");

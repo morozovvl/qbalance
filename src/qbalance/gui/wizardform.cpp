@@ -17,18 +17,26 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QLabel>
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QPushButton>
+    #include <QtGui/QLabel>
+#else
+    #include <QtWidgets/QPushButton>
+    #include <QtWidgets/QLabel>
+#endif
+
 #include "wizardform.h"
 #include "dialog.h"
 #include "../kernel/app.h"
 
 
-WizardForm::WizardForm(QObject* parent/* = 0*/): Form(parent)
+WizardForm::WizardForm(QObject* parent/* = nullptr*/): Form(parent)
 {
     result = true;
     frameIndex = 0;
-    currentFrame = 0;
+    currentFrame = nullptr;
 }
 
 

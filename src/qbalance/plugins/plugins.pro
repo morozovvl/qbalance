@@ -13,16 +13,16 @@ greaterThan(QT_MAJOR_VERSION, 4)
 }
 
 
-#CONFIG += sql \
-#        core \
-#        script \
-#        gui \
-#        xml \
-#        network \
-#        printsupport \
-#        widgets
-#        designer \
-#        uitools
+CONFIG += sql \
+        core \
+        script \
+        gui \
+        xml \
+        network \
+        printsupport \
+        widgets \
+        designer \
+        uitools
 
 unix:TARGET = ../../../plugins/designer/plugins
 win32:TARGET = ../../../../plugins/designer/plugins

@@ -17,12 +17,24 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QtWidgets/QTreeWidgetItem>
-#include <QtWidgets/QFrame>
-#include <QtWidgets/QSizePolicy>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QGridLayout>
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QTreeWidgetItem>
+    #include <QtGui/QFrame>
+    #include <QtGui/QSizePolicy>
+    #include <QtGui/QLabel>
+    #include <QtGui/QLineEdit>
+    #include <QtGui/QGridLayout>
+#else
+    #include <QtWidgets/QTreeWidgetItem>
+    #include <QtWidgets/QFrame>
+    #include <QtWidgets/QSizePolicy>
+    #include <QtWidgets/QLabel>
+    #include <QtWidgets/QLineEdit>
+    #include <QtWidgets/QGridLayout>
+#endif
+
 #include "configform.h"
 #include "../kernel/app.h"
 #include "../storage/dbfactory.h"
@@ -32,7 +44,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "dialog.h"
 
 
-ConfigForm::ConfigForm(QObject* parent/* = 0*/): Form(parent)
+ConfigForm::ConfigForm(QObject* parent/* = nullptr*/): Form(parent)
 {
     app = TApplication::exemplar();
     configName = "ConfigForm";
@@ -58,7 +70,7 @@ bool ConfigForm::open(QWidget* pwgt)
         formWidget->setWindowTitle(QObject::trUtf8("Настройки"));
 
         QTreeWidget* treeWidget = new QTreeWidget();
-        QTreeWidgetItem* treeWidgetItem0 = 0;
+        QTreeWidgetItem* treeWidgetItem0 = nullptr;
 /*
         treeWidgetItem0 = new QTreeWidgetItem(treeWidget, QStringList(QObject::trUtf8("Справочники")));
         treeWidgetItem0->addChild(new QTreeWidgetItem(QStringList() << QObject::trUtf8("Создать") << "10"));
@@ -93,7 +105,7 @@ bool ConfigForm::open(QWidget* pwgt)
         hLayout->addWidget(treeWidget);
         hLayout->addWidget(frame);
         QVBoxLayout* vbxLayout = (QVBoxLayout*)formWidget->findChild("vbxLayout");
-        if (vbxLayout != 0) {
+        if (vbxLayout != nullptr) {
             vbxLayout->insertLayout(0, hLayout);
         }
 
@@ -119,7 +131,7 @@ void ConfigForm::dispatch(QTreeWidgetItem* item, int) {
 
 void ConfigForm::dictAdd() {
     QLayout* layout = frame->layout();
-    if (layout != 0) {
+    if (layout != nullptr) {
         delete layout;
     }
     QGridLayout* vLayout = new QGridLayout();
@@ -135,7 +147,7 @@ void ConfigForm::dictAdd() {
 
 void ConfigForm::dictProperties() {
     QLayout* layout = frame->layout();
-    if (layout != 0) {
+    if (layout != nullptr) {
         delete layout;
     }
 }
@@ -143,7 +155,7 @@ void ConfigForm::dictProperties() {
 
 void ConfigForm::dictColumns() {
     QLayout* layout = frame->layout();
-    if (layout != 0) {
+    if (layout != nullptr) {
         delete layout;
     }
 }
@@ -151,7 +163,7 @@ void ConfigForm::dictColumns() {
 
 void ConfigForm::dictPermissions() {
     QLayout* layout = frame->layout();
-    if (layout != 0) {
+    if (layout != nullptr) {
         delete layout;
     }
 }
@@ -171,7 +183,7 @@ void ConfigForm::showConfigGroup(QString type)
 {
     currentConfigGroup = type;
     QLayout* layout = frame->layout();
-    if (layout != 0)
+    if (layout != nullptr)
     {
         QLayoutItem* item;
         while ((item = layout->takeAt(0)) != NULL)
@@ -239,7 +251,7 @@ void ConfigForm::changePassword()
 
 void ConfigForm::ftpUpload()
 {
-    if (app->getUpdates() != 0)
+    if (app->getUpdates() != nullptr)
     {
         cmdOk();
         app->getUpdates()->updateModified(false);
@@ -249,7 +261,7 @@ void ConfigForm::ftpUpload()
 
 void ConfigForm::ftpTotalUpload()
 {
-    if (app->getUpdates() != 0)
+    if (app->getUpdates() != nullptr)
     {
         cmdOk();
         app->getUpdates()->putTotalUpdates();
@@ -259,7 +271,7 @@ void ConfigForm::ftpTotalUpload()
 
 void ConfigForm::ftpLoad()
 {
-    if (app->getUpdates() != 0)
+    if (app->getUpdates() != nullptr)
     {
         cmdOk();
         app->getUpdates()->updateModified();

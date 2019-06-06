@@ -19,10 +19,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #ifndef CONFIGFORM_H
 #define CONFIGFORM_H
-#include <QtWidgets/QFrame>
-#include <QtWidgets/QComboBox>
-#include <QtWidgets/QCheckBox>
-#include <QtWidgets/QTreeWidgetItem>
+
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QFrame>
+    #include <QtGui/QComboBox>
+    #include <QtGui/QCheckBox>
+    #include <QtGui/QTreeWidgetItem>
+#else
+    #include <QtWidgets/QFrame>
+    #include <QtWidgets/QComboBox>
+    #include <QtWidgets/QCheckBox>
+    #include <QtWidgets/QTreeWidgetItem>
+#endif
+
+
 #include <QtCore/QSignalMapper>
 #include "../kernel/configvars.h"
 #include "form.h"

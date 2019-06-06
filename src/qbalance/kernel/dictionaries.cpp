@@ -31,12 +31,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 Dictionaries::Dictionaries(QObject *parent): Dictionary("", parent)
 {
-    document = 0;
+    document = nullptr;
 }
 
 
 Dictionaries::~Dictionaries()
 {
+}
+
+
+void Dictionaries::close()
+{
+    removeAll();
+    Dictionary::close();
 }
 
 
@@ -49,10 +56,10 @@ void Dictionaries::postInitialize(QObject* parent)
     lDeleteable = app->isSA();       // Если работает пользователь SA, то можно попытаться удалить справочник
     lUpdateable = false;
     lPrintable = false;
-    document = 0;
+    document = nullptr;
     lIsSaldoExist = false;
     formTitle = QObject::trUtf8("Справочники");
-    scriptEngine = 0;
+    scriptEngine = nullptr;
     scriptEngineEnabled = false;
     photoEnabled = false;
 }
@@ -138,7 +145,7 @@ bool Dictionaries::addDictionary(QString dictName)
                     foreach (QString dictName, dict->getChildDicts())
                     {
                         Dictionary* childDict = getDictionary(dictName);
-                        if (childDict != 0)
+                        if (childDict != nullptr)
                             childDict->setParentDict(dict);
                     }
                 }
@@ -270,7 +277,7 @@ bool Dictionaries::remove(bool noAsk)
 
 void Dictionaries::query(QString, bool)
 {
-    Dictionary::query(QString("%1=true").arg(db->getObjectNameCom("доступ_к_справочникам.меню")));
+    Dictionary::query(QString("%1=%2").arg(db->getObjectNameCom("доступ_к_справочникам.меню")).arg(db->getTrueValue()));
 }
 
 
@@ -281,7 +288,7 @@ void Dictionaries::cmdOk()
     if (dictName.size() > 0) {
         Dictionaries* dicts = app->getDictionaries();
         Dictionary* dict = dicts->getDictionary(dictName);         // Откроем справочник и подсправочники 1-го уровня
-        if (dict != 0)
+        if (dict != nullptr)
         {
             dict->show();
         }
@@ -291,7 +298,7 @@ void Dictionaries::cmdOk()
 
 void Dictionaries::setForm(QString formName)
 {
-    if (form != 0)
+    if (form != nullptr)
     {
         form->close();
         delete form;

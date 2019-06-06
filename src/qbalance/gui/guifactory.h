@@ -20,10 +20,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef GUIFACTORY_H
 #define GUIFACTORY_H
 
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QMessageBox>
+    #include <QtGui/QErrorMessage>
+    #include <QtGui/QDesktopWidget>
+#else
+    #include <QtWidgets/QMessageBox>
+    #include <QtWidgets/QErrorMessage>
+    #include <QtWidgets/QDesktopWidget>
+#endif
+
 #include <QtCore/QString>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QErrorMessage>
-#include <QtWidgets/QDesktopWidget>
 
 class MainWindow;
 class DBFactory;

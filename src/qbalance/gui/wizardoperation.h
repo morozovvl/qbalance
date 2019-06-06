@@ -20,12 +20,26 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef WIZARDOPERATION_H
 #define WIZARDOPERATION_H
 
-//#include <QtWidgets/QPrinter>
-#include <QtWidgets/QTextEdit>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QCheckBox>
-#include <QtWidgets/QTableWidget>
-#include <QtWidgets/QListWidget>
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QTextEdit>
+    #include <QtGui/QLineEdit>
+    #include <QtGui/QCheckBox>
+    #include <QtGui/QTableWidget>
+    #include <QtGui/QListWidget>
+    #include <QtGui/QHeaderView>
+    #include <QtGui/QLabel>
+#else
+    #include <QtWidgets/QTextEdit>
+    #include <QtWidgets/QLineEdit>
+    #include <QtWidgets/QCheckBox>
+    #include <QtWidgets/QTableWidget>
+    #include <QtWidgets/QListWidget>
+    #include <QtWidgets/QHeaderView>
+    #include <QtWidgets/QLabel>
+#endif
+
 #include <QtSql/QSqlQuery>
 #include "wizardform.h"
 

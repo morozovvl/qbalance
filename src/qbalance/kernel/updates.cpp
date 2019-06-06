@@ -44,7 +44,7 @@ Updates::Updates(TApplication* a, QObject *parent): QObject(parent)
 
     isGetUpdates = false;
     updatesCount = 0;
-    timer = 0;
+    timer = nullptr;
     if (app->getConfigValue("UPDATES_FTP_TIMEOUT").toInt() > 0)     // Если задан период проверки на наличие обновлений
     {
         timer = new QTimer(this);
@@ -57,7 +57,7 @@ Updates::Updates(TApplication* a, QObject *parent): QObject(parent)
 
 Updates::~Updates()
 {
-    if (timer != 0)
+    if (timer != nullptr)
     {
         disconnect(timer, SIGNAL(timeout()), this, SLOT(updateModified()));
         delete timer;

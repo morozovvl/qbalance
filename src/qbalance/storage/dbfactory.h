@@ -160,7 +160,7 @@ public:
     QSqlDatabase* getDB();
 
     // Работа со справочниками
-    bool createNewDictionary(QString, QString = "", bool = true);
+    virtual bool createNewDictionary(QString, QString = "", bool = true);
     virtual QSqlQuery getDictionariesProperties();
     virtual QSqlRecord getDictionariesProperties(QString tableName);
     virtual QString getDictionariesProperties(QString, QString);
@@ -178,9 +178,9 @@ public:
     virtual void    unlockDocument(int) {;}
     virtual void    clearLockedDocumentList() {;}
 
-    int addDoc(int operNumber, QDate date);                                                             // Создать новый документ по типовой операции operNumber с датой date
-    bool removeDoc(int docId);                                                                          // Удалить документ с идентификатором docId
-    int addDocStr(int operNumber, int docId, QString cParam = "''", int nQuan = 1, int nDocStr = 0);    // Добавить новую строку в документ по типовой операции operNumber
+    virtual int addDoc(int operNumber, QDate date);                                                             // Создать новый документ по типовой операции operNumber с датой date
+    virtual void removeDoc(int docId);                                                                          // Удалить документ с идентификатором docId
+    virtual int addDocStr(int operNumber, int docId, QString cParam = "''", int nQuan = 1, int nDocStr = 0);    // Добавить новую строку в документ по типовой операции operNumber
                                                                                                         // с идентификатором docId. В строке cParam через запятую находится информация об идентификаторах объектов учета,
                                                                                                         // их количестве, цене и сумме или строка cParam может быть пустой
                                                                                                         // nQuan - сколько строк вставить, nDocStr - вставить строку с номером
@@ -240,11 +240,11 @@ public:
     QHash<int, UserInfo> getUserList();
 
     // Работа с ошибками
-    Q_INVOKABLE bool exec(QString = "", bool = true, QSqlDatabase* = 0);
+    Q_INVOKABLE bool exec(QString = "", bool = true, QSqlDatabase* = nullptr);
     Q_INVOKABLE void exec(QStringList);
     Q_INVOKABLE bool execQueryFile(QString, bool = true);
     bool execSystem(QString command, QString tableName);       // Будет вызываться там, где необходима проверка изменения системных таблиц
-    Q_INVOKABLE QSqlQuery execQuery(QString, bool = true, QSqlDatabase* = 0);
+    Q_INVOKABLE QSqlQuery execQuery(QString, bool = true, QSqlDatabase* = nullptr);
 
     Q_INVOKABLE virtual QString getObjectName(const QString&);       // транслирует имена объектов БД из "внутренних" в реальные наименования
     Q_INVOKABLE virtual QString getObjectNameCom(const QString&);                        // то же самое, только результат возвращает в кавычках (применяется при генерации SQL команд)
@@ -289,6 +289,8 @@ public:
     Q_INVOKABLE virtual QVariant getValue(QString command);
     Q_INVOKABLE virtual QSqlRecord getRecord(QString command, int row);
     Q_INVOKABLE virtual QVariant getOstSum(QString acc, int id = 0);     // Получить сумму остатка на счете для объекта
+    Q_INVOKABLE virtual int getInsertReturningId(QString, QString, QString) { return 0; }
+    Q_INVOKABLE QString driverName();
 
     void changePassword(QString);
 
@@ -302,6 +304,10 @@ public:
     virtual int getSecDiff();
     virtual QString getILIKEexpression(QString, QString) { return ""; }       // Возвращает аналог выражения ILIKE для разных БД
     QString getDictPrototype(QString);
+
+    virtual QString getTrueValue();
+    virtual QString getFalseValue();
+    virtual QString getCurrentTimeStamp();
 
 protected:
     TApplication*           app;

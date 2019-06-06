@@ -17,10 +17,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QtWidgets/QComboBox>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QFormLayout>
-#include <QtWidgets/QLabel>
+#include <QtCore/QtGlobal>
+
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
@@ -28,7 +26,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/app.h"
 #include "dialog.h"
 
-PassWordForm::PassWordForm(QObject* parent/* = 0*/) : Form(parent)
+PassWordForm::PassWordForm(QObject* parent/* = nullptr*/) : Form(parent)
 {
     appendToMdi = false;        // Не добавлять окно к многооконному интерфейсу, т.к. его к этому моменту еще не существует
 
@@ -57,7 +55,7 @@ QString PassWordForm::getPassword()
 }
 
 
-bool PassWordForm::open(QWidget* pwgt/* = 0*/)
+bool PassWordForm::open(QWidget* pwgt/* = nullptr*/)
 // Создает форму ввода пароля на основе формы с кнопками "Ок" и "Cancel"
 {
     QFormLayout* layout = new QFormLayout();
@@ -70,7 +68,7 @@ bool PassWordForm::open(QWidget* pwgt/* = 0*/)
 
         connect(PasswordEditor, SIGNAL(returnPressed()), this, SLOT(cmdOk()));
         QVBoxLayout* vbxLayout = (QVBoxLayout*)formWidget->findChild("vbxLayout");
-        if (vbxLayout != 0)
+        if (vbxLayout != nullptr)
             vbxLayout->insertLayout(0, layout);
         formWidget->setMinimumHeight(100);
         formWidget->setMinimumWidth(500);

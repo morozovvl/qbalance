@@ -53,7 +53,7 @@ public:
     void        setCurrentRow(int);
     int         getCurrentRow();
     void        clear();
-    void        setScriptEngine(DocumentScriptEngine* = 0);
+    void        setScriptEngine(DocumentScriptEngine* = nullptr);
 
 private:
     QHash<QString, QVariant>*    data;

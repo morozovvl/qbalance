@@ -20,8 +20,21 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef MYVALUEEDITOR_H
 #define MYVALUEEDITOR_H
 
-#include <QtWidgets/QWidget>
-//#include "../kernel/app.h"
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QWidget>
+    #include <QtGui/QLineEdit>
+    #include <QtGui/QComboBox>
+    #include <QtGui/QCheckBox>
+    #include <QtGui/QPushButton>
+#else
+    #include <QtWidgets/QWidget>
+    #include <QtWidgets/QLineEdit>
+    #include <QtWidgets/QComboBox>
+    #include <QtWidgets/QCheckBox>
+    #include <QtWidgets/QPushButton>
+#endif
 
 #include "configform.h"
 

@@ -20,9 +20,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef MYNUMERICEDITPLUGIN_H
 #define MYNUMERICEDITPLUGIN_H
 
-#include <QtWidgets/QLineEdit>
-//#include <QtDesigner/QDesignerCustomWidgetInterface>
-#include <QtUiPlugin/QDesignerCustomWidgetInterface>
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QLineEdit>
+    #include <QtDesigner/QDesignerCustomWidgetInterface>
+#else
+    #include <QtWidgets/QLineEdit>
+    #include <QtUiPlugin/QDesignerCustomWidgetInterface>
+#endif
 
 class MyNumericEditPlugin : public QObject, public QDesignerCustomWidgetInterface
 {

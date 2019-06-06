@@ -17,21 +17,33 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QtWidgets/QApplication>
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QApplication>
+    #include <QtGui/QAbstractItemView>
+    #include <QtGui/QHBoxLayout>
+    #include <QtGui/QHeaderView>
+    #include <QtGui/QPushButton>
+    #include <QtGui/QInputDialog>
+#else
+    #include <QtWidgets/QApplication>
+    #include <QtWidgets/QAbstractItemView>
+    #include <QtWidgets/QHBoxLayout>
+    #include <QtWidgets/QHeaderView>
+    #include <QtWidgets/QPushButton>
+    #include <QtWidgets/QInputDialog>
+#endif
+
 #include <QtSql/QSqlTableModel>
 #include <QtCore/QStringList>
-#include <QtWidgets/QAbstractItemView>
 #include <QtCore/QModelIndex>
 #include <QtCore/QRect>
 #include <QtGui/QPalette>
 #include <QtGui/QPixmap>
-#include <QtWidgets/QHBoxLayout>
 #include <QtGui/QPainter>
 #include <QtCore/QUrl>
-#include <QtWidgets/QHeaderView>
-#include <QtWidgets/QPushButton>
 #include <QtCore/QDebug>
-#include <QtWidgets/QInputDialog>
 #include "formgrid.h"
 #include "picture.h"
 #include "tableview.h"
@@ -44,21 +56,21 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../engine/scriptengine.h"
 
 
-FormGrid::FormGrid(QObject* parent/* = 0*/)
+FormGrid::FormGrid(QObject* parent/* = nullptr*/)
 : Form(parent)
 {
-    grdTable = 0;
-    tableLayout = 0;
-    imageLayout = 0;
-    picture = 0;
-    buttonAdd = 0;
-    buttonDelete = 0;
-    buttonView = 0;
-    buttonRequery = 0;
-    buttonQuery = 0;
-    buttonPrint = 0;
-    buttonLoad = 0;
-    buttonSave = 0;
+    grdTable = nullptr;
+    tableLayout = nullptr;
+    imageLayout = nullptr;
+    picture = nullptr;
+    buttonAdd = nullptr;
+    buttonDelete = nullptr;
+    buttonView = nullptr;
+    buttonRequery = nullptr;
+    buttonQuery = nullptr;
+    buttonPrint = nullptr;
+    buttonLoad = nullptr;
+    buttonSave = nullptr;
     leftPercent = true;
     rightPercent = true;
 }
@@ -155,17 +167,17 @@ QString FormGrid::getFilter()
 
 void FormGrid::close()
 {
-    if (grdTable != 0)
+    if (grdTable != nullptr)
     {
         grdTable->close();
         delete grdTable;
-        grdTable = 0;
+        grdTable = nullptr;
     }
     Form::close();
 }
 
 
-void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
+void FormGrid::createForm(QString fileName, QWidget* pwgt/* = nullptr*/)
 {
     Form::createForm(fileName, pwgt);
     if (defaultForm)
@@ -175,7 +187,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         tableLayout = new QVBoxLayout();
         tableLayout->setObjectName("tableLayout");
         tableLayout->addWidget(grdTable);
-        if (vbxLayout != 0)
+        if (vbxLayout != nullptr)
         {
             vbxLayout->insertLayout(0, tableLayout);
         }
@@ -186,7 +198,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         picture->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
         imageLayout->addWidget(picture);
         imageLayout->addStretch(1);
-        if (vbxLayout != 0)
+        if (vbxLayout != nullptr)
         {
             vbxLayout->insertLayout(1, imageLayout);
         }
@@ -205,7 +217,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         }
     }
 
-    if (picture != 0)
+    if (picture != nullptr)
     {
         picture->setForm(this);
         picture->setApp(app);
@@ -213,7 +225,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     }
 
     // Подключим кнопку "Загрузить"
-    if (parent != 0)
+    if (parent != nullptr)
     {
         if (defaultForm)
         {
@@ -223,12 +235,12 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         }
         else
         {
-            if (formWidget != 0)
+            if (formWidget != nullptr)
             {
                 buttonLoad = (QPushButton*)formWidget->findChild("buttonLoad");
             }
         }
-        if (buttonLoad != 0)
+        if (buttonLoad != nullptr)
         {
             connect(buttonLoad, SIGNAL(clicked()), this, SLOT(cmdLoad()));
             buttonLoad->hide();
@@ -236,7 +248,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     }
 
     // Подключим кнопку "Выгрузить"
-    if (parent != 0)
+    if (parent != nullptr)
     {
         if (defaultForm)
         {
@@ -246,12 +258,12 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         }
         else
         {
-            if (formWidget != 0)
+            if (formWidget != nullptr)
             {
                 buttonSave = (QPushButton*)formWidget->findChild("buttonSave");
             }
         }
-        if (buttonSave != 0)
+        if (buttonSave != nullptr)
         {
             connect(buttonSave, SIGNAL(clicked()), this, SLOT(cmdSave()));
             buttonSave->hide();
@@ -269,12 +281,12 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         }
         else
         {
-            if (formWidget != 0)
+            if (formWidget != nullptr)
             {
                 buttonPrint = (QPushButton*)formWidget->findChild("buttonPrint");
             }
         }
-        if (buttonPrint != 0)
+        if (buttonPrint != nullptr)
         {
             connect(buttonPrint, SIGNAL(clicked()), this, SLOT(cmdPrint()));
         }
@@ -294,7 +306,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     {
         buttonRequery = (QPushButton*)formWidget->findChild("buttonRequery");
     }
-    if (buttonRequery != 0)
+    if (buttonRequery != nullptr)
     {
         connect(buttonRequery, SIGNAL(clicked()), this, SLOT(cmdRequery()));
     }
@@ -310,12 +322,12 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     {
         buttonQuery = (QPushButton*)formWidget->findChild("buttonQuery");
     }
-    if (buttonQuery != 0)
+    if (buttonQuery != nullptr)
     {
         connect(buttonQuery, SIGNAL(clicked()), this, SLOT(cmdQuery()));
     }
     // Подключим кнопку "Просмотреть"
-    if (parent != 0)
+    if (parent != nullptr)
     {
         if (parent->isViewable())
         {
@@ -329,7 +341,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
             {
                 buttonView = (QPushButton*)formWidget->findChild("buttonView");
             }
-            if (buttonView != 0)
+            if (buttonView != nullptr)
             {
                 connect(buttonView, SIGNAL(clicked()), this, SLOT(cmdView()));
             }
@@ -346,7 +358,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
 
     grdTables.append(grdTable);
 
-    if (vbxLayout != 0)
+    if (vbxLayout != nullptr)
         vbxLayout->setSpacing(1);
 }
 
@@ -367,7 +379,7 @@ void FormGrid::setButtonAdd(bool set)
             {
                 buttonAdd = (QPushButton*)formWidget->findChild("buttonAdd");
             }
-            if (buttonAdd != 0)
+            if (buttonAdd != nullptr)
             {
                 connect(buttonAdd, SIGNAL(clicked()), this, SLOT(cmdAdd()));
                 app->setIcons(formWidget);
@@ -378,7 +390,7 @@ void FormGrid::setButtonAdd(bool set)
     {
         if (!defaultForm)
             buttonAdd = (QPushButton*)formWidget->findChild("buttonAdd");
-        if (parent != 0 && buttonAdd != 0)
+        if (parent != 0 && buttonAdd != nullptr)
         {
             buttonAdd->hide();
             cmdButtonLayout->removeWidget(buttonAdd);
@@ -386,7 +398,7 @@ void FormGrid::setButtonAdd(bool set)
             if (defaultForm)
             {
                 delete buttonAdd;
-                buttonAdd = 0;
+                buttonAdd = nullptr;
             }
         }
     }
@@ -409,7 +421,7 @@ void FormGrid::setButtonDelete(bool set)
             {
                 buttonDelete = (QPushButton*)formWidget->findChild("buttonDelete");
             }
-            if (buttonDelete != 0)
+            if (buttonDelete != nullptr)
             {
                 connect(buttonDelete, SIGNAL(clicked()), this, SLOT(cmdDelete()));
                 app->setIcons(formWidget);
@@ -420,7 +432,7 @@ void FormGrid::setButtonDelete(bool set)
     {
         if (!defaultForm)
             buttonDelete = (QPushButton*)formWidget->findChild("buttonDelete");
-        if (parent != 0 && buttonDelete != 0)
+        if (parent != 0 && buttonDelete != nullptr)
         {
             buttonDelete->hide();
             cmdButtonLayout->removeWidget(buttonDelete);
@@ -428,7 +440,7 @@ void FormGrid::setButtonDelete(bool set)
             if (defaultForm)
             {
                 delete buttonDelete;
-                buttonDelete = 0;
+                buttonDelete = nullptr;
             }
         }
     }
@@ -437,7 +449,7 @@ void FormGrid::setButtonDelete(bool set)
 
 int FormGrid::exec()
 {
-    if (grdTable != 0)
+    if (grdTable != nullptr)
     {
         grdTable->setColumnsHeaders();
         grdTable->setCurrentFocus();
@@ -449,7 +461,7 @@ int FormGrid::exec()
 
 void FormGrid::show()
 {
-    if (grdTable != 0)
+    if (grdTable != nullptr)
     {
         grdTable->setColumnsHeaders();
         grdTable->setCurrentFocus();
@@ -461,7 +473,7 @@ void FormGrid::show()
 
 void FormGrid::activateWidget()
 {
-    if (grdTable != 0)
+    if (grdTable != nullptr)
     {
         grdTable->setFocus();
     }
@@ -563,30 +575,30 @@ void FormGrid::showPhoto()
 
 void FormGrid::setButtons()
 {
-    if (parent != 0)
+    if (parent != nullptr)
     {
         if (parent->rowCount() > 0)
         {
-            if (buttonAdd != 0)
+            if (buttonAdd != nullptr)
                 buttonAdd->setEnabled(parent->isInsertable());
-            if (buttonDelete != 0)
+            if (buttonDelete != nullptr)
                 buttonDelete->setEnabled(parent->isDeleteable());
-            if (buttonView != 0)
+            if (buttonView != nullptr)
                 buttonView->setEnabled(parent->isViewable());
-            if (buttonPrint != 0)
+            if (buttonPrint != nullptr)
                 buttonPrint->setEnabled(true);
-            if (buttonSave != 0)
+            if (buttonSave != nullptr)
                 buttonSave->setEnabled(true);
         }
         else
         {
-            if (buttonDelete != 0)
+            if (buttonDelete != nullptr)
                 buttonDelete->setEnabled(false);
-            if (buttonView != 0)
+            if (buttonView != nullptr)
                 buttonView->setEnabled(false);
-            if (buttonPrint != 0)
+            if (buttonPrint != nullptr)
                 buttonPrint->setEnabled(false);
-            if (buttonSave != 0)
+            if (buttonSave != nullptr)
                 buttonSave->setEnabled(false);
         }
     }
@@ -597,7 +609,7 @@ void FormGrid::setEnabled(bool enabled)
 {
     buttonAdd->setEnabled(enabled);
     buttonDelete->setEnabled(enabled);
-    if (grdTable != 0)
+    if (grdTable != nullptr)
         grdTable->setReadOnly(!enabled);
 }
 
@@ -662,7 +674,7 @@ TableView* FormGrid::getGrdTable()
 
 void FormGrid::setGrdTable(TableView* gt)
 {
-    if (gt != 0)
+    if (gt != nullptr)
     {
         if (defaultForm)
             delete grdTable;

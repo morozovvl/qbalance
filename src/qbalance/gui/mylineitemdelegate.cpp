@@ -17,7 +17,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QtWidgets/QLineEdit>
+#include <QtCore/QtGlobal>
+
 #include "mylineitemdelegate.h"
 #include "formgrid.h"
 #include "../kernel/dictionary.h"
@@ -41,7 +42,7 @@ QWidget* MyLineItemDelegate::createEditor(QWidget* parent, const QStyleOptionVie
     editorWidget->setMaxLength(length);
     if (!readOnly)
     {
-        if (essence != 0)
+        if (essence != nullptr)
         {
             essence->saveOldValues();
             disconnect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));

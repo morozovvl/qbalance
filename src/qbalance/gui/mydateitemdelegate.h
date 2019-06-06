@@ -20,8 +20,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #ifndef MYDATEITEMDELEGATE_H
 #define MYDATEITEMDELEGATE_H
-//#include <QtDesigner/QDesignerExportWidget>
-#include <QtUiPlugin/QDesignerExportWidget>
+
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QLineEdit>
+    #include <QtDesigner/QDesignerExportWidget>
+#else
+    #include <QtWidgets/QLineEdit>
+    #include <QtUiPlugin/QDesignerExportWidget>
+#endif
+
 #include <QtCore/QPointer>
 #include "myitemdelegate.h"
 
@@ -29,7 +38,7 @@ class MyDateItemDelegate : public MyItemDelegate
 {
     Q_OBJECT
 public:
-    MyDateItemDelegate(QObject*, FormGrid* = 0);
+    MyDateItemDelegate(QObject*, FormGrid* = nullptr);
     virtual QWidget* createEditor(QWidget*, const QStyleOptionViewItem &, const QModelIndex &) const;
 };
 

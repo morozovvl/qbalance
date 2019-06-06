@@ -17,14 +17,21 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QtWidgets/QLabel>
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QLabel>
+#else
+    #include <QtWidgets/QLabel>
+#endif
+
 #include "calendarform.h"
 #include "../kernel/app.h"
 #include "../gui/dialog.h"
 
 
 
-CalendarForm::CalendarForm(QObject* parent/* = 0*/): Form(parent)
+CalendarForm::CalendarForm(QObject* parent/* = nullptr*/): Form(parent)
 {
     configName = "calendar";
 }
@@ -65,7 +72,7 @@ bool CalendarForm::open(QWidget* pwgt) {
         ptopLayout->addWidget(pEndCalendar, 1, 1, Qt::AlignCenter);
 
         QVBoxLayout* vbxLayout = (QVBoxLayout*)formWidget->findChild("vbxLayout");
-        if (vbxLayout != 0)
+        if (vbxLayout != nullptr)
             vbxLayout->insertLayout(0, ptopLayout);
         app->setIcons(formWidget);
         formWidget->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);

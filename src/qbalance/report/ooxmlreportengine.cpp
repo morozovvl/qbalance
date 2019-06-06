@@ -31,8 +31,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 OOXMLReportEngine::OOXMLReportEngine(Essence* ess, DocumentScriptEngine* engine) : ReportEngine(engine)
 {
-    app = 0;
-    context = 0;
+    app = nullptr;
+    context = nullptr;
 
     app = TApplication::exemplar();
     essence = ess;
@@ -102,7 +102,7 @@ bool OOXMLReportEngine::open(QString fileName, ReportContext* cont, bool justPri
             writeVariables(strNumber);       // Перепишем переменные из контекста печати в файл content.xml
         }
 
-        if (scriptEngine != 0)
+        if (scriptEngine != nullptr)
             scriptEngine->eventBeforeTotalPrint();
 
         writeHeader();

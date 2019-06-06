@@ -20,15 +20,25 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef MYNUMERICITEMDELEGATE_H
 #define MYNUMERICITEMDELEGATE_H
 
-#include <QtWidgets/QItemDelegate>
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QLineEdit>
+    #include <QtGui/QItemDelegate>
+    #include <QtGui/QStyleOptionViewItem>
+    #include <QtDesigner/QDesignerExportWidget>
+#else
+    #include <QtWidgets/QLineEdit>
+    #include <QtWidgets/QItemDelegate>
+    #include <QtWidgets/QStyleOptionViewItem>
+    #include <QtUiPlugin/QDesignerExportWidget>
+#endif
+
 #include <QtCore/QString>
 #include <QtGui/QPainter>
-#include <QtWidgets/QStyleOptionViewItem>
 #include <QtCore/QModelIndex>
 #include <QtCore/QVariant>
 #include <QtCore/QPointer>
-//#include <QtDesigner/QDesignerExportWidget>
-#include <QtUiPlugin/QDesignerExportWidget>
 #include "myitemdelegate.h"
 
 

@@ -229,7 +229,7 @@ QString MySqlRelationalTableModel::selectStatement() const
         else
             query.replace(lastIndex, 8, "WHERE " + filter() + " ORDER BY");
     }
-    if (parent != 0)
+    if (parent != nullptr)
         query = parent->transformSelectStatement(query);
     if (testSelect)
         query = "SELECT * FROM (" + query + ") s LIMIT 0";

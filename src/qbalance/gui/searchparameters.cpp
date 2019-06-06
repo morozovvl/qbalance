@@ -17,17 +17,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
+#include <QtCore/QtGlobal>
+
 #include <QtCore/QString>
-//#include <QtWidgets/QSizePolicy>
-//#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QSizePolicy>
-#include <QtWidgets/QFrame>
-#include <QtWidgets/QLayout>
 #include <QtGui/QKeyEvent>
-#include <QtWidgets/QCheckBox>
-#include <QtWidgets/QLineEdit>
 #include "formgrid.h"
 #include "formgridsearch.h"
 #include "searchparameters.h"
@@ -39,10 +32,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/mycombobox.h"
 
 SearchParameters::SearchParameters(QWidget* parentWidget): QFrame(parentWidget) {
-    app = 0;
-    gridLayout = 0;
-    parentForm = 0;
-    dictionaries = 0;
+    app = nullptr;
+    gridLayout = nullptr;
+    parentForm = nullptr;
+    dictionaries = nullptr;
 }
 
 
@@ -90,7 +83,7 @@ void SearchParameters::setFieldsList(QStringList fldList)
     setLineWidth(1);
     setFrameStyle(QFrame::Panel | QFrame::Raised);
     int strNum = 0;
-    if (gridLayout == 0)
+    if (gridLayout == nullptr)
     {
         gridLayout = new QGridLayout(this);
         gridLayout->setVerticalSpacing(1);
@@ -138,7 +131,7 @@ void SearchParameters::addString(QString name, int strNum)
         button->setFocusPolicy(Qt::NoFocus);            // Запретим переход на кнопку по клавише TAB
         gridLayout->addWidget(button, strNum, 2, 1, 1);
         connect(button, SIGNAL(clicked()), this, SLOT(dictionaryButtonPressed()));
-        if (app != 0)
+        if (app != nullptr)
         {
             labelName = app->getDBFactory()->getDictionariesProperties(name, "имя_в_форме");
 //            name = name + "." + programNameFieldName;
@@ -152,7 +145,7 @@ void SearchParameters::addString(QString name, int strNum)
     {
         Dictionary* dict = (Dictionary*)(parentForm->getParent());
         name = dict->getTableName();
-        if (app != 0)
+        if (app != nullptr)
         {
             labelName = "Наименование";
         }
@@ -254,10 +247,10 @@ QString SearchParameters::getFilter(QString dictName, QString defFilter)
                 {
                     if (param.size() > 0)
                     {
-                        if (parentForm != 0 && dictionaries != 0)
+                        if (parentForm != 0 && dictionaries != nullptr)
                         {
                             Dictionary* dict = dictionaries->getDictionary(searchParameters[i].table);    // Поместим связанный справочник в список справочников приложения
-                            if (dict != 0)
+                            if (dict != nullptr)
                             {
                                 if (dict->getForm()->isLeftPercent())
                                     param = "%" + param;
@@ -326,15 +319,15 @@ QString SearchParameters::getSearchValue(QString dictName)
 
 void SearchParameters::dictionaryButtonPressed()
 {
-    if (dictionaries != 0)
+    if (dictionaries != nullptr)
     {
         Dictionary* dict = dictionaries->getDictionary(sender()->objectName());    // Поместим связанный справочник в список справочников приложения
-        if (dict != 0) {
+        if (dict != nullptr) {
             dict->exec();
             if (dict->isFormSelected())
             {
                 MyComboBox* cmb = (MyComboBox*)this->findChild<QObject*>(sender()->objectName());
-                if (cmb != 0)
+                if (cmb != nullptr)
                 {
                     QString text = dict->getValue(programNameFieldName).toString().trimmed();
                     int index = cmb->findText(text);
@@ -384,7 +377,7 @@ void SearchParameters::setFocus()
         for (int i = 0; i < gridLayout->rowCount(); i++)
         {
             QLayoutItem* item = gridLayout->itemAtPosition(i, 1);
-            if (item != 0)
+            if (item != nullptr)
             {
                 MyComboBox* widget = (MyComboBox*)(item->widget());
                 if (widget != 0 && QString::compare(widget->metaObject()->className(), "MyComboBox") == 0)
@@ -408,7 +401,7 @@ void SearchParameters::keyPressEvent(QKeyEvent *event)
 void SearchParameters::setParent(QWidget* parent)
 {
     QFrame::setParent(parent);
-    if (gridLayout != 0)
+    if (gridLayout != nullptr)
         gridLayout->setParent(parent);
 }
 
@@ -425,7 +418,7 @@ void SearchParameters::clearAllComboBoxes()
     for (int i = 0; i < gridLayout->rowCount(); i++)
     {
         QLayoutItem* item = gridLayout->itemAtPosition(i, 1);
-        if (item != 0)
+        if (item != nullptr)
         {
             MyComboBox* widget = (MyComboBox*)(item->widget());
             if (widget != 0 && QString::compare(widget->metaObject()->className(), "MyComboBox") == 0)

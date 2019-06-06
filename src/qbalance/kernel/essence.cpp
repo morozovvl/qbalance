@@ -25,12 +25,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QDir>
 #include <QtXml/QDomDocument>
 #include <QtXml/QDomElement>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QMenu>
 #include <QtCore/QFile>
 #include <QtCore/QTemporaryFile>
 #include <QtCore/QDebug>
-#include <QtCore/QtMath>
 #include <QtGui/QImage>
 //#include <boost/crc.hpp>
 #include "essence.h"
@@ -60,13 +57,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 Essence::Essence(QString name, QObject *parent): Table(name, parent)
 {
-    grdTable = 0;
-    tableModel = 0;
-    form = 0;
-    parentForm = 0;
-    scriptEngine = 0;
-    reportScriptEngine = 0;
-    m_networkAccessManager = 0;
+    grdTable = nullptr;
+    tableModel = nullptr;
+    form = nullptr;
+    parentForm = nullptr;
+    scriptEngine = nullptr;
+    reportScriptEngine = nullptr;
+    m_networkAccessManager = nullptr;
 }
 
 
@@ -79,8 +76,8 @@ void Essence::postInitialize(QString name, QObject* parent)
 {
     Table::postInitialize(name, parent);
 
-    form = 0;
-    scriptEngine = 0;
+    form = nullptr;
+    scriptEngine = nullptr;
     parentForm = app->getMainWindow()->centralWidget();
     formTitle   = "";
     lInsertable = false;
@@ -101,13 +98,13 @@ void Essence::postInitialize(QString name, QObject* parent)
     photoPathVerified = false;
     photoIdField = "";
     photoEnabled = false;
-    m_networkAccessManager = 0;
+    m_networkAccessManager = nullptr;
     doSubmit = false;                           // По умолчанию не обновлять записи автоматически
     defaultFilter = "";
-    grdTable = 0;
-    dictionaries = 0;
+    grdTable = nullptr;
+    dictionaries = nullptr;
     loading = false;
-    reportScriptEngine = 0;
+    reportScriptEngine = nullptr;
     lIsDocument = false;
     cardReaderEnabled = false;
 }
@@ -331,7 +328,7 @@ int Essence::getCurrentColumn()
 
 void Essence::setCurrentColumn(int column)
 {
-    if (grdTable != 0)
+    if (grdTable != nullptr)
     {
         grdTable->selectColumn(column);
     }
@@ -340,7 +337,7 @@ void Essence::setCurrentColumn(int column)
 
 void Essence::setCurrentRow(int row)
 {
-    if (grdTable != 0)
+    if (grdTable != nullptr)
     {
         grdTable->selectRow(row);
     }
@@ -368,7 +365,7 @@ bool Essence::isLoading()
 
 void Essence::appendPrintValue(QString name, QVariant value)
 {
-    if (reportScriptEngine != 0)
+    if (reportScriptEngine != nullptr)
     {
         int currentRow = reportScriptEngine->getReportContext()->getCurrentRow();
         if (currentRow > 0)
@@ -381,7 +378,7 @@ void Essence::appendPrintValue(QString name, QVariant value)
 
 void Essence::appendPrintValues(QString str, QSqlQuery* query)
 {
-    if (reportScriptEngine != 0)
+    if (reportScriptEngine != nullptr)
         reportScriptEngine->getReportContext()->appendPrintValues(str, query);
 }
 
@@ -389,7 +386,7 @@ void Essence::appendPrintValues(QString str, QSqlQuery* query)
 QVariant Essence::getPrintValue(QString name)
 {
     QVariant result;
-    if (reportScriptEngine != 0)
+    if (reportScriptEngine != nullptr)
         result = reportScriptEngine->getReportContext()->getValue(name);
     return result;
 }
@@ -438,7 +435,7 @@ bool Essence::isVisible()
 bool Essence::calculate(bool)
 {
     bool lResult = false;
-    if (scriptEngineEnabled && scriptEngine != 0)
+    if (scriptEngineEnabled && scriptEngine != nullptr)
     {
         scriptEngine->eventCalcTable();
         if (!scriptEngine->getScriptError())
@@ -460,7 +457,7 @@ bool Essence::calculate(bool)
 QScriptValue Essence::evaluateScript(QString script)
 {
     QScriptValue result;
-    if (scriptEngine != 0)
+    if (scriptEngine != nullptr)
     {
         QRegExp rx("^\\D+.*\\(.*\\)$");
         QRegExp argrx("\\(.*\\)$");
@@ -626,7 +623,7 @@ bool Essence::setId(int id)
         // На время отключим обновление(показ) фотографии
         query(QString("\"%1\".\"%2\"=%3").arg(tableName).arg(idFieldName).arg(id), true);
     }
-    if (grdTable != 0)
+    if (grdTable != nullptr)
     {
         grdTable->selectRow(0);
         grdTable->setCurrentIndex(grdTable->currentIndex().sibling(0, grdTable->currentIndex().column()));
@@ -749,7 +746,7 @@ QString Essence::getPhotoFile(QString copyTo)
                                             m_networkAccessManager = new QNetworkAccessManager(this);
                                             connect(m_networkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
                                         }
-                                        if (m_networkAccessManager != 0)
+                                        if (m_networkAccessManager != nullptr)
                                         {
                                             urlId v = {idValue, copyTo};
                                             urls.insert(QString("%1:%2%3").arg(url.host()).arg(url.port(80)).arg(url.path()), v);             // Запомним URL картинки и его локальный код
@@ -827,7 +824,7 @@ void Essence::replyFinished(QNetworkReply* reply)
                 if (idValue == getValue(photoIdField).toString().trimmed())
                 {
                     emit photoLoaded();                 // Выведем фотографию на экран
-                    if (scriptEngineEnabled && scriptEngine != 0)
+                    if (scriptEngineEnabled && scriptEngine != nullptr)
                         scriptEngine->eventPhotoLoaded();
                 }
             }
@@ -861,7 +858,7 @@ int Essence::exec()
     int result = 0;
     if (!opened)
         open();
-    if (opened && form != 0)
+    if (opened && form != nullptr)
     {
         beforeShowFormEvent(getForm());
         form->exec();
@@ -875,7 +872,7 @@ void Essence::show()
 {
     if (!opened)
         open();
-    if (opened && form != 0)
+    if (opened && form != nullptr)
     {
         beforeShowFormEvent(getForm());
         form->show();
@@ -886,7 +883,7 @@ void Essence::show()
 
 void Essence::hide()
 {
-    if (opened && form != 0)
+    if (opened && form != nullptr)
     {
         if (beforeHideFormEvent(form))
         {
@@ -899,7 +896,7 @@ void Essence::hide()
 
 void Essence::view()
 {
-    if (form != 0)
+    if (form != nullptr)
         form->getFormWidget()->setFocus(Qt::OtherFocusReason);
 }
 
@@ -913,10 +910,10 @@ bool Essence::open()
 
         openScriptEngine();
 
-        if (form != 0)
+        if (form != nullptr)
         {
             grdTable = form->getGrdTable();
-            if (grdTable != 0)
+            if (grdTable != nullptr)
             {
                 grdTable->setEssence(this);
                 grdTable->setReadOnly(!lUpdateable);
@@ -933,23 +930,23 @@ bool Essence::open()
 
 void Essence::close()
 {
-    if (form != 0)
+    if (form != nullptr)
     {
         form->close();
         if (form->isDefaultForm())
         {
             delete form;
-            form = 0;
+            form = nullptr;
         }
         else
             form->deleteLater();
     }
 
     delete reportScriptEngine;
-    reportScriptEngine = 0;
+    reportScriptEngine = nullptr;
 
 
-    if (m_networkAccessManager != 0)
+    if (m_networkAccessManager != nullptr)
         delete m_networkAccessManager;
 
     closeScriptEngine();
@@ -960,7 +957,7 @@ void Essence::close()
 
 void Essence::setGrdTable(TableView* gt)
 {
-    if (gt != 0)
+    if (gt != nullptr)
     {
         grdTable = gt;
         grdTable->setEssence(this);
@@ -976,7 +973,7 @@ void Essence::setScriptEngine()
 
 void Essence::evaluateEngine()
 {
-    if (scriptEngineEnabled && scriptEngine != 0)
+    if (scriptEngineEnabled && scriptEngine != nullptr)
     {
         scriptEngineEnabled = false;
         if (scriptEngine->open(scriptFileName))
@@ -1014,7 +1011,7 @@ void Essence::openScriptEngine()
     {
         setScriptEngine();
         evaluateEngine();
-        if (dictionaries != 0 && dictionaries->getDocument() != 0)          // Если этот справочник является частью документа
+        if (dictionaries != 0 && dictionaries->getDocument() != nullptr)          // Если этот справочник является частью документа
             scriptEngine->setIsDocumentScript(true);                                             // То обозначим контекст выполнения скриптов
 
         initFormEvent();
@@ -1025,7 +1022,7 @@ void Essence::openScriptEngine()
 void Essence::closeScriptEngine()
 {
     closeFormEvent(form);
-    if (scriptEngineEnabled && scriptEngine != 0)
+    if (scriptEngineEnabled && scriptEngine != nullptr)
     {
         scriptEngine->close();
         scriptEngine->deleteLater();        // НЕ ИЗМЕНЯТЬ. ЕСЛИ СДЕЛАТЬ ПО-ДРУГОМУ, ВОЗМОЖНА ОШИБКА СЕГМЕНТАЦИИ
@@ -1037,7 +1034,7 @@ void Essence::setEnabled(bool en)
 {
     QString disabledMessage = QObject::trUtf8(" - изменения запрещены");
     enabled = en;
-    if (scriptEngineEnabled && scriptEngine != 0)
+    if (scriptEngineEnabled && scriptEngine != nullptr)
         scriptEngine->eventSetEnabled(en);
     if (enabled)
         setFormTitle(getFormTitle().remove(disabledMessage));
@@ -1046,7 +1043,7 @@ void Essence::setEnabled(bool en)
         if (!getFormTitle().contains(disabledMessage))
             setFormTitle(form->getFormWidget()->windowTitle().append(disabledMessage));
     }
-    if (form != 0)
+    if (form != nullptr)
         form->setEnabled(enabled);
 }
 
@@ -1071,14 +1068,14 @@ void Essence::initForm() {
 
 void Essence::setFormTitle(QString title) {
     formTitle = title;
-    if (form != 0)
+    if (form != nullptr)
         form->getFormWidget()->setWindowTitle(title);
 }
 
 
 QString Essence::getFormTitle()
 {
-    if (form != 0)
+    if (form != nullptr)
         return form->getFormWidget()->windowTitle();
     return QString();
 }
@@ -1086,7 +1083,7 @@ QString Essence::getFormTitle()
 
 bool Essence::isFormSelected()
 {
-    if (form != 0)
+    if (form != nullptr)
         return form->isFormSelected();
     return false;
 }
@@ -1116,21 +1113,21 @@ void Essence::load()
 
 void Essence::initFormEvent()
 {
-    if (scriptEngineEnabled && getScriptEngine() != 0)
+    if (scriptEngineEnabled && getScriptEngine() != nullptr)
         getScriptEngine()->eventInitForm(form);
 }
 
 
 void Essence::beforeShowFormEvent(Form* form)
 {
-    if (scriptEngineEnabled && getScriptEngine() != 0)
+    if (scriptEngineEnabled && getScriptEngine() != nullptr)
         getScriptEngine()->eventBeforeShowForm(form);
 }
 
 
 void Essence::afterShowFormEvent(Form* form)
 {
-    if (scriptEngineEnabled && getScriptEngine() != 0)
+    if (scriptEngineEnabled && getScriptEngine() != nullptr)
         getScriptEngine()->eventAfterShowForm(form);
 }
 
@@ -1138,7 +1135,7 @@ void Essence::afterShowFormEvent(Form* form)
 bool Essence::beforeHideFormEvent(Form* form)
 {
     bool result = true;
-    if (scriptEngineEnabled && getScriptEngine() != 0)
+    if (scriptEngineEnabled && getScriptEngine() != nullptr)
         result = getScriptEngine()->eventBeforeHideForm(form);
     return result;
 }
@@ -1146,14 +1143,14 @@ bool Essence::beforeHideFormEvent(Form* form)
 
 void Essence::afterHideFormEvent(Form* form)
 {
-    if (scriptEngineEnabled && getScriptEngine() != 0)
+    if (scriptEngineEnabled && getScriptEngine() != nullptr)
         getScriptEngine()->eventAfterHideForm(form);
 }
 
 
 void Essence::closeFormEvent(Form* form)
 {
-    if (scriptEngineEnabled && getScriptEngine() != 0)
+    if (scriptEngineEnabled && getScriptEngine() != nullptr)
         getScriptEngine()->eventCloseForm(form);
 }
 
@@ -1161,7 +1158,7 @@ void Essence::closeFormEvent(Form* form)
 QString Essence::preparePictureUrl()
 {
     QString result;
-    if (scriptEngineEnabled && getScriptEngine() != 0)
+    if (scriptEngineEnabled && getScriptEngine() != nullptr)
         result = getScriptEngine()->preparePictureUrl(this);
     return result;
 }
@@ -1170,7 +1167,7 @@ QString Essence::preparePictureUrl()
 QString Essence::prepareBarCodeData()
 {
     QString result;
-    if (scriptEngineEnabled && getScriptEngine() != 0)
+    if (scriptEngineEnabled && getScriptEngine() != nullptr)
         result = getScriptEngine()->prepareBarCodeData(this);
     return result;
 }
@@ -1185,7 +1182,7 @@ void Essence::afterRowChanged()
 
 void Essence::beforeRowChanged()
 {
-    if (scriptEngineEnabled && getScriptEngine() != 0)
+    if (scriptEngineEnabled && getScriptEngine() != nullptr)
         getScriptEngine()->eventBeforeRowChanged();
 }
 
@@ -1231,7 +1228,7 @@ void Essence::updateCurrentRow(int strNum)
 
 void Essence::preparePrintValues()
 {
-    if (reportScriptEngine != 0)
+    if (reportScriptEngine != nullptr)
     {
         // Зарядим текущую дату
         reportScriptEngine->getReportContext()->setValue("сегодня", QDate().currentDate().toString(app->dateFormat()));
@@ -1262,7 +1259,7 @@ void Essence::preparePrintValues()
             }
             reportScriptEngine->getReportContext()->setValue(QString("таблица.%1").arg("номерстроки"), QVariant(i), i);
         }
-        if (scriptEngineEnabled && scriptEngine != 0)
+        if (scriptEngineEnabled && scriptEngine != nullptr)
             scriptEngine->eventPreparePrintValues();
     }
 }
@@ -1270,7 +1267,7 @@ void Essence::preparePrintValues()
 
 void Essence::clearPrintValues()
 {
-    if (reportScriptEngine != 0)
+    if (reportScriptEngine != nullptr)
     {
         reportScriptEngine->getReportContext()->clear();
     }
@@ -1314,13 +1311,8 @@ bool Essence::getFile(QString path, QString fileName, FileType type)
                 {
                     if (app->isSA())   // Если не указано время сохранения файла на сервере
                     {
-                        if (locFileTime.secsTo(servFileInfo.lastModified) < 120)   // Если локальный файл новее серверного на 120 секунд
-                            db->setFile(fileName, type, array);      // Сохранить копию файла на сервере, если мы работаем как SA
-                        else if (locFileTime.secsTo(servFileInfo.lastModified) > 120)   // Если локальный файл старее серверного на 120 секунд
-                        {
-                            QByteArray templateFile = db->getFile(fileName, type);
-                            app->saveFile(fullFileName, &templateFile);
-                        }
+                        QByteArray templateFile = db->getFile(fileName, type);
+                        app->saveFile(fullFileName, &templateFile);
                     }
                     else
                     {
@@ -1340,7 +1332,7 @@ void Essence::saveOldValues()
 {
     // Сохраним старые значения полей записи
     oldValues.clear();
-    if (tableModel != 0)
+    if (tableModel != nullptr)
     {
         foreach (QString field, tableModel->getFieldsList())
         {
@@ -1372,7 +1364,7 @@ void Essence::barCodeReaded(QString barCode)
         scriptEngine->eventBarCodeReaded(barCode);
     }
 
-    if (grdTable != 0)
+    if (grdTable != nullptr)
         grdTable->setCurrentFocus();
     form->setButtons();
 }
@@ -1509,7 +1501,7 @@ void Essence::print(QString fileName, bool newFile, bool justPrint, int copyCoun
 
 bool Essence::isDocumentLoading()
 {
-    if (dictionaries != 0 && dictionaries->getDocument() != 0)
+    if (dictionaries != 0 && dictionaries->getDocument() != nullptr)
     {
         // И в данный момент происходит загрузка документа из файла (или другого источника)
         if (dictionaries->getDocument()->isLoading())
@@ -1522,7 +1514,7 @@ bool Essence::isDocumentLoading()
 QModelIndex Essence::getCurrentIndex()
 {
     QModelIndex index;
-    if (grdTable != 0)
+    if (grdTable != nullptr)
     {
         index = grdTable->currentIndex();
     }
@@ -1532,7 +1524,7 @@ QModelIndex Essence::getCurrentIndex()
 
 void Essence::setCurrentIndex(QModelIndex index)
 {
-    if (grdTable != 0)
+    if (grdTable != nullptr)
         grdTable->setCurrentIndex(index);
 }
 
@@ -1623,7 +1615,6 @@ void Essence::exportData(QString fileName, QStringList fieldsList)
             }
 
             QString command(QString("INSERT INTO %1 (%2) VALUES (%3);").arg(tableName).arg(fieldListCommand));
-            qDebug() << command;
             progressDialog->setValue(i);
 
             i++;

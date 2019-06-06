@@ -20,8 +20,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef MYBUTTONLINEEDIT_H
 #define MYBUTTONLINEEDIT_H
 
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QPushButton>
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QLineEdit>
+    #include <QtGui/QPushButton>
+#else
+    #include <QtWidgets/QLineEdit>
+    #include <QtWidgets/QPushButton>
+#endif
+
 //#include "form.h"
 
 class MyButtonLineEdit : public QWidget

@@ -21,14 +21,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef DIALOG_H
 #define DIALOG_H
 
-#include <QtWidgets/QDialog>
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QPushButton>
+    #include <QtDesigner/QDesignerExportWidget>
+#else
+    #include <QtWidgets/QPushButton>
+    #include <QtUiPlugin/QDesignerExportWidget>
+#endif
+
+#include <QtGui/QDialog>
 #include <QtGui/QKeyEvent>
-//#include <QtDesigner/QDesignerExportWidget>
-#include <QtUiPlugin/QDesignerExportWidget>
-#include "form.h"
 
 class MainWindow;
-
+class Form;
+class TApplication;
 
 class Dialog : public QDialog
 

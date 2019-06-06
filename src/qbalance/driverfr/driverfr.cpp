@@ -405,11 +405,11 @@ DriverFR::DriverFR(QObject *parent) : QObject(parent)
     remote = false;
     locked = false;
     codec = QTextCodec::codecForName("Windows-1251");
-    app = 0;
-    progressDialog = 0;
+    app = nullptr;
+    progressDialog = nullptr;
     showProgressBar = false;
     maxTries = MAX_TRIES;
-    serialPort = 0;
+    serialPort = nullptr;
 }
 
 
@@ -422,7 +422,7 @@ DriverFR::~DriverFR()
 bool DriverFR::open(QString port, int rate, int timeout, int password)
 {
     bool result = false;
-    if (app == 0)
+    if (app == nullptr)
         return result;
     locked = false;
     // Установление связи с ккм
@@ -432,7 +432,7 @@ bool DriverFR::open(QString port, int rate, int timeout, int password)
     fr.Timeout       = timeout;
     fr.Password      = password;
     serialPort = app->getSerialPort(port);
-    if (serialPort != 0)
+    if (serialPort != nullptr)
     {
         // Сначала поищем на удаленном компьютере, т.к. это быстрее
         if (serialPort->getTcpClient()->isValid() && app->getConfigValue("FR_USE_REMOTE").toBool())
@@ -440,7 +440,7 @@ bool DriverFR::open(QString port, int rate, int timeout, int password)
             remote = true;
             serialPort->setRemote(remote);
 
-//            fr.PortNumber = 0;
+//            fr.PortNumber = nullptr;
 //            fr.BaudRate = app->getConfigValue("FR_DRIVER_BOUD_RATE").toInt();
 //            if (remote)
 //                fr.Timeout = app->getConfigValue("FR_REMOTE_DRIVER_TIMEOUT").toInt();
@@ -605,6 +605,13 @@ void DriverFR::setLock(bool lock, QString lockedBy)
     else
         lockedByHost = lockedBy;
     locked = lock;
+}
+
+
+void DriverFR::setProgressDialogValue(int value)
+{
+    if (progressDialog != 0)
+        progressDialog->setValue(value);
 }
 
 
@@ -1224,7 +1231,7 @@ int DriverFR::GetShortECRStatus()
         fr.FMSoftVersion[0] = a.buff[18];
         fr.FMSoftVersion[1] = 0x2e;
         fr.FMSoftVersion[2] = a.buff[19];
-        fr.FMSoftVersion[3] = 0;
+        fr.FMSoftVersion[3] = nullptr;
         fr.FMBuild = evalint((unsigned char*)&a.buff + 20, 2);
         evaldate((unsigned char*)&a.buff + 22, &fr.FMSoftDate);
         evaldate((unsigned char*)&a.buff + 25, &fr.Date);
@@ -1503,7 +1510,7 @@ int DriverFR::Sale()
 
     if (connected)
     {
-        logCommand(SALE, "Продажа");
+        logCommand(SALE, QString("Продажа (%1 * %2 = %3)").arg(fr.Quantity).arg(fr.Price).arg(fr.Quantity * fr.Price));
 
         int64_t quant = llround(fr.Quantity * 1000);
         int64_t price = llround(fr.Price * 100);
@@ -1532,7 +1539,7 @@ int DriverFR::ReturnSale()
 
     if (connected)
     {
-        logCommand(RETURN_SALE, "Возврат продажи");
+        logCommand(RETURN_SALE, QString("Возврат продажи (%1 * %2 = %3)").arg(fr.Quantity).arg(fr.Price).arg(fr.Quantity * fr.Price));
 
         int64_t quant = llround(fr.Quantity * 1000);
         int64_t price = llround(fr.Price * 100);
@@ -1867,7 +1874,7 @@ int DriverFR::CloseCheck()
 
     if (connected)
     {
-        logCommand(CLOSE_CHECK, "Закрытие чека");
+        logCommand(CLOSE_CHECK, QString("Закрытие чека (%1, %2, %3, %4, %5)").arg(fr.Summ1).arg(fr.Summ2).arg(fr.Summ3).arg(fr.Summ4).arg(fr.DiscountOnCheck));
 
         int64_t  sum;
         p.len   = 67;

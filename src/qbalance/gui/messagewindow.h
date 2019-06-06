@@ -20,9 +20,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef MESSAGEWINDOW_H
 #define MESSAGEWINDOW_H
 
-//#include <QtWidgets/QPrinter>
-#include <QtWidgets/QTextEdit>
-#include <QtWidgets/QMdiSubWindow>
+#include <QtCore/QtGlobal>
+
+#if QT_VERSION < 0x050000
+    #include <QtGui/QTextEdit>
+    #include <QtGui/QMdiSubWindow>
+#else
+    #include <QtWidgets/QTextEdit>
+    #include <QtWidgets/QMdiSubWindow>
+#endif
 
 //#include "mainwindow.h"
 

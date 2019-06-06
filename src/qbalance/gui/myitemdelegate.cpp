@@ -17,8 +17,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
+#include <QtCore/QtGlobal>
+
 #include <QtCore/QObject>
-#include <QtWidgets/QLineEdit>
 #include "../storage/mysqlrelationaltablemodel.h"
 #include "../kernel/essence.h"
 #include "myitemdelegate.h"
@@ -28,12 +29,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 MyItemDelegate::MyItemDelegate(QObject* par, FormGrid* form)
 : QItemDelegate(par)
 {
-    essence = 0;
+    essence = nullptr;
 
     columnMask = "";
     delegateType = String;
     setReadOnly(false);
-    if (form != 0)
+    if (form != nullptr)
         essence = (Essence*)(form->getParent());
 }
 
@@ -124,7 +125,7 @@ void MyItemDelegate::setReadOnly(bool val)
 
 void MyItemDelegate::calculate()
 {
-    if (essence != 0)
+    if (essence != nullptr)
     {
         essence->calculate();  //123
     }
