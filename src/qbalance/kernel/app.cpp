@@ -543,6 +543,7 @@ void TApplication::initConfig()
     setConfig("openoffice", "OO_PATH", "Каталог OpenOffice", CONFIG_VALUE_STRING, "");
 
     setConfigTypeName("emailclient", "E-Mail");
+    setConfig("emailclient", "EMAILCLIENT_NEEDED", "Использовать E-mail клиент", CONFIG_VALUE_BOOLEAN, false);
     setConfig("emailclient", "EMAILCLIENT_SERVER_URL", "SMTP сервер", CONFIG_VALUE_STRING, "");
     setConfig("emailclient", "EMAILCLIENT_SERVER_PORT", "Порт", CONFIG_VALUE_INTEGER, 465);
     setConfig("emailclient", "EMAILCLIENT_USER_ADDRESS", "Ваш адрес E-mail", CONFIG_VALUE_STRING, "");
@@ -963,18 +964,19 @@ void    TApplication::openPlugins()
     }
 
     // Запустим почтовый клиент
-    /*
-    smtpclient = (EMailClient*)createPlugin("emailclient");
-    if (smtpclient != nullptr)
+    if (getConfigValue("EMAILCLIENT_NEEDED").toBool())
     {
-        if (smtpclient->open())
+        smtpclient = static_cast<EMailClient*>(createPlugin("emailclient"));
+        if (smtpclient != nullptr)
         {
-            smtpclient->sendMail();
-            smtpclient->close();
-            smtpclient = nullptr;
+            if (smtpclient->open())
+            {
+                smtpclient->sendMail();
+                smtpclient->close();
+                smtpclient = nullptr;
+            }
         }
     }
-*/
 }
 
 

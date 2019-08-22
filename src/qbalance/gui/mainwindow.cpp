@@ -138,11 +138,12 @@ void MainWindow::about()
 
 void MainWindow::createActions()
 {
+/*
       dictionariesAct = new QAction(this);
       dictionariesAct->setShortcut(QObject::trUtf8("Ctrl+N"));
       dictionariesAct->setStatusTip(QObject::trUtf8("Открыть список справочников"));
       connect(dictionariesAct, SIGNAL(triggered()), this, SLOT(showDictionaries()));
-
+*/
       newAct = new QAction(QIcon(":buttonAdd"), "", this);
       newAct->setShortcut(QObject::trUtf8("Ctrl+N"));
       newAct->setStatusTip(QObject::trUtf8("Добавить новую запись"));

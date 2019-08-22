@@ -258,7 +258,7 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt/* = nullptr*/)
 void FormDocument::show()
 {
     if (dateEdit != nullptr)
-        dateEdit->setDate(getParent()->getParent()->getValue("ДАТА").toDate());
+        dateEdit->setDate(db->toDate(getParent()->getParent()->getValue("ДАТА")));
     if (numberEdit != nullptr)
         numberEdit->setText(getParent()->getParent()->getValue("НОМЕР").toString());
     if (itogNumeric != nullptr)

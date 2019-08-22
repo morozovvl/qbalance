@@ -26,7 +26,7 @@ class EMailClient : public QObject
 {
     Q_OBJECT
 public:
-    EMailClient(QObject *parent = 0);
+    EMailClient(QObject *parent = nullptr);
     virtual ~EMailClient();
     virtual bool    open();
     virtual void    close();

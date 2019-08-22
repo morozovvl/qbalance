@@ -252,15 +252,15 @@ bool WizardOperation::setData()
 
             item = prvTable->item(i, dbConstField);
             if (item != nullptr)
-                dbConstAcc = item->text().compare("true") == 0 ? true : false;
+                dbConstAcc = item->text().compare(db->getTrueValue()) == 0 ? true : false;
 
             item = prvTable->item(i, dbVisible);
             if (item != nullptr)
-                dbVisib = item->text().compare("true") == 0 ? true : false;
+                dbVisib = item->text().compare(db->getTrueValue()) == 0 ? true : false;
 
             item = prvTable->item(i, dbSalVisField);
             if (item != nullptr)
-                dbSalVisible = item->text().compare("true") == 0 ? true : false;
+                dbSalVisible = item->text().compare(db->getTrueValue()) == 0 ? true : false;
 
             crAcc = "";
             item = prvTable->item(i, creditField);
@@ -269,23 +269,23 @@ bool WizardOperation::setData()
 
             item = prvTable->item(i, crConstField);
             if (item != nullptr)
-                crConstAcc = item->text().compare("true") == 0 ? true : false;
+                crConstAcc = item->text().compare(db->getTrueValue()) == 0 ? true : false;
 
             item = prvTable->item(i, crVisible);
             if (item != nullptr)
-                crVisib = item->text().compare("true") == 0 ? true : false;
+                crVisib = item->text().compare(db->getTrueValue()) == 0 ? true : false;
 
             item = prvTable->item(i, crSalVisField);
             if (item != nullptr)
-                crSalVisible = item->text().compare("true") == 0 ? true : false;
+                crSalVisible = item->text().compare(db->getTrueValue()) == 0 ? true : false;
 
             item = prvTable->item(i, freeField);
             if (item != nullptr)
-                freePrv = item->text().compare("true") == 0 ? true : false;
+                freePrv = item->text().compare(db->getTrueValue()) == 0 ? true : false;
 
             item = prvTable->item(i, attrField);
             if (item != nullptr)
-                attribute = item->text().compare("true") == 0 ? true : false;
+                attribute = item->text().compare(db->getTrueValue()) == 0 ? true : false;
 
             QString itog;
             if (prvTable->item(i, itogField) != nullptr)
@@ -329,7 +329,7 @@ bool WizardOperation::setData()
         db->removeColumnHeaders(tableId);
         for (int i = 0; i < fields.count(); i++)
         {
-            if (!db->appendColumnHeader(tableId, tableId, fields.value(i).name, fields.value(i).header, fields.value(i).number, fields.value(i).readOnly))
+            if (!db->appendColumnHeader(tableId, tableId, fields.value(i).name, fields.value(i).header, fields.value(i).number, fields.value(i).readOnly | fields.value(i).constReadOnly))
             {
                 db->rollbackTransaction();
                 return false;
@@ -344,7 +344,7 @@ bool WizardOperation::setData()
             db->removeColumnHeaders(tableId);
             for (int i = 0; i < docListFields.count(); i++)
             {
-               if (!db->appendColumnHeader(tableId, tableId, docListFields.value(i).name, docListFields.value(i).header, docListFields.value(i).number, docListFields.value(i).readOnly))
+               if (!db->appendColumnHeader(tableId, tableId, docListFields.value(i).name, docListFields.value(i).header, docListFields.value(i).number, docListFields.value(i).readOnly | docListFields.value(i).constReadOnly))
                {
                    db->rollbackTransaction();
                    return false;
@@ -385,7 +385,7 @@ void WizardOperation::getData()
     bleNumerator->setValue(db->getToperNumerator(oper));
 
     // Создадим таблицу проводок
-    prvTable = new QTableWidget((prvs.size() > 0 ? prvs.size() : 1), 11);
+    prvTable = new QTableWidget((db->querySize(&prvs) > 0 ? db->querySize(&prvs) : 1), 11);
     if (prvTable->verticalHeader()->minimumSectionSize() > 0)
         prvTable->verticalHeader()->setDefaultSectionSize(prvTable->verticalHeader()->minimumSectionSize());
     prvTable->setHorizontalHeaderLabels(QStringList() << QObject::trUtf8("Дебет")
@@ -723,7 +723,7 @@ void WizardOperation::getFieldsTable(QList<FieldType>* flds,  QTableWidget* fiel
         item->setData(Qt::UserRole, flds->at(i).number);
         fieldsTable->setItem(i, visibleField, item);
 
-        item = new QTableWidgetItem(flds->at(i).readOnly ? "true" : "false");
+        item = new QTableWidgetItem(flds->at(i).constReadOnly ? "true" : "false");
         if (flds->at(i).constReadOnly)
             item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
         fieldsTable->setItem(i, editableField, item);
@@ -762,20 +762,20 @@ void WizardOperation::frameDeactivated(int frameNumber)
                     toperT.dbAcc = item->text().trimmed();
                 item = prvTable->item(i, dbConstField);
                 if (item != nullptr)
-                    toperT.dbConst = (QString(item->text()).compare("true") == 0) ? true : false;
+                    toperT.dbConst = (QString(item->text()).compare(db->getTrueValue()) == 0) ? true : false;
                 item = prvTable->item(i, dbSalVisField);
                 if (item != nullptr)
-                    toperT.dbSaldoVisible = (QString(item->text()).compare("true") == 0) ? true : false;
+                    toperT.dbSaldoVisible = (QString(item->text()).compare(db->getTrueValue()) == 0) ? true : false;
                 item = prvTable->item(i, creditField);
                 if (item != nullptr)
                     toperT.crAcc = item->text().trimmed();
                 item = prvTable->item(i, crConstField);
                 if (item != nullptr)
-                    toperT.crConst = (QString(item->text()).compare("true") == 0) ? true : false;
+                    toperT.crConst = (QString(item->text()).compare(db->getTrueValue()) == 0) ? true : false;
                 item = prvTable->item(i, itogField);
                 item = prvTable->item(i, crSalVisField);
                 if (item != nullptr)
-                    toperT.crSaldoVisible = (QString(item->text()).compare("true") == 0) ? true : false;
+                    toperT.crSaldoVisible = (QString(item->text()).compare(db->getTrueValue()) == 0) ? true : false;
                 if (item != nullptr)
                     toperT.itog = item->text().trimmed();
                 topersList.append(toperT);
@@ -818,7 +818,7 @@ void WizardOperation::frameDeactivated(int frameNumber)
                 {
                     FieldType field = docListFields.at(j);
                     field.header = docListFieldsTable->item(i, headerField)->text();
-                    field.readOnly = docListFieldsTable->item(i, editableField)->text() == "true" ? true : false;
+                    field.readOnly = docListFieldsTable->item(i, editableField)->text() == db->getTrueValue() ? true : false;
                     docListFields.removeAt(j);
                     docListFields.insert(j, field);
                 }

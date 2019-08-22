@@ -192,7 +192,8 @@ HEADERS +=  gui/passwordform.h \
     gui/myuiloader.h \
     version.h \
     storage/postgresdbfactory.h \
-    storage/sqlitedbfactory.h
+    storage/sqlitedbfactory.h \
+    storage/mymultilist.h
 
 
 RESOURCES += ../../resources.qrc

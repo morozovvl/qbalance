@@ -122,7 +122,7 @@ public:
     Q_INVOKABLE void setNumber(QString);
     Q_INVOKABLE QString getNumber();
     Q_INVOKABLE void showParameterText(QString);
-    Q_INVOKABLE int appendDocString();
+    Q_INVOKABLE int appendDocString(bool = true);
     Q_INVOKABLE int appendDocStrings(int);
     void prepareValue(QString, Dictionary*);
     Q_INVOKABLE void prepareValue(QString, QVariant);
@@ -143,6 +143,9 @@ public:
     bool isQuanAccount();
 //    Q_INVOKABLE virtual void    setCurrentRow(int row);
     Q_INVOKABLE bool saveChanges();
+    Q_INVOKABLE bool lockDocument();
+    Q_INVOKABLE void unlockDocument();
+
 };
 
 #endif // DOCUMENT_H

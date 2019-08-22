@@ -135,7 +135,9 @@ void Table::query(QString filter)
     {
         tableModel->setFilter(filter);
         if (tableModel->rowCount() == 0)
+        {
             tableModel->select();
+        }
 
         tableModel->setFullDebugInfo(fullDebugInfo);
 
@@ -178,7 +180,9 @@ void Table::query(QString filter)
         }
 
         if (tableModel->lastError().isValid())
-            app->showError(tableModel->lastError().text());
+        {
+           app->showError(tableModel->lastError().text());
+        }
     }
  }
 

@@ -22,7 +22,6 @@ public:
     virtual void    unlockDocument(int);
     virtual void    clearLockedDocumentList();
 
-    virtual void getColumnsProperties(QList<FieldType>*, QString, QString, int);
     virtual QString getILIKEexpression(QString, QString);
 
     virtual bool createNewDictionary(QString, QString = "", bool = true);
@@ -30,9 +29,11 @@ public:
     Q_INVOKABLE virtual int getInsertReturningId(QString, QString, QString);
 
     virtual void setFile(QString, FileType, QByteArray, bool = false);
+    virtual QDate toDate(QVariant);
 
-protected:
-    QSqlQuery               columnsProperties;
+    Q_INVOKABLE virtual QSqlQuery execQuery(QString, bool = true, QSqlDatabase* = nullptr);
+
+    virtual int querySize(QSqlQuery*);
 
 };
 

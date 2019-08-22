@@ -340,7 +340,7 @@ QString Dictionaries::getDictionarySqlSelectStatement(QString tableName, QString
         for (int i = 0; i < columnsProperties.count(); i++)
         {
             fld = columnsProperties.at(i);
-            if (!tables.contains(fld.table))
+            if (!tables.contains(fld.table) && fld.name == db->getObjectName(fld.table + ".код"))
             {
                 if (fld.table.left(9) == "документы" && fld.table.size() > 9)
                 {
@@ -370,7 +370,7 @@ QString Dictionaries::getDictionarySqlSelectStatement(QString tableName, QString
                 tables.append(fld.table);
             }
             if (selectList.size() > 0)
-            selectList.append(", ");
+                selectList.append(", ");
             selectList.append(QString("\"%1\".\"%2\" AS \"%3%4\"").arg(fld.table)
                                                                   .arg(fld.name)
                                                                   .arg(prefix.toUpper())

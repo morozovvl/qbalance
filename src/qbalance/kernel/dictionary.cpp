@@ -439,7 +439,7 @@ bool Dictionary::calculate(bool update) {
     bool lResult = false;
     if (Essence::calculate())
     {   // Если в вычислениях не было ошибки
-        if (update)
+        if (update && !isView)
         {
             saveChanges();
         }

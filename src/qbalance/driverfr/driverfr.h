@@ -688,7 +688,7 @@ public:
 
 class DriverFR : public QObject
 {
-//    Q_OBJECT
+    Q_OBJECT
 public:
     explicit DriverFR(QObject *parent = 0);
     ~DriverFR();
@@ -805,25 +805,25 @@ public:
 
 private:
 
-    virtual short int readByte();
-    virtual short int readBytes(unsigned char *, int);
-    virtual int readMessage(answer *);
-    virtual int sendENQ();
-    virtual int sendNAK();
-    virtual int sendACK();
-    virtual unsigned short int LRC(unsigned char *, int, int = 0);
-    virtual int readAnswer(answer*, short int = 0);
-    virtual int composeComm(command*, int, int, parameter*);
-    virtual int sendCommand(int, int, parameter*);
-    virtual int errHand(answer*);
-    virtual int evalint(unsigned char*, int);
-    virtual int32_t evalint32(unsigned char*, int);
-    virtual int64_t evalint64(unsigned char*, int);
-    virtual void evaldate(unsigned char*, struct tm*);
-    virtual void evaltime(unsigned char *, struct tm *);
-    virtual void DefineECRModeDescription();
-    virtual void logCommand(int, QString);
-    virtual int processCommand(int, parameter*, answer*);
+    short int readByte();
+    short int readBytes(unsigned char *, int);
+    int readMessage(answer *);
+    int sendENQ();
+    int sendNAK();
+    int sendACK();
+    unsigned short int LRC(unsigned char *, int, int = 0);
+    int readAnswer(answer*, short int = 0);
+    int composeComm(command*, int, int, parameter*);
+    int sendCommand(int, int, parameter*);
+    int errHand(answer*);
+    int evalint(unsigned char*, int);
+    int32_t evalint32(unsigned char*, int);
+    int64_t evalint64(unsigned char*, int);
+    void evaldate(unsigned char*, struct tm*);
+    void evaltime(unsigned char *, struct tm *);
+    void DefineECRModeDescription();
+    void logCommand(int, QString);
+    int processCommand(int, parameter*, answer*);
 
     QMyExtSerialPort*         serialPort;
     bool            remote;

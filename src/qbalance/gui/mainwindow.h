@@ -114,7 +114,7 @@ private:
 
       QToolBar* editToolBar;
 
-      QAction* dictionariesAct;
+//      QAction* dictionariesAct;
       QAction* dictAct;
       QAction* operAct;
       QAction* processAct;

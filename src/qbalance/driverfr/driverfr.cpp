@@ -493,8 +493,8 @@ bool DriverFR::open(QString port, int rate, int timeout, int password)
         }
 */
     }
-    if (!result)
-        app->showError(QString(failConnectErrorMessage).append(" ").append(serialPort->errorString()));
+//    if (!result)
+//        app->showError(QString(failConnectErrorMessage).append(" ").append(serialPort->errorString()));
     app->clearMessageOnStatusBar();
     return result;
 }

@@ -101,6 +101,7 @@ Document* Documents::getDocument(int docId)
 
 bool Documents::add()
 {
+    bool result = false;
     QDate date = QDate().currentDate();
     if ((date < TApplication::exemplar()->getBeginDate() || date > TApplication::exemplar()->getEndDate()))
     {
@@ -115,30 +116,20 @@ bool Documents::add()
         int strNum = db->addDoc(operNumber, date);
         if (strNum > 0)
         {
-            int newRow = tableModel->rowCount();
-/*
-            if (newRow == 0)
-            {
-                query();
-                setId(strNum);
-            }
-            else
-            {
-*/
-                tableModel->insertRow(newRow);          // POSSIBLY MEMORY LEAK
-                grdTable->reset();
-                grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
-                setCurrentRow(newRow);
-                updateCurrentRow(strNum);
-//            }
             setCurrentDocument(strNum);
+            int newRow = tableModel->rowCount();
+            tableModel->insertRow(newRow);          // POSSIBLY MEMORY LEAK
+            grdTable->reset();
+            grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+            setCurrentRow(newRow);
+            updateCurrentRow(strNum);
             saveOldValues();
             form->setButtons();
             grdTable->setFocus();
-            return true;
+            result = true;
         }
     }
-    return false;
+    return result;
 }
 
 
@@ -178,7 +169,7 @@ void Documents::view()
 
 void Documents::show()
 {
-    query();
+//    query();
     Dictionary::show();
 }
 
@@ -316,7 +307,7 @@ void Documents::setForm(QString formName)
 
 bool Documents::setTableModel(int)
 {
-    if (Essence::setTableModel(0))
+    if (Table::setTableModel(0))
     {
         FieldType fld;
         int keyColumn   = 0;
@@ -368,6 +359,7 @@ bool Documents::setTableModel(int)
         }
         tableModel->setSelectStatement(selectStatement);
         db->getColumnsRestrictions(tableName, &columnsProperties);
+
         return true;
     }
     return false;
@@ -395,7 +387,7 @@ void Documents::showItog()
 bool Documents::calculate(bool)
 {
     bool lResult = true;
-    saveChanges();            // сохраним изменения
+    Essence::saveChanges();            // сохраним изменения
     return lResult;
 }
 
@@ -491,7 +483,7 @@ QString Documents::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                             {        // Если поле ссылается на другую таблицу
                                 QString setDictName = fieldName.toLower();
                                 setDictName.remove(0, 4);                       // Получим наименование справочника, который входит в набор
-                                db->getColumnsProperties(&fields, setDictName);
+                                db->getColumnsProperties(&fields, setDictName, tableName);
                                 foreach (QString setDictFieldName, db->getFieldsList(setDictName, 0))
                                 {
                                     QString alias = QString("%1%2__%3").arg(prefix.size() > 0 ? prDictName__ : "").arg(setDictName.toUpper()).arg(setDictFieldName.toUpper());
@@ -514,7 +506,7 @@ QString Documents::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                             }
                             else
                             {
-                                db->getColumnsProperties(&fields, dictName);
+                                db->getColumnsProperties(&fields, dictName, tableName);
                                 QString alias = QString("%1%2__%3").arg(prefix.size() > 0 ? prDictName__ : "").arg(dictName.toUpper()).arg(fieldName.toUpper());
                                 if (!columns.contains(alias))
                                 {
@@ -533,7 +525,7 @@ QString Documents::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                     }
                     else
                     {  // Это обычный справочник
-                        db->getColumnsProperties(&fields, dictName);
+                        db->getColumnsProperties(&fields, dictName, tableName);
                         foreach (QString field, db->getFieldsList(dictName, 0))
                         {
                             QString alias = QString("%1%2__%3").arg(prefix.size() > 0 ? prDictName__ : "").arg(dictName.toUpper()).arg(field.toUpper());
@@ -578,7 +570,7 @@ QString Documents::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                               {        // Если поле ссылается на другую таблицу
                                   QString setDictName = fieldName.toLower();
                                   setDictName.remove(0, 4);                       // Получим наименование справочника, который входит в набор
-                                  db->getColumnsProperties(&fields, setDictName);
+                                  db->getColumnsProperties(&fields, setDictName, tableName);
                                   foreach (QString setDictFieldName, db->getFieldsList(setDictName, 0))
                                   {
                                       QString alias = QString("%1%2__%3").arg(prefix.size() > 0 ? prDictName__ : "").arg(setDictName.toUpper()).arg(setDictFieldName.toUpper());
@@ -601,7 +593,7 @@ QString Documents::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                               }
                               else
                               {
-                                  db->getColumnsProperties(&fields, dictName);
+                                  db->getColumnsProperties(&fields, dictName, tableName);
                                   QString alias = QString("%1%2__%3").arg(prefix.size() > 0 ? prDictName__ : "").arg(dictName.toUpper()).arg(fieldName.toUpper());
                                   if (!columns.contains(alias))
                                   {
@@ -620,7 +612,7 @@ QString Documents::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                     }
                     else
                     {  // Это обычный справочник
-                        db->getColumnsProperties(&fields, dictName);
+                        db->getColumnsProperties(&fields, dictName, tableName);
                         foreach (QString field, db->getFieldsList(dictName, 0))
                         {
                             QString alias = QString("%1%2__%3").arg(prefix.size() > 0 ? prDictName__ : "").arg(dictName.toUpper()).arg(field.toUpper());
@@ -640,7 +632,7 @@ QString Documents::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
             }
             // Приступим к генерации списка сальдо
             QString salTableName = db->getObjectName("сальдо");
-            db->getColumnsProperties(&fields, salTableName);
+            db->getColumnsProperties(&fields, salTableName, tableName);
             QString field;
             if (topersList->at(i).dbSaldoVisible)
             {
@@ -693,7 +685,7 @@ QString Documents::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
         if (topersList->at(0).attributes)
         {   // Если имеются атрибуты для документа в данной операции
             QString attrName = QString("%1%2").arg(db->getObjectName("атрибуты")).arg(oper).toLower();
-            db->getColumnsProperties(&fields, attrName);
+            db->getColumnsProperties(&fields, attrName, tableName);
             selectClause += ", a.*,";
             QString attrSelectClause = "";
             QString attrFromClause = "";
@@ -712,7 +704,7 @@ QString Documents::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                     for (int i = 0; i < fields.count(); i++)
                         if (fields.at(i).table == attrName && fields.at(i).name.toUpper() == fieldName.toUpper() && columnsProperties != nullptr)
                             db->addColumnProperties(columnsProperties, attrName, fieldName, fields.at(i).type, fields.at(i).length, fields.at(i).precision, false, false, 0, 1);
-                    db->getColumnsProperties(&fields, dictName);
+                    db->getColumnsProperties(&fields, dictName, tableName);
                     foreach (QString dictFieldName, db->getFieldsList(dictName, 0))
                     {
                         QString alias = QString("%1__%2").arg(dictName.toUpper()).arg(dictFieldName.toUpper());

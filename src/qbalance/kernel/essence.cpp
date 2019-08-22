@@ -136,7 +136,7 @@ void Essence::setFilter(const QString &filter)
 
 int Essence::getRowCount()
 {
-    return tableModel != 0 ? tableModel->rowCount() : 0;
+    return tableModel != nullptr ? tableModel->rowCount() : 0;
 }
 
 
@@ -280,13 +280,13 @@ void Essence::showAllGridSections()
 
 bool Essence::isDefaultForm()
 {
-    return form != 0 ? form->isDefaultForm() : false;
+    return form != nullptr ? form->isDefaultForm() : false;
 }
 
 
 bool Essence::isFormVisible()
 {
-    return form != 0 ? form->isVisible() : false;
+    return form != nullptr ? form->isVisible() : false;
 }
 
 
@@ -423,7 +423,7 @@ Dialog* Essence::getFormWidget()
     {
         open();
     }
-    return (form != 0 ? form->getFormWidget() : 0);
+    return (form != nullptr ? form->getFormWidget() : nullptr);
 }
 
 bool Essence::isVisible()
@@ -649,7 +649,8 @@ void Essence::query(QString filter, bool)
     }
     else
         Table::query(filter);
-    setCurrentRow(row);
+    if (row >= 0)
+        setCurrentRow(row);
  }
 
 
@@ -741,7 +742,7 @@ QString Essence::getPhotoFile(QString copyTo)
                                     if (urls.count() <= 1000)
                                     {
                                         // Если сетевой менеджер еще не подключен, то подключим его
-                                        if (m_networkAccessManager == 0)
+                                        if (m_networkAccessManager == nullptr)
                                         {   // Вызывается только один раз, по необходимости загрузить фотографию
                                             m_networkAccessManager = new QNetworkAccessManager(this);
                                             connect(m_networkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
@@ -919,7 +920,7 @@ bool Essence::open()
                 grdTable->setReadOnly(!lUpdateable);
             }
         }
-        reportScriptEngine = new DocumentScriptEngine(0, this);
+        reportScriptEngine = new DocumentScriptEngine(nullptr, this);
         reportScriptEngine->setReportContext(&printValues);
         reportScriptEngine->getReportContext()->setScriptEngine(reportScriptEngine);
         return true;
@@ -1011,7 +1012,7 @@ void Essence::openScriptEngine()
     {
         setScriptEngine();
         evaluateEngine();
-        if (dictionaries != 0 && dictionaries->getDocument() != nullptr)          // Если этот справочник является частью документа
+        if (dictionaries != nullptr && dictionaries->getDocument() != nullptr)          // Если этот справочник является частью документа
             scriptEngine->setIsDocumentScript(true);                                             // То обозначим контекст выполнения скриптов
 
         initFormEvent();
@@ -1175,7 +1176,7 @@ QString Essence::prepareBarCodeData()
 
 void Essence::afterRowChanged()
 {
-    if (scriptEngineEnabled && getScriptEngine() != 0 && isVisible())
+    if (scriptEngineEnabled && getScriptEngine() != nullptr && isVisible())
         getScriptEngine()->eventAfterRowChanged();
 }
 
@@ -1199,7 +1200,9 @@ void Essence::prepareSelectCurrentRowCommand()
 
 void Essence::updateCurrentRow(int strNum)
 {
-    if (preparedSelectCurrentRow.exec() && preparedSelectCurrentRow.first())
+    bool execRes = preparedSelectCurrentRow.exec();
+    bool firstRes = preparedSelectCurrentRow.first();
+    if (execRes && firstRes)
     {
         QModelIndex index = getCurrentIndex();
         int str = strNum == 0 ? index.row() : strNum;
@@ -1332,7 +1335,7 @@ void Essence::saveOldValues()
 {
     // Сохраним старые значения полей записи
     oldValues.clear();
-    if (tableModel != nullptr)
+    if (tableModel != nullptr && tableModel->rowCount()> 0)
     {
         foreach (QString field, tableModel->getFieldsList())
         {
@@ -1359,7 +1362,7 @@ void Essence::restoreOldValues()
 
 void Essence::barCodeReaded(QString barCode)
 {
-    if (scriptEngineEnabled && scriptEngine != 0 && enabled)
+    if (scriptEngineEnabled && scriptEngine != nullptr && enabled)
     {
         scriptEngine->eventBarCodeReaded(barCode);
     }
@@ -1372,7 +1375,7 @@ void Essence::barCodeReaded(QString barCode)
 
 void Essence::cardCodeReaded(QString cardCode)
 {
-    if (scriptEngineEnabled && scriptEngine != 0 && enabled && cardReaderEnabled)
+    if (scriptEngineEnabled && scriptEngine != nullptr && enabled && cardReaderEnabled)
     {
         scriptEngine->eventCardCodeReaded(cardCode);
     }
@@ -1501,7 +1504,7 @@ void Essence::print(QString fileName, bool newFile, bool justPrint, int copyCoun
 
 bool Essence::isDocumentLoading()
 {
-    if (dictionaries != 0 && dictionaries->getDocument() != nullptr)
+    if (dictionaries != nullptr && dictionaries->getDocument() != nullptr)
     {
         // И в данный момент происходит загрузка документа из файла (или другого источника)
         if (dictionaries->getDocument()->isLoading())

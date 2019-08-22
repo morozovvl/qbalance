@@ -26,6 +26,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/passwordform.h"
 #include "../gui/messagewindow.h"
 #include "../kernel/dictionaries.h"
+#include "mymultilist.h"
 
 
 DBFactory::DBFactory() : QObject()
@@ -39,7 +40,6 @@ DBFactory::DBFactory() : QObject()
     extDbExist = false;
 
     errorText.clear();
-    //    clearError();
     commands.clear();
 
     hostName = "localhost";
@@ -457,28 +457,6 @@ bool DBFactory::execSystem(QString command, QString tableName)
 }
 
 
-QSqlQuery DBFactory::execQuery(QString str, bool showError, QSqlDatabase* extDb)
-{
-    app->debug(1, QString("Query: %1").arg(str));
-    clearError();
-    QSqlQuery result;
-    QSqlQuery* query;
-    if (extDb != nullptr && extDb->isValid())
-        query = new QSqlQuery(*extDb);
-    else
-        query = new QSqlQuery(*db);
-
-    if (!query->exec(str) && showError)
-    {
-        setError(query->lastError().text());
-    }
-    query->first();
-    result = *query;
-    delete query;
-    return result;
-}
-
-
 QHash<int, UserInfo> DBFactory::getUserList()
 {
     QHash<int, UserInfo> result;
@@ -647,6 +625,97 @@ void DBFactory::getColumnsRestrictions(QString table, QList<FieldType>* columns)
         columnsRestrictions.next();
     }
 }
+
+void DBFactory::getColumnsProperties(QList<FieldType>* result, QString table, QString originTable, int level)
+{
+    QString fldTable = table;
+    QString tableAlias = table;
+    if (table.left(9) == "документы" && table.size() > 9)
+    {
+        table = "vw_спрдокументы";
+    }
+
+    QList<ColumnPropertyType> values = columnsProperties.values(table);
+    for (int i = 0; i < values.size(); i++)
+    {
+        FieldType fld;
+        fld.table  = tableAlias;
+        fld.name      = values.at(i).name;
+        fld.type      = values.at(i).type;
+        fld.length    = values.at(i).length;
+        fld.precision = values.at(i).precision;
+        fld.constReadOnly = false;
+        if (fld.name == getObjectName("код"))
+            fld.readOnly = true;
+        else
+        {
+            if (level > 0)
+                fld.readOnly = true;        // Если это связанный справочник, то у него любое поле запрещено изменять напрямую
+            else
+                fld.readOnly  = values.at(i).updateable.toUpper() == "YES" ? false : true;
+        }
+        fld.level = level;
+        // Если это столбец из связанной таблицы, то наименование столбца приведем к виду "таблица__столбец"
+        if (originTable.size() > 0 && originTable != table)
+        {
+            fld.column = fldTable.toUpper() + "__" + fld.name;
+            fld.constReadOnly = true;
+        }
+        else
+            fld.column = fld.name;
+        fld.header = fld.column;
+        fld.headerExist = false;        // Пока мы не нашли для столбца заголовок
+        fld.number    = 0;
+        if (table == getObjectName("документы"))
+        {
+            if (fld.column == getObjectName("документы.комментарий"))
+            {
+                fld.readOnly = false;
+                fld.constReadOnly = false;
+            }
+            else
+            {
+                fld.readOnly = true;
+                fld.constReadOnly = true;
+            }
+        }
+        if (table == getObjectName("проводки"))
+        {
+            if ((fld.column == getObjectName("проводки.дбкод")) ||
+                (fld.column == getObjectName("проводки.кркод")) ||
+                (fld.column == getObjectName("проводки.кол")) ||
+                (fld.column == getObjectName("проводки.цена")) ||
+                (fld.column == getObjectName("проводки.сумма")))
+            {
+                fld.readOnly = false;
+                fld.constReadOnly = false;
+            }
+            else
+            {
+                fld.readOnly = true;
+                fld.constReadOnly = true;
+            }
+        }
+        result->append(fld);
+
+        if (fld.name.left(4) == getObjectName("код") + "_" && level == 0)   // обработаем ссылку на связанную таблицу
+        {
+            QString dictName = fld.name;
+            dictName.remove(0, 4);                          // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
+            dictName = dictName.toLower();                  // и переведем в нижний регистр, т.к. имена таблиц в БД могут быть только маленькими буквами
+            getColumnsProperties(result, dictName, table, level + 1);
+
+            if (dictName.left(9) == "документы" && dictName.size() > 9)
+            {
+                QString oper = dictName.remove("документы");
+                QString dictName = QString("докатрибуты%1").arg(oper);
+                if (isTableExists(dictName))
+                    getColumnsProperties(result, dictName, table, level + 1);
+            }
+        }
+    }
+}
+
 
 
 int DBFactory::getTypeId(QString dict)
@@ -1139,7 +1208,9 @@ int DBFactory::addDoc(int operNumber, QDate date)
 void DBFactory::removeDoc(int docId)
 {
     clearError();
+    lockDocument(docId);
     exec(QString("SELECT sp_DeleteDoc(%1);").arg(docId));
+    unlockDocument(docId);
 }
 
 
@@ -1167,8 +1238,12 @@ void DBFactory::saveDocAttribute(int operNumber, int docId, QString attributes)
 
 bool DBFactory::removeDocStr(int docId, int nDocStr)
 {
+    bool result = false;
     clearError();
-    return exec(QString("SELECT sp_DeleteDocStr(%1,%2);").arg(docId).arg(nDocStr));
+    lockDocument(docId);
+    result = exec(QString("SELECT sp_DeleteDocStr(%1,%2);").arg(docId).arg(nDocStr));
+    unlockDocument(docId);
+    return result;
 }
 
 
@@ -1399,9 +1474,8 @@ QStringList DBFactory::getFilesList(QString fileName, FileType type, bool extend
     {
         QString text;
         if (app->isSA() || type != ReportTemplateFileType)
-            text = QString("SELECT * FROM %1 WHERE %2 ILIKE '%3' AND %4 = %5;").arg(getObjectNameCom("файлы"))
-                                                                                  .arg(getObjectNameCom("файлы.имя"))
-                                                                                  .arg(fileName + ".%")
+            text = QString("SELECT * FROM %1 WHERE %2 AND %3 = %4;").arg(getObjectNameCom("файлы"))
+                                                                                .arg(getILIKEexpression(getObjectNameCom("файлы.имя"), "'" + fileName + ".%'"))
                                                                                   .arg(getObjectNameCom("файлы.тип"))
                                                                                   .arg(type);
         else

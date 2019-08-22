@@ -80,7 +80,12 @@ void MySqlRelationalTableModel::setSelectStatement(QString string)
 
 bool MySqlRelationalTableModel::select()
 {
-    return QSqlRelationalTableModel::select();
+    bool result =QSqlRelationalTableModel::select();
+
+    while (canFetchMore())
+        fetchMore();
+
+    return result;
 }
 
 
@@ -311,11 +316,8 @@ QString MySqlRelationalTableModel::prepareValueToWrite(QString type, QVariant re
     if (type == "CHARACTER" || type == "CHARACTER VARYING" || type == "TEXT")
     {
         value = recValue.toString();
-        if (value.size() > 0)
-        {
-            value.replace("'", "''");
-            value = QString("'%1'").arg(value);
-        }
+        value.replace("'", "''");
+        value = QString("'%1'").arg(value);
     }
     else if (type == "DATE" || type == "DATETIME" || type.left(9) == "TIMESTAMP")
     {

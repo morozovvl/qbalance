@@ -1,7 +1,5 @@
-CONFIG += plugin \
-        widgets \
-        core
-
+CONFIG += plugin
+CONFIG += debug
 
 unix:TARGET = ../../../plugins/driverfr
 win32:TARGET = ../../../../plugins/driverfr
@@ -12,9 +10,9 @@ DEPENDPATH += .
 INCLUDEPATH += .
 
 HEADERS += driverfr.h \
-           driverfrinterface.h
+            driverfrplugin.h
 SOURCES += driverfr.cpp \
-           driverfrinterface.cpp
+            driverfrplugin.cpp
 
 unix:MOC_DIR = ../../../.moc
 win32:MOC_DIR = ../../../.moc

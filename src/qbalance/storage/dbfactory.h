@@ -34,6 +34,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include "mysqlrelationaltablemodel.h"
 #include "filetype.h"
+#include "mymultilist.h"
 
 
 class TApplication;
@@ -122,11 +123,13 @@ struct UpdateIds
 };
 
 
-struct ColumnProperties
+struct ColumnPropertyType
 {
+    QString     name;
     QString     type;
     int         length;
     int         precision;
+    QString     updateable;
 };
 
 
@@ -174,21 +177,21 @@ public:
 
 
     // Работа с бухгалтерскими документами
-    virtual bool    lockDocument(int) { return true; }
-    virtual void    unlockDocument(int) {;}
+    Q_INVOKABLE virtual bool    lockDocument(int) { return true; }
+    Q_INVOKABLE virtual void    unlockDocument(int) {;}
     virtual void    clearLockedDocumentList() {;}
 
-    virtual int addDoc(int operNumber, QDate date);                                                             // Создать новый документ по типовой операции operNumber с датой date
-    virtual void removeDoc(int docId);                                                                          // Удалить документ с идентификатором docId
-    virtual int addDocStr(int operNumber, int docId, QString cParam = "''", int nQuan = 1, int nDocStr = 0);    // Добавить новую строку в документ по типовой операции operNumber
+    virtual int addDoc(int, QDate);                                                             // Создать новый документ по типовой операции operNumber с датой date
+    Q_INVOKABLE virtual void removeDoc(int);                                                    // Удалить документ с идентификатором docId
+    virtual int addDocStr(int, int, QString = "''", int = 1, int = 0);    // Добавить новую строку в документ по типовой операции operNumber
                                                                                                         // с идентификатором docId. В строке cParam через запятую находится информация об идентификаторах объектов учета,
                                                                                                         // их количестве, цене и сумме или строка cParam может быть пустой
                                                                                                         // nQuan - сколько строк вставить, nDocStr - вставить строку с номером
-    bool removeDocStr(int docId, int nDocStr);                                                          // Удалить строку в документе docId под номером nDocStr
+    virtual bool removeDocStr(int, int);                                                          // Удалить строку в документе docId под номером nDocStr
     void saveDocAttribute(int, int, QString);
     QSqlQuery getDocumentAddQueriesList(int);
 
-    QSqlQuery getToper(int operNumber);
+    QSqlQuery getToper(int);
     QVariant getTopersProperties(int, QString);
 
     void getToperData(int oper, QList<ToperType>* topersList);
@@ -223,7 +226,7 @@ public:
     QStringList getFilesList(QString, FileType, bool = false);
     bool isFileExist(QString, FileType, bool = false);
     void removeFile(QString, FileType, bool = false);
-    virtual void setFile(QString, FileType, QByteArray, bool = false) { ; }
+    virtual void setFile(QString, FileType, QByteArray, bool = false) = 0;
     void copyFile(QString, QString, bool = false);
 
 
@@ -231,7 +234,7 @@ public:
     QStringList getFieldsList(QHash<int, FieldType>*);
     QStringList getFieldsList(QString tableName, int = -1);
     bool isSet(QString tableName);
-    virtual void getColumnsProperties(QList<FieldType>*, QString = "", QString = "", int = 0) { ; }
+    virtual void getColumnsProperties(QList<FieldType>*, QString = "", QString = "", int = 0);
     void getColumnsRestrictions(QString, QList<FieldType>*);                    // Устанавливает ограничение на просматриваемые поля исходя из разграничений доступа
     QString getPhotoDatabase();
     void insertSaldo(QString , int);                 // Вставляет в сальдо новую строку
@@ -240,11 +243,11 @@ public:
     QHash<int, UserInfo> getUserList();
 
     // Работа с ошибками
-    Q_INVOKABLE bool exec(QString = "", bool = true, QSqlDatabase* = nullptr);
+    Q_INVOKABLE virtual bool exec(QString = "", bool = true, QSqlDatabase* = nullptr);
     Q_INVOKABLE void exec(QStringList);
     Q_INVOKABLE bool execQueryFile(QString, bool = true);
     bool execSystem(QString command, QString tableName);       // Будет вызываться там, где необходима проверка изменения системных таблиц
-    Q_INVOKABLE QSqlQuery execQuery(QString, bool = true, QSqlDatabase* = nullptr);
+    Q_INVOKABLE virtual QSqlQuery execQuery(QString, bool = true, QSqlDatabase* = nullptr) = 0;
 
     Q_INVOKABLE virtual QString getObjectName(const QString&);       // транслирует имена объектов БД из "внутренних" в реальные наименования
     Q_INVOKABLE virtual QString getObjectNameCom(const QString&);                        // то же самое, только результат возвращает в кавычках (применяется при генерации SQL команд)
@@ -304,10 +307,13 @@ public:
     virtual int getSecDiff();
     virtual QString getILIKEexpression(QString, QString) { return ""; }       // Возвращает аналог выражения ILIKE для разных БД
     QString getDictPrototype(QString);
+    virtual QDate toDate(QVariant) = 0;
 
     virtual QString getTrueValue();
     virtual QString getFalseValue();
     virtual QString getCurrentTimeStamp();
+
+    virtual int querySize(QSqlQuery*) = 0;
 
 protected:
     TApplication*           app;
@@ -341,6 +347,8 @@ protected:
     int                     errorNumber;
     int                     secDiff;
     QHash<QString, QString>   dictsPrototypes;
+//    QMultiMap<QString, ColumnPropertyType>  columnsProperties;
+    MyMultiList<ColumnPropertyType>  columnsProperties;
 
     void setError(QString);
     void initObjectNames();
@@ -350,7 +358,7 @@ protected:
     int getTypeId(QString);
     void clearError();
     bool execPSql(QStringList command, QString user, QString password);
-    virtual void reloadColumnProperties() { ; }
+    virtual void reloadColumnProperties() = 0;
     virtual void reloadColumnHeaders();
 
 private slots:

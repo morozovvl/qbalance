@@ -4,13 +4,323 @@
 #include <QtSql/QSqlDriver>
 #include <QtSql/QSqlRecord>
 #include "sqlitedbfactory.h"
+#include <math.h>
 #include "../kernel/app.h"
 #include <iostream>
+#include <sstream>
 #include "../../sqlite/sqlite3.h"
-//#include "../../sqlite/sqlite3ext.h"
+//#include "fixed_point.h"
+
+//using namespace std;
+
+//#define double fpml::fixed_point<int32_t, 24>
 
 
-using namespace std;
+static QString toString(double val)
+{
+    QString result;
+/*
+    std::stringstream buffer;
+    buffer.precision(-3);
+    buffer << val;
+    result = QString().fromUtf8(buffer.str().c_str());
+    qDebug() << QString("=== %1 %2").arg(val).arg(result);
+*/
+    result = QString("%1").arg(val);
+    qDebug() << "===" << val << result;
+    return result;
+}
+
+
+static double fromString(const char * val)
+{
+    double result;
+/*
+    std::stringstream buffer;
+    buffer.precision(-3);
+    buffer << val;
+    buffer >> result;
+    qDebug() << QString("*** %1 %2 %3").arg(val).arg(buffer.str().c_str()).arg(toString(result));
+*/
+    result = QString(val).toDouble();
+    qDebug() << "***" << val << result;
+    return result;
+}
+
+
+static void calcEndSaldo(sqlite3 *db, QString acc, long id)
+{
+    sqlite3_stmt *stmt;
+    int rc;
+
+   double      quan        = 0.0;
+   double      saldo       = 0.0;
+   double      dbQuan      = 0.0;
+   double      debet       = 0.0;
+   double      crQuan      = 0.0;
+   double      credit      = 0.0;
+   double      endQuan     = 0.0;
+   double      endSaldo    = 0.0;
+   double      endPrice    = 0.0;
+
+    QString command = QString("SELECT КОЛ, САЛЬДО, ДБКОЛ, ДЕБЕТ, КРКОЛ, КРЕДИТ FROM сальдо WHERE СЧЕТ = '%1' AND КОД = %2;").arg(acc).arg(id);
+    sqlite3_prepare_v2(db, command.toUtf8().data(), -1, &stmt, NULL);
+    if ((rc = sqlite3_step(stmt)) == SQLITE_ROW)
+    {
+        quan    = sqlite3_column_double(stmt, 0);
+        saldo   = sqlite3_column_double(stmt, 1);
+        dbQuan  = sqlite3_column_double(stmt, 2);
+        debet   = sqlite3_column_double(stmt, 3);
+        crQuan  = sqlite3_column_double(stmt, 4);
+        credit  = sqlite3_column_double(stmt, 5);
+    }
+    sqlite3_finalize(stmt);
+
+    endQuan = quan + dbQuan - crQuan;
+    endSaldo = saldo + debet - credit;
+//    if (endQuan != zero)
+//    {
+//        endPrice = endSaldo / endQuan;
+//    }
+
+    command = QString("UPDATE сальдо SET КОНКОЛ = %1, КОНСАЛЬДО = %2, КОНЦЕНА = %3 WHERE СЧЕТ = '%4' AND КОД = %5;")
+            .arg(toString(endQuan))
+            .arg(toString(endSaldo))
+            .arg(toString(endPrice))
+            .arg(acc)
+            .arg(id);
+
+    sqlite3_exec(db, command.toUtf8().data(), NULL, NULL, NULL);
+}
+
+
+
+
+static void insertNewSaldo(sqlite3 *db, QString acc, long id)
+{
+    sqlite3_stmt *stmt;
+    int analiticAcc = 0;
+
+    sqlite3_prepare_v2(db, QString("SELECT АНАЛИТИКА FROM счета WHERE СЧЕТ = '%1';").arg(acc).toUtf8().data(), -1, &stmt, NULL);
+    if (sqlite3_step(stmt) == SQLITE_ROW)
+        analiticAcc = sqlite3_column_int(stmt, 0);
+    sqlite3_finalize(stmt);
+
+    if (analiticAcc == 1)
+    {
+        if (id > 0)
+        {
+            sqlite3_prepare_v2(db, QString("SELECT COUNT(*) FROM сальдо WHERE СЧЕТ = '%1' AND КОД = %2;").arg(acc).arg(id).toUtf8().data(), -1, &stmt, NULL);
+            if (sqlite3_step(stmt) == SQLITE_ROW)
+            {
+                if (sqlite3_column_int(stmt, 0) == 0)
+                    sqlite3_exec(db, QString("INSERT INTO сальдо (СЧЕТ, КОД)  VALUES ('%1', %2);").arg(acc).arg(id).toUtf8().data(), NULL, NULL, NULL);
+            }
+            sqlite3_finalize(stmt);
+        }
+    }
+    else
+    {
+        sqlite3_prepare_v2(db, QString("SELECT COUNT(*) FROM сальдо WHERE СЧЕТ = '%1' AND КОД = 0;").arg(acc).toUtf8().data(), -1, &stmt, NULL);
+        if (sqlite3_step(stmt) == SQLITE_ROW)
+        {
+            if (sqlite3_column_int(stmt, 0) == 0)
+                sqlite3_exec(db, QString("INSERT INTO сальдо (СЧЕТ, КОД)  VALUES ('%1', 0);").arg(acc).toUtf8().data(), NULL, NULL, NULL);
+        }
+        sqlite3_finalize(stmt);
+    }
+}
+
+
+static void calcDbSaldo(sqlite3 *db, QString acc, long id,double quan,double sum)
+{
+    sqlite3_stmt *stmt;
+    int rc;
+
+    int balanceAcc = 0;     // Счет является балансовым (1) или нет (0)
+    int analiticAcc = 0;
+
+    sqlite3_prepare_v2(db, QString("SELECT БАЛАНС, АНАЛИТИКА FROM счета WHERE СЧЕТ = '%1';").arg(acc).toUtf8().data(), -1, &stmt, NULL);
+    if ((rc = sqlite3_step(stmt)) == SQLITE_ROW)
+    {
+        balanceAcc = sqlite3_column_int(stmt, 0);
+        analiticAcc = sqlite3_column_int(stmt, 1);
+    }
+    sqlite3_finalize(stmt);
+
+    if (balanceAcc == 1)
+    {
+       double      dbQuan;
+       double      debet;
+
+        QString command = QString("SELECT ДБКОЛ, ДЕБЕТ FROM сальдо WHERE СЧЕТ = '%1' AND КОД = %2;").arg(acc).arg(id);
+        sqlite3_prepare_v2(db, command.toUtf8().data(), -1, &stmt, NULL);
+        if ((rc = sqlite3_step(stmt)) == SQLITE_ROW)
+        {
+            dbQuan    = sqlite3_column_double(stmt, 0);
+            debet   = sqlite3_column_double(stmt, 1);
+        }
+        sqlite3_finalize(stmt);
+
+        dbQuan += quan;
+        debet += sum;
+
+        command = QString("UPDATE сальдо SET ДБКОЛ = %1, ДЕБЕТ = %2 WHERE СЧЕТ = '%3' AND КОД = %4;")
+                .arg(analiticAcc == 0 ? "0.0" : toString(dbQuan))
+            .arg(toString(debet))
+            .arg(acc)
+            .arg(id);
+
+        rc = sqlite3_exec(db, command.toUtf8().data(), NULL, NULL, NULL);
+        calcEndSaldo(db, acc, id);
+    }
+}
+
+
+
+
+static void calcCrSaldo(sqlite3 *db, QString acc, long id,double quan,double sum)
+{
+    sqlite3_stmt *stmt;
+    int rc;
+
+    int balanceAcc = 0;     // Счет является балансовым (1) или нет (0)
+    int analiticAcc = 0;
+
+    sqlite3_prepare_v2(db, QString("SELECT БАЛАНС, АНАЛИТИКА FROM счета WHERE СЧЕТ = '%1';").arg(acc).toUtf8().data(), -1, &stmt, NULL);
+    if ((rc = sqlite3_step(stmt)) == SQLITE_ROW)
+    {
+        balanceAcc = sqlite3_column_int(stmt, 0);
+        analiticAcc = sqlite3_column_int(stmt, 1);
+    }
+    sqlite3_finalize(stmt);
+
+    if (balanceAcc == 1)
+    {
+       double crQuan;
+       double credit;
+
+        QString command = QString("SELECT КРКОЛ, КРЕДИТ FROM сальдо WHERE СЧЕТ = '%1' AND КОД = %2;").arg(acc).arg(id);
+        sqlite3_prepare_v2(db, command.toUtf8().data(), -1, &stmt, NULL);
+        if ((rc = sqlite3_step(stmt)) == SQLITE_ROW)
+        {
+            crQuan   = sqlite3_column_double(stmt, 0);
+            credit   = sqlite3_column_double(stmt, 1);
+        }
+        sqlite3_finalize(stmt);
+
+        crQuan += quan;
+        credit += sum;
+
+        qDebug() << toString(credit) << toString(sum);
+
+        command = QString("UPDATE сальдо SET КРКОЛ = %1, КРЕДИТ = %2 WHERE СЧЕТ = '%3' AND КОД = %4;")
+                .arg(analiticAcc == 0 ? "0.0" : toString(crQuan))
+            .arg(toString(credit))
+            .arg(acc)
+            .arg(id);
+
+        qDebug() << command;
+
+        rc = sqlite3_exec(db, command.toUtf8().data(), NULL, NULL, NULL);
+        calcEndSaldo(db, acc, id);
+    }
+}
+
+
+
+
+static void insertPrvFunc(sqlite3_context *context, int, sqlite3_value **argv)
+{
+    sqlite3 *db = sqlite3_context_db_handle(context);
+    sqlite3_stmt *stmt;
+
+    QString     newDbAcc((char*)sqlite3_value_text(argv[0]));
+    long        newDbId = sqlite3_value_int64(argv[1]);
+    QString     newCrAcc((char*)sqlite3_value_text(argv[2]));
+    long        newCrId = sqlite3_value_int64(argv[3]);
+   double      newQuan =sqlite3_value_double(argv[4]);
+   double      newSum = fromString((char*)sqlite3_value_text(argv[5]));
+    QString     newOper((char*)sqlite3_value_text(argv[6]));
+
+    sqlite3_prepare_v2(db, QString("SELECT СЧИТАТЬ FROM топер WHERE ОПЕР = %1 AND НОМЕР = 1;").arg(newOper).toUtf8().data(), -1, &stmt, NULL);
+    if (sqlite3_step(stmt) == SQLITE_ROW)
+        if (sqlite3_column_int(stmt, 0) == 1)
+        {
+            insertNewSaldo(db, newDbAcc, newDbId);
+            calcDbSaldo(db, newDbAcc, newDbId, newQuan, newSum);
+
+            insertNewSaldo(db, newCrAcc, newCrId);
+            calcCrSaldo(db, newCrAcc, newCrId, -newQuan, -newSum);
+        }
+    sqlite3_finalize(stmt);
+}
+
+
+
+
+static void calcPrvFunc(sqlite3_context *context, int, sqlite3_value **argv)
+{
+    sqlite3 *db = sqlite3_context_db_handle(context);
+
+    QString     oldDbAcc((char*)sqlite3_value_text(argv[0]));
+    long        oldDbId = sqlite3_value_int64(argv[1]);
+    QString     oldCrAcc((char*)sqlite3_value_text(argv[2]));
+    long        oldCrId = sqlite3_value_int64(argv[3]);
+   double      oldQuan = sqlite3_value_double(argv[4]);
+   double      oldSum = fromString((char*)sqlite3_value_text(argv[5]));
+    QString     newDbAcc((char*)sqlite3_value_text(argv[6]));
+    long        newDbId = sqlite3_value_int64(argv[7]);
+    QString     newCrAcc((char*)sqlite3_value_text(argv[8]));
+    long        newCrId = sqlite3_value_int64(argv[9]);
+   double      newQuan = sqlite3_value_double(argv[10]);
+   double      newSum = fromString((char*)sqlite3_value_text(argv[11]));
+
+    // Cначала обработаем по дебетовому обороту
+    if (oldDbId == newDbId)	// Ссылка на дебетовый объект не изменилась
+        calcDbSaldo(db, oldDbAcc, oldDbId, newQuan - oldQuan, newSum - oldSum);
+    else
+    {
+        calcDbSaldo(db, oldDbAcc, oldDbId, -oldQuan, -oldSum);
+        insertNewSaldo(db, oldDbAcc, newDbId);
+        calcDbSaldo(db, oldDbAcc, newDbId, newQuan, newSum);
+    }
+
+    // Теперь обработаем по кредитовому обороту
+
+    if (oldCrId == newCrId)	// Ссылка на кредитовый объект не изменилась
+        calcCrSaldo(db, oldCrAcc, oldCrId, newQuan - oldQuan, newSum - oldSum);
+    else
+    {
+        calcCrSaldo(db, oldCrAcc, oldCrId, -oldQuan, -oldSum);
+        insertNewSaldo(db, oldCrAcc, newCrId);
+        calcCrSaldo(db, oldCrAcc, newCrId, newQuan, newSum);
+    }
+}
+
+
+
+
+static void removePrvFunc(sqlite3_context *context, int, sqlite3_value **argv)
+{
+    sqlite3 *db = sqlite3_context_db_handle(context);
+
+    QString     oldDbAcc((char*)sqlite3_value_text(argv[0]));
+    long        oldDbId = sqlite3_value_int64(argv[1]);
+    QString     oldCrAcc((char*)sqlite3_value_text(argv[2]));
+    long        oldCrId = sqlite3_value_int64(argv[3]);
+   double      oldQuan = sqlite3_value_double(argv[4]);
+   double      oldSum = fromString((char*)sqlite3_value_text(argv[5]));
+
+    // Cначала обработаем по дебетовому обороту
+    calcDbSaldo(db, oldDbAcc, oldDbId, -oldQuan, -oldSum);
+
+    // Теперь обработаем по кредитовому обороту
+    calcCrSaldo(db, oldCrAcc, oldCrId, -oldQuan,  -oldSum);
+}
+
+
+
 
 
 static void upperFunc(sqlite3_context *context, int argc, sqlite3_value **argv)
@@ -166,8 +476,14 @@ bool SQLiteDBFactory::open(QString login, QString password)
                     sqlite3_create_function(db_handle, "encode", 2, SQLITE_UTF8, NULL, &encodeFunc, NULL, NULL);
                     sqlite3_create_function(db_handle, "ENCODE", 2, SQLITE_UTF8, NULL, &encodeFunc, NULL, NULL);
                     sqlite3_create_function(db_handle, "Encode", 2, SQLITE_UTF8, NULL, &encodeFunc, NULL, NULL);
+
+                    sqlite3_create_function(db_handle, "insertPrv", 7, SQLITE_UTF8, NULL, &insertPrvFunc, NULL, NULL);
+                    sqlite3_create_function(db_handle, "calcPrv", 12, SQLITE_UTF8, NULL, &calcPrvFunc, NULL, NULL);
+                    sqlite3_create_function(db_handle, "removePrv", 6, SQLITE_UTF8, NULL, &removePrvFunc, NULL, NULL);
+
                 }
             }
+
             return true;
         }
     }
@@ -216,117 +532,62 @@ void SQLiteDBFactory::loadSystemTables()
 }
 
 
-void SQLiteDBFactory::getColumnsProperties(QList<FieldType>* result, QString table, QString originTable, int level)
+void SQLiteDBFactory::_reloadColumnProperties(QString _t, QString _u)
 {
-    QSqlQuery q = execQuery(QString("PRAGMA table_info(%1);").arg(table));
-    q.first();
-    while (q.isValid())
+
+    QSqlQuery query = execQuery(QString("SELECT tbl_name FROM sqlite_master s WHERE TYPE = '%1';").arg(_t));
+
+    for (query.first(); query.isValid(); query.next())
     {
-        QString type = "";
-        QString length = "";
-        QString precision = "";
-        QString incomeType = q.record().value("type").toString().toUpper();
-        int leftBracket = incomeType.indexOf("(");
-        int rightBracket = incomeType.indexOf(")");
-        if (leftBracket >= 0)
+        QString tableName = query.record().value(0).toString();
+        QSqlQuery query1 = execQuery(QString("PRAGMA table_info(%1);").arg(tableName));
+        for (query1.first(); query1.isValid(); query1.next())
         {
-            type = incomeType.left(leftBracket);
-            length = incomeType.mid(leftBracket + 1, rightBracket - leftBracket - 1);
-            int commaPos = length.indexOf(",");
-            if (commaPos >= 0)
-            {
-                precision = length.mid(commaPos + 1);
-                length = length.left(commaPos);
-            }
-        }
-        else
-        {
-            type = incomeType;
-            length = "0";
-            precision = "0";
-        }
+            QSqlRecord record = query1.record();
+            ColumnPropertyType col;
 
-
-        FieldType fld;
-        fld.table  = table;
-        fld.name      = q.record().value("name").toString().trimmed();
-        fld.type      = type;
-        fld.length    = length.toInt();
-        fld.precision = precision.toInt();
-        fld.constReadOnly = false;
-        if (fld.name == getObjectName("код"))
-            fld.readOnly = true;
-        else
-        {
-            if (level > 0)
-                fld.readOnly = true;        // Если это связанный справочник, то у него любое поле запрещено изменять напрямую
-            else
+            QString type = "";
+            QString length = "";
+            QString precision = "";
+            QString incomeType = record.value("type").toString().toUpper();
+            int leftBracket = incomeType.indexOf("(");
+            int rightBracket = incomeType.indexOf(")");
+            if (leftBracket >= 0)
             {
-                fld.readOnly  = false;
-//                fld.readOnly  = record.value("updateable").toString().trimmed().toUpper() == "YES" ? false : true;
-            }
-        }
-        fld.level = level;
-        // Если это столбец из связанной таблицы, то наименование столбца приведем к виду "таблица__столбец"
-        if (originTable.size() > 0 && originTable != table)
-            fld.column = table.toUpper() + "__" + fld.name;
-        else
-            fld.column = fld.name;
-        fld.header = fld.column;
-        fld.headerExist = false;        // Пока мы не нашли для столбца заголовок
-        fld.number    = 0;
-        if (table == getObjectName("документы"))
-        {
-            if (fld.column == getObjectName("документы.комментарий"))
-            {
-                fld.readOnly = false;
-                fld.constReadOnly = false;
-            }
-            else
-            {
-                fld.readOnly = true;
-                fld.constReadOnly = true;
-            }
-        }
-        if (table == getObjectName("проводки"))
-        {
-            if ((fld.column == getObjectName("проводки.дбкод")) ||
-                (fld.column == getObjectName("проводки.кркод")) ||
-                (fld.column == getObjectName("проводки.кол")) ||
-                (fld.column == getObjectName("проводки.цена")) ||
-                (fld.column == getObjectName("проводки.сумма")))
-            {
-                fld.readOnly = false;
-                fld.constReadOnly = false;
-            }
-            else
-            {
-                fld.readOnly = true;
-                fld.constReadOnly = true;
-            }
-        }
-        result->append(fld);
-
-        if (fld.name.left(4) == getObjectName("код") + "_" && level == 0)   // обработаем ссылку на связанную таблицу
-        {
-            QString dictName = fld.name;
-            dictName.remove(0, 4);                          // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
-            dictName = dictName.toLower();                  // и переведем в нижний регистр, т.к. имена таблиц в БД могут быть только маленькими буквами
-            getColumnsProperties(result, dictName, table, level + 1);
-
-            if (dictName.left(9) == "документы" && dictName.size() > 9)
-            {
-                QString oper = dictName.remove("документы");
-                QString dictName = QString("докатрибуты%1").arg(oper);
-                if (isTableExists(dictName))
+                type = incomeType.left(leftBracket);
+                length = incomeType.mid(leftBracket + 1, rightBracket - leftBracket - 1);
+                int commaPos = length.indexOf(",");
+                if (commaPos >= 0)
                 {
-                    getColumnsProperties(result, dictName, table, level + 1);
+                    precision = length.mid(commaPos + 1);
+                    length = length.left(commaPos);
                 }
             }
-        }
+            else
+            {
+                type = incomeType;
+                length = "0";
+                precision = "0";
+            }
 
-        q.next();
+            col.name      = record.value("name").toString().trimmed();
+            col.type      = type;
+            col.length    = QString(length).toInt();
+            col.precision = QString(precision).toInt();
+            col.updateable = _u;
+
+            columnsProperties.insert(tableName, col);
+        }
     }
+}
+
+
+void SQLiteDBFactory::reloadColumnProperties()
+{
+    columnsProperties.clear();
+
+    _reloadColumnProperties("table", "YES");
+    _reloadColumnProperties("view", "NO");
 }
 
 
@@ -573,7 +834,7 @@ void SQLiteDBFactory::removeDoc(int nDocId)
    if (getValue(QString("SELECT COUNT(*) FROM sqlite_master WHERE name='%1';").arg(docAttrTableName)).toInt() > 0)
        exec(QString("DELETE FROM %1 WHERE %2 = %3;")
             .arg(docAttrTableName)
-            .arg(getObjectNameCom(docAttrTableName + ".ДОККОД"))
+            .arg(getObjectNameCom(docAttrTableName + ".КОД"))
             .arg(nDocId));
 
     commitTransaction();
@@ -618,8 +879,10 @@ int SQLiteDBFactory::addDocStr(int nOperId, int docId, QString cParam, int nCoun
                                 .arg(getObjectNameCom("топер.ОПЕР"))
                                 .arg(nOperId));
 
-    QStringList paramList = cParam.split(QRegExp(","));
+    if (toper.size() > 1)
+        beginTransaction();
 
+    QStringList paramList = cParam.split(QRegExp(","));
     for (int i = 0; i < nCount; i++)
     {
         if (bAttrExist)
@@ -705,121 +968,82 @@ int SQLiteDBFactory::addDocStr(int nOperId, int docId, QString cParam, int nCoun
                     exec(insertCommand);
                 tc++;
             } while (toper.next());
-
-            nDocStr++;
         }
     }
+
+    if (toper.size() > 1)
+        commitTransaction();
 
     result = nDocStr;
 
     return result;
+}
+
+
+
+
+bool SQLiteDBFactory::removeDocStr(int nDocId, int nDocStr)      // Удалить строку в документе docId под номером nDocStr
+{
+    clearError();
+
+    beginTransaction();
+
+    int nOperNum = getValue(QString("SELECT %1 FROM %2 WHERE %3 = %4 LIMIT 1;")
+                            .arg(getObjectNameCom("документы.ОПЕР"))
+                            .arg(getObjectNameCom("документы"))
+                            .arg(getObjectNameCom("документы.КОД"))
+                            .arg(nDocId)).toInt();
+
+    exec(QString("DELETE FROM %1 WHERE %2 = %3 AND %4 = %5;")
+         .arg(getObjectNameCom("проводки"))
+         .arg(getObjectNameCom("проводки.ДОККОД"))
+         .arg(nDocId)
+         .arg(getObjectNameCom("проводки.СТР"))
+         .arg(nDocStr));
+
+    QString attrTableName = QString("%1%2")
+            .arg(getObjectName("атрибуты"))
+            .arg(nOperNum);
+    if (getValue(QString("SELECT COUNT(*) FROM sqlite_master WHERE name='%1';").arg(attrTableName)).toInt() > 0)
+        exec(QString("DELETE FROM %1 WHERE %2 = %3 AND %4 = %5;")
+             .arg(attrTableName)
+             .arg(getObjectNameCom(attrTableName + ".ДОККОД"))
+             .arg(nDocId)
+             .arg(getObjectNameCom("проводки.СТР"))
+             .arg(nDocStr));
+
+    commitTransaction();
+    return true;
 
 /*
-CREATE OR REPLACE FUNCTION sp_insertdocstr(
-    noper integer,
-    ndocid integer,
-    pcparam character varying,
-    pncount integer,
-    pndocstr integer)
-  RETURNS integer AS
-$BODY$
-DECLARE nNum INTEGER;
-    cDbAcc VARCHAR(5);
-    cCrAcc VARCHAR(5);
-    nDbId INTEGER;
-    nCrId INTEGER;
-    nQuan NUMERIC(8,3);
-    nPrice NUMERIC(14,2);
-    nSum NUMERIC(14,2);
-    cParam1 VARCHAR(100);
-    cParam VARCHAR(100);
-    nCount INTEGER;
-    nCount1 INTEGER;
-    nDocStr INTEGER;
-    nFreeCount INTEGER;
-    bFreePrv BOOLEAN;
-    curResult REFCURSOR;
-    cCommand VARCHAR(1000);
-    bAttrExist BOOLEAN;
-BEGIN
-    cParam := pcParam;
-    nCount := pnCount;
-    nDocStr := pnDocStr;
-
-    IF nCount IS NULL THEN
-        nCount := 1;
-    END IF;
-    IF (SELECT COUNT(*) FROM pg_tables WHERE schemaname = 'public' AND tablename = 'атрибуты' || rtrim(ltrim(cast(nOper AS VARCHAR(10))))) > 0 THEN
-        bAttrExist := TRUE;
-    ELSE
-        bAttrExist := FALSE;
-    END IF;
-    IF nDocStr IS NULL OR nDocStr = 0 THEN
-        -- найдем наибольший "НОМЕР" строки в документе
-        nDocStr := (SELECT max(p."СТР") AS max_value FROM "проводки" p WHERE p."ДОККОД" = nDocId AND p."ОПЕР" = noper);
-        IF nDocStr IS NULL THEN
-            nDocStr := 1;
-        ELSE
-            nDocStr := nDocStr + 1;
-        END IF;
-    END IF;
-    -- вставим в документ проводки для новой строки
-    OPEN curResult FOR SELECT "ДБСЧЕТ", "КРСЧЕТ", "НОМЕР", "НЕЗАВИСИМ"  FROM "топер" WHERE "ОПЕР" = noper ORDER BY "НОМЕР";
-    WHILE nCount > 0 LOOP
-        -- Проверим, не использует ли документ таблицу атрибутов, и если использует, то добавим строку в таблицу атрибутов
-        IF bAttrExist THEN
-            EXECUTE 'SELECT COUNT(*) FROM "атрибуты'  || rtrim(ltrim(cast(noper AS VARCHAR(10)))) || '" WHERE "ДОККОД" = ' || nDocId::text || ' AND "СТР" = ' || nDocStr::text INTO nCount1;
-            IF nCount1 = 0 THEN
-                EXECUTE 'INSERT INTO "атрибуты' || rtrim(ltrim(cast(noper AS VARCHAR(10)))) || '" ("КОД", "ДОККОД", "СТР") VALUES ((SELECT COALESCE((SELECT MAX("КОД") FROM "атрибуты' || rtrim(ltrim(cast(noper AS VARCHAR(10)))) || '"), 0) + 1), ' || nDocId || ', ' || nDocStr || ');';
-
-            END IF;
-        END IF;
-        cParam1 := cParam;
-        FETCH first FROM curResult INTO cDbAcc, cCrAcc, nNum, bFreePrv;
-        WHILE found LOOP
-            IF length(cParam) = 0 THEN
-                cParam1 := '0,0,0,0,0,';
-            END IF;
-            nDbId := to_number(substring(cParam1 FROM 1 FOR position(',' in cParam1) - 1), '999999999');
-            cParam1 := substring(cParam1 FROM position(',' in cParam1) + 1);
-            nCrId := to_number(substring(cParam1 FROM 1 FOR position(',' in cParam1) - 1), '999999999');
-            cParam1 := substring(cParam1 FROM position(',' in cParam1) + 1);
-            nQuan := to_number(replace(substring(cParam1 FROM 1 FOR position(',' in cParam1) - 1), '.', ','), '99999d999');
-            cParam1 := substring(cParam1 FROM position(',' in cParam1) + 1);
-            nPrice := to_number(replace(substring(cParam1 FROM 1 FOR position(',' in cParam1) - 1), '.', ','), '99999999d99');
-            cParam1 := substring(cParam1 FROM position(',' in cParam1) + 1);
-            nSum := to_number(replace(substring(cParam1 FROM 1 FOR position(',' in cParam1) - 1), '.', ','), '99999999d99');
-            cParam1 := substring(cParam1 FROM position(',' in cParam1) + 1);
-            IF bFreePrv THEN
-                nFreeCount := (SELECT count(*) FROM "проводки" p WHERE p."ДОККОД" = nDocId AND p."ОПЕР" = noper AND p."НОМЕРОПЕР" = nNum);
-                IF nFreeCount = 0 THEN
-                    INSERT INTO "проводки" ("КОД", "ДОККОД", "СТР", "ОПЕР", "НОМЕРОПЕР", "ДБСЧЕТ", "ДБКОД", "КРСЧЕТ", "КРКОД", "КОЛ", "ЦЕНА", "СУММА")
-                        VALUES ((SELECT MAX("КОД")+1 FROM "проводки"), nDocId, nDocStr, noper, nNum, cDbAcc, nDbId, cCrAcc, nCrId, nQuan, nPrice, nSum);
+    nOper := (SELECT "ОПЕР" FROM "документы" WHERE "КОД" = nDocId);
+    OPEN curResult FOR SELECT "НОМЕР" FROM "топер" WHERE "ОПЕР" = nOper AND "НЕЗАВИСИМ" = true;
+    FETCH first FROM curResult INTO nFreeOper;
+    WHILE found LOOP
+        IF nFreeOper IS NOT NULL THEN
+            IF (SELECT "СТР" FROM "проводки" WHERE "ДОККОД" = nDocId AND "НОМЕРОПЕР" = nFreeOper LIMIT 1) = nDocStr THEN
+                IF (SELECT COUNT(*) FROM "проводки" WHERE "ДОККОД" = nDocId AND "ОПЕР" = nOper AND "СТР" <> nDocStr) > 1 THEN
+                    nNewDocStr := (SELECT MIN("СТР") FROM "проводки" WHERE "ДОККОД" = nDocId AND "ОПЕР" = nOper AND "СТР" <> nDocStr);
+                ELSE
+                    nNewDocStr := 1;
                 END IF;
-            ELSE
-                INSERT INTO "проводки" ("КОД", "ДОККОД", "СТР", "ОПЕР", "НОМЕРОПЕР", "ДБСЧЕТ", "ДБКОД", "КРСЧЕТ", "КРКОД", "КОЛ", "ЦЕНА", "СУММА")
-                    VALUES ((SELECT MAX("КОД")+1 FROM "проводки"), nDocId, nDocStr, noper, nNum, cDbAcc, nDbId, cCrAcc, nCrId, nQuan, nPrice, nSum);
+                IF nNewDocStr IS NOT NULL AND nNewDocStr <> nDocStr THEN
+                    INSERT INTO "проводки" ("ДОККОД", "СТР", "ОПЕР", "НОМЕРОПЕР", "ДБСЧЕТ", "ДБКОД", "КРСЧЕТ", "КРКОД", "КОЛ", "ЦЕНА", "СУММА")
+                        SELECT "ДОККОД", nNewDocStr, "ОПЕР", "НОМЕРОПЕР", "ДБСЧЕТ", "ДБКОД", "КРСЧЕТ", "КРКОД", "КОЛ", "ЦЕНА", "СУММА" FROM "проводки" WHERE "ДОККОД" = nDocId AND "НОМЕРОПЕР" = nFreeOper LIMIT 1;
+                END IF;
             END IF;
-            FETCH NEXT FROM curResult INTO cDbAcc, cCrAcc, nNum, bFreePrv;
-        END LOOP;
-        nCount := nCount - 1;
-        nDocStr := nDocStr + 1;
+        END IF;
+        FETCH next FROM curResult INTO nFreeOper;
     END LOOP;
-    nDocStr := nDocStr - 1;
-    CLOSE curResult;
-RETURN nDocStr;
-END;
-$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION sp_insertdocstr(integer, integer, character varying, integer, integer)
-  OWNER TO sa;
-GRANT EXECUTE ON FUNCTION sp_insertdocstr(integer, integer, character varying, integer, integer) TO sa;
-GRANT EXECUTE ON FUNCTION sp_insertdocstr(integer, integer, character varying, integer, integer) TO public;
-GRANT EXECUTE ON FUNCTION sp_insertdocstr(integer, integer, character varying, integer, integer) TO "продавец";
-
+    DELETE FROM "проводки" WHERE "ДОККОД" = nDocId AND "СТР" = nDocStr;
+    IF (SELECT COUNT(*) FROM pg_tables WHERE schemaname = 'public' AND tablename = 'атрибуты' || rtrim(ltrim(cast(nOper AS VARCHAR(10))))) > 0 THEN
+        EXECUTE 'DELETE FROM "атрибуты' || nOper::text || '" WHERE "ДОККОД" = ' || nDocId::text || ' AND "СТР" = ' || nDocStr::text;
+    END IF;
 */
 }
+
+
+
 
 
 QString SQLiteDBFactory::getCurrentTimeStamp()
@@ -894,3 +1118,45 @@ void SQLiteDBFactory::setFile(QString file, FileType type, QByteArray fileData, 
 }
 
 
+bool SQLiteDBFactory::exec(QString str, bool showError, QSqlDatabase* db)
+{
+    return DBFactory::exec(str, showError, db);
+}
+
+
+QDate SQLiteDBFactory::toDate(QVariant d)
+{
+    return QDate().fromString(d.toString(), app->dateFormat());
+}
+
+
+QSqlQuery SQLiteDBFactory::execQuery(QString str, bool showError, QSqlDatabase* extDb)
+{
+    app->debug(1, QString("Query: %1").arg(str));
+    clearError();
+    QSqlQuery result;
+    QSqlQuery* query;
+    if (extDb != nullptr && extDb->isValid())
+        query = new QSqlQuery(*extDb);
+    else
+        query = new QSqlQuery();
+
+    if (!query->exec(str) && showError)
+    {
+        setError(query->lastError().text());
+    }
+    query->first();
+    result = *query;
+    delete query;
+    return result;
+}
+
+
+int SQLiteDBFactory::querySize(QSqlQuery* q)
+{
+    q->last();
+    return q->at() + 1;
+}
+
+
+//#undef double

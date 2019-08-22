@@ -202,7 +202,7 @@ bool Document::calculate(bool)
     bool lResult = false;
     if (enabled && !scriptEngine->getScriptError())             // Если это не повторный вход в функцию и разрешено редактирование документа
     {
-        if (Dictionary::calculate(false))           // После вычисление не сохранять
+        if (Essence::calculate(false))           // После вычисление не сохранять
         {   // Если в вычислениях не было ошибки
             calcItog();                             // то посчитаем итоги
             saveChanges();            // сохраним изменения
@@ -558,7 +558,7 @@ void Document::show()
     app->debug(1, "");
     app->debug(1, QString("Opened document %1 (ОПЕР=%2, НОМЕР=%3)").arg(docId).arg(operNumber).arg(parent->getValue("НОМЕР").toString()));
     locked = false;
-    bool lock = db->lockDocument(docId);        // Попытаемся заблокировать документ
+    bool lock = lockDocument();        // Попытаемся заблокировать документ
     if (!lock)
         setEnabled(false);                      // Если заблокировать не удалось
     locked = !lock;
@@ -580,7 +580,7 @@ void Document::hide()
     Essence::hide();
     if (!locked)
     {
-        db->unlockDocument(docId);
+        unlockDocument();
         setEnabled(true);
     }
     app->debug(1, QString("Closed document %1").arg(docId));
@@ -1074,7 +1074,7 @@ void Document::prepareValue(QString name, QVariant val)
 }
 
 
-int Document::appendDocString()
+int Document::appendDocString(bool repaint)
 {
     int result = 0;
 
@@ -1095,7 +1095,7 @@ int Document::appendDocString()
         QString prefix = QString("P%1__").arg(i + 1);
         QString fldName;
         int dbId = 0, crId = 0;
-        float quan = 0, price = 0, sum = 0;
+        QString quan = "0", price = "0", sum = "0";
 
         fldName = prefix + "ДБКОД";
         if (prvValues.keys().contains(fldName))
@@ -1119,13 +1119,13 @@ int Document::appendDocString()
         }
         fldName = prefix + "КОЛ";
         if (prvValues.keys().contains(fldName))
-            quan = prvValues.value(fldName).toFloat();
+            quan = prvValues.value(fldName).toString();
         fldName = prefix + "ЦЕНА";
         if (prvValues.keys().contains(fldName))
-            price = prvValues.value(fldName).toFloat();
+            price = prvValues.value(fldName).toString();
         fldName = prefix + "СУММА";
         if (prvValues.keys().contains(fldName))
-            sum = prvValues.value(fldName).toFloat();
+            sum = prvValues.value(fldName).toString();
         // Добавим параметры проводки <ДбКод, КрКод, Кол, Цена, Сумма> в список параметров
         parameter.append(QString("%1,%2,%3,%4,%5,").arg(dbId).arg(crId).arg(quan).arg(price).arg(sum));
      }
@@ -1153,7 +1153,7 @@ int Document::appendDocString()
         db->saveDocAttribute(operNumber, docId, attrList);
     }
 
-    if (result > 0)      // Если строка была добавлена
+    if (result > 0 && repaint)      // Если строка была добавлена
     {
         int newRow = tableModel->rowCount();
         tableModel->insertRow(newRow);
@@ -1278,7 +1278,6 @@ void Document::showParameterText(QString dictName)
 
 void Document::cmdOk()
 {
-    saveChanges();
     parent->showItog();
     Dictionary::cmdOk();
 }
@@ -1302,4 +1301,16 @@ bool Document::saveChanges()
     else
         parent->restoreOldValues();
     return lResult;
+}
+
+
+bool Document::lockDocument()
+{
+    return db->lockDocument(docId);
+}
+
+
+void Document::unlockDocument()
+{
+    db->unlockDocument(docId);
 }
