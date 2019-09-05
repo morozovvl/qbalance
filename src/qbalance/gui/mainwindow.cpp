@@ -433,7 +433,7 @@ QMdiSubWindow* MainWindow::appendMdiWindow(QWidget* dialogWidget)
         subWindow->setWidget(dialogWidget);
         return workSpace->addSubWindow(subWindow, Qt::Window);
     }
-    return 0;
+    return nullptr;
 }
 
 
@@ -447,7 +447,7 @@ QMdiSubWindow* MainWindow::findMdiWindow(QWidget* dialogWidget)
                 return subWindow;
         }
     }
-    return 0;
+    return nullptr;
 }
 
 

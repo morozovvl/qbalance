@@ -116,16 +116,12 @@ bool Documents::add()
         int strNum = db->addDoc(operNumber, date);
         if (strNum > 0)
         {
-            setCurrentDocument(strNum);
             int newRow = tableModel->rowCount();
             tableModel->insertRow(newRow);          // POSSIBLY MEMORY LEAK
             grdTable->reset();
             grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
-            setCurrentRow(newRow);
             updateCurrentRow(strNum);
             saveOldValues();
-            form->setButtons();
-            grdTable->setFocus();
             result = true;
         }
     }

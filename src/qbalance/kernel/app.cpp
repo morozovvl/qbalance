@@ -51,6 +51,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 QList<QString>      TApplication::DebugModes;
 TApplication*       TApplication::Exemplar   = nullptr;
+int                 TApplication::userid           = 0;
 QString             TApplication::username         = "";
 QString             TApplication::password         = "";
 QString             TApplication::host             = "";
@@ -964,6 +965,7 @@ void    TApplication::openPlugins()
     }
 
     // Запустим почтовый клиент
+
     if (getConfigValue("EMAILCLIENT_NEEDED").toBool())
     {
         smtpclient = static_cast<EMailClient*>(createPlugin("emailclient"));
@@ -971,7 +973,7 @@ void    TApplication::openPlugins()
         {
             if (smtpclient->open())
             {
-                smtpclient->sendMail();
+//                smtpclient->sendMail();
                 smtpclient->close();
                 smtpclient = nullptr;
             }

@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QTimer>
 #include <QtCore/QProcess>
 #include <QtCore/QDebug>
+#include <QtScript/QScriptEngine>
 #include "ooxmlreportengine.h"
 #include "../openoffice/ooxmlengine.h"
 #include "../engine/documentscriptengine.h"
@@ -247,8 +248,9 @@ void OOXMLReportEngine::writeHeader()
         QString cellText = cells.at(i).toElement().text().trimmed();        // Получим текст текущей ячейки
         if (expressionsForEvaluation.contains(cellText))                    // Если значение ячейки находится в списке
         {
-            QVariant var = scriptEngine->evaluate(cellText).toVariant();    // то оценим его скриптовым движком
-            writeCell(cells.at(i), cellText, var);                      // запишем результат оценки вместо текста ячейки
+            QScriptValue var = scriptEngine->evaluate(cellText);    // то оценим его скриптовым движком
+            if (!scriptEngine->hasUncaughtException())
+                writeCell(cells.at(i), cellText, var.toVariant());                      // запишем результат оценки вместо текста ячейки
         }
     }
 }

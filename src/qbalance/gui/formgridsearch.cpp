@@ -28,7 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #define LABEL_SEARCH_PARAMETERS     QObject::trUtf8("Параметры для поиска:")
 
-FormGridSearch::FormGridSearch(QObject* parent/* = nullptr*/) : FormGrid(parent)
+FormGridSearch::FormGridSearch(QObject* parent) : FormGrid(parent)
 {
     parameters = nullptr;
 }
@@ -45,7 +45,7 @@ SearchParameters* FormGridSearch::getSearchParameters()
 }
 
 
-void FormGridSearch::createForm(QString fileName, QWidget* pwgt/* = nullptr*/)
+void FormGridSearch::createForm(QString fileName, QWidget* pwgt)
 {
     FormGrid::createForm(fileName, pwgt);
     formWidget->resize(600, formWidget->height());

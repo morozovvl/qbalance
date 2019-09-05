@@ -31,7 +31,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
 
-CalendarForm::CalendarForm(QObject* parent/* = nullptr*/): Form(parent)
+CalendarForm::CalendarForm(QObject* parent): Form(parent)
 {
     configName = "calendar";
 }

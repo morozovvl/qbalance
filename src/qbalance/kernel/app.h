@@ -119,6 +119,7 @@ class TApplication : public QApplication {
 
 public:
     QHash<QString, Documents*> documents;                        // Объекты списков документов
+    static int userid;
     static QString username;
     static QString password;
     static QString host;

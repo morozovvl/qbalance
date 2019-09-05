@@ -49,14 +49,14 @@ QScriptValue restoreVariable(QScriptContext* context, QScriptEngine* engine) {
 
 
 
-DocumentScriptEngine::DocumentScriptEngine(Essence* parent/* = nullptr*/)
+DocumentScriptEngine::DocumentScriptEngine(Essence* parent)
 :ScriptEngine(parent)
 {
     reportContext = nullptr;
 }
 
 
-DocumentScriptEngine::DocumentScriptEngine(QHash<QString, QVariant>* context, Essence *parent/* = nullptr*/)
+DocumentScriptEngine::DocumentScriptEngine(QHash<QString, QVariant>* context, Essence *parent)
 :ScriptEngine(parent)
 {
     reportContext = nullptr;

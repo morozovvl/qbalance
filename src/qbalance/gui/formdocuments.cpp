@@ -39,7 +39,7 @@ FormDocuments::~FormDocuments()
 }
 
 
-void FormDocuments::createForm(QString fileName, QWidget* pwgt/* = nullptr*/)
+void FormDocuments::createForm(QString fileName, QWidget* pwgt)
 {
     FormGrid::createForm(fileName, pwgt);
     if (defaultForm)

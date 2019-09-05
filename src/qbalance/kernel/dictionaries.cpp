@@ -93,11 +93,11 @@ Dictionary* Dictionaries::getDictionary(QString dictName)
 {
     dictName = dictName.trimmed().toLower();
     if (dictName.size() == 0)
-        return 0;
+        return nullptr;
     if (!dictionariesList.contains(dictName))
     {             // Если справочник с таким именем не существует, то попробуем его создать
         if (!addDictionary(dictName))
-            return 0;
+            return nullptr;
     }
     return dictionariesList.value(dictName);
 }
@@ -106,12 +106,12 @@ Dictionary* Dictionaries::getDictionary(QString dictName)
 Saldo* Dictionaries::getSaldo(QString acc)
 {
     if (acc.size() == 0)
-        return 0;
+        return nullptr;
     QString alias = "saldo" + acc;
     if (!dictionariesList.contains(alias))
     {             // Если справочник с таким именем не существует, то попробуем его создать
         if (!addSaldo(acc))
-            return 0;
+            return nullptr;
     }
     lIsSaldoExist = true;
     return (Saldo*)dictionariesList[alias];

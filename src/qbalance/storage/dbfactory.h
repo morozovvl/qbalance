@@ -51,6 +51,7 @@ struct FileInfo
 
 struct UserInfo
 {
+    int         id;
     QString     userName;
     QString     loginName;
 };

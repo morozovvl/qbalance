@@ -44,7 +44,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "dialog.h"
 
 
-ConfigForm::ConfigForm(QObject* parent/* = nullptr*/): Form(parent)
+ConfigForm::ConfigForm(QObject* parent): Form(parent)
 {
     app = TApplication::exemplar();
     configName = "ConfigForm";

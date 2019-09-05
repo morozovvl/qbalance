@@ -104,7 +104,7 @@ WizardOperation::~WizardOperation()
 }
 
 
-bool WizardOperation::open(QWidget* pwgt, int op/* = nullptr*/)
+bool WizardOperation::open(QWidget* pwgt, int op)
 {
     if (op == 0)
         op = db->getNewToper();
@@ -660,6 +660,7 @@ void WizardOperation::sortHeaders(QListWidget* headers, QList<FieldType>* fields
         for (int j = 0; j < fields->count(); j++)
         {
             QString column = headers->item(i)->data(Qt::UserRole).toString();
+            qDebug() << fields->at(j).column << column;
             if (fields->at(j).column == column)
             {
                 FieldType field = fields->at(j);
@@ -810,10 +811,10 @@ void WizardOperation::frameDeactivated(int frameNumber)
     {
         for (int i = 0; i < docListFieldsTable->rowCount(); i++)
         {
+            QString table = docListFieldsTable->item(i, tableField)->data(Qt::UserRole).toString();
+            QString column = table.toUpper() + "__" + docListFieldsTable->item(i, columnField)->data(Qt::UserRole).toString();
             for (int j = 0; j < docListFields.count(); j++)
             {
-                QString table = docListFieldsTable->item(i, tableField)->data(Qt::UserRole).toString();
-                QString column = docListFieldsTable->item(i, columnField)->data(Qt::UserRole).toString();
                 if (docListFields.at(j).table == table && docListFields.at(j).column == column)
                 {
                     FieldType field = docListFields.at(j);

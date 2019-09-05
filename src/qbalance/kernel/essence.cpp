@@ -1092,6 +1092,7 @@ bool Essence::isFormSelected()
 
 void Essence::cmdOk()
 {
+    db->execCommands();
 }
 
 
@@ -1584,7 +1585,7 @@ bool Essence::saveChanges()
 }
 
 
-void Essence::exportData(QString fileName, QStringList fieldsList)
+void Essence::exportData(QString, QStringList fieldsList)
 {
     QStringList fList = fieldsList.count() > 0 ? fieldsList : fieldList;
     QString fieldListCommand;

@@ -32,7 +32,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/app.h"
 
 
-WizardForm::WizardForm(QObject* parent/* = nullptr*/): Form(parent)
+WizardForm::WizardForm(QObject* parent): Form(parent)
 {
     result = true;
     frameIndex = 0;

@@ -481,20 +481,20 @@ bool DriverFR::open(QString port, int rate, int timeout, int password)
                 DisConnect();
             }
         }
-/*
         if (result)
         {
             serialPort->setRemote(remote);
-            if (app->getGUIFactory() != 0)
+            if (app->getGUIFactory() != nullptr)
             {
                 progressDialog = app->getMyProgressDialog(trUtf8("Ожидайте окончания работы фискального регистратора..."));
                 progressDialog->resize(600, progressDialog->height());
             }
         }
-*/
     }
-//    if (!result)
-//        app->showError(QString(failConnectErrorMessage).append(" ").append(serialPort->errorString()));
+/*
+    if (!result)
+        app->showError(QString(failConnectErrorMessage).append(" ").append(serialPort->errorString()));
+*/
     app->clearMessageOnStatusBar();
     return result;
 }
@@ -1226,28 +1226,28 @@ int DriverFR::GetShortECRStatus()
         fr.ECRAdvancedMode = evalint((unsigned char*)&a.buff + 6, 1);
         fr.ECRAdvancedModeDescription = (char*)ecrsubmodedesc[fr.ECRAdvancedMode];
         fr.QuantityOfOperations = a.buff[7];
-/*
-        fr.PortNumber  = evalint((unsigned char*)&a.buff + 17, 1);
-        fr.FMSoftVersion[0] = a.buff[18];
-        fr.FMSoftVersion[1] = 0x2e;
-        fr.FMSoftVersion[2] = a.buff[19];
-        fr.FMSoftVersion[3] = nullptr;
-        fr.FMBuild = evalint((unsigned char*)&a.buff + 20, 2);
-        evaldate((unsigned char*)&a.buff + 22, &fr.FMSoftDate);
-        evaldate((unsigned char*)&a.buff + 25, &fr.Date);
-        evaltime((unsigned char*)&a.buff + 28, &fr.Time);
-        fr.FM1IsPresent = (a.buff[31] & 1) == 1;
-        fr.FM2IsPresent = (a.buff[31] & 2) == 2;
-        fr.LicenseIsPresent = (a.buff[31] & 4) == 4;
-        fr.FMOverflow = (a.buff[31] & 8) == 8;
-        fr.BatteryCondition = (a.buff[31] & 16) == 16;
-        sprintf(fr.SerialNumber, "%d", evalint((unsigned char*)&a.buff + 32, 4));
-        fr.SessionNumber = evalint((unsigned char*)&a.buff + 36, 2);
-        fr.FreeRecordInFM = evalint((unsigned char*)&a.buff + 38, 2);
-        fr.RegistrationNumber = evalint((unsigned char*)&a.buff + 40, 1);
-        fr.FreeRegistration = evalint((unsigned char*)&a.buff + 41, 1);
-        sprintf(fr.INN, "%.0lg", (double)evalint64((unsigned char*)&a.buff + 42, 6));
-*/
+
+//        fr.PortNumber  = evalint((unsigned char*)&a.buff + 17, 1);
+//        fr.FMSoftVersion[0] = a.buff[18];
+//        fr.FMSoftVersion[1] = 0x2e;
+//        fr.FMSoftVersion[2] = a.buff[19];
+//        fr.FMSoftVersion[3] = nullptr;
+//        fr.FMBuild = evalint((unsigned char*)&a.buff + 20, 2);
+//        evaldate((unsigned char*)&a.buff + 22, &fr.FMSoftDate);
+//        evaldate((unsigned char*)&a.buff + 25, &fr.Date);
+//        evaltime((unsigned char*)&a.buff + 28, &fr.Time);
+//        fr.FM1IsPresent = (a.buff[31] & 1) == 1;
+//        fr.FM2IsPresent = (a.buff[31] & 2) == 2;
+//        fr.LicenseIsPresent = (a.buff[31] & 4) == 4;
+//        fr.FMOverflow = (a.buff[31] & 8) == 8;
+//        fr.BatteryCondition = (a.buff[31] & 16) == 16;
+//        sprintf(fr.SerialNumber, "%d", evalint((unsigned char*)&a.buff + 32, 4));
+//        fr.SessionNumber = evalint((unsigned char*)&a.buff + 36, 2);
+//        fr.FreeRecordInFM = evalint((unsigned char*)&a.buff + 38, 2);
+//        fr.RegistrationNumber = evalint((unsigned char*)&a.buff + 40, 1);
+//        fr.FreeRegistration = evalint((unsigned char*)&a.buff + 41, 1);
+//        sprintf(fr.INN, "%.0lg", (double)evalint64((unsigned char*)&a.buff + 42, 6));
+
     }
   }
   return result;

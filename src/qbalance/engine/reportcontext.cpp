@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "documentscriptengine.h"
 
 
-ReportContext::ReportContext(QHash<QString, QVariant>* d, QObject *parent/* = nullptr*/) :
+ReportContext::ReportContext(QHash<QString, QVariant>* d, QObject *parent) :
     QObject(parent)
 {
     data = d;

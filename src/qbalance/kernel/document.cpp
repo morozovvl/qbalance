@@ -299,7 +299,7 @@ bool Document::add()
             if (getScriptEngine() != nullptr)
             {
                 getScriptEngine()->eventAfterAddString();
-                saveChanges();
+//                saveChanges();
             }
         }
         else
@@ -420,7 +420,7 @@ bool Document::remove(bool noAsk)
                     if (scriptEngineEnabled && scriptEngine != nullptr)
                         scriptEngine->eventAfterDeleteString();
                     calcItog();
-                    saveChanges();     // Принудительно обновим итог после удаления строки
+                    db->execCommands();
                     return true;
                 }
                 app->showError(QString(QObject::trUtf8("Не удалось удалить строку")));
@@ -544,13 +544,6 @@ int Document::findFreePrv()
     return 0;
 }
 
-/*
-void Document::setCurrentRow(int row)
-{
-    Essence::setCurrentRow(row);
-    saveOldValues();
-}
-*/
 
 void Document::show()
 {

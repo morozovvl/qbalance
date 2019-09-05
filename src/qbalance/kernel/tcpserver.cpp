@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../bankterminal/bankterminal.h"
 
 
-TcpServer::TcpServer(int nPort, QObject *parent /* = nullptr*/):   QObject(parent)
+TcpServer::TcpServer(int nPort, QObject *parent ):   QObject(parent)
 {
     app = (TApplication*)parent;
     m_nNextBlockSize = 0;

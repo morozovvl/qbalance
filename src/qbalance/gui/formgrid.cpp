@@ -56,7 +56,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../engine/scriptengine.h"
 
 
-FormGrid::FormGrid(QObject* parent/* = nullptr*/)
+FormGrid::FormGrid(QObject* parent)
 : Form(parent)
 {
     grdTable = nullptr;
@@ -177,7 +177,7 @@ void FormGrid::close()
 }
 
 
-void FormGrid::createForm(QString fileName, QWidget* pwgt/* = nullptr*/)
+void FormGrid::createForm(QString fileName, QWidget* pwgt)
 {
     Form::createForm(fileName, pwgt);
     if (defaultForm)

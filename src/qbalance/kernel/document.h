@@ -61,7 +61,6 @@ private:
     bool                            docModified;
     bool                            quanAccount;        // В проводках есть количественный учет
     bool                            singlePrv;          // Проводка простая (одиночная)
-    bool                            locked;
     bool                            addingFromQuery;
 
     bool showNextDict();
@@ -81,7 +80,7 @@ public:
     ~Document();
 
     template <class T>
-        static T* create(int opNumber, Documents *parent = 0)
+        static T* create(int opNumber, Documents *parent = nullptr)
         {
             T* p(new T(opNumber, parent));
             p->postInitialize(opNumber, parent);
@@ -141,7 +140,6 @@ public:
     Q_INVOKABLE void calcItog();
     bool isSinglePrv();
     bool isQuanAccount();
-//    Q_INVOKABLE virtual void    setCurrentRow(int row);
     Q_INVOKABLE bool saveChanges();
     Q_INVOKABLE bool lockDocument();
     Q_INVOKABLE void unlockDocument();

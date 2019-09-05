@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtNetwork/QNetworkConfigurationManager>
 
 
-TcpClient::TcpClient(const QString& strHost, int nPort, QObject *parent /* = nullptr*/):   QObject(parent)
+TcpClient::TcpClient(const QString& strHost, int nPort, QObject *parent ):   QObject(parent)
 {
     app = TApplication::exemplar();
     m_nNextBlockSize = 0;

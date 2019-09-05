@@ -467,6 +467,7 @@ QHash<int, UserInfo> DBFactory::getUserList()
         do
         {
             UserInfo u;
+            u.id = query.value(0).toInt();
             u.loginName = query.value(1).toString();
             u.userName = query.value(2).toString().trimmed();
             result.insert(query.value(0).toInt(), u);
@@ -1200,7 +1201,7 @@ int DBFactory::addDoc(int operNumber, QDate date)
 {
     int result = 0;
     clearError();
-    result = getValue(QString("SELECT sp_InsertDoc(%1,'%2');").arg(operNumber).arg(date.toString(app->dateFormat()))).toInt();
+    result = getValue(QString("SELECT sp_InsertDoc(%1,'%2', %3);").arg(operNumber).arg(date.toString(app->dateFormat())).arg(app->userid)).toInt();
     return result;
 }
 
@@ -1208,9 +1209,11 @@ int DBFactory::addDoc(int operNumber, QDate date)
 void DBFactory::removeDoc(int docId)
 {
     clearError();
-    lockDocument(docId);
-    exec(QString("SELECT sp_DeleteDoc(%1);").arg(docId));
-    unlockDocument(docId);
+    if (lockDocument(docId))
+    {
+        exec(QString("SELECT sp_DeleteDoc(%1);").arg(docId));
+        unlockDocument(docId);
+    }
 }
 
 
@@ -1240,9 +1243,7 @@ bool DBFactory::removeDocStr(int docId, int nDocStr)
 {
     bool result = false;
     clearError();
-    lockDocument(docId);
     result = exec(QString("SELECT sp_DeleteDocStr(%1,%2);").arg(docId).arg(nDocStr));
-    unlockDocument(docId);
     return result;
 }
 
@@ -1920,10 +1921,10 @@ void DBFactory::appendCommand(UpdateValues value)
     {
         if (value.table == updateValues.at(i).table &&
             value.recId == updateValues.at(i).recId &&
-            value.field == updateValues.at(i).field &&
-            value.value == updateValues.at(i).value)
+            value.field == updateValues.at(i).field)
         {
-            return;
+            updateValues.removeAt(i);
+            break;
         }
     }
     updateValues.append(value);

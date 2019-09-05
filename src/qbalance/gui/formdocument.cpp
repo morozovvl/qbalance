@@ -101,7 +101,7 @@ QPushButton* FormDocument::getButtonQueryAdd()
 }
 
 
-void FormDocument::createForm(QString fileName, QWidget* pwgt/* = nullptr*/)
+void FormDocument::createForm(QString fileName, QWidget* pwgt)
 {
     FormGrid::createForm(fileName, pwgt);
     // Подключим кнопку "Добавить из запроса"

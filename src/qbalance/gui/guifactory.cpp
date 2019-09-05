@@ -113,6 +113,7 @@ int GUIFactory::openDB()
                     app->setWriteDebug(true);
                     if (db->open(users.value(key).loginName, TApplication::password))
                     {
+                        app->userid = users.value(key).id;
                         returnCode = 0;
                         break;
                     }
@@ -150,6 +151,7 @@ int GUIFactory::openDB()
                             login = users.value(key).loginName.trimmed();
                             userName = users.value(key).userName.trimmed();
                             app->username = userName;
+                            app->userid = users.value(key).id;
                             break;
                         }
                     }

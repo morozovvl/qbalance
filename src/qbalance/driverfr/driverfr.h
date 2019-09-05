@@ -690,7 +690,7 @@ class DriverFR : public QObject
 {
     Q_OBJECT
 public:
-    explicit DriverFR(QObject *parent = 0);
+    explicit DriverFR(QObject *parent = nullptr);
     ~DriverFR();
     virtual void setApp(TApplication* a) { app = a; }
     virtual bool open(QString, int, int, int);

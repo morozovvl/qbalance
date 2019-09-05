@@ -26,7 +26,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/app.h"
 #include "dialog.h"
 
-PassWordForm::PassWordForm(QObject* parent/* = nullptr*/) : Form(parent)
+PassWordForm::PassWordForm(QObject* parent) : Form(parent)
 {
     appendToMdi = false;        // Не добавлять окно к многооконному интерфейсу, т.к. его к этому моменту еще не существует
 
@@ -55,7 +55,7 @@ QString PassWordForm::getPassword()
 }
 
 
-bool PassWordForm::open(QWidget* pwgt/* = nullptr*/)
+bool PassWordForm::open(QWidget* pwgt)
 // Создает форму ввода пароля на основе формы с кнопками "Ок" и "Cancel"
 {
     QFormLayout* layout = new QFormLayout();

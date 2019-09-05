@@ -49,13 +49,14 @@ void EMailClient::close()
 
 int EMailClient::sendMail()
 {
+
     SmtpClient* smtp = new SmtpClient("smtp.gmail.com", 465, SmtpClient::SslConnection);
 
     // We need to set the username (your email address) and password
     // for smtp authentification.
 
-    smtp->setUser("ip5540726@gmail.com");
-    smtp->setPassword("mva10031974");
+//    smtp->setUser("ip5540726@gmail.com");
+//    smtp->setPassword("mva10031974");
 
 /*
     // Now we create a MimeMessage object. This is the email.
@@ -98,6 +99,7 @@ int EMailClient::sendMail()
         return -3;
     }
 */
+
     smtp->quit();
 
     delete smtp;
