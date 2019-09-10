@@ -240,8 +240,8 @@ void Form::cmdOk()
     lSelected = true;
     if (parent != nullptr)
     {
-        parent->hide();
         parent->cmdOk();
+        parent->hide();
     }
     else
         hide();

@@ -432,7 +432,7 @@ MyItemDelegate* TableView::getColumnDelegate(FieldType fld)
 
 bool TableView::columnIsReadOnly()
 {
-    if (tableModel != 0 && tableModel->rowCount() > 0)
+    if (tableModel != nullptr && tableModel->rowCount() > 0)
     {
         QModelIndex index = currentIndex();
         if (!index.isValid())
@@ -442,7 +442,7 @@ bool TableView::columnIsReadOnly()
         if (!horizontalHeader()->isSectionHidden(logicalIndex))
         {
             MyItemDelegate* delegate = (MyItemDelegate*)itemDelegateForColumn(logicalIndex);
-            if (delegate != 0 && !delegate->isReadOnly())    // Если эта колонка для редактирования
+            if (delegate != nullptr && !delegate->isReadOnly())    // Если эта колонка для редактирования
             {
                 return false;
             }
@@ -455,7 +455,7 @@ bool TableView::columnIsReadOnly()
 void TableView::selectNextColumn()
 // Ищет следующую колонку для редактирования
 {
-    if (tableModel != 0 && tableModel->rowCount() > 0)
+    if (tableModel != nullptr && tableModel->rowCount() > 0)
     {
         QModelIndex index = currentIndex();
         if (!index.isValid())
@@ -485,7 +485,7 @@ void TableView::selectNextColumn()
             if (!horizontalHeader()->isSectionHidden(logicalIndex))
             {
                 MyItemDelegate* delegate = (MyItemDelegate*)itemDelegateForColumn(logicalIndex);
-                if (delegate != 0 && !delegate->isReadOnly())    // Если эта колонка для редактирования
+                if (delegate != nullptr && !delegate->isReadOnly())    // Если эта колонка для редактирования
                 {
                     setCurrentIndex(newIndex);
                     break;
@@ -531,7 +531,7 @@ void TableView::selectPreviousColumn()
         {
             setCurrentIndex(newIndex);
             MyItemDelegate* delegate = (MyItemDelegate*)itemDelegateForColumn(logicalIndex);
-            if (delegate != 0 && !delegate->isReadOnly())    // Если эта колонка для редактирования
+            if (delegate != nullptr && !delegate->isReadOnly())    // Если эта колонка для редактирования
                 break;
         }
         if (column == oldColumn)                            // Выход из бесконечного цикла в случае, если ни одного поля для редактирования не найдено
@@ -543,7 +543,7 @@ void TableView::selectPreviousColumn()
 void TableView::showPhoto()
 {
     QString photoFileName = "";
-    if (picture != 0 && essence != nullptr)
+    if (picture != nullptr && essence != nullptr)
     {
         if (tableModel->rowCount() > 0)
         {

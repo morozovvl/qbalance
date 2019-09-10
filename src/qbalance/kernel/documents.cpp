@@ -122,6 +122,7 @@ bool Documents::add()
             grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
             updateCurrentRow(strNum);
             saveOldValues();
+            setCurrentDocument(strNum);
             result = true;
         }
     }

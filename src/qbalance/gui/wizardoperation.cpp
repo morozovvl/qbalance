@@ -116,7 +116,7 @@ bool WizardOperation::open(QWidget* pwgt, int op)
 void WizardOperation::initFrames()
 {
     // Добавим страницы мастера
-    QVBoxLayout* layout = nullptr;
+    QVBoxLayout* layout = 0 /*nullptr*/;
     layout = new QVBoxLayout();
 
     // 1-я страница
@@ -247,48 +247,48 @@ bool WizardOperation::setData()
 
             dbAcc = "";
             item = prvTable->item(i, debetField);
-            if (item != nullptr)
+            if (item != 0 /*nullptr*/)
                 dbAcc = item->text().trimmed();
 
             item = prvTable->item(i, dbConstField);
-            if (item != nullptr)
+            if (item != 0 /*nullptr*/)
                 dbConstAcc = item->text().compare(db->getTrueValue()) == 0 ? true : false;
 
             item = prvTable->item(i, dbVisible);
-            if (item != nullptr)
+            if (item != 0 /*nullptr*/)
                 dbVisib = item->text().compare(db->getTrueValue()) == 0 ? true : false;
 
             item = prvTable->item(i, dbSalVisField);
-            if (item != nullptr)
+            if (item != 0 /*nullptr*/)
                 dbSalVisible = item->text().compare(db->getTrueValue()) == 0 ? true : false;
 
             crAcc = "";
             item = prvTable->item(i, creditField);
-            if (item != nullptr)
+            if (item != 0 /*nullptr*/)
                 crAcc = item->text().trimmed();
 
             item = prvTable->item(i, crConstField);
-            if (item != nullptr)
+            if (item != 0 /*nullptr*/)
                 crConstAcc = item->text().compare(db->getTrueValue()) == 0 ? true : false;
 
             item = prvTable->item(i, crVisible);
-            if (item != nullptr)
+            if (item != 0 /*nullptr*/)
                 crVisib = item->text().compare(db->getTrueValue()) == 0 ? true : false;
 
             item = prvTable->item(i, crSalVisField);
-            if (item != nullptr)
+            if (item != 0 /*nullptr*/)
                 crSalVisible = item->text().compare(db->getTrueValue()) == 0 ? true : false;
 
             item = prvTable->item(i, freeField);
-            if (item != nullptr)
+            if (item != 0 /*nullptr*/)
                 freePrv = item->text().compare(db->getTrueValue()) == 0 ? true : false;
 
             item = prvTable->item(i, attrField);
-            if (item != nullptr)
+            if (item != 0 /*nullptr*/)
                 attribute = item->text().compare(db->getTrueValue()) == 0 ? true : false;
 
             QString itog;
-            if (prvTable->item(i, itogField) != nullptr)
+            if (prvTable->item(i, itogField) != 0 /*nullptr*/)
                 itog = prvTable->item(i, itogField)->text().trimmed();
             if (!db->addToperPrv(oper,
                                  i+1,
@@ -657,9 +657,9 @@ void WizardOperation::sortHeaders(QListWidget* headers, QList<FieldType>* fields
     }
     for (int i = 0; i < headers->count(); i++)
     {
+        QString column = headers->item(i)->data(Qt::UserRole).toString();
         for (int j = 0; j < fields->count(); j++)
         {
-            QString column = headers->item(i)->data(Qt::UserRole).toString();
             qDebug() << fields->at(j).column << column;
             if (fields->at(j).column == column)
             {
@@ -759,25 +759,25 @@ void WizardOperation::frameDeactivated(int frameNumber)
                 QTableWidgetItem* item;
                 toperT.number = i + 1;
                 item = prvTable->item(i, debetField);
-                if (item != nullptr)
+                if (item != 0 /*nullptr*/)
                     toperT.dbAcc = item->text().trimmed();
                 item = prvTable->item(i, dbConstField);
-                if (item != nullptr)
+                if (item != 0 /*nullptr*/)
                     toperT.dbConst = (QString(item->text()).compare(db->getTrueValue()) == 0) ? true : false;
                 item = prvTable->item(i, dbSalVisField);
-                if (item != nullptr)
+                if (item != 0 /*nullptr*/)
                     toperT.dbSaldoVisible = (QString(item->text()).compare(db->getTrueValue()) == 0) ? true : false;
                 item = prvTable->item(i, creditField);
-                if (item != nullptr)
+                if (item != 0 /*nullptr*/)
                     toperT.crAcc = item->text().trimmed();
                 item = prvTable->item(i, crConstField);
-                if (item != nullptr)
+                if (item != 0 /*nullptr*/)
                     toperT.crConst = (QString(item->text()).compare(db->getTrueValue()) == 0) ? true : false;
                 item = prvTable->item(i, itogField);
                 item = prvTable->item(i, crSalVisField);
-                if (item != nullptr)
+                if (item != 0 /*nullptr*/)
                     toperT.crSaldoVisible = (QString(item->text()).compare(db->getTrueValue()) == 0) ? true : false;
-                if (item != nullptr)
+                if (item != 0 /*nullptr*/)
                     toperT.itog = item->text().trimmed();
                 topersList.append(toperT);
             }
@@ -856,7 +856,7 @@ void WizardOperation::generateScripts()
                 stream << QObject::trUtf8("var кол = getValue(\"P1__КОЛ\");") << endl;
                 stream << QObject::trUtf8("var цена = getValue(\"P1__ЦЕНА\");") << endl;
                 stream << QObject::trUtf8("var сумма = getValue(\"P1__СУММА\");") << endl;
-                stream << QObject::trUtf8("if (getCurrentFieldName() == \"P1__СУММА\" && кол != nullptr)") << endl;
+                stream << QObject::trUtf8("if (getCurrentFieldName() == \"P1__СУММА\" && кол != 0 /*nullptr*/)") << endl;
                 stream << QObject::trUtf8("   цена = сумма / кол;") << endl;
                 stream << QObject::trUtf8("else") << endl;
                 stream << QObject::trUtf8("   сумма = кол * цена;") << endl;

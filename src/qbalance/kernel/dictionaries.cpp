@@ -149,6 +149,7 @@ bool Dictionaries::addDictionary(QString dictName)
                             childDict->setParentDict(dict);
                     }
                 }
+                dict->setPhotoPath(getValue(db->getObjectName("доступ_к_справочникам.фото")).toString().trimmed());
             }
 
             return true;

@@ -1271,8 +1271,8 @@ void Document::showParameterText(QString dictName)
 
 void Document::cmdOk()
 {
-    parent->showItog();
     Dictionary::cmdOk();
+    parent->showItog();
 }
 
 
