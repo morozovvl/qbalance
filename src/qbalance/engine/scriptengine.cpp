@@ -59,7 +59,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "eventloop.h"
 #include "reportcontextfunctions.h"
 #include "reportcontext.h"
-#include "fileinfoclass.h"
+//#include "fileinfoclass.h"
 
 
 Q_DECLARE_METATYPE(Dialog*)
@@ -1211,7 +1211,11 @@ QString ScriptEngine::preparePictureUrl(Essence* essence)
     if (!res.isValid() || res.isUndefined())
         result = "";
     else
+    {
         result = res.toString();
+        if (result == "undefined")
+            result = "";
+    }
     return result;
 }
 
