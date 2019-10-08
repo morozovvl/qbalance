@@ -4,6 +4,8 @@ set(CMAKE_BUILD_TYPE "Release")
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
+SET ( CMAKE_CXX_FLAGS "-ludev" )
+
 find_package (Qt4 REQUIRED)
 include(${QT_USE_FILE})
 

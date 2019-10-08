@@ -703,8 +703,6 @@ bool TApplication::initApplication()
 
     if (db->getDB()->isValid())
     {
-        messagesWindow = new MessageWindow();
-
         getMainWindow()->setWindowTitle(QString("%1 %2").arg(getTrueApplicationName()).arg(applicationVersion()));
 
         forever         // Будем бесконечно пытаться открыть базу, пока пользователь не откажется
@@ -712,6 +710,8 @@ bool TApplication::initApplication()
             int result = db->openDBDialog(); // Попытаемся открыть базу данных
             if (result == 0)
             {   // БД открыть удалось
+
+                messagesWindow = new MessageWindow();
 
                 db->clearLockedDocumentList();
 
@@ -846,22 +846,26 @@ void TApplication::close()
             documents.remove(operName);
         }
     }
+
     if (dictionaryList != nullptr)
     {
         dictionaryList->close();
         delete dictionaryList;
     }
+
     if (topersList != nullptr)
     {
         topersList->close();
         delete topersList;
     }
+
     if (db != nullptr)
     {
         db->close();
         delete db;
         db = nullptr;
     }
+
     if (gui != nullptr)
         gui->close();
 }

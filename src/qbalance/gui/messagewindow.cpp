@@ -164,6 +164,7 @@ void MessageWindow::writeSettings()
 {
     // Сохраним данные локально, на компьютере пользователя
     int x, y, w, h;
+
     if (subWindow != nullptr)
     {
         x = subWindow->geometry().x();

@@ -390,29 +390,30 @@ void MainWindow::terminalControlRibbon()
 
 void MainWindow::readSettings()
 {
-      QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
-      if (settings.status() == QSettings::NoError) {
-          settings.beginGroup("mainwindow");
-          int x = settings.value("x", pos().x()).toInt();
-          int y = settings.value("y", pos().y()).toInt();
-          int w = settings.value("width", size().width()).toInt();
-          int h = settings.value("height", size().height()).toInt();
-          move(x, y);
-          resize(w, h);
-          settings.endGroup();
-      }
+    QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
+    if (settings.status() == QSettings::NoError)
+    {
+        settings.beginGroup("mainwindow");
+        int x = settings.value("x", pos().x()).toInt();
+        int y = settings.value("y", pos().y()).toInt();
+        int w = settings.value("width", size().width()).toInt();
+        int h = settings.value("height", size().height()).toInt();
+        move(x, y);
+        resize(w, h);
+        settings.endGroup();
+    }
 }
 
 
 void MainWindow::writeSettings()
 {
-      QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
-      settings.beginGroup("mainwindow");
-      settings.setValue("x", pos().x());
-      settings.setValue("y", pos().y());
-      settings.setValue("width", size().width());
-      settings.setValue("height", size().height());
-      settings.endGroup();
+    QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
+    settings.beginGroup("mainwindow");
+    settings.setValue("x", pos().x());
+    settings.setValue("y", pos().y());
+    settings.setValue("width", size().width());
+    settings.setValue("height", size().height());
+    settings.endGroup();
 }
 
 
@@ -456,7 +457,7 @@ void MainWindow::removeMdiWindow(QMdiSubWindow* subWindow)
     if (subWindow != nullptr)
     {
         workSpace->setActiveSubWindow(subWindow);
-        subWindow->setWidget(0);    // Обнулим указатель на виджет, чтобы при удалении подокна оно одновременно не удалило и виджет
+        subWindow->setWidget(nullptr);    // Обнулим указатель на виджет, чтобы при удалении подокна оно одновременно не удалило и виджет
         workSpace->removeSubWindow(subWindow);
         delete subWindow;
     }

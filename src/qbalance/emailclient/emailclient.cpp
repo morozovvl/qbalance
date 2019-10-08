@@ -50,7 +50,7 @@ void EMailClient::close()
 int EMailClient::sendMail()
 {
 
-    SmtpClient* smtp = new SmtpClient("smtp.gmail.com", 465, SmtpClient::SslConnection);
+//    SmtpClient* smtp = new SmtpClient("smtp.gmail.com", 465/*, SmtpClient::SslConnection*/);
 
     // We need to set the username (your email address) and password
     // for smtp authentification.
@@ -100,9 +100,9 @@ int EMailClient::sendMail()
     }
 */
 
-    smtp->quit();
+//    smtp->quit();
 
-    delete smtp;
+//    delete smtp;
 
     return 0;
 }

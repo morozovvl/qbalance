@@ -27,11 +27,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 class EMailClientPlugin : public EMailClient
 {
     Q_OBJECT
-
-#if QT_VERSION >= 0x050000
-    Q_PLUGIN_METADATA(IID "EMailClient")
-#endif
-
     Q_INTERFACES(EMailClient)
 };
 

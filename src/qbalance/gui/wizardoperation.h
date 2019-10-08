@@ -79,6 +79,7 @@ private:
     QList<FieldType>    fields;           // Первоначальный список полей
     QList<FieldType>    docListFields;    // Первоначальный список полей
     QList<ToperType> topersList;
+    QStringList     mainTablesList;
     virtual void    getData();
     friend QString  showAccounts();
     void            getFieldsTable(QList<FieldType>*,  QTableWidget*);

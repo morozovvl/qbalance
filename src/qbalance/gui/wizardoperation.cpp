@@ -116,7 +116,7 @@ bool WizardOperation::open(QWidget* pwgt, int op)
 void WizardOperation::initFrames()
 {
     // Добавим страницы мастера
-    QVBoxLayout* layout = 0 /*nullptr*/;
+    QVBoxLayout* layout = nullptr;
     layout = new QVBoxLayout();
 
     // 1-я страница
@@ -247,48 +247,48 @@ bool WizardOperation::setData()
 
             dbAcc = "";
             item = prvTable->item(i, debetField);
-            if (item != 0 /*nullptr*/)
+            if (item != nullptr)
                 dbAcc = item->text().trimmed();
 
             item = prvTable->item(i, dbConstField);
-            if (item != 0 /*nullptr*/)
+            if (item != nullptr)
                 dbConstAcc = item->text().compare(db->getTrueValue()) == 0 ? true : false;
 
             item = prvTable->item(i, dbVisible);
-            if (item != 0 /*nullptr*/)
+            if (item != nullptr)
                 dbVisib = item->text().compare(db->getTrueValue()) == 0 ? true : false;
 
             item = prvTable->item(i, dbSalVisField);
-            if (item != 0 /*nullptr*/)
+            if (item != nullptr)
                 dbSalVisible = item->text().compare(db->getTrueValue()) == 0 ? true : false;
 
             crAcc = "";
             item = prvTable->item(i, creditField);
-            if (item != 0 /*nullptr*/)
+            if (item != nullptr)
                 crAcc = item->text().trimmed();
 
             item = prvTable->item(i, crConstField);
-            if (item != 0 /*nullptr*/)
+            if (item != nullptr)
                 crConstAcc = item->text().compare(db->getTrueValue()) == 0 ? true : false;
 
             item = prvTable->item(i, crVisible);
-            if (item != 0 /*nullptr*/)
+            if (item != nullptr)
                 crVisib = item->text().compare(db->getTrueValue()) == 0 ? true : false;
 
             item = prvTable->item(i, crSalVisField);
-            if (item != 0 /*nullptr*/)
+            if (item != nullptr)
                 crSalVisible = item->text().compare(db->getTrueValue()) == 0 ? true : false;
 
             item = prvTable->item(i, freeField);
-            if (item != 0 /*nullptr*/)
+            if (item != nullptr)
                 freePrv = item->text().compare(db->getTrueValue()) == 0 ? true : false;
 
             item = prvTable->item(i, attrField);
-            if (item != 0 /*nullptr*/)
+            if (item != nullptr)
                 attribute = item->text().compare(db->getTrueValue()) == 0 ? true : false;
 
             QString itog;
-            if (prvTable->item(i, itogField) != 0 /*nullptr*/)
+            if (prvTable->item(i, itogField) != nullptr)
                 itog = prvTable->item(i, itogField)->text().trimmed();
             if (!db->addToperPrv(oper,
                                  i+1,
@@ -470,8 +470,14 @@ void WizardOperation::getData()
 
      // Получим список полей и заголовков формы списка документов
      docListFields.clear();
-     db->getColumnsProperties(&docListFields, db->getObjectName("документы"));
-     db->getColumnsProperties(&docListFields, QString("%1%2").arg(db->getObjectName("докатрибуты")).arg(oper));
+
+     QString tName = db->getObjectName("документы");
+     db->getColumnsProperties(&docListFields, tName);
+     mainTablesList.append(tName);
+     tName = QString("%1%2").arg(db->getObjectName("докатрибуты")).arg(oper);
+     db->getColumnsProperties(&docListFields, tName);
+     mainTablesList.append(tName);
+
      db->getColumnsHeaders(QString("СписокДокументов%1").arg(oper), &docListFields);
      getFieldsTable(&docListFields, docListFieldsTable);
      sortHeadersList(docListFieldsTable, &docListHeaders);
@@ -660,8 +666,14 @@ void WizardOperation::sortHeaders(QListWidget* headers, QList<FieldType>* fields
         QString column = headers->item(i)->data(Qt::UserRole).toString();
         for (int j = 0; j < fields->count(); j++)
         {
-            qDebug() << fields->at(j).column << column;
-            if (fields->at(j).column == column)
+            QString tName = fields->at(j).table;
+            QString cName = fields->at(j).column;
+/*
+            if (!mainTablesList.contains(tName))
+                cName = QString(tName + "__" + cName).toUpper();
+            qDebug() << "#########" << cName << column;
+*/
+            if (cName == column)
             {
                 FieldType field = fields->at(j);
                 field.number = i + 1;
@@ -759,25 +771,25 @@ void WizardOperation::frameDeactivated(int frameNumber)
                 QTableWidgetItem* item;
                 toperT.number = i + 1;
                 item = prvTable->item(i, debetField);
-                if (item != 0 /*nullptr*/)
+                if (item != nullptr)
                     toperT.dbAcc = item->text().trimmed();
                 item = prvTable->item(i, dbConstField);
-                if (item != 0 /*nullptr*/)
+                if (item != nullptr)
                     toperT.dbConst = (QString(item->text()).compare(db->getTrueValue()) == 0) ? true : false;
                 item = prvTable->item(i, dbSalVisField);
-                if (item != 0 /*nullptr*/)
+                if (item != nullptr)
                     toperT.dbSaldoVisible = (QString(item->text()).compare(db->getTrueValue()) == 0) ? true : false;
                 item = prvTable->item(i, creditField);
-                if (item != 0 /*nullptr*/)
+                if (item != nullptr)
                     toperT.crAcc = item->text().trimmed();
                 item = prvTable->item(i, crConstField);
-                if (item != 0 /*nullptr*/)
+                if (item != nullptr)
                     toperT.crConst = (QString(item->text()).compare(db->getTrueValue()) == 0) ? true : false;
                 item = prvTable->item(i, itogField);
                 item = prvTable->item(i, crSalVisField);
-                if (item != 0 /*nullptr*/)
+                if (item != nullptr)
                     toperT.crSaldoVisible = (QString(item->text()).compare(db->getTrueValue()) == 0) ? true : false;
-                if (item != 0 /*nullptr*/)
+                if (item != nullptr)
                     toperT.itog = item->text().trimmed();
                 topersList.append(toperT);
             }
@@ -809,14 +821,18 @@ void WizardOperation::frameDeactivated(int frameNumber)
     }
     if (frameNumber == 5 && docListFldsTableChanged)
     {
+//        qDebug() << docListFieldsTable->rowCount();
         for (int i = 0; i < docListFieldsTable->rowCount(); i++)
         {
             QString table = docListFieldsTable->item(i, tableField)->data(Qt::UserRole).toString();
-            QString column = table.toUpper() + "__" + docListFieldsTable->item(i, columnField)->data(Qt::UserRole).toString();
+            QString column = docListFieldsTable->item(i, columnField)->data(Qt::UserRole).toString();
+//            if (!mainTablesList.contains(table))
+//                column = QString(table + "__" + column).toUpper();
             for (int j = 0; j < docListFields.count(); j++)
             {
                 if (docListFields.at(j).table == table && docListFields.at(j).column == column)
                 {
+//                    qDebug() << "***" << docListFields.at(j).table << docListFields.at(j).column << "--" << table << column;
                     FieldType field = docListFields.at(j);
                     field.header = docListFieldsTable->item(i, headerField)->text();
                     field.readOnly = docListFieldsTable->item(i, editableField)->text() == db->getTrueValue() ? true : false;
@@ -856,7 +872,7 @@ void WizardOperation::generateScripts()
                 stream << QObject::trUtf8("var кол = getValue(\"P1__КОЛ\");") << endl;
                 stream << QObject::trUtf8("var цена = getValue(\"P1__ЦЕНА\");") << endl;
                 stream << QObject::trUtf8("var сумма = getValue(\"P1__СУММА\");") << endl;
-                stream << QObject::trUtf8("if (getCurrentFieldName() == \"P1__СУММА\" && кол != 0 /*nullptr*/)") << endl;
+                stream << QObject::trUtf8("if (getCurrentFieldName() == \"P1__СУММА\" && кол != nullptr)") << endl;
                 stream << QObject::trUtf8("   цена = сумма / кол;") << endl;
                 stream << QObject::trUtf8("else") << endl;
                 stream << QObject::trUtf8("   сумма = кол * цена;") << endl;
