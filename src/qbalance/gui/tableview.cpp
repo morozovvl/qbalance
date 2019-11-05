@@ -397,11 +397,11 @@ MyItemDelegate* TableView::getColumnDelegate(FieldType fld)
         fld.type.toUpper() == "INTEGER")
     {     // для числовых полей зададим свой самодельный делегат
         MyNumericItemDelegate* numericDelegate = new MyNumericItemDelegate(this, parent, fld.length, fld.precision);
-        result = (MyItemDelegate*)numericDelegate;
+        result = static_cast<MyItemDelegate*>(numericDelegate);
     } else if (fld.type.toUpper() == "BOOLEAN")
     {
         MyBooleanItemDelegate* booleanDelegate = new MyBooleanItemDelegate(this, parent);
-        result = (MyItemDelegate*)booleanDelegate;
+        result = static_cast<MyItemDelegate*>(booleanDelegate);
     } else
     {
         if (fld.type.toUpper() == "CHARACTER" ||
@@ -410,7 +410,7 @@ MyItemDelegate* TableView::getColumnDelegate(FieldType fld)
         {
             MyLineItemDelegate* textDelegate = new MyLineItemDelegate(this, parent);
             textDelegate->setMaxLength(fld.length);
-            result = (MyItemDelegate*)textDelegate;
+            result = static_cast<MyItemDelegate*>(textDelegate);
         }
         else
         {
@@ -418,7 +418,7 @@ MyItemDelegate* TableView::getColumnDelegate(FieldType fld)
                 fld.type.toUpper().left(9) == "TIMESTAMP")
             {
                 MyDateItemDelegate* dateDelegate = new MyDateItemDelegate(this, parent);
-                result = (MyItemDelegate*)dateDelegate;
+                result = static_cast<MyItemDelegate*>(dateDelegate);
             }
         }
     }
@@ -441,7 +441,7 @@ bool TableView::columnIsReadOnly()
         int logicalIndex = horizontalHeader()->logicalIndex(column);
         if (!horizontalHeader()->isSectionHidden(logicalIndex))
         {
-            MyItemDelegate* delegate = (MyItemDelegate*)itemDelegateForColumn(logicalIndex);
+            MyItemDelegate* delegate = static_cast<MyItemDelegate*>(itemDelegateForColumn(logicalIndex));
             if (delegate != nullptr && !delegate->isReadOnly())    // Если эта колонка для редактирования
             {
                 return false;
@@ -484,7 +484,7 @@ void TableView::selectNextColumn()
 
             if (!horizontalHeader()->isSectionHidden(logicalIndex))
             {
-                MyItemDelegate* delegate = (MyItemDelegate*)itemDelegateForColumn(logicalIndex);
+                MyItemDelegate* delegate = static_cast<MyItemDelegate*>(itemDelegateForColumn(logicalIndex));
                 if (delegate != nullptr && !delegate->isReadOnly())    // Если эта колонка для редактирования
                 {
                     setCurrentIndex(newIndex);
@@ -530,7 +530,7 @@ void TableView::selectPreviousColumn()
         if (!horizontalHeader()->isSectionHidden(logicalIndex))
         {
             setCurrentIndex(newIndex);
-            MyItemDelegate* delegate = (MyItemDelegate*)itemDelegateForColumn(logicalIndex);
+            MyItemDelegate* delegate = static_cast<MyItemDelegate*>(itemDelegateForColumn(logicalIndex));
             if (delegate != nullptr && !delegate->isReadOnly())    // Если эта колонка для редактирования
                 break;
         }
@@ -579,7 +579,7 @@ void TableView::setReadOnly(bool ro)
         app->getDBFactory()->getColumnsHeaders(essence->getTagName(), &fields);
         for (int i = 0; i < fields.count(); i++)
         {
-            MyItemDelegate* delegate = (MyItemDelegate*)itemDelegateForColumn(i);
+            MyItemDelegate* delegate = static_cast<MyItemDelegate*>(itemDelegateForColumn(i));
             if (delegate != nullptr)
             {
                 if (ro)

@@ -18,13 +18,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
 #include "emailclient.h"
-#include "../../SMTPEmail/src/SmtpMime"
-#include "../../SMTPEmail/src/smtpclient.h"
-#include "../../SMTPEmail/src/mimemessage.h"
 
 
-EMailClient::EMailClient(QObject *parent) :
-    QObject(parent)
+EMailClient::EMailClient(const QString & host, int port, ConnectionType ct) : SmtpClient(host, port, ct)
 {
 }
 
@@ -47,8 +43,8 @@ void EMailClient::close()
 }
 
 
-int EMailClient::sendMail()
-{
+//int EMailClient::sendMail()
+//{
 
 //    SmtpClient* smtp = new SmtpClient("smtp.gmail.com", 465/*, SmtpClient::SslConnection*/);
 
@@ -102,7 +98,9 @@ int EMailClient::sendMail()
 
 //    smtp->quit();
 
-//    delete smtp;
+/*
+    delete smtp;
 
     return 0;
-}
+*/
+//}

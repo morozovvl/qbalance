@@ -43,7 +43,7 @@ class TcpClient;
 {
     Q_OBJECT
 public:
-    QMyExtSerialPort(const QString & name, QueryMode mode, QObject * parent = 0);
+    QMyExtSerialPort(const QString & name, QueryMode mode, QObject * parent = nullptr);
     ~QMyExtSerialPort();
 
     virtual bool open(OpenMode mode);

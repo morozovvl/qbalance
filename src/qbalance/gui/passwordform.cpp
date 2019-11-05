@@ -67,7 +67,7 @@ bool PassWordForm::open(QWidget* pwgt)
         setFormTitle(QObject::trUtf8("Логин и пароль"));
 
         connect(PasswordEditor, SIGNAL(returnPressed()), this, SLOT(cmdOk()));
-        QVBoxLayout* vbxLayout = (QVBoxLayout*)formWidget->findChild("vbxLayout");
+        QVBoxLayout* vbxLayout = static_cast<QVBoxLayout*>(formWidget->findChild("vbxLayout"));
         if (vbxLayout != nullptr)
             vbxLayout->insertLayout(0, layout);
         formWidget->setMinimumHeight(100);

@@ -970,19 +970,19 @@ void    TApplication::openPlugins()
 
     // Запустим почтовый клиент
 
-    if (getConfigValue("EMAILCLIENT_NEEDED").toBool())
-    {
-        smtpclient = static_cast<EMailClient*>(createPlugin("emailclient"));
-        if (smtpclient != nullptr)
-        {
-            if (smtpclient->open())
-            {
-//                smtpclient->sendMail();
-                smtpclient->close();
-                smtpclient = nullptr;
-            }
-        }
-    }
+//    if (getConfigValue("EMAILCLIENT_NEEDED").toBool())
+//    {
+//        smtpclient = static_cast<EMailClient*>(createPlugin("emailclient"));
+//        if (smtpclient != nullptr)
+//        {
+//            if (smtpclient->open())
+//            {
+////                smtpclient->sendMail();
+//                smtpclient->close();
+//                smtpclient = nullptr;
+//            }
+//        }
+//    }
 }
 
 
@@ -1392,8 +1392,12 @@ QVariant TApplication::getConst(QString valueName, bool refresh)
             if (QString().compare(dict->getValue(constNameField, i).toString().trimmed(), valName, Qt::CaseInsensitive) == 0)
             {
                 if (refresh)
+                {
                     dict->updateCurrentRow(i);
-                result = dict->getValue(constValueField, i);
+                    result = db->getValue(QString("SELECT %1 FROM %2 WHERE %3 = '%4';").arg(constValueField).arg(constDictionaryName).arg(constNameField).arg(valueName));
+                }
+                else
+                    result = dict->getValue(constValueField, i);
                 QString res = result.toString().trimmed().toLower();
                 if (res == "yes" || res == "да")
                     result = true;

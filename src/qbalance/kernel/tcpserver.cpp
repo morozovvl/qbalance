@@ -27,7 +27,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 TcpServer::TcpServer(int nPort, QObject *parent ):   QObject(parent)
 {
-    app = (TApplication*)parent;
+    app = static_cast<TApplication*>(parent);
     m_nNextBlockSize = 0;
     pingOk = false;
     m_ptcpServer = new QTcpServer(this);
@@ -82,7 +82,7 @@ void TcpServer::slotNewConnection()
 
 void TcpServer::slotDisconnected()
 {
-    QTcpSocket* clientSocket = ((QTcpSocket*)sender());
+    QTcpSocket* clientSocket = static_cast<QTcpSocket*>(sender());
     clients.remove(clientSocket->peerAddress().toString());         // Удалим клиента из списка обслуживаемых
     clientSocket->deleteLater();
 }
@@ -90,7 +90,7 @@ void TcpServer::slotDisconnected()
 
 void TcpServer::slotReadClient()
 {
-    QTcpSocket* pClientSocket = (QTcpSocket*)sender();
+    QTcpSocket* pClientSocket = static_cast<QTcpSocket*>(sender());
     if (pClientSocket->isValid())
     {
         QDataStream in(pClientSocket);
@@ -100,7 +100,7 @@ void TcpServer::slotReadClient()
         {
             if (!m_nNextBlockSize)
             {
-                if (pClientSocket->bytesAvailable() < (int)sizeof(quint16))
+                if (pClientSocket->bytesAvailable() < static_cast<int>(sizeof(quint16)))
                     break;
                 in >> m_nNextBlockSize;
             }

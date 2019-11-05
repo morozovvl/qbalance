@@ -83,7 +83,7 @@ private slots:
       void deleteRecord();
       void about();
       void setPeriod();
-      void closeEvent();
+      void closeApp();
       void wikiQt();
       void vkQt();
 

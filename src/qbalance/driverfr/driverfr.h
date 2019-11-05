@@ -45,6 +45,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QTime>
 #include <QtCore/QDebug>
 #include <sys/time.h>
+#include <stdint.h>
 #include "../serialport/qmyextserialport.h"
 #include "../gui/myprogressdialog.h"
 

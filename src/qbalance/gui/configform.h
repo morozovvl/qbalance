@@ -49,9 +49,9 @@ class ConfigForm : public Form
 public:
     QSignalMapper *signalMapper;
 
-    ConfigForm(QObject* parent = 0);
+    ConfigForm(QObject* parent = nullptr);
     ~ConfigForm();
-    virtual bool open(QWidget* pwgt = 0);
+    virtual bool open(QWidget* pwgt = nullptr);
 
 public slots:
     virtual void cmdOk();
@@ -61,7 +61,7 @@ private slots:
     void dispatch(QTreeWidgetItem*, int);
 
 private:
-    TApplication* app;
+//    TApplication* app;
     QFrame* frame;
     QHash<QString, ConfigEntry> configs;
     QString                     currentConfigGroup;

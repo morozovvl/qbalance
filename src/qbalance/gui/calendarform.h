@@ -35,9 +35,9 @@ class TApplication;
 class CalendarForm : public Form {
     Q_OBJECT
 public:
-    CalendarForm(QObject* parent = 0);
+    CalendarForm(QObject* parent = nullptr);
     ~CalendarForm();
-    virtual bool open(QWidget* pwgt = 0);
+    virtual bool open(QWidget* pwgt = nullptr);
     Q_INVOKABLE virtual QDate getBeginDate();
     Q_INVOKABLE virtual QDate getEndDate();
     Q_INVOKABLE virtual void setBeginDate(QDate);

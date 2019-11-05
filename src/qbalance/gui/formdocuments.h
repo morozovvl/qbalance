@@ -51,7 +51,7 @@ public slots:
 
 private:
      MyNumericEdit*    itogNumeric;
-     virtual void createForm(QString, QWidget* pwgt = 0);
+     virtual void createForm(QString, QWidget* pwgt = nullptr);
 };
 
 #endif //FORMDOCUMENTS_H

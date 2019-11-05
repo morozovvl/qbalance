@@ -59,11 +59,11 @@ void FormGridSearch::createForm(QString fileName, QWidget* pwgt)
     }
     else
     {
-        parameters = (SearchParameters*)formWidget->findChild("searchParameters");
+        parameters = static_cast<SearchParameters*>(formWidget->findChild("searchParameters"));
     }
     if (parameters != nullptr)
     {
-        parameters->setDictionaries(((Dictionary*)parent)->getDictionaries());
+        parameters->setDictionaries(static_cast<Dictionary*>(parent)->getDictionaries());
         parameters->setParent(formWidget);
         parameters->setApp(app);
         parameters->setFormGrid(this);

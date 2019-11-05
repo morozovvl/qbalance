@@ -71,7 +71,7 @@ bool CalendarForm::open(QWidget* pwgt) {
         ptopLayout->addWidget(pBeginCalendar, 1, 0, Qt::AlignCenter);
         ptopLayout->addWidget(pEndCalendar, 1, 1, Qt::AlignCenter);
 
-        QVBoxLayout* vbxLayout = (QVBoxLayout*)formWidget->findChild("vbxLayout");
+        QVBoxLayout* vbxLayout = static_cast<QVBoxLayout*>(formWidget->findChild("vbxLayout"));
         if (vbxLayout != nullptr)
             vbxLayout->insertLayout(0, ptopLayout);
         app->setIcons(formWidget);

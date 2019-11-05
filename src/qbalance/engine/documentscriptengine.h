@@ -31,8 +31,8 @@ class Documents;
 class DocumentScriptEngine : public ScriptEngine
 {
 public:
-    DocumentScriptEngine(Essence *parent = 0);
-    DocumentScriptEngine(QHash<QString, QVariant>*, Essence *parent = 0);
+    DocumentScriptEngine(Essence *parent = nullptr);
+    DocumentScriptEngine(QHash<QString, QVariant>*, Essence *parent = nullptr);
     virtual void eventAppendFromQuery(QString, QSqlRecord*);
     virtual bool eventBeforeLinePrint(int);
     virtual void eventAfterLinePrint(int);

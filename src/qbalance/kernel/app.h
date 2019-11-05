@@ -193,7 +193,7 @@ public:
     void    setDebugToBuffer(bool buff);
     int getDebugBufferCount(int mode);
     void clearDebugBuffer(int mode);
-    void setWriteDebug(bool write);
+    Q_INVOKABLE void setWriteDebug(bool write);
     QString getLastValueInDebugBuffer(int);
     void removeLastValueInDebugBuffer(int);
     bool    getFullDebugInfo();
@@ -250,7 +250,7 @@ public:
     Q_INVOKABLE virtual void sleep(int);
 
     Q_INVOKABLE void setDirName(QString str);
-    Q_INVOKABLE QString getOpenFileName(QWidget* parent = 0, const QString caption = QString(), const QString dir = QString(), const QString filter = QString(), QString* selectedFilter = 0, QFileDialog::Options options = 0);
+    Q_INVOKABLE QString getOpenFileName(QWidget* parent = nullptr, const QString caption = QString(), const QString dir = QString(), const QString filter = QString(), QString* selectedFilter = nullptr, QFileDialog::Options options = 0);
 
     void saveCustomization();
     void printReportWithoutCleaning();
@@ -278,7 +278,7 @@ public:
     ScriptEngine*   getLastScriptStack();
 
     QObject*        createPlugin(QString);
-    virtual QMyExtSerialPort* getSerialPort(const QString & name, QMyExtSerialPort::QueryMode mode = QMyExtSerialPort::EventDriven, QObject * parent = 0);
+    virtual QMyExtSerialPort* getSerialPort(const QString & name, QMyExtSerialPort::QueryMode mode = QMyExtSerialPort::EventDriven, QObject * parent = nullptr);
     virtual MyProgressDialog* getMyProgressDialog(QString mess);
     QString         getReportFile(QString, bool, QWidget*, QRect);
     QString         getProcessFile(QString, QWidget*, QRect);

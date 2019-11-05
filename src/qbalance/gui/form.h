@@ -55,7 +55,7 @@ class Form: public QObject
 {
     Q_OBJECT
 public:
-    Form(QObject* parent = 0);
+    Form(QObject* parent = nullptr);
     ~Form();
     Q_INVOKABLE virtual bool open(QWidget* = nullptr, Essence* = nullptr, QString = "");
     Q_INVOKABLE virtual void close();
@@ -117,7 +117,7 @@ protected:
     QPushButton*    buttonOk;
     QPushButton*    buttonCancel;
 
-    virtual void    createForm(QString, QWidget* pwgt = 0);
+    virtual void    createForm(QString, QWidget* pwgt = nullptr);
 
 private:
     bool                    uiCreated;

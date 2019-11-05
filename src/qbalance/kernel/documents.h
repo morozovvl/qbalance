@@ -44,14 +44,14 @@ private:
 protected:
     virtual bool        setTableModel(int = 0);
 
-    Documents(int, QObject* parent = 0);
+    Documents(int, QObject* parent = nullptr);
     virtual void postInitialize(int, QObject*);
 
 public:
     ~Documents();
 
     template <class T>
-        static T* create(int opNumber, QObject *parent = 0)
+        static T* create(int opNumber, QObject *parent = nullptr)
         {
             T* p(new T(opNumber, parent));
             p->postInitialize(opNumber, parent);

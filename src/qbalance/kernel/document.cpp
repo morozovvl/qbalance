@@ -175,7 +175,7 @@ bool Document::getIsSingleString()
 
 FormDocument* Document::getForm(bool)
 {
-    return (FormDocument*)Essence::getForm();
+    return static_cast<FormDocument*>(Essence::getForm());
 }
 
 
@@ -224,7 +224,7 @@ void Document::calcItog()
     // сохраним те переменные, которые использовались в скриптах
     foreach (QString varName, variables.keys())
     {
-        QVariant var = ((DocumentScriptEngine*)scriptEngine)->evaluate(varName).toVariant();
+        QVariant var = static_cast<DocumentScriptEngine*>(scriptEngine)->evaluate(varName).toVariant();
         saveVariable(varName, var);
     }
 
@@ -351,7 +351,7 @@ int Document::addFromQuery(QString queryName)
             do {
                 record = queryData.record();
                 if (record.count() > 0)
-                    ((DocumentScriptEngine*)scriptEngine)->eventAppendFromQuery(queryName, &record);
+                    static_cast<DocumentScriptEngine*>(scriptEngine)->eventAppendFromQuery(queryName, &record);
                 i++;
                 progressDialog->setValue(i);
             } while (queryData.next());
@@ -361,7 +361,7 @@ int Document::addFromQuery(QString queryName)
             result = queryData.size();;
         }
         else
-            ((DocumentScriptEngine*)scriptEngine)->eventAppendFromQuery(queryName, &record);
+            static_cast<DocumentScriptEngine*>(scriptEngine)->eventAppendFromQuery(queryName, &record);
 
         Dictionary::query();
         calcItog();
@@ -624,7 +624,7 @@ void Document::loadDocument()
                     Dictionary* childDict = getDictionariesList()->value(dictName);
                     childDict->setCanShow(false);
                     processedDictNames.append(dictName);
-                    if (childDict != 0 && childDict->isConst())
+                    if (childDict != nullptr && childDict->isConst())
                     {
                         // Установим сначала значение основного справочника
                         int val = getValue(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.кркод")), 0).toULongLong();
@@ -754,7 +754,7 @@ void Document::setConstDictId(QString dName, QVariant id)
                 if (constDict->isConst())
                 {
                     Dictionary* parentDict = constDict->getParentDict();
-                    if (parentDict != 0 && parentDict->getPrototypeName() == dictName)
+                    if (parentDict != nullptr && parentDict->getPrototypeName() == dictName)
                     {
                         constDict->setIdEnabled(false);
                         dict = getDictionariesList()->value(dictName);
@@ -790,7 +790,7 @@ void Document::setConstDictId(QString dName, QVariant id)
                 if (constDict->isConst())
                 {
                     Dictionary* parentDict = constDict->getParentDict();
-                    if (parentDict != 0 && parentDict->getPrototypeName() == dictName)
+                    if (parentDict != nullptr && parentDict->getPrototypeName() == dictName)
                     {
                         constDict->setIdEnabled(false);
                         dict = getDictionariesList()->value(dictName);
@@ -873,7 +873,7 @@ void Document::setForm(QString formName)
     form->appendToolTip("buttonSave", trUtf8("Экспорт документа"));
     form->appendToolTip("buttonLoad", trUtf8("Импорт документа"));
 
-    form->open(parentForm, (Document*)this, formName.size() == 0 ? QString("Документ%1").arg(operNumber) : formName);
+    form->open(parentForm, static_cast<Document*>(this), formName.size() == 0 ? QString("Документ%1").arg(operNumber) : formName);
 }
 
 
@@ -885,7 +885,7 @@ void Document::setScriptEngine()
 
 DocumentScriptEngine* Document::getScriptEngine()
 {
-    return (DocumentScriptEngine*)scriptEngine;
+    return static_cast<DocumentScriptEngine*>(scriptEngine);
 }
 
 
@@ -934,7 +934,7 @@ bool Document::setTableModel(int)
             if (dictsList.at(i).isSaldo)
             {
                 Saldo* saldo = dictionaries->getSaldo(dictsList.at(i).acc);
-                SearchParameters* searchParameters = ((FormGridSearch*)(saldo->getForm()))->getSearchParameters();
+                SearchParameters* searchParameters = static_cast<FormGridSearch*>(saldo->getForm())->getSearchParameters();
                 if (searchParameters != nullptr)
                     searchParameters->setDictionaries(dictionaries);
                 saldo->setAutoLoaded(true);
@@ -946,7 +946,7 @@ bool Document::setTableModel(int)
                 Dictionary* dict = dictionaries->getDictionary(dictsList.at(i).name);
                 if (dictsList.at(i).isConst)
                     dict->setConst(true);
-                SearchParameters* searchParameters = ((FormGridSearch*)dict->getForm())->getSearchParameters();
+                SearchParameters* searchParameters = static_cast<FormGridSearch*>(dict->getForm())->getSearchParameters();
                 if (searchParameters != nullptr)
                     searchParameters->setDictionaries(dictionaries);
                 dict->setAutoLoaded(true);
@@ -1047,7 +1047,7 @@ void Document::prepareValue(QString name, Dictionary* dict)
     {
         int id = -1;
         if (dict->isSaldo())
-            id = ((Saldo*)dict)->getId();
+            id = static_cast<Saldo*>(dict)->getId();
         else
             id = dict->getId();
         if (id > 0 || !dict->getExact())

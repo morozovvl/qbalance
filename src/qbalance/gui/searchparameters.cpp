@@ -103,7 +103,8 @@ void SearchParameters::setFieldsList(QStringList fldList)
         }
         else if (field.left(4).toLower() == (programIdFieldName + "_"))                          // Если это поле - столбец ИМЯ, то это справочник
         {
-            addString(field, strNum++);                 // следовательно должна быть строка для поиска по наименованию
+            addString(field, strNum);                 // следовательно должна быть строка для поиска по наименованию
+            strNum++;
         }
     }
     gridLayout->setColumnStretch(1, 1);
@@ -143,7 +144,7 @@ void SearchParameters::addString(QString name, int strNum)
     }
     else
     {
-        Dictionary* dict = (Dictionary*)(parentForm->getParent());
+        Dictionary* dict = static_cast<Dictionary*>(parentForm->getParent());
         name = dict->getTableName();
         if (app != nullptr)
         {
@@ -184,7 +185,7 @@ QVector<sParam> SearchParameters::getParameters()
         par.value = text;
         // Определим, включен ли полнотекстовый поиск
         QCheckBox* chb = this->findChild<QCheckBox*>(field);
-        par.isFtsEnabled = (chb != 0 ? chb->isChecked(): false);
+        par.isFtsEnabled = (chb != nullptr ? chb->isChecked(): false);
         param.append(par);
     }
     return param;
@@ -243,16 +244,17 @@ QString SearchParameters::getFilter(QString dictName, QString defFilter)
             }
             else
             { // Если полнотекстовый поиск отключен
+                int subStrNum = 0;
                 foreach (QString param, paramList)
                 {
                     if (param.size() > 0)
                     {
-                        if (parentForm != 0 && dictionaries != nullptr)
+                        if (parentForm != nullptr && dictionaries != nullptr)
                         {
                             Dictionary* dict = dictionaries->getDictionary(searchParameters[i].table);    // Поместим связанный справочник в список справочников приложения
                             if (dict != nullptr)
                             {
-                                if (dict->getForm()->isLeftPercent())
+                                if (dict->getForm()->isLeftPercent() || subStrNum > 0)     // Отсутствие знака % актуально только для первого слова
                                     param = "%" + param;
                                 if (dict->getForm()->isRightPercent())
                                     param = param + "%";
@@ -269,6 +271,7 @@ QString SearchParameters::getFilter(QString dictName, QString defFilter)
                             fieldName.append(QString("%1.").arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table)));
                         fieldName.append(app->getDBFactory()->getObjectNameCom(searchParameters[i].table + "." + searchParameters[i].field));
                         filter.append(app->getDBFactory()->getILIKEexpression(fieldName, "'" + param + "'"));
+                        subStrNum++;
                     }
                 }
             }
@@ -326,7 +329,7 @@ void SearchParameters::dictionaryButtonPressed()
             dict->exec();
             if (dict->isFormSelected())
             {
-                MyComboBox* cmb = (MyComboBox*)this->findChild<QObject*>(sender()->objectName());
+                MyComboBox* cmb = static_cast<MyComboBox*>(this->findChild<QObject*>(sender()->objectName()));
                 if (cmb != nullptr)
                 {
                     QString text = dict->getValue(programNameFieldName).toString().trimmed();
@@ -352,12 +355,12 @@ void SearchParameters::comboBoxEnterPressed(QWidget* wdgt)
     int i = 0;
     while (i < gridLayout->rowCount())
     {                        // Пока мы не достигли последней ComboBox в параметрах поиска
-        MyComboBox* cmb = (MyComboBox*)gridLayout->itemAtPosition(i, 1)->widget();
+        MyComboBox* cmb = static_cast<MyComboBox*>(gridLayout->itemAtPosition(i, 1)->widget());
         if (cmb->objectName() == wdgt->objectName())
         {   // На этой ComboBox была нажата Enter
             if ((i + 1) < gridLayout->rowCount())                               // Если ниже есть еще одна ComboBox
             {
-                cmb = (MyComboBox*)gridLayout->itemAtPosition(i + 1, 1)->widget();
+                cmb = static_cast<MyComboBox*>(gridLayout->itemAtPosition(i + 1, 1)->widget());
                 cmb->lineEdit()->selectAll();
                 cmb->setFocus();     // то переставим фокус на нее
             }
@@ -379,8 +382,8 @@ void SearchParameters::setFocus()
             QLayoutItem* item = gridLayout->itemAtPosition(i, 1);
             if (item != nullptr)
             {
-                MyComboBox* widget = (MyComboBox*)(item->widget());
-                if (widget != 0 && QString::compare(widget->metaObject()->className(), "MyComboBox") == 0)
+                MyComboBox* widget = static_cast<MyComboBox*>(item->widget());
+                if (widget != nullptr && QString::compare(widget->metaObject()->className(), "MyComboBox") == 0)
                 {
                     widget->lineEdit()->selectAll();
                     if (i == 0)
@@ -420,8 +423,8 @@ void SearchParameters::clearAllComboBoxes()
         QLayoutItem* item = gridLayout->itemAtPosition(i, 1);
         if (item != nullptr)
         {
-            MyComboBox* widget = (MyComboBox*)(item->widget());
-            if (widget != 0 && QString::compare(widget->metaObject()->className(), "MyComboBox") == 0)
+            MyComboBox* widget = static_cast<MyComboBox*>(item->widget());
+            if (widget != nullptr && QString::compare(widget->metaObject()->className(), "MyComboBox") == 0)
             {
                 widget->lineEdit()->clear();
             }

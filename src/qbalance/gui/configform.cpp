@@ -104,7 +104,7 @@ bool ConfigForm::open(QWidget* pwgt)
         QHBoxLayout* hLayout = new QHBoxLayout();
         hLayout->addWidget(treeWidget);
         hLayout->addWidget(frame);
-        QVBoxLayout* vbxLayout = (QVBoxLayout*)formWidget->findChild("vbxLayout");
+        QVBoxLayout* vbxLayout = static_cast<QVBoxLayout*>(formWidget->findChild("vbxLayout"));
         if (vbxLayout != nullptr) {
             vbxLayout->insertLayout(0, hLayout);
         }

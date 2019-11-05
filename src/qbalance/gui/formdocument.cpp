@@ -60,7 +60,7 @@ FormDocument::~FormDocument()
 
 Document* FormDocument::getParent(bool)
 {
-    return (Document*)parent;
+    return static_cast<Document*>(parent);
 }
 
 
@@ -117,7 +117,7 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt)
         {
             if (formWidget != nullptr)
             {
-                buttonQueryAdd = (QPushButton*)formWidget->findChild("buttonQueryAdd");
+                buttonQueryAdd = static_cast<QPushButton*>(formWidget->findChild("buttonQueryAdd"));
             }
         }
         if (buttonQueryAdd != nullptr)
@@ -220,12 +220,12 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt)
     {
         if (docParams)
         {
-            parameters = (DocParameters*)formWidget->findChild("docParameters");
+            parameters = static_cast<DocParameters*>(formWidget->findChild("docParameters"));
         }
-        dateEdit = (QDateEdit*)formWidget->findChild("dateEdit");
-        numberEdit = (QLineEdit*)formWidget->findChild("numberEdit");
-        itogNumeric = (MyNumericEdit*)formWidget->findChild("itogNumeric");
-        textEdit = (QTextEdit*)formWidget->findChild("commentText");
+        dateEdit        = static_cast<QDateEdit*>(formWidget->findChild("dateEdit"));
+        numberEdit      = static_cast<QLineEdit*>(formWidget->findChild("numberEdit"));
+        itogNumeric     = static_cast<MyNumericEdit*>(formWidget->findChild("itogNumeric"));
+        textEdit        = static_cast<QTextEdit*>(formWidget->findChild("commentText"));
     }
     if (parameters != nullptr)
     {

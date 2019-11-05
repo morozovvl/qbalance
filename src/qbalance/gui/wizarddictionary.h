@@ -51,7 +51,7 @@ class WizardDictionary : public WizardForm
 public:
     WizardDictionary(bool = false);
     ~WizardDictionary();
-    virtual bool open(QWidget* pwgt = 0, QString = "");
+    virtual bool open(QWidget* pwgt = nullptr, QString = "");
     static WizardDictionary* exemplar();
 
 protected:

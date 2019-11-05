@@ -547,7 +547,7 @@ void Dictionary::setForm(QString formName)
     form->appendToolTip("buttonQuery",    trUtf8("Выполнить запрос"));
 
     form->open(parentForm, this, formName.size() == 0 ? getTagName() : formName);
-    parameters = (SearchParameters*)form->getFormWidget()->findChild("searchParameters");
+    parameters = static_cast<SearchParameters*>(form->getFormWidget()->findChild("searchParameters"));
 
     grdTable = form->getGrdTable();
 //123
@@ -616,7 +616,7 @@ bool Dictionary::open(QString command, QString tName)
                 }
             }
 
-            reportScriptEngine = new DocumentScriptEngine(0, this);
+            reportScriptEngine = new DocumentScriptEngine(nullptr, this);
             reportScriptEngine->setReportContext(&printValues);
             reportScriptEngine->getReportContext()->setScriptEngine(reportScriptEngine);
         }
@@ -635,7 +635,7 @@ void Dictionary::close()
 void Dictionary::setConst(bool isConst)
 {
     lIsConst = isConst;
-    if (dictionaries != 0 && dictionaries->getDocument() != nullptr)      // Если справочник является локальным к документу
+    if (dictionaries != nullptr && dictionaries->getDocument() != nullptr)      // Если справочник является локальным к документу
     {                                                               // То на форме документа мы должны его переместить в строку параметров документа
         FormDocument* docForm = dictionaries->getDocument()->getForm();
         if (docForm != nullptr)

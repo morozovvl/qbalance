@@ -45,7 +45,7 @@ class DBFactory;
 class ConnectionForm : public Form {
     Q_OBJECT
 public:
-    ConnectionForm(QObject* parent = 0);
+    ConnectionForm(QObject* parent = nullptr);
     ~ConnectionForm();
     virtual void initForm(QString, QString, int, bool readSettings = true);
     QString connectionName();
@@ -61,7 +61,7 @@ private slots:
     void cmdCancel();
     void connectionChanged(int);
 private:
-    DBFactory* db;
+//    DBFactory* db;
     QComboBox* pcmbConnection;
     QLineEdit* ptxtHost;
     QLineEdit* ptxtPort;

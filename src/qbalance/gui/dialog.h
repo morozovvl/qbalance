@@ -44,7 +44,7 @@ class Dialog : public QDialog
     Q_OBJECT
 public:
 
-    Dialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    Dialog(QWidget *parent = nullptr, Qt::WindowFlags f = nullptr);
     ~Dialog();
     Q_INVOKABLE virtual QObject* findChild(QString);
     Q_INVOKABLE virtual bool isFormSelected();

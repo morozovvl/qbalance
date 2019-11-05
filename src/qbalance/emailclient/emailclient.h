@@ -21,16 +21,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define EMAILCLIENT_H
 
 #include <QtCore/QObject>
+#include "../../SMTPEmail/src/SmtpMime"
+#include "../../SMTPEmail/src/smtpclient.h"
+#include "../../SMTPEmail/src/mimemessage.h"
 
-class EMailClient : public QObject
+class EMailClient : public SmtpClient
 {
     Q_OBJECT
 public:
-    explicit EMailClient(QObject *parent = nullptr);
+    explicit EMailClient(const QString & host = "localhost", int port = 25, ConnectionType ct = TcpConnection);
     virtual ~EMailClient();
     virtual bool    open();
     virtual void    close();
-    virtual int    sendMail();
 
 signals:
 

@@ -61,7 +61,7 @@ class SearchParameters : public QFrame {
     Q_OBJECT
 
 public:
-    SearchParameters(QWidget* parentWidget = 0);
+    SearchParameters(QWidget* parentWidget = nullptr);
     ~SearchParameters();
     virtual void close();
     virtual QVector<sParam> getParameters();              // Возвращает информацию о заданных параметрах поиска

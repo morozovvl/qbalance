@@ -114,7 +114,7 @@ Saldo* Dictionaries::getSaldo(QString acc)
             return nullptr;
     }
     lIsSaldoExist = true;
-    return (Saldo*)dictionariesList[alias];
+    return static_cast<Saldo*>(dictionariesList[alias]);
 }
 
 
@@ -200,7 +200,7 @@ void Dictionaries::removeDictionary(QString dictName)
         }
         else
         {
-            Saldo* sal = (Saldo*)dict;
+            Saldo* sal = static_cast<Saldo*>(dict);
             sal->close();
             delete sal;
         }

@@ -63,7 +63,7 @@ void FormDocuments::createForm(QString fileName, QWidget* pwgt)
     }
     else
     {
-         itogNumeric = (MyNumericEdit*)formWidget->findChild("itogNumeric");
+         itogNumeric = static_cast<MyNumericEdit*>(formWidget->findChild("itogNumeric"));
     }
     connect(buttonRequery, SIGNAL(clicked()), this, SLOT(showItog()));
  }

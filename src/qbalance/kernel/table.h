@@ -60,7 +60,7 @@ public:
     virtual ~Table() = 0;
 
     template <class T>
-        static T* create(QString name = "", QObject* parent = 0)
+        static T* create(QString name = "", QObject* parent = nullptr)
         {
             T* p(new T(name, parent));
             p->postInitialize(name, parent);

@@ -15,7 +15,7 @@ class MyUiLoader : public QUiLoader
 {
     Q_OBJECT
 public:
-    explicit MyUiLoader(QObject *parent = 0);
+    explicit MyUiLoader(QObject *parent = nullptr);
     virtual QWidget* createWidget (const QString&, QWidget* = nullptr, const QString& = QString());
 };
 

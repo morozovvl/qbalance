@@ -42,9 +42,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 class PassWordForm: public Form {
     Q_OBJECT
 public:
-        PassWordForm(QObject* parent = 0);
+        PassWordForm(QObject* parent = nullptr);
         ~PassWordForm();
-        Q_INVOKABLE virtual bool open(QWidget* pwgt = 0);
+        Q_INVOKABLE virtual bool open(QWidget* pwgt = nullptr);
         virtual void addLogin(QString);
         virtual void addLogin(QStringList);
         virtual QString getLogin();

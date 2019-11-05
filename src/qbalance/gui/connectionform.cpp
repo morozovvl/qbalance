@@ -74,11 +74,11 @@ void ConnectionForm::initForm(QString hostName, QString dbName, int portNum, boo
     ptopLayout->addWidget(ptxtHost, 1, 1);
     ptopLayout->addWidget(ptxtPort, 2, 1);
     ptopLayout->addWidget(ptxtDatabase, 3, 1);
-    QVBoxLayout* vbxLayout = (QVBoxLayout*)formWidget->findChild("vbxLayout");
+    QVBoxLayout* vbxLayout = static_cast<QVBoxLayout*>(formWidget->findChild("vbxLayout"));
     if (vbxLayout != nullptr)
     {
         vbxLayout->insertLayout(0, ptopLayout);
-        QHBoxLayout* cmdButtonLayout = (QHBoxLayout*)formWidget->findChild("cmdButtonLayout");
+        QHBoxLayout* cmdButtonLayout = static_cast<QHBoxLayout*>(formWidget->findChild("cmdButtonLayout"));
         if (cmdButtonLayout != nullptr)
         {
             QPushButton* buttonDelete = new QPushButton();

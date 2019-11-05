@@ -86,8 +86,8 @@ bool Form::open(QWidget* pwgt, Essence* par, QString fName)
     //  Установим подписи ко всем кнопкам
     foreach (QString key, toolTips.keys())
     {
-        QPushButton* button = (QPushButton*)formWidget->findChild(key);
-        if (button != 0 && button->toolTip().isEmpty())
+        QPushButton* button = static_cast<QPushButton*>(formWidget->findChild(key));
+        if (button != nullptr && button->toolTip().isEmpty())
             button->setToolTip(toolTips.value(key, ""));
     }
 
@@ -117,13 +117,13 @@ Dialog* Form::getFormWidget()
 
 bool Form::isVisible()
 {
-    return subWindow != 0 ? subWindow->isVisible() : false;
+    return subWindow != nullptr ? subWindow->isVisible() : false;
 }
 
 
 Dictionary* Form::getParent()
 {
-    return (Dictionary*)parent;
+    return static_cast<Dictionary*>(parent);
 }
 
 
@@ -189,11 +189,11 @@ void Form::createForm(QString fileName, QWidget* pwgt)
         formWidget->setParent(pwgt);
         formWidget->setVisible(false);
         formWidget->setWindowFlags(Qt::Window | Qt::Dialog | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowContextHelpButtonHint);
-        buttonOk = (QPushButton*)formWidget->findChild("buttonOk");
-        buttonCancel = (QPushButton*)formWidget->findChild("buttonCancel");
-        cmdButtonLayout = (QHBoxLayout*)formWidget->findChild("cmdButtonLayout");
-        vbxLayout = (QVBoxLayout*)formWidget->findChild("vbxLayout");
-        defaultForm = false;
+        buttonOk        = static_cast<QPushButton*>(formWidget->findChild("buttonOk"));
+        buttonCancel    = static_cast<QPushButton*>(formWidget->findChild("buttonCancel"));
+        cmdButtonLayout = static_cast<QHBoxLayout*>(formWidget->findChild("cmdButtonLayout"));
+        vbxLayout       = static_cast<QVBoxLayout*>(formWidget->findChild("vbxLayout"));
+        defaultForm     = false;
     }
     else
     {   // Нужно создать стандартную форму
@@ -471,9 +471,9 @@ void Form::readSettings()
 void Form::writeSettings()
 {
     // Сохраним координаты и размеры окна
-    QWidget* widget = (QWidget*)getSubWindow();
+    QWidget* widget = static_cast<QWidget*>(getSubWindow());
     if (widget == nullptr)
-        widget = (QWidget*)formWidget;
+        widget = static_cast<QWidget*>(formWidget);
 
     // Сохраним данные локально, на компьютере пользователя
     QSettings settings(app->getConfigFileName(), QSettings::IniFormat);

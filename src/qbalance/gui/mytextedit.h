@@ -33,7 +33,7 @@ class MyTextEdit : public QTextEdit
 {
     Q_OBJECT
 public:
-    MyTextEdit(QWidget *parent = 0);
+    MyTextEdit(QWidget *parent = nullptr);
 };
 
 #endif // MYTEXTEDIT_H

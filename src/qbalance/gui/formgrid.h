@@ -44,7 +44,7 @@ class Picture;
 class FormGrid : public Form {
     Q_OBJECT
 public:
-    FormGrid(QObject* parent = 0);
+    FormGrid(QObject* parent = nullptr);
     ~FormGrid();
     virtual void close();
     Q_INVOKABLE virtual void    setLeftPercent(bool percent);
@@ -102,7 +102,7 @@ protected:
     QPushButton*                buttonLoad;
     QPushButton*                buttonSave;
 
-    virtual void createForm(QString, QWidget* pwgt = 0);
+    virtual void createForm(QString, QWidget* pwgt = nullptr);
 
 private:
     bool    leftPercent;                        //

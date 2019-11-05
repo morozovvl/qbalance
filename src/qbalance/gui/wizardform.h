@@ -26,8 +26,8 @@ class WizardForm : public Form
 {
     Q_OBJECT
 public:
-    WizardForm(QObject* parent = 0);
-    virtual bool open(QWidget* pwgt = 0);
+    WizardForm(QObject* parent = nullptr);
+    virtual bool open(QWidget* pwgt = nullptr);
     bool getResult();
 public slots:
     virtual void                cmdOk();

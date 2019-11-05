@@ -58,7 +58,7 @@ class DocParameters : public QFrame {
     Q_OBJECT
 
 public:
-    DocParameters(QWidget* pwgt = 0);
+    DocParameters(QWidget* pwgt = nullptr);
     ~DocParameters();
     virtual void addString(QString);
     virtual void setFocus();

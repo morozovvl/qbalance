@@ -367,6 +367,7 @@ void Documents::preparePrintValues()
 {
     if (reportScriptEngine != nullptr)
     {
+        reportScriptEngine->getReportContext()->setValue("документы.ДАТА", getValue(db->getObjectName("документы.дата")));
         reportScriptEngine->getReportContext()->setValue("документы.СУММА", getSumValue(db->getObjectName("документы.сумма")));
         reportScriptEngine->getReportContext()->setValue("документы.ИМЯ", operName);
         Dictionary::preparePrintValues();
@@ -377,7 +378,7 @@ void Documents::preparePrintValues()
 void Documents::showItog()
 {
     if (form != nullptr)
-        ((FormDocuments*)form)->showItog();
+        static_cast<FormDocuments*>(form)->showItog();
 }
 
 

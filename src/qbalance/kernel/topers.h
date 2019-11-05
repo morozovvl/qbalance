@@ -32,14 +32,14 @@ private:
 protected:
     Q_INVOKABLE virtual void setForm(QString = "");
 
-    Topers(QObject *parent = 0);
-    virtual void postInitialize(QObject *parent = 0);
+    Topers(QObject* parent = nullptr);
+    virtual void postInitialize(QObject* parent = nullptr);
 
 public:
     ~Topers();
 
     template <class T>
-        static T* create(QObject *parent = 0)
+        static T* create(QObject* parent = nullptr)
         {
             T* p(new T(parent));
             p->postInitialize(parent);

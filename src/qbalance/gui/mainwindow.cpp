@@ -72,7 +72,7 @@ void  MainWindow::showMenus()
 }
 
 
-void MainWindow::closeEvent()
+void MainWindow::closeApp()
 {
     QMainWindow::close();
 }
@@ -262,7 +262,7 @@ void MainWindow::createMenus()
     connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 
     exitAct = menuBar()->addAction(QObject::trUtf8("&Выход"));
-    connect(exitAct, SIGNAL(triggered()), this, SLOT(closeEvent()));
+    connect(exitAct, SIGNAL(triggered()), this, SLOT(closeApp()));
 }
 
 

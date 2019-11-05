@@ -282,7 +282,7 @@ bool MySqlRelationalTableModel::prepareCommand(const QModelIndex& index)
         {
             QString value;
             QString fieldName = updateInfo.value(columnIndex).originField;
-            QVariant recValue = ((Essence*)parent)->getValue(fieldName, rowIndex);
+            QVariant recValue = static_cast<Essence*>(parent)->getValue(fieldName, rowIndex);
             // Возьмем исходное значение из модели, которое необходимо сохранить в базу
             // Определим его тип для того, чтобы правильно подготовить текст команды сохранения для сервера
             QString type = updateInfo.value(columnIndex).type.toUpper();

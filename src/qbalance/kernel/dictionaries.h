@@ -48,7 +48,7 @@ public:
     Q_INVOKABLE virtual void close();
 
     template <class T>
-        static T* create(QObject *parent = 0)
+        static T* create(QObject *parent = nullptr)
         {
             T* p(new T(parent));
             p->postInitialize(parent);
