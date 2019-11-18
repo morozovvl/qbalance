@@ -38,8 +38,8 @@ Picture::Picture(QWidget* parent): QFrame(parent) {
     isBigPicture = false;
     bigPictRect.setRect(QApplication::desktop()->availableGeometry().x(),
                         QApplication::desktop()->availableGeometry().y(),
-                        QApplication::desktop()->availableGeometry().width() * 0.8,
-                        QApplication::desktop()->availableGeometry().height() * 0.8);
+                        qRound(QApplication::desktop()->availableGeometry().width() * 0.8),
+                        qRound(QApplication::desktop()->availableGeometry().height() * 0.8));
     photoWindowTitle = "";
     app = nullptr;
     form = nullptr;
@@ -80,7 +80,7 @@ void Picture::setApp(TApplication* a)
 {
     app = a;
     // Установим высоту и ширину картинки как 15% от среднего высоты и ширины экрана, чтобы картинка "адаптировалась" к размерам экрана
-    pictSize = (app->desktop()->width() + app->desktop()->height()) * 0.15 / 2;
+    pictSize = qRound((app->desktop()->width() + app->desktop()->height()) * 0.15 / 2);
     setFixedSize(pictSize, pictSize);
 }
 

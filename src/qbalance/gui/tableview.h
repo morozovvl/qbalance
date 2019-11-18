@@ -37,6 +37,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtScript/QScriptValue>
 #include <QtScript/QScriptContext>
 #include <QtScript/QScriptEngine>
+#include "../storage/dbfactory.h"
 
 
 class TApplication;
@@ -108,6 +109,7 @@ private:
     QList<FieldType>            fields;
     bool                        columnsSettingsReaded;
     bool                        currentChangedScripts;
+    int                         fieldCounter;
 
     virtual MyItemDelegate*     getColumnDelegate(FieldType);
     virtual void                readSettings();

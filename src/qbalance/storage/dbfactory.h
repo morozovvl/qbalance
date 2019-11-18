@@ -44,7 +44,7 @@ class Dictionaries;
 
 struct FileInfo
 {
-    int   size;
+    qulonglong   size;
     QDateTime   lastModified;
 };
 

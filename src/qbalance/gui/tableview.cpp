@@ -42,6 +42,7 @@ TableView::TableView(): QTableView()
     tableModel = nullptr;
     essence = nullptr;
     picture = nullptr;
+    fieldCounter = 0;
 }
 
 
@@ -305,6 +306,7 @@ void TableView::setColumnsHeaders()
                             setItemDelegateForColumn(i, delegate);
                         }
                         columns.insert(fields.at(i).number - 1, i);
+                        fieldCounter++;
                     }
                 }
 
@@ -576,7 +578,7 @@ void TableView::setReadOnly(bool ro)
 {
     if (parent != nullptr)
     {
-        app->getDBFactory()->getColumnsHeaders(essence->getTagName(), &fields);
+//        app->getDBFactory()->getColumnsHeaders(essence->getTagName(), &fields);
         for (int i = 0; i < fields.count(); i++)
         {
             MyItemDelegate* delegate = static_cast<MyItemDelegate*>(itemDelegateForColumn(i));
@@ -588,7 +590,6 @@ void TableView::setReadOnly(bool ro)
                     delegate->setReadOnly(fields.at(i).readOnly);
             }
         }
-//        repaint();
     }
 }
 
@@ -687,14 +688,15 @@ void TableView::appendColumnDefinition(int number, QString column, QString heade
         if (fields.at(i).table.toUpper() == parent->getParent()->getQueryTableName().toUpper() &&
             fields.at(i).column.toUpper() == column.toUpper()    )
         {
+            fieldCounter++;
             FieldType field = fields.at(i);
-            field.number = number;
+            field.number = fieldCounter;
             field.header = header;
             field.readOnly = readOnly;
             fields.removeAt(i);
             fields.insert(i, field);
             columnsHeadersSeted = false;
-            return;
+            break;
         }
     }
 }
@@ -711,6 +713,7 @@ void TableView::clearColumnDefinitions()
         fields.removeAt(i);
         fields.insert(i, field);
     }
+    fieldCounter = 0;
     columnsHeadersSeted = false;
 }
 

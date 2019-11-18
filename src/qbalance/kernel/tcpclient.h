@@ -31,7 +31,7 @@ class TcpClient : public QObject
 {
     Q_OBJECT
 public:
-    TcpClient(const QString& strHost, int nPort, QObject *parent = nullptr);
+    TcpClient(const QString& strHost, quint16 nPort, QObject *parent = nullptr);
     virtual bool sendToServer(QString);
     virtual bool isValid();
     virtual QString     getResult();
@@ -51,7 +51,7 @@ private:
     bool        connected;
     bool        resultReady;
     QString     hostName;
-    int         port;
+    quint16     port;
 
     QString     result;
 };

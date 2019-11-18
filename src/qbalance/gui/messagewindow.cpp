@@ -139,7 +139,7 @@ void MessageWindow::readSettings()
     if (settingValues.count() == 0)
     {
         // Загрузим значения по умолчанию
-        int defY = app->getMainWindow()->centralWidget()->height() * 0.6;
+        int defY = qRound(app->getMainWindow()->centralWidget()->height() * 0.6);
         int defHeight = app->getMainWindow()->centralWidget()->height() - defY;
 
         settingValues.insert("x", 0);

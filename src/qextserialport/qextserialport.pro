@@ -36,6 +36,7 @@ include(src/qextserialport.pri)
 
 #create_prl is needed, otherwise, MinGW can't found libqextserialport1.a
 CONFIG += create_prl
+CONFIG += qesp_static
 
 #mac framework is designed for shared library
 macx:qesp_mac_framework:qesp_static: CONFIG -= qesp_static

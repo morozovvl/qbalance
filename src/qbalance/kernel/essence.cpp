@@ -1309,7 +1309,7 @@ bool Essence::getFile(QString path, QString fileName, FileType type)
                 QByteArray array = file.readAll();
                 file.close();
 
-                int localFileCheckSum = app->calculateCRC32(&array);
+                qulonglong localFileCheckSum = app->calculateCRC32(&array);
 
                 if (servFileInfo.size != localFileCheckSum) // Если локальный и серверный файлы различаются по контрольной сумме
                 {

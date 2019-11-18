@@ -21,6 +21,7 @@
 
 #include <QtCore/QObject>
 #include <QtNetwork/QSslSocket>
+#include <QtNetwork/QTcpSocket>
 
 #include "mimemessage.h"
 #include "smtpexports.h"

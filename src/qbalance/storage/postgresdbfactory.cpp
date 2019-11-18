@@ -123,7 +123,7 @@ void PostgresDBFactory::loadSystemTables()
 
     config = execQuery("SELECT \"group\", \"name\", \"value\" FROM configs;");
 
-    columnsRestrictions = execQuery(QString("SELECT %1 FROM %2 WHERE %3=5 AND (%4 ILIKE '\%'||\"current_user\"()::text||'%' OR %4 ILIKE '\%*\%');")
+    columnsRestrictions = execQuery(QString("SELECT %1 FROM %2 WHERE %3=5 AND (%4 ILIKE '%'||\"current_user\"()::text||'%' OR %4 ILIKE '%*%');")
                                                                .arg(getObjectNameCom("доступ.имя"))
                                                                .arg(getObjectNameCom("доступ"))
                                                                .arg(getObjectNameCom("доступ.код_типыобъектов"))

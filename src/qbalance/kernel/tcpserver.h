@@ -31,7 +31,7 @@ class TcpServer : public QObject
     Q_OBJECT
 
 public:
-    TcpServer(int nPort, QObject *parent = nullptr);
+    TcpServer(quint16 nPort, QObject *parent = nullptr);
     virtual void    pingClient(QString);
     virtual bool    getPingOk();
 

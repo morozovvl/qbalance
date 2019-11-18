@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtNetwork/QNetworkConfigurationManager>
 
 
-TcpClient::TcpClient(const QString& strHost, int nPort, QObject *parent ):   QObject(parent)
+TcpClient::TcpClient(const QString& strHost, quint16 nPort, QObject *parent ):   QObject(parent)
 {
     app = TApplication::exemplar();
     m_nNextBlockSize = 0;
@@ -56,7 +56,7 @@ void TcpClient::slotReadyRead()
     {
         if (!m_nNextBlockSize)
         {
-            if (m_pTcpSocket->bytesAvailable() < (int)sizeof(quint16))
+            if (m_pTcpSocket->bytesAvailable() < static_cast<quint16>(sizeof(quint16)))
             {
                 break;
             }

@@ -146,7 +146,7 @@ void QMyExtSerialPort::tryReceive()
     if (result.size() > 0)
     {
         for (int i = 0; i < result.size(); i++)
-            buffer.enqueue(result.at(i));
+            buffer.enqueue(static_cast<unsigned char>(result.at(i)));
     }
     if (!tryReceiveExit)
     {
@@ -167,7 +167,7 @@ qint64 QMyExtSerialPort::readData(char* data, qint64 maxSize, bool fromRemote)
             if (buffer.size() >= maxSize)
             {
                 for (int i = 0; i < maxSize; i++)
-                    data[i] = buffer.dequeue();
+                    data[i] = static_cast<char>(buffer.dequeue());
                 result = maxSize;
                 break;
             }
@@ -182,9 +182,9 @@ qint64 QMyExtSerialPort::readData(char* data, qint64 maxSize, bool fromRemote)
         }
 
         tryReceiveExit = true;              // Не будем больше постоянно опрашивать COM порт
-        appendLog(false, QByteArray(data, maxSize).toHex().data(), fromRemote);
+        appendLog(false, QByteArray(data, static_cast<int>(maxSize)).toHex().data(), fromRemote);
     }
-    else if (tcpClient != 0  && tcpClient->isValid()&& !fromRemote)
+    else if (tcpClient != nullptr  && tcpClient->isValid()&& !fromRemote)
     {
         QString command = QString("=fr=<<%1").arg(maxSize);
         if (tcpClient->sendToServer(command))
@@ -199,8 +199,8 @@ qint64 QMyExtSerialPort::readData(char* data, qint64 maxSize, bool fromRemote)
                     QByteArray arr;
                     res.remove(0, pos + 2);
                     arr.append(QByteArray::fromHex(QByteArray().append(res)));
-                    memcpy(data, arr.data(), maxSize);
-                    appendLog(false, QByteArray(data, maxSize).toHex().data(), fromRemote);
+                    memcpy(data, arr.data(), static_cast<unsigned long>(maxSize));
+                    appendLog(false, QByteArray(data, static_cast<int>(maxSize)).toHex().data(), fromRemote);
                 }
             }
         }
@@ -222,17 +222,17 @@ qint64 QMyExtSerialPort::writeData(const char * data, qint64 maxSize, bool fromR
         result = QextSerialPort::writeData(data, maxSize);
 #endif
 
-        appendLog(true, QByteArray(data, maxSize).toHex().data(), fromRemote);
+        appendLog(true, QByteArray(data, static_cast<int>(maxSize)).toHex().data(), fromRemote);
     }
-    else if (tcpClient != 0 && tcpClient->isValid() && !fromRemote)
+    else if (tcpClient != nullptr && tcpClient->isValid() && !fromRemote)
     {
-        if (tcpClient->sendToServer("=fr=>>" + QString(QByteArray(data, maxSize).toHex().data())))
+        if (tcpClient->sendToServer("=fr=>>" + QString(QByteArray(data, static_cast<int>(maxSize)).toHex().data())))
         {
             if (tcpClient->waitResult())
             {
                 QString res = tcpClient->getResult();
                 result = res.toLongLong();
-                appendLog(true, QByteArray(data, maxSize).toHex().data(), fromRemote);
+                appendLog(true, QByteArray(data, static_cast<int>(maxSize)).toHex().data(), fromRemote);
             }
         }
     }
@@ -251,7 +251,7 @@ qint64 QMyExtSerialPort::writeData(QString string, bool fromRemote)
 bool QMyExtSerialPort::isReadyDriverFR()
 {
     bool result = false;
-    if (tcpClient != 0 && tcpClient->isValid())
+    if (tcpClient != nullptr && tcpClient->isValid())
     {
         if (tcpClient->sendToServer("driverFRisReady") && tcpClient->waitResult())
         {
@@ -267,7 +267,7 @@ bool QMyExtSerialPort::isReadyDriverFR()
 bool QMyExtSerialPort::isLockedDriverFR()
 {
     bool result = false;
-    if (remote && tcpClient != 0 && tcpClient->isValid())
+    if (remote && tcpClient != nullptr && tcpClient->isValid())
     {
         if (tcpClient->sendToServer("isLockedDriverFR") && tcpClient->waitResult())
         {
@@ -282,7 +282,7 @@ bool QMyExtSerialPort::isLockedDriverFR()
 bool QMyExtSerialPort::setLock(bool lock)
 {
     bool locked = false;
-    if (remote && tcpClient != 0 && tcpClient->isValid())
+    if (remote && tcpClient != nullptr && tcpClient->isValid())
     {
         QString command;
         if (lock)
@@ -331,7 +331,7 @@ void QMyExtSerialPort::appendLog(bool out, QString str, bool fromRemote)
 
 void QMyExtSerialPort::writeLog(QString str, bool fromRemote)
 {
-    if (remote && tcpClient != 0 && tcpClient->isValid())
+    if (remote && tcpClient != nullptr && tcpClient->isValid())
     {
         tcpClient->sendToServer(QString("=fr=writeLog=%1").arg(str));
     }

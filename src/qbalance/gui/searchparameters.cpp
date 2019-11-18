@@ -128,7 +128,7 @@ void SearchParameters::addString(QString name, int strNum)
         name = name.toLower();
         QPushButton* button = new QPushButton("...", parentWidget());   // Создадим пользовательскую кнопку для связанного справочника
         button->setObjectName(name);                    // Запомним в кнопке имя связанного справочника, чтобы потом извлечь его в слоте
-        button->setFixedSize(comboBox->height() * 1.2, comboBox->height());
+        button->setFixedSize(qRound(comboBox->height() * 1.2), comboBox->height());
         button->setFocusPolicy(Qt::NoFocus);            // Запретим переход на кнопку по клавише TAB
         gridLayout->addWidget(button, strNum, 2, 1, 1);
         connect(button, SIGNAL(clicked()), this, SLOT(dictionaryButtonPressed()));

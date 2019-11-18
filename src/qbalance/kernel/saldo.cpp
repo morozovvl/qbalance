@@ -116,7 +116,7 @@ void Saldo::lock(bool toLock)
     if (toLock)
     {
         Dictionary* dict = dictionaries->getDictionary(dictionaryName);
-        dict->setId(getValue(idFieldName).toLongLong());
+        dict->setId(getValue(idFieldName).toInt());
         dict->lock();
         locked = true;
     }

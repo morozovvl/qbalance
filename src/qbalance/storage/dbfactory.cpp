@@ -1120,16 +1120,6 @@ void DBFactory::getColumnsHeaders(QString tableName, QList<FieldType>* fields)
                 }
             }
         }
-        if (counter == 0)
-        {
-            for (int i = 0; i < fields->count(); i++)
-            {
-                FieldType field = fields->at(i);
-                field.number = i + 1;
-                fields->removeAt(i);
-                fields->insert(i, field);
-            }
-        }
     }
 }
 
@@ -1436,7 +1426,7 @@ qulonglong DBFactory::getFileCheckSum(QString file, FileType type, bool extend)
     query.first();
     if (query.isValid())
     {
-        qulonglong result = query.record().value(0).toLongLong();
+        qulonglong result = query.record().value(0).toULongLong();
         if (result == 0)    // Видимо раньше не была обозначена контрольная сумма
             result = 1;     // Сделаем ее не равной 0, иначе фотография не будет показана, хотя она в базе есть
         return result;
@@ -1461,7 +1451,7 @@ FileInfo DBFactory::getFileInfo(QString file, FileType type, bool extend)
     if (query.isValid())
     {
         result.lastModified = query.record().value(0).toDateTime();
-        result.size = query.record().value(1).toLongLong();
+        result.size = query.record().value(1).toULongLong();
     }
     return result;
 }

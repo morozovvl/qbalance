@@ -405,7 +405,7 @@ bool Dictionary::remove(bool noAsk)
 
             if (canRemove)
             {
-                if (db->removeDictValue(tableName, getValue("КОД").toULongLong()))
+                if (db->removeDictValue(tableName, getValue("КОД").toInt()))
                 {
                     query();
                     return true;
@@ -514,7 +514,7 @@ bool Dictionary::setId(int id)
                 Dictionary* dict = dictionaries->getDictionary(dictName);
                 if (!dict->isSet())
                 {
-                    int val = getValue(QString("%1_%2").arg(idFieldName).arg(dictName).toUpper(), 0).toULongLong();
+                    int val = getValue(QString("%1_%2").arg(idFieldName).arg(dictName).toUpper(), 0).toInt();
                     if (val > 0)
                         dict->setId(val);
                 }
@@ -863,7 +863,7 @@ void Dictionary::lock(bool toLock)
             Dictionary* dict = dictionaries->getDictionary(dictName);
             if (toLock)
             {
-                int id = getValue(idFieldName + "_" + dictName).toLongLong();
+                int id = getValue(idFieldName + "_" + dictName).toInt();
                 dict->setId(id);
             }
             dict->lock(toLock);

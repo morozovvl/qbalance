@@ -853,7 +853,7 @@ void WizardOperation::generateScripts()
     QString scripts = textEditor->toPlainText();
     if (scripts.size() == 0)
     {
-        DocumentScriptEngine engine((Essence*)(app->getDocuments(oper)->getDocument()));
+        DocumentScriptEngine engine(reinterpret_cast<Essence*>(app->getDocuments(oper)->getDocument()));
 
         EventFunction func;
         QString script;

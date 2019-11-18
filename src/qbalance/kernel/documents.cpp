@@ -751,7 +751,7 @@ QString Documents::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
             selectStatement = selectClause + " FROM " + fromClause + QString(" ORDER BY \"P1__%1\" ASC;").arg(db->getObjectName("проводки.стр").toUpper());
 
         // Получим заголовки столбцов
-        db->getColumnsHeaders(QString("Документ%1").arg(oper), columnsProperties);
+//        db->getColumnsHeaders(QString("Документ%1").arg(oper), columnsProperties);
     }
     return selectStatement;
 }

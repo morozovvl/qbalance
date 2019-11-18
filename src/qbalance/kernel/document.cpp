@@ -250,9 +250,12 @@ void Document::calcItog()
 
 void Document::showItog()
 {
-    MyNumericEdit* itogWidget = (MyNumericEdit*)form->getFormWidget()->findChild("itogNumeric");
+    MyNumericEdit* itogWidget = static_cast<MyNumericEdit*>(form->getFormWidget()->findChild("itogNumeric"));
     if (itogWidget != nullptr)
-        itogWidget->setValue(parent->getValue(db->getObjectName("документы.сумма")));
+    {
+        QVariant value = parent->getValue(db->getObjectName("документы.сумма"));
+        itogWidget->setValue(value);
+    }
 }
 
 
@@ -488,7 +491,7 @@ void Document::restoreVariablesFromDB()
             if (xmlReader.tokenType() == QXmlStreamReader::StartElement && xmlReader.name() == "variable")
             {
                 QVariant val(xmlReader.attributes().value("value").toString());
-                if (val.convert((QVariant::Type)QString(xmlReader.attributes().value("type").toString()).toInt()))
+                if (val.convert(static_cast<QVariant::Type>(QString(xmlReader.attributes().value("type").toString()).toInt())))
                 {
                     variables.insert(xmlReader.attributes().value("name").toString().toUpper(), val);
                 }
@@ -607,7 +610,7 @@ void Document::loadDocument()
             if (dict->isConst())
             {   // ... и помечен как "постоянный"
                 // то установим его значение, которое актуально для всего документа
-                int val = getValue(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.кркод")), 0).toULongLong();
+                int val = getValue(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.кркод")), 0).toInt();
                 if (val > 0)
                 {
                     dict->setId(val);
@@ -627,13 +630,13 @@ void Document::loadDocument()
                     if (childDict != nullptr && childDict->isConst())
                     {
                         // Установим сначала значение основного справочника
-                        int val = getValue(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.кркод")), 0).toULongLong();
+                        int val = getValue(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.кркод")), 0).toInt();
                         if (val > 0)
                         {
                             dict->setId(val);
                             dict->setMustShow(false);
                             // А затем установим значение связанного справочника
-                            val = dict->getValue(QString("%1_%2").arg(idFieldName).arg(dictName).toUpper(), 0).toULongLong();
+                            val = dict->getValue(QString("%1_%2").arg(idFieldName).arg(dictName).toUpper(), 0).toInt();
                             if (val > 0)
                             {
                                 childDict->setId(val);
@@ -655,7 +658,7 @@ void Document::loadDocument()
             if (dict->isConst())
             {   // ... и помечен как "постоянный"
                 // то установим его значение, которое актуально для всего документа
-                int val = getValue(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.дбкод")), 0).toULongLong();
+                int val = getValue(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.дбкод")), 0).toInt();
                 if (val > 0)
                 {
                     dict->setId(val);
@@ -677,13 +680,13 @@ void Document::loadDocument()
                         if (childDict->isConst())
                         {
                             // Установим сначала значение основного справочника
-                            int val = getValue(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.дбкод")), 0).toULongLong();
+                            int val = getValue(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.дбкод")), 0).toInt();
                             if (val > 0)
                             {
                                 dict->setId(val);
                                 dict->setMustShow(false);
                                 // А затем установим значение связанного справочника
-                                val = dict->getValue(QString("%1_%2").arg(idFieldName).arg(dictName).toUpper(), 0).toULongLong();
+                                val = dict->getValue(QString("%1_%2").arg(idFieldName).arg(dictName).toUpper(), 0).toInt();
                                 if (val > 0)
                                 {
                                     childDict->setId(val);
@@ -760,7 +763,7 @@ void Document::setConstDictId(QString dName, QVariant id)
                         dict = getDictionariesList()->value(dictName);
                         for (int r = 0; r < tableModel->rowCount(); r++)
                         {
-                            int id = getValue(QString("P%1__%2").arg(topersList->at(i).number).arg(db->getObjectName("проводки.дбкод")), r).toULongLong();
+                            int id = getValue(QString("P%1__%2").arg(topersList->at(i).number).arg(db->getObjectName("проводки.дбкод")), r).toInt();
                             dict->setId(id);
                             id = dict->getId();
                             setValue(QString("P%1__%2").arg(topersList->at(i).number).arg(db->getObjectName("проводки.дбкод")), id, r);
@@ -796,7 +799,7 @@ void Document::setConstDictId(QString dName, QVariant id)
                         dict = getDictionariesList()->value(dictName);
                         for (int r = 0; r < tableModel->rowCount(); r++)
                         {
-                            int id = getValue(QString("P%1__%2").arg(topersList->at(i).number).arg(db->getObjectName("проводки.кркод")), r).toULongLong();
+                            int id = getValue(QString("P%1__%2").arg(topersList->at(i).number).arg(db->getObjectName("проводки.кркод")), r).toInt();
                             dict->setId(id);
                             id = dict->getId();
                             setValue(QString("P%1__%2").arg(topersList->at(i).number).arg(db->getObjectName("проводки.кркод")), id, r);

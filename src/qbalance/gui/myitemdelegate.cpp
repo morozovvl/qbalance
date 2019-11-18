@@ -35,7 +35,7 @@ MyItemDelegate::MyItemDelegate(QObject* par, FormGrid* form)
     delegateType = String;
     setReadOnly(false);
     if (form != nullptr)
-        essence = (Essence*)(form->getParent());
+        essence = reinterpret_cast<Essence*>(form->getParent());
 }
 
 

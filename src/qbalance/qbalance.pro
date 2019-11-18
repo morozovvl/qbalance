@@ -43,11 +43,13 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0
 
 APP_NAME = qb_main
 
-TARGET = ../../../$${APP_NAME}
+TARGET = ../../$${APP_NAME}
 
 DEFINES += APPLICATION_NAME=\\\"$${APP_NAME}\\\"
 
-CONFIG -= app_bundle shared
+CONFIG -= app_bundle
+#CONFIG += static
+
 TEMPLATE = app
 
 

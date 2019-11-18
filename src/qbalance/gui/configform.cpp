@@ -186,7 +186,7 @@ void ConfigForm::showConfigGroup(QString type)
     if (layout != nullptr)
     {
         QLayoutItem* item;
-        while ((item = layout->takeAt(0)) != NULL)
+        while ((item = layout->takeAt(0)) != nullptr)
         {
             delete item->widget();
             delete item;
