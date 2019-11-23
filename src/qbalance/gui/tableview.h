@@ -75,6 +75,7 @@ public:
     virtual QList<FieldType>*   getFields() { return &fields; }
     Q_INVOKABLE virtual void    clearColumnDefinitions();
     Q_INVOKABLE virtual void    appendColumnDefinition(int number, QString column, QString header = "", bool readOnly = false);
+    Q_INVOKABLE virtual void    appendColumnDefinition(QString column, QString header = "", bool readOnly = false);
     virtual void                setCurrentFocus();
     virtual void                keyPressEvent(QKeyEvent*);     // Обработка нажатий клавиш
     Q_INVOKABLE virtual int     getColumnsCount();

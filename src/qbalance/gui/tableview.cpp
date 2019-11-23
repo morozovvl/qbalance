@@ -681,7 +681,7 @@ void TableView::writeSettings()
 }
 
 
-void TableView::appendColumnDefinition(int number, QString column, QString header, bool readOnly)
+void TableView::appendColumnDefinition(int, QString column, QString header, bool readOnly)
 {
     for (int i = 0; i < fields.count(); i++)
     {
@@ -699,6 +699,12 @@ void TableView::appendColumnDefinition(int number, QString column, QString heade
             break;
         }
     }
+}
+
+
+void TableView::appendColumnDefinition(QString column, QString header, bool readOnly)
+{
+    appendColumnDefinition(0, column, header, readOnly);
 }
 
 

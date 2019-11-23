@@ -4,14 +4,10 @@ set(CMAKE_BUILD_TYPE "Release")
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-#SET (CMAKE_CXX_FLAGS "-ludev" )
+SET (CMAKE_CXX_FLAGS "-ludev" )
 
 find_package (Qt4 REQUIRED)
 include(${QT_USE_FILE})
-
-SET (CMAKE_FIND_LIBRARY_SUFFIXES ".a")
-SET (BUILD_SHARED_LIBRARIES OFF)
-SET (CMAKE_EXE_LINKER_FLAGS "-static")
 
 add_subdirectory(src/qbalance/bankterminal)
 add_subdirectory(src/qbalance/barcodereader)
