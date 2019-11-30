@@ -116,7 +116,7 @@ void MessageWindow::readSettings()
 {
     QHash<QString, int> settingValues;
 
-    QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
+    QSettings settings(app->applicationDataDirPath(), QSettings::IniFormat);
     if (settings.status() == QSettings::NoError)
     {
         settings.beginGroup(configName);
@@ -180,7 +180,7 @@ void MessageWindow::writeSettings()
         h = textEditor->geometry().height();
     }
 
-    QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
+    QSettings settings(app->applicationDataDirPath(), QSettings::IniFormat);
     settings.beginGroup(configName);
     settings.setValue("x", x);
     settings.setValue("y", y);

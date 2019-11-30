@@ -1064,7 +1064,7 @@ int SQLiteDBFactory::getInsertReturningId(QString tableName, QString columns, QS
 
 void SQLiteDBFactory::setFile(QString file, FileType type, QByteArray fileData, bool extend)
 {
-    QString fileName = file.replace(app->applicationDirPath(), "~");
+    QString fileName = file.replace(app->applicationDataDirPath(), "~");
     clearError();
     qulonglong size = app->calculateCRC32(&fileData);
     QString text;

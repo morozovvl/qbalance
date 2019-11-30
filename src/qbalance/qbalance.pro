@@ -246,4 +246,4 @@ OTHER_FILES += \
     license.txt \
     ../../README
 
-# LIBS +=  ../../lib64/libmpfr.so
+#LIBS +=  ../../lib64/libmpfr.so

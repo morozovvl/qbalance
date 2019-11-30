@@ -207,9 +207,6 @@ bool DBFactory::createNewDB(QString dbName, QString password, QStringList script
     QString command = QString("CREATE DATABASE %1 WITH TEMPLATE template0 ENCODING = 'UTF-8';").arg(dbName);
     if (execPSql(QStringList() << QString("-c \"%1\"").arg(command), "postgres", password))
     {
-        //Drake
-        //Нет смысла создавать локальный временный экземпляр в куче
-        //Лучше на стеке - система его удалит
         foreach (QString script, scripts)
         {
             lResult = execPSql(QStringList() << "-f" << script << dbName, "postgres", password);
@@ -1294,8 +1291,8 @@ QStringList DBFactory::initializationScriptList(QString ext) const
     QStringList result;
     for (int i = 0;; i++)
     {
-        QString fileName(QString("initdb%1%2.sql").arg(ext).arg(i));
-        if (QFileInfo(QCoreApplication::applicationDirPath() + "/" + fileName).exists())
+        QString fileName(QString("%1/initdb%2%3.sql").arg(app->applicationDirPath()).arg(ext).arg(i));
+        if (QFileInfo(fileName).exists())
         {
             result.append(fileName);
         }
@@ -2082,7 +2079,7 @@ void DBFactory::saveUpdate(QString value)
 {
     if (app->isSA() && app->getConfigValue("SAVE_DB_UPDATES_TO_LOCAL").toBool())
     {
-        QString templateString = app->applicationDirPath().append("/updates_db/").append(dbName).append("/%1.sql");
+        QString templateString = app->applicationDataDirPath().append("/updates_db/").append(dbName).append("/%1.sql");
         QString fileName;
         if (updateNum == 0)
         {
@@ -2111,7 +2108,7 @@ void DBFactory::saveUpdate(QString value)
 
 void DBFactory::loadUpdates()
 {
-    QString templateString = app->applicationDirPath().append("/updates_db/").append(dbName).append("/");
+    QString templateString = app->applicationDataDirPath().append("/updates_db/").append(dbName).append("/");
     int updateNum = getValue("SELECT \"ЗНАЧЕНИЕ\" FROM константы WHERE \"ИМЯ\" = 'Last_DB_Update';").toInt();
     do
     {
@@ -2140,7 +2137,7 @@ void DBFactory::loadUpdates()
 int DBFactory::updatesCount()
 {
     QString tableName = getObjectNameCom("константы");
-    QString templateString = app->applicationDirPath().append("/updates_db/").append(dbName).append("/");
+    QString templateString = app->applicationDataDirPath().append("/updates_db/").append(dbName).append("/");
     dbUpdatesList = QDir(templateString).entryList(QStringList() << "*.sql", QDir::Files);
     if (isTableExists(tableName))
     {

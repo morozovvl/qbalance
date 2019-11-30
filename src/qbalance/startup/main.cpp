@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QDir>
 #include <QtCore/QTextCodec>
 #include <QtCore/QString>
+#include <QtCore/QDebug>
 
 
 bool  copyRecursively(const QString &srcFilePath, const QString &tgtFilePath)

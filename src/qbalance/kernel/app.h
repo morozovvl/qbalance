@@ -129,6 +129,7 @@ public:
     static QStringList scriptParameter;
     static bool    serverMode;
     static bool loadDefaultConfig;
+    static QString homeDir;
 
     TApplication(int& argc, char** argv);
     ~TApplication();
@@ -150,6 +151,7 @@ public:
     Q_INVOKABLE virtual bool isSA();
     Q_INVOKABLE QDate getBeginDate();
     Q_INVOKABLE QDate getEndDate();
+    QString applicationDataDirPath();
     QString getLogsPath();
     QString getMessagesLogsPath(QString = "");
     QString getFormsPath(QString = "", QString = "");

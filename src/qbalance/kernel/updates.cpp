@@ -179,7 +179,7 @@ void Updates::putUpdates(QString path, QStringList filesList)
         isGetUpdates = false;
         foreach (QString fileName, filesList)
         {
-            QFile* file = new QFile(app->applicationDirPath() + "/" + fileName);
+            QFile* file = new QFile(app->applicationDataDirPath() + "/" + fileName);
             if (file->open(QIODevice::ReadOnly))
             {
                 QNetworkRequest request = makeNetworkRequest(path, fileName);
@@ -225,7 +225,7 @@ void Updates::updateModified(bool getUpdates)
         // Если есть пароль администратора FTP сервера и загрузка обновлений еще не произведена
         if (app->getConfigValue("UPDATES_FTP_ADMIN_CLIENT_PASSWORD").toString().size() == 0 && !updatesDownloaded)
         {
-            removeDir(app->applicationDirPath() + "/" + updatesPath);
+            removeDir(app->applicationDataDirPath() + "/" + updatesPath);
             updatesCount = 0;
 
             request = makeNetworkRequest("program" + osPath, programUpdateXMLFile);
@@ -288,7 +288,7 @@ void Updates::transmissionFinished(QNetworkReply* reply)
     {
         if (reply->error() == QNetworkReply::NoError)
         {
-            QString fileName = app->applicationDirPath() + "/" + files.value(urlString);
+            QString fileName = app->applicationDataDirPath() + "/" + files.value(urlString);
             QDir().mkpath(QFileInfo(fileName).absolutePath());
             QFile file(fileName);
             if( file.open(QIODevice::WriteOnly) )
