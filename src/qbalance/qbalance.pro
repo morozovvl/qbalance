@@ -120,7 +120,8 @@ SOURCES += main.cpp \
     kernel/updates.cpp \
     gui/myuiloader.cpp \
     storage/postgresdbfactory.cpp \
-    storage/sqlitedbfactory.cpp
+    storage/sqlitedbfactory.cpp \
+    kernel/report.cpp
 
 HEADERS +=  gui/passwordform.h \
     gui/form.h \
@@ -195,7 +196,8 @@ HEADERS +=  gui/passwordform.h \
     version.h \
     storage/postgresdbfactory.h \
     storage/sqlitedbfactory.h \
-    storage/mymultilist.h
+    storage/mymultilist.h \
+    kernel/report.h
 
 
 RESOURCES += ../../resources.qrc

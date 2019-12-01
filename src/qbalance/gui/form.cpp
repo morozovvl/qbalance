@@ -103,9 +103,9 @@ bool Form::open(QWidget* pwgt, Essence* par, QString fName)
 
 void Form::close()
 {
+    hide();
     if (formWidget->isFormWidgetChanged())
         writeSettings();
-    hide();
 }
 
 
@@ -361,12 +361,12 @@ void Form::hide()
 {
     if (formWidget != nullptr)
     {
+        formWidget->hide();
         if (!freeWindow)
         {
             if (subWindow != nullptr)
                 subWindow->hide();
         }
-        formWidget->hide();
     }
 }
 

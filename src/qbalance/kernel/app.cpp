@@ -29,6 +29,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "dictionaries.h"
 #include "documents.h"
 #include "topers.h"
+#include "report.h"
 #include "tcpserver.h"
 #include "tcpclient.h"
 #include "../gui/guifactory.h"
@@ -39,6 +40,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/messagewindow.h"
 #include "../gui/dialog.h"
 #include "../gui/myuiloader.h"
+#include "../gui/tableview.h"
 #include "../engine/documentscriptengine.h"
 #include "../storage/postgresdbfactory.h"
 #include "../storage/sqlitedbfactory.h"
@@ -2271,6 +2273,14 @@ bool TApplication::readParameters(int argc, char *argv[])
 
 void TApplication::showReports()
 {
+    Report* rep = Report::create<Report>();
+    if (rep->open())
+    {
+        rep->query();
+        rep->exec();
+        rep->close();
+    }
+    delete rep;
 }
 
 

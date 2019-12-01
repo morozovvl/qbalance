@@ -467,11 +467,12 @@ void MainWindow::removeMdiWindow(QMdiSubWindow* subWindow)
 
 void MainWindow::wikiQt()
 {
-    QDesktopServices::openUrl(QUrl("https://github.com/morozovvl/qbalance/wiki"));
+    QUrl url = QUrl("www.github.com/morozovvl/qbalance/wiki");
+    QDesktopServices::openUrl(url);
 }
 
 
 void MainWindow::vkQt()
 {
-    QDesktopServices::openUrl(QUrl("https://vk.com/qbalance"));
+    QDesktopServices::openUrl(QUrl("www.vk.com/qbalance"));
 }

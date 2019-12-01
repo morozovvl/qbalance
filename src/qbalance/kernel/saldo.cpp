@@ -71,7 +71,7 @@ bool Saldo::setTableModel(int)
 {
     if (Dictionary::setTableModel(0))
     {
-        QString selectCommand = tableModel->getSelectStatement();
+        QString selectStatement = tableModel->getSelectStatement();
 
         QString tName = db->getObjectName("сальдо");
         QList<FieldType> fields;
@@ -95,14 +95,14 @@ bool Saldo::setTableModel(int)
                 columnsProperties.append(fld);
             }
         }
-        selectCommand.replace(" FROM", selectList + " FROM");
-        selectCommand.append(QString(" INNER JOIN \"%1\" ON \"%1\".\"%2\"='%3' AND \"%1\".\"%4\"=\"%5\".\"%6\"").arg(tName)
+        selectStatement.replace(" FROM", selectList + " FROM");
+        selectStatement.append(QString(" INNER JOIN \"%1\" ON \"%1\".\"%2\"='%3' AND \"%1\".\"%4\"=\"%5\".\"%6\"").arg(tName)
                                                                                                                 .arg(db->getObjectName(dictionaryName + ".счет"))
                                                                                                                 .arg(account)
                                                                                                                 .arg(db->getObjectName(tName + ".код"))
                                                                                                                 .arg(dictionaryName)
                                                                                                                 .arg(db->getObjectName(dictionaryName + ".код")));
-        tableModel->setSelectStatement(selectCommand);
+        tableModel->setSelectStatement(selectStatement);
         db->getColumnsRestrictions(tName, &columnsProperties);
         return true;
     }

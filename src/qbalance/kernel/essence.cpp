@@ -902,9 +902,9 @@ void Essence::view()
 }
 
 
-bool Essence::open()
+bool Essence::open(QString command)
 {
-    if (Table::open())
+    if (Table::open(command))
     {
         if (!app->isScriptMode())       // Если мы работаем не в скриптовом режиме, то создадим форму для этой сущности
             initForm();

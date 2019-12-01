@@ -133,20 +133,29 @@ int GUIFactory::openDB()
             lastPort = db->getPort();
             if (db->open("test", "*"))
             {
-                PassWordForm* frm = new PassWordForm();
+                bool formSelected;
+                QString login, password;
+
+                PassWordForm* frm = new PassWordForm(app->getMainWindow());
                 users = db->getUserList();
                 foreach (int key, users.keys())
                     frm->addLogin(QString(users.value(key).loginName + " " + users.value(key).userName).trimmed());
                 db->close();
                 frm->open();
                 frm->exec();
-                if (frm->isFormSelected())
+                formSelected = frm->isFormSelected();
+                login = frm->getLogin();
+                password = frm->getPassword();
+                frm->hide();
+                frm->close();
+                delete frm;
+
+                if (formSelected)
                 {   // Пользователь нажал кнопку "Ok"
-                    QString login;
                     QString userName;
                     foreach (key, users.keys())
                     {
-                        if (QString("%1 %2").arg(users.value(key).loginName).arg(users.value(key).userName).trimmed() == frm->getLogin())
+                        if (QString("%1 %2").arg(users.value(key).loginName).arg(users.value(key).userName).trimmed() == login)
                         {
                             login = users.value(key).loginName.trimmed();
                             userName = users.value(key).userName.trimmed();
@@ -155,7 +164,6 @@ int GUIFactory::openDB()
                             break;
                         }
                     }
-                    QString password = frm->getPassword();
                     app->setWriteDebug(true);
                     if (db->open(login, password))
                     {
@@ -169,7 +177,6 @@ int GUIFactory::openDB()
                 }
                 else
                     returnCode = -4;  //  Пользователь нажал кнопку "Отмена"
-                delete frm;
             }
             else
                 returnCode = -2; // Ошибка соединения с сервером

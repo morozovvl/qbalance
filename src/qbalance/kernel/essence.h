@@ -117,10 +117,10 @@ protected:
 public:
     ~Essence();
 
-    Q_INVOKABLE virtual bool            open();
+    Q_INVOKABLE virtual bool            open(QString = "");
     Q_INVOKABLE virtual void            close();
     void                                initForm();
-    Q_INVOKABLE virtual bool            add() = 0;                      // Добавление записи
+    Q_INVOKABLE virtual bool            add() { return true; }                      // Добавление записи
     Q_INVOKABLE virtual bool            remove(bool = false);     // Удаление записи
     Q_INVOKABLE virtual void            view();                         // Просмотр записи
     Q_INVOKABLE virtual void            print(QString, bool = false, bool = false, int = 1, QString = "");  // Печать
