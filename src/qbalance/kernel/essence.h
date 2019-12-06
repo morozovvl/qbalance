@@ -146,7 +146,8 @@ public:
     Q_INVOKABLE virtual void            setOrderClause(QString = "") { ; }
     Q_INVOKABLE int                     getRowCount();
     Q_INVOKABLE int                     rowCount();
-    Q_INVOKABLE bool saveChanges();
+    Q_INVOKABLE bool                    saveChanges();
+    Q_INVOKABLE void                    setReadOnly(bool);
 
 
 // Функции для работы с модулем GUI

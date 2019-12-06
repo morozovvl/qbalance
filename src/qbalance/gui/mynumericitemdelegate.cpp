@@ -28,6 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 MyNumericItemDelegate::MyNumericItemDelegate(QObject* parent, FormGrid* form, int len, int prec)
 : MyItemDelegate(parent, form)
 {
+    hideZero = false;   // по умолчанию нулевые значения будем показывать
     length = len;
     precision = prec;
     delegateType = Numeric;
@@ -103,10 +104,20 @@ void MyNumericItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem&
 {
     QStyleOptionViewItem opt;
     QLocale locale;
+    QString text = "";
+    double value = index.data(Qt::DisplayRole).toDouble();
     locale.setNumberOptions(QLocale::OmitGroupSeparator);
     opt = setElementColor(QStyleOptionViewItem(option));
     opt.displayAlignment = Qt::AlignRight | Qt::AlignVCenter;
-    QString text = locale.toString(index.data(Qt::DisplayRole).toDouble(), 'f', precision);
+    if (value != 0.0 || !hideZero)
+    {
+        text = locale.toString(value, 'f', precision);
+    }
     drawDisplay(painter, opt, opt.rect, text);
 }
 
+
+void MyNumericItemDelegate::setHideZero(bool hide)
+{
+    hideZero = hide;
+}

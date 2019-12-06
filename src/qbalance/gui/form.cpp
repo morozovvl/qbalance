@@ -50,6 +50,7 @@ Form::Form(QObject* par): QObject(par)
     db = app->getDBFactory();
     freeWindow = false;
     configName = "Form";
+    enabled = true;
 
     // Установим цветовую палитру подсказок
     QPalette palette = QToolTip::palette();
@@ -201,22 +202,18 @@ void Form::createForm(QString fileName, QWidget* pwgt)
         formWidget->setApp(app);
         formWidget->setVisible(false);
         formWidget->setWindowFlags(Qt::Window | Qt::Dialog | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowContextHelpButtonHint);
-        buttonOk = new QPushButton();
-        buttonOk->setObjectName("buttonOk");
-        buttonCancel = new QPushButton();
-        buttonCancel->setObjectName("buttonCancel");
 
         cmdButtonLayout = new QHBoxLayout();
         cmdButtonLayout->setObjectName("cmdButtonLayout");
         cmdButtonLayout->addStretch(1);
-        cmdButtonLayout->addWidget(buttonOk);
-        cmdButtonLayout->addWidget(buttonCancel);
 
         vbxLayout = new QVBoxLayout();
         vbxLayout->setObjectName("vbxLayout");
-
         vbxLayout->addLayout(cmdButtonLayout);
         formWidget->setLayout(vbxLayout);
+
+        buttonOk = addButton("buttonOk");
+        buttonCancel = addButton("buttonCancel");
     }
 
     if (buttonOk != nullptr)
@@ -232,6 +229,24 @@ void Form::createForm(QString fileName, QWidget* pwgt)
     freeWindow = !appendToMdi;
 
     formWidget->setForm(this);
+}
+
+
+QPushButton* Form::addButton(QString objectName)
+{
+    QPushButton* button = new QPushButton();
+    button->setObjectName(objectName);
+    cmdButtonLayout->addWidget(button);
+    return button;
+}
+
+
+QPushButton* Form::insertButton(QString objectName, int order)
+{
+    QPushButton* button = new QPushButton();
+    button->setObjectName(objectName);
+    cmdButtonLayout->insertWidget(order, button);
+    return button;
 }
 
 
@@ -506,4 +521,10 @@ QString Form::getFormTitle()
 void Form::setFormTitle(QString title)
 {
     getFormWidget()->setWindowTitle(title);
+}
+
+
+void Form::setEnabled(bool e)
+{
+    enabled = e;
 }

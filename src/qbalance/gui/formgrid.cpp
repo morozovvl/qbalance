@@ -228,18 +228,10 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt)
     if (parent != nullptr)
     {
         if (defaultForm)
-        {
-            buttonLoad = new QPushButton();
-            buttonLoad->setObjectName("buttonLoad");
-            cmdButtonLayout->insertWidget(0, buttonLoad);
-        }
-        else
-        {
-            if (formWidget != nullptr)
-            {
-                buttonLoad = static_cast<QPushButton*>(formWidget->findChild("buttonLoad"));
-            }
-        }
+            buttonLoad = insertButton("buttonLoad");
+        else if (formWidget != nullptr)
+            buttonLoad = static_cast<QPushButton*>(formWidget->findChild("buttonLoad"));
+
         if (buttonLoad != nullptr)
         {
             connect(buttonLoad, SIGNAL(clicked()), this, SLOT(cmdLoad()));
@@ -251,18 +243,10 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt)
     if (parent != nullptr)
     {
         if (defaultForm)
-        {
-            buttonSave = new QPushButton();
-            buttonSave->setObjectName("buttonSave");
-            cmdButtonLayout->insertWidget(0, buttonSave);
-        }
-        else
-        {
-            if (formWidget != nullptr)
-            {
-                buttonSave = static_cast<QPushButton*>(formWidget->findChild("buttonSave"));
-            }
-        }
+            buttonSave = insertButton("buttonSave");
+        else if (formWidget != nullptr)
+            buttonSave = static_cast<QPushButton*>(formWidget->findChild("buttonSave"));
+
         if (buttonSave != nullptr)
         {
             connect(buttonSave, SIGNAL(clicked()), this, SLOT(cmdSave()));
@@ -274,81 +258,50 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt)
     if (parent != nullptr && parent->isPrintable())
     {
         if (defaultForm)
-        {
-            buttonPrint = new QPushButton();
-            buttonPrint->setObjectName("buttonPrint");
-            cmdButtonLayout->insertWidget(0, buttonPrint);
-        }
-        else
-        {
-            if (formWidget != nullptr)
-            {
-                buttonPrint = static_cast<QPushButton*>(formWidget->findChild("buttonPrint"));
-            }
-        }
+            buttonPrint = insertButton("buttonPrint");
+        else if (formWidget != nullptr)
+            buttonPrint = static_cast<QPushButton*>(formWidget->findChild("buttonPrint"));
+
         if (buttonPrint != nullptr)
-        {
             connect(buttonPrint, SIGNAL(clicked()), this, SLOT(cmdPrint()));
-        }
         else
-        {
             parent->setPrintable(false);
-        }
     }
     // Подключим кнопку "Обновить"
     if (defaultForm)
-    {
-        buttonRequery = new QPushButton();
-        buttonRequery->setObjectName("buttonRequery");
-        cmdButtonLayout->insertWidget(0, buttonRequery);
-    }
+        buttonRequery = insertButton("buttonRequery");
     else
-    {
         buttonRequery = static_cast<QPushButton*>(formWidget->findChild("buttonRequery"));
-    }
+
     if (buttonRequery != nullptr)
-    {
         connect(buttonRequery, SIGNAL(clicked()), this, SLOT(cmdRequery()));
-    }
+
     // Подключим кнопку "Запрос"
     if (defaultForm)
     {
-        buttonQuery = new QPushButton();
-        buttonQuery->setObjectName("buttonQuery");
-        cmdButtonLayout->insertWidget(0, buttonQuery);
+        buttonQuery = insertButton("buttonQuery");
         buttonQuery->hide();
     }
     else
-    {
         buttonQuery = static_cast<QPushButton*>(formWidget->findChild("buttonQuery"));
-    }
+
     if (buttonQuery != nullptr)
-    {
         connect(buttonQuery, SIGNAL(clicked()), this, SLOT(cmdQuery()));
-    }
+
     // Подключим кнопку "Просмотреть"
     if (parent != nullptr)
     {
         if (parent->isViewable())
         {
             if (defaultForm)
-            {
-                buttonView = new QPushButton();
-                buttonView->setObjectName("buttonView");
-                cmdButtonLayout->insertWidget(0, buttonView);
-            }
+                buttonView = insertButton("buttonView");
             else
-            {
                 buttonView = static_cast<QPushButton*>(formWidget->findChild("buttonView"));
-            }
+
             if (buttonView != nullptr)
-            {
                 connect(buttonView, SIGNAL(clicked()), this, SLOT(cmdView()));
-            }
             else
-            {
                 parent->setViewable(false);
-            }
         }
         // Подключим кнопку "Удалить"
         parent->setDeleteable(parent->isDeleteable());
@@ -370,15 +323,10 @@ void FormGrid::setButtonAdd(bool set)
         if (parent != nullptr && parent->isInsertable() && buttonAdd == nullptr)
         {
             if (defaultForm)
-            {
-                buttonAdd = new QPushButton();
-                buttonAdd->setObjectName("buttonAdd");
-                cmdButtonLayout->insertWidget(0, buttonAdd);
-            }
+                buttonAdd = insertButton("buttonAdd");
             else
-            {
                 buttonAdd = static_cast<QPushButton*>(formWidget->findChild("buttonAdd"));
-            }
+
             if (buttonAdd != nullptr)
             {
                 connect(buttonAdd, SIGNAL(clicked()), this, SLOT(cmdAdd()));
@@ -412,15 +360,10 @@ void FormGrid::setButtonDelete(bool set)
         if (parent != nullptr && parent->isDeleteable() && buttonDelete == nullptr)
         {
             if (defaultForm)
-            {
-                buttonDelete = new QPushButton();
-                buttonDelete->setObjectName("buttonDelete");
-                cmdButtonLayout->insertWidget(0, buttonDelete);
-            }
+                buttonDelete = insertButton("buttonDelete");
             else
-            {
                 buttonDelete = static_cast<QPushButton*>(formWidget->findChild("buttonDelete"));
-            }
+
             if (buttonDelete != nullptr)
             {
                 connect(buttonDelete, SIGNAL(clicked()), this, SLOT(cmdDelete()));
@@ -581,9 +524,9 @@ void FormGrid::setButtons()
         if (parent->rowCount() > 0)
         {
             if (buttonAdd != nullptr)
-                buttonAdd->setEnabled(parent->isInsertable());
+                buttonAdd->setEnabled(parent->isInsertable() && enabled);
             if (buttonDelete != nullptr)
-                buttonDelete->setEnabled(parent->isDeleteable());
+                buttonDelete->setEnabled(parent->isDeleteable() && enabled);
             if (buttonView != nullptr)
                 buttonView->setEnabled(parent->isViewable());
             if (buttonPrint != nullptr)
@@ -593,6 +536,8 @@ void FormGrid::setButtons()
         }
         else
         {
+            if (buttonAdd != nullptr)
+                buttonAdd->setEnabled(enabled);
             if (buttonDelete != nullptr)
                 buttonDelete->setEnabled(false);
             if (buttonView != nullptr)
@@ -608,8 +553,11 @@ void FormGrid::setButtons()
 
 void FormGrid::setEnabled(bool enabled)
 {
-    buttonAdd->setEnabled(enabled);
-    buttonDelete->setEnabled(enabled);
+    Form::setEnabled(enabled);
+    if (buttonAdd != nullptr)
+        buttonAdd->setEnabled(enabled);
+    if (buttonDelete != nullptr)
+        buttonDelete->setEnabled(enabled);
     if (grdTable != nullptr)
         grdTable->setReadOnly(!enabled);
 }

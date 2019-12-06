@@ -81,24 +81,23 @@ void ConnectionForm::initForm(QString hostName, QString dbName, int portNum, boo
         QHBoxLayout* cmdButtonLayout = static_cast<QHBoxLayout*>(formWidget->findChild("cmdButtonLayout"));
         if (cmdButtonLayout != nullptr)
         {
-            QPushButton* buttonDelete = new QPushButton();
-            buttonDelete->setObjectName("buttonDelete");
+            QPushButton* buttonDelete = insertButton("buttonDelete");
             buttonDelete->setToolTip(trUtf8("Удалить настройки подключения"));
             connect(buttonDelete, SIGNAL(clicked()), this, SLOT(buttonDelete()));
-            QPushButton* buttonSave = new QPushButton();
-            buttonSave->setObjectName("buttonSave");
+
+            QPushButton* buttonSave = insertButton("buttonSave");
             buttonSave->setToolTip(trUtf8("Сохранить настройки подключения"));
             connect(buttonSave, SIGNAL(clicked()), this, SLOT(buttonSave()));
-            cmdButtonLayout->insertWidget(0, buttonDelete);
-            cmdButtonLayout->insertWidget(0, buttonSave);
         }
     }
     buttonOk->setToolTip(trUtf8("Подключиться к серверу"));
     buttonCancel->setToolTip(trUtf8("Не подключаться к серверу и выйти из программы"));
+
     formWidget->setMinimumHeight(200);
     formWidget->setMinimumWidth(350);
     formWidget->setMaximumHeight(200);
     formWidget->setMaximumWidth(350);
+
     if (readSettings)
         readConnectionsList();
     app->setIcons(formWidget);

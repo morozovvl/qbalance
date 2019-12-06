@@ -54,9 +54,11 @@ public:
     virtual int getPrecision();
     virtual void paint(QPainter*, const QStyleOptionViewItem&, const QModelIndex&) const;
     virtual void setColumnMask(const QString mask = "");
+    virtual void setHideZero(bool);
 private:
     int length;
     int precision;
+    bool hideZero;
 };
 
 #endif // MYNUMERICITEMDELEGATE_H

@@ -23,6 +23,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/tableview.h"
 #include "../gui/mainwindow.h"
 #include "../gui/calendarform.h"
+#include "../engine/documentscriptengine.h"
+#include "../engine/reportcontext.h"
 #include "../storage/mysqlrelationaltablemodel.h"
 #include "../storage/dbfactory.h"
 #include "report.h"
@@ -30,14 +32,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 Report::Report(QString name, QObject* parent): Dictionary(name, parent)
 {
+    dict = nullptr;
 }
 
 
-bool Report::open(QString, QString)
+bool Report::open(QString acc, QString)
 {
-    setTagName("оборот60");
+    account = acc;
+    setTagName("оборот" + account);
 
-    Dictionary* dict = app->getDictionary("организации");
+    dict = app->getDictionary(db->getAccountsValue(account, "ИМЯСПРАВОЧНИКА").toString());
+    dictEnabled = dict->isEnabled();
+    dict->setEnabled(false);
     dict->exec();
     if (dict->isFormSelected())
     {
@@ -48,18 +54,27 @@ bool Report::open(QString, QString)
         calendar->exec();
         if (calendar->isFormSelected())
         {
-            if (Essence::open(getReportqlSelectStatement(dict->getId(), calendar->getBeginDate(), calendar->getEndDate())))
+            beginDate = calendar->getBeginDate();
+            endDate = calendar->getEndDate();
+            if (Dictionary::open(getReportqlSelectStatement(dict->getId(), beginDate, endDate)))
             {
-                form->setFormTitle("Обороты по счету 60");
-                form->getGrdTable()->clearColumnDefinitions();
-                form->getGrdTable()->appendColumnDefinition("ДАТА", "Дата", true);
-                form->getGrdTable()->appendColumnDefinition("ОПЕРНОМЕР", "№ оп.", true);
-                form->getGrdTable()->appendColumnDefinition("ОПЕРИМЯ", "Наименование операции", true);
-                form->getGrdTable()->appendColumnDefinition("ДОКУМЕНТ", "Документ", true);
-                form->getGrdTable()->appendColumnDefinition("НОМЕР", "№ док.", true);
-                form->getGrdTable()->appendColumnDefinition("КОММЕНТАРИЙ", "Комментарий", true);
-                form->getGrdTable()->appendColumnDefinition("ДЕБЕТ", "Дебет", true);
-                form->getGrdTable()->appendColumnDefinition("КРЕДИТ", "Кредит", true);
+                form->setFormTitle(QString("Обороты по счету %1 - %2").arg(account).arg(dict->getName()));
+
+                TableView* table = form->getGrdTable();
+                table->setHideZero();
+                table->clearColumnDefinitions();
+                table->appendColumnDefinition("ДАТА", "Дата");
+                table->appendColumnDefinition("ОПЕРНОМЕР", "№ оп.");
+                table->appendColumnDefinition("ОПЕРИМЯ", "Наименование операции");
+                table->appendColumnDefinition("ДОКУМЕНТ", "Документ");
+                table->appendColumnDefinition("НОМЕР", "№ док.");
+                table->appendColumnDefinition("КОММЕНТАРИЙ", "Комментарий");
+                table->appendColumnDefinition("ДЕБЕТ", "Дебет", true, 10, 2);
+                table->appendColumnDefinition("КРЕДИТ", "Кредит", true, 10, 2);
+
+                if (form->getButtonView() != nullptr)
+                    form->getButtonView()->setVisible(true);
+
                 return true;
             }
         }
@@ -69,29 +84,35 @@ bool Report::open(QString, QString)
 }
 
 
+void Report::close()
+{
+    dict->setEnabled(dictEnabled);
+    Dictionary::close();
+}
+
+
 void Report::preparePrintValues()   // Готовит значения для печати
 {
+    Dictionary::preparePrintValues();
+
+    foreach(QString field, dict->getFieldsList())
+    {
+        if (field.left(4) != idFieldName)       // Если поле не является ссылкой на другой справочник
+            reportScriptEngine->getReportContext()->setValue(QString("%1.%2")
+                                                             .arg(dict->getTableName())
+                                                             .arg(field).toLower(),
+                                                             dict->getValue(field));
+    }
+
+    reportScriptEngine->getReportContext()->setValue("НачалоПериода", beginDate.toString(app->dateFormat()));
+    reportScriptEngine->getReportContext()->setValue("КонецПериода", endDate.toString(app->dateFormat()));
 }
 
 
-QString Report::getReportqlSelectStatement(int orgId, QDate begDate, QDate endDate)
+QString Report::getReportqlSelectStatement(int id, QDate begDate, QDate endDate)
 {
-    QString command = QString("SELECT ДАТА, ОПЕРНОМЕР, ОПЕРИМЯ, ДОКУМЕНТ, НОМЕР, КОММЕНТАРИЙ, ДЕБЕТ, КРЕДИТ FROM sp_calcobjoborot('60', %1, '%2', '%3')")
-            .arg(orgId)
-            .arg(begDate.toString(app->dateFormat()))
-            .arg(endDate.toString(app->dateFormat()));
+    QString command = db->getCalcObjOborotCommand(account, id, begDate, endDate);
+    command = QString("SELECT ДАТА, ОПЕРНОМЕР, ОПЕРИМЯ, ДОКУМЕНТ, НОМЕР, КОММЕНТАРИЙ, ДЕБЕТ, КРЕДИТ FROM (%1) s").arg(command);
     return command;
 }
-
-
-void Report::setForm(QString formName)
-{
-    form = new FormGrid();
-
-    form->appendToolTip("buttonOk",         trUtf8("Закрыть список документов"));
-    form->appendToolTip("buttonRequery",    trUtf8("Обновить список документов (загрузить повторно с сервера) (F3)"));
-
-    form->open(parentForm, this, formName);
-}
-
 

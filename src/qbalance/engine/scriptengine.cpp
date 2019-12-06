@@ -713,28 +713,6 @@ void QFileDialogFromScriptValue(const QScriptValue &object, QFileDialog* &out)
 }
 
 
-/*
-// класс QSqlQuery
-Q_DECLARE_METATYPE(QSqlQuery*)
-
-QScriptValue QSqlQueryConstructor(QScriptContext *context, QScriptEngine *engine) {
-    if (context->argument(0).isString())
-    {
-        return engine->toScriptValue(QSqlQuery(context->argument(0).toString()));
-    }
-    return QScriptValue();
-}
-
-QScriptValue QSqlQueryToScriptValue(QScriptEngine *engine, QSqlQuery* const &in) {
-    return engine->toScriptValue(in);
-}
-
-void QSqlQueryFromScriptValue(const QScriptValue &object, QSqlQuery* &out) {
-//    out = qobject_cast<QSqlQuery*>(object.engine()->fromScriptValue(object));
-    QSqlQuery* p = qobject_cast<QSqlQuery*>(object.engine()->fromScriptValue(object));
-}
-*/
-
 //================================================================================================
 // Реализация класса
 
@@ -848,13 +826,6 @@ void ScriptEngine::close()
 void ScriptEngine::loadScriptObjects()
 {
     installTranslatorFunctions(currentContext()->thisObject());
-/*
-    const int typeId1 = qRegisterMetaType<QFileInfo>("QFileInfo");
-    QScriptValue prototype1 = newQObject(new QFileInfoPrototype);
-    setDefaultPrototype(typeId1, prototype1);
-    QScriptValue creator1 = newFunction(QFileInfoPrototype::construct, prototype1);
-    globalObject().setProperty(QLatin1String("QFileInfo"), creator1);
-*/
 
     // Объявим классы для работы с БД
     globalObject().setProperty(sqlRecordClass->name(), sqlRecordClass->constructor());
@@ -1532,17 +1503,8 @@ QScriptValue ScriptEngine::scriptCall(QString eventName, const QScriptValue &thi
         }
         TApplication::exemplar()->debug(3, "/" + program);
     }
-//    else
-//        TApplication::exemplar()->debug(3, QObject::trUtf8("Не найдена функция ") + eventName);
     return result;
 }
-
-/*
-QScriptValue ScriptEngine::globalObject()
-{
-    return QScriptEngine::globalObject();
-}
-*/
 
 
 void ScriptEngine::tryEventLoop()

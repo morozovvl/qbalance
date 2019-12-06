@@ -104,7 +104,7 @@ void Document::postInitialize(int oper, Documents* par)
 
     lInsertable = true;
     lDeleteable = true;
-//    lUpdateable = true;
+    lUpdateable = true;
     isDictionary = false;
     lIsDocument = true;
     addingFromQuery = false;
@@ -577,7 +577,7 @@ void Document::hide()
     if (!locked)
     {
         unlockDocument();
-        setEnabled(true);
+//        setEnabled(true);
     }
     app->debug(1, QString("Closed document %1").arg(docId));
 }
@@ -723,6 +723,7 @@ void Document::loadDocument()
                 dict->setMustShow(true);
             }
         }
+        dict->setEnabled(false);        // По умолчанию запретим редактировать справочники при работе с документами
     }
 }
 

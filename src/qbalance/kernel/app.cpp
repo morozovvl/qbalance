@@ -2274,8 +2274,9 @@ bool TApplication::readParameters(int argc, char *argv[])
 void TApplication::showReports()
 {
     Report* rep = Report::create<Report>();
-    if (rep->open())
+    if (rep->open("70"))
     {
+        db->getDictionariesInAnalitics();
         rep->query();
         rep->exec();
         rep->close();

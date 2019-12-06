@@ -109,9 +109,7 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt)
     {
         if (defaultForm)
         {
-            buttonQueryAdd = new QPushButton();
-            buttonQueryAdd->setObjectName("buttonQueryAdd");
-            cmdButtonLayout->insertWidget(1, buttonQueryAdd);
+            buttonQueryAdd = insertButton("buttonQueryAdd", 1);
         }
         else
         {

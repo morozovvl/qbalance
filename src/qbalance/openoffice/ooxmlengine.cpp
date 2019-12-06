@@ -74,12 +74,17 @@ bool OOXMLEngine::open(QString fName, QString sheet, bool ro)
         sheetName = sheet;
         readOnly = ro;
         templateFileName = fileName;
+        tmpDir = templateFileName + ".tmp";
+/*
         // Создадим временный каталог
         QTemporaryFile templateFile;
-        templateFile.setFileTemplate(QDir().tempPath() + "/tmp_" + QFileInfo(fileName).fileName() + "_XXXXXX");
+//        templateFile.setFileTemplate(QDir().tempPath() + "/tmp_" + QFileInfo(fileName).fileName() + "_XXXXXX");
+        templateFile.setFileTemplate(QDir().tempPath() + "/" + fileName);
         templateFile.open();
-        tmpDir = templateFile.fileName() + ".tmp";
         templateFile.close();
+//        tmpDir = templateFile.fileName() + ".tmp";
+*/
+
         if (QDir().mkdir(tmpDir))
         {
             // Распакуем файл шаблона документа OpenOffice

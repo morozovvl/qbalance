@@ -66,6 +66,7 @@ public:
     virtual void                selectNextColumn();         // Перемещает курсор в следующий столбец, разрешенный к редактированию
     virtual void                selectPreviousColumn();     // Перемещает курсор в предыдущий столбец, разрешенный к редактированию
     Q_INVOKABLE virtual void    setReadOnly(bool);
+    Q_INVOKABLE virtual bool    isReadOnly();
     Q_INVOKABLE virtual void    setColumnsHeaders();
     Q_INVOKABLE virtual void    hideAllGridSections();
     virtual void                hideGridSection(QString);
@@ -74,14 +75,16 @@ public:
     virtual void                restoreCurrentIndex(QModelIndex);
     virtual QList<FieldType>*   getFields() { return &fields; }
     Q_INVOKABLE virtual void    clearColumnDefinitions();
-    Q_INVOKABLE virtual void    appendColumnDefinition(int number, QString column, QString header = "", bool readOnly = false);
-    Q_INVOKABLE virtual void    appendColumnDefinition(QString column, QString header = "", bool readOnly = false);
+    Q_INVOKABLE virtual void    appendColumnDefinition(int number, QString column, QString header = "", bool readOnly = true, int length = 0, int precision = 0);
+    Q_INVOKABLE virtual void    appendColumnDefinition(QString column, QString header = "", bool readOnly = true, int length = 0, int precision = 0);
     virtual void                setCurrentFocus();
     virtual void                keyPressEvent(QKeyEvent*);     // Обработка нажатий клавиш
     Q_INVOKABLE virtual int     getColumnsCount();
     virtual void                setCurrentChangedScripts(bool);
     Q_INVOKABLE virtual void    setConfigName(QString);         // Используется в скриптах
     virtual void                setApp(TApplication*);
+    Q_INVOKABLE virtual void    setHideZero(bool = true);
+
 
 public slots:
     virtual void                cmdAdd();
@@ -111,6 +114,8 @@ private:
     bool                        columnsSettingsReaded;
     bool                        currentChangedScripts;
     int                         fieldCounter;
+    bool                        hideZero;
+    bool                        readOnly;
 
     virtual MyItemDelegate*     getColumnDelegate(FieldType);
     virtual void                readSettings();

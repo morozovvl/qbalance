@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "dialog.h"
 #include "mainwindow.h"
 #include "form.h"
-#include <QDebug>
+#include <QtCore/QDebug>
 
 
 Dialog::Dialog(QWidget *parent, Qt::WindowFlags f):

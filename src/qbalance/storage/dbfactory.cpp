@@ -510,11 +510,11 @@ QString DBFactory::getDictionariesProperties(QString tName, QString nameInForm)
 }
 
 
-QStringList DBFactory::getFieldsList(QHash<int, FieldType>* columnsProperties)
+QStringList DBFactory::getFieldsList(QHash<int, FieldType>* colProperties)
 {
     QStringList result;
-    foreach (int i, columnsProperties->keys())
-        result << columnsProperties->value(i).name;
+    foreach (int i, colProperties->keys())
+        result << colProperties->value(i).name;
     return result;
 }
 
@@ -560,17 +560,17 @@ bool DBFactory::isSet(QString tableName)
 }
 
 
-void DBFactory::addColumnProperties(QList<FieldType>* columnsProperties, QString table, QString name, QString type, int length, int precision, bool read, bool constRead, int number, int level)
+void DBFactory::addColumnProperties(QList<FieldType>* colProperties, QString table, QString name, QString type, int length, int precision, bool read, bool constRead, int number, int level)
 {
     // Выясним, нет ли уже такого поля, чтобы избежать появления двойных полей
     int maxKey = 0;
-    if (columnsProperties->count() > 0)
+    if (colProperties->count() > 0)
     {
-        for (int i = 0; i < columnsProperties->count(); i++)
+        for (int i = 0; i < colProperties->count(); i++)
         {
-              if (columnsProperties->at(i).table == table &&
-                  columnsProperties->at(i).column.toUpper() == name.toUpper() &&
-                  columnsProperties->at(i).type == type)
+              if (colProperties->at(i).table == table &&
+                  colProperties->at(i).column.toUpper() == name.toUpper() &&
+                  colProperties->at(i).type == type)
                 return;                 // такое поле уже существует, не будем ничего добавлять
             if (i > maxKey)
                 maxKey = i;
@@ -589,7 +589,7 @@ void DBFactory::addColumnProperties(QList<FieldType>* columnsProperties, QString
     fld.constReadOnly = constRead;
     fld.number = number;
     fld.level = level;
-    columnsProperties->insert(maxKey, fld);
+    colProperties->insert(maxKey, fld);
 }
 
 
@@ -633,7 +633,7 @@ void DBFactory::getColumnsProperties(QList<FieldType>* result, QString table, QS
         table = "vw_спрдокументы";
     }
 
-    QList<ColumnPropertyType> values = columnsProperties.values(table);
+    QList<ColumnPropertyType> values = columnsProperties.values(table.toLower());
     for (int i = 0; i < values.size(); i++)
     {
         FieldType fld;
@@ -2244,4 +2244,110 @@ QString DBFactory::getCurrentTimeStamp()
 QString DBFactory::driverName()
 {
     return db->driverName();
+}
+
+
+QSqlQuery DBFactory::getDictionariesInAnalitics()
+{
+    QString dictsList;
+    QStringList dicts = columnsProperties.keys();
+    for (int i = 0; i < dicts.count(); i++)
+    {
+        QString dictName = dicts.at(i);
+        QList<ColumnPropertyType> values = columnsProperties.values(dictName);
+        for (int i = 0; i < values.size(); i++)
+        {
+            if (values.at(i).name == "ИМЯ")
+            {
+                if (dictsList.size() > 0)
+                    dictsList.append(",");
+                dictsList.append(QString("'%1'").arg(dictName));
+            }
+        }
+    }
+    return execQuery(QString("SELECT * FROM счета WHERE lower(trim(ИМЯСПРАВОЧНИКА)) IN (%1) AND БАЛАНС;").arg(dictsList));
+}
+
+
+QString DBFactory::getCalcObjOborotCommand(QString cAcc, int nObj, QDate dDate1, QDate dDate2, bool showOborotAndSaldo)
+{
+    QString command = QString(
+    "SELECT DISTINCT '1' AS ТИП, '%3'::DATE AS ДАТА, 0 AS ОПЕРНОМЕР, 'Сальдо начальное' AS ОПЕРИМЯ, 0 AS ДОККОД, '' AS ДОКУМЕНТ, '' AS НОМЕР, '' AS КОММЕНТАРИЙ, 0 AS СУММА, '' AS ДБСЧЕТ, '' AS КРСЧЕТ, \
+            CASE WHEN S.КОЛ > 0 THEN S.КОЛ ELSE 0 END AS ДБКОЛ, \
+            CASE WHEN S.САЛЬДО > 0 THEN S.САЛЬДО ELSE 0 END AS ДЕБЕТ, \
+            CASE WHEN S.КОЛ < 0 THEN -S.КОЛ ELSE 0 END AS КРКОЛ, \
+            CASE WHEN S.САЛЬДО < 0 THEN -S.САЛЬДО ELSE 0 END AS КРЕДИТ \
+    FROM (SELECT (S.КОЛ + P1.КОЛ - P2.КОЛ) AS КОЛ, (S.САЛЬДО + P1.СУММА - P2.СУММА) AS САЛЬДО \
+          FROM (SELECT сальдо.КОД, сальдо.КОЛ, сальдо.САЛЬДО \
+            FROM сальдо \
+            WHERE сальдо.СЧЕТ = '%1' AND сальдо.КОД = %2) S, \
+           (SELECT SUM(P.КОЛ) AS КОЛ, SUM(P.СУММА) AS СУММА \
+                        FROM (SELECT p.КОД AS КОД, p.КОЛ, p.СУММА \
+              FROM проводки P INNER JOIN (SELECT документы.КОД \
+                              FROM документы \
+                              WHERE документы.ДАТА < '%3') D ON P.ДОККОД=D.КОД \
+                              WHERE P.ДБСЧЕТ = '%1' AND P.ДБКОД = %2) p) P1, \
+                   (SELECT SUM(P.КОЛ) AS КОЛ, SUM(P.СУММА) AS СУММА \
+                        FROM (SELECT p.КОД AS КОД, p.КОЛ, p.СУММА \
+              FROM проводки P INNER JOIN (SELECT документы.КОД \
+                              FROM документы \
+                              WHERE документы.ДАТА < '%3') D ON P.ДОККОД=D.КОД \
+              WHERE P.КРСЧЕТ = '%1' AND P.КРКОД = %2) p) P2 \
+              ) S \
+    UNION \
+    SELECT '2' AS ТИП, D.ДАТА, D.ОПЕР AS ОПЕРНОМЕР, T.ИМЯ AS ОПЕРИМЯ, D.КОД AS ДОККОД, T.ОСНДОКУМЕНТ AS ДОКУМЕНТ, D.НОМЕР, D.КОММЕНТАРИЙ, D.СУММА, '%1' AS ДБСЧЕТ, P.КРСЧЕТ, SUM(P.КОЛ) AS ДБКОЛ, SUM(P.СУММА) AS ДЕБЕТ, 0 AS КРКОЛ, 0 AS КРЕДИТ \
+    FROM проводки P INNER JOIN документы D ON P.ДОККОД=D.КОД \
+                        INNER JOIN топер T ON P.ОПЕР = T.ОПЕР AND T.НОМЕР = 1 \
+    WHERE P.ДБСЧЕТ = '%1' AND P.ДБКОД = %2 AND D.ДАТА >= '%3' AND D.ДАТА <= '%4' \
+    GROUP BY D.ДАТА, D.ОПЕР, T.ИМЯ, D.КОД, T.ОСНДОКУМЕНТ, D.НОМЕР, D.КОММЕНТАРИЙ, D.СУММА, P.КРСЧЕТ \
+    UNION \
+    SELECT '2' AS ТИП, D.ДАТА, D.ОПЕР AS ОПЕРНОМЕР, T.ИМЯ AS ОПЕРИМЯ, D.КОД AS ДОККОД, T.ОСНДОКУМЕНТ AS ДОКУМЕНТ, D.НОМЕР, D.КОММЕНТАРИЙ, D.СУММА, P.ДБСЧЕТ, '%1' AS КРСЧЕТ, 0 AS ДБКОЛ, 0 AS ДЕБЕТ, SUM(P.КОЛ) AS КРКОЛ, SUM(P.СУММА) AS КРЕДИТ \
+    FROM проводки P INNER JOIN документы D ON P.ДОККОД=D.КОД \
+                            INNER JOIN топер T ON P.ОПЕР = T.ОПЕР AND T.НОМЕР = 1 \
+    WHERE P.КРСЧЕТ = '%1' AND P.КРКОД = %2 AND D.ДАТА >= '%3' AND D.ДАТА <= '%4' \
+    GROUP BY D.ДАТА, D.ОПЕР, T.ИМЯ, D.КОД, T.ОСНДОКУМЕНТ, D.НОМЕР, D.КОММЕНТАРИЙ, D.СУММА, P.ДБСЧЕТ");
+
+    if (showOborotAndSaldo)
+            command.append(" UNION \
+    SELECT '3' AS ТИП, '%4'::DATE AS ДАТА, 0 AS ОПЕРНОМЕР, 'Обороты за период' AS ОПЕРИМЯ, 0 AS ДОККОД, '' AS ДОКУМЕНТ, '' AS НОМЕР, '' AS КОММЕНТАРИЙ, 0 AS СУММА, '' AS ДБСЧЕТ, '' AS КРСЧЕТ, O1.ДБКОЛ, O1.ДЕБЕТ, O2.КРКОЛ, O2.КРЕДИТ \
+    FROM \
+    (SELECT SUM(P.КОЛ) AS ДБКОЛ, SUM(P.СУММА) AS ДЕБЕТ \
+    FROM проводки P INNER JOIN документы D ON P.ДОККОД=D.КОД \
+                            INNER JOIN топер T ON P.ОПЕР = T.ОПЕР AND T.НОМЕР = 1 \
+    WHERE P.ДБСЧЕТ = '%1' AND P.ДБКОД = %2 AND D.ДАТА >= '%3' AND D.ДАТА <= '%4') O1, \
+    (SELECT SUM(P.КОЛ) AS КРКОЛ, SUM(P.СУММА) AS КРЕДИТ \
+    FROM проводки P INNER JOIN документы D ON P.ДОККОД=D.КОД \
+                            INNER JOIN топер T ON P.ОПЕР = T.ОПЕР AND T.НОМЕР = 1 \
+    WHERE P.КРСЧЕТ = '%1' AND P.КРКОД = %2 AND D.ДАТА >= '%3' AND D.ДАТА <= '%4') O2 \
+    UNION \
+    SELECT '4' AS ТИП, '%4'::DATE AS ДАТА, 0 AS ОПЕРНОМЕР, 'Сальдо конечное' AS ОПЕРИМЯ, 0 AS ДОККОД, '' AS ДОКУМЕНТ, '' AS НОМЕР, '' AS КОММЕНТАРИЙ, 0 AS СУММА, '' AS ДБСЧЕТ, '' AS КРСЧЕТ, \
+            CASE WHEN S.КОЛ > 0 THEN S.КОЛ ELSE 0 END AS ДБКОЛ, \
+            CASE WHEN S.САЛЬДО > 0 THEN S.САЛЬДО ELSE 0 END AS ДЕБЕТ, \
+            CASE WHEN S.КОЛ < 0 THEN -S.КОЛ ELSE 0 END AS КРКОЛ, \
+            CASE WHEN S.САЛЬДО < 0 THEN -S.САЛЬДО ELSE 0::NUMERIC(10, 2) END AS КРЕДИТ \
+    FROM (SELECT (S.КОЛ + P1.КОЛ - P2.КОЛ) AS КОЛ, (S.САЛЬДО + P1.СУММА - P2.СУММА) AS САЛЬДО \
+          FROM (SELECT сальдо.КОД, сальдо.КОЛ, сальдо.САЛЬДО \
+            FROM сальдо \
+            WHERE сальдо.СЧЕТ = '%1' AND сальдо.КОД = %2) S, \
+           (SELECT SUM(P.КОЛ) AS КОЛ, SUM(P.СУММА) AS СУММА \
+                        FROM (SELECT p.КОД AS КОД, p.КОЛ, p.СУММА \
+              FROM проводки P INNER JOIN (SELECT документы.КОД \
+                              FROM документы \
+                              WHERE документы.ДАТА <= '%4') D ON P.ДОККОД=D.КОД \
+                              WHERE P.ДБСЧЕТ = '%1' AND P.ДБКОД = %2) p) P1, \
+                   (SELECT SUM(P.КОЛ) AS КОЛ, SUM(P.СУММА) AS СУММА \
+                        FROM (SELECT p.КОД AS КОД, p.КОЛ, p.СУММА \
+              FROM проводки P INNER JOIN (SELECT документы.КОД \
+                              FROM документы \
+                              WHERE документы.ДАТА <= '%4') D ON P.ДОККОД=D.КОД \
+              WHERE P.КРСЧЕТ = '%1' AND P.КРКОД = %2) p) P2 \
+              ) S");
+    command.append(" ORDER BY ТИП, ДАТА, ОПЕРИМЯ, НОМЕР");
+
+    command = command.arg(cAcc)
+                    .arg(nObj)
+                    .arg(dDate1.toString(app->dateFormat()))
+                    .arg(dDate2.toString(app->dateFormat()));
+
+    return command;
 }

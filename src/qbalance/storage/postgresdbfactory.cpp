@@ -155,6 +155,7 @@ void PostgresDBFactory::reloadColumnProperties()
     columnsProperties.clear();
     QSqlQuery query = execQuery("SELECT DISTINCT lower(trim(table_name)) AS table_name, ins.ordinal_position::integer - 1 AS \"order\", ins.column_name AS column_name, ins.data_type AS type, COALESCE(ins.character_maximum_length::integer, 0) + COALESCE(ins.numeric_precision::integer, 0) AS length, COALESCE(ins.numeric_scale::integer, 0) AS \"precision\", ins.is_updatable AS updateable " \
                                   "FROM information_schema.columns ins " \
+                                  "WHERE table_schema = 'public' " \
                                   "ORDER BY table_name;");
     for (query.first(); query.isValid(); query.next())
     {
@@ -165,7 +166,6 @@ void PostgresDBFactory::reloadColumnProperties()
         col.length    = record.value("length").toInt();
         col.precision = record.value("precision").toInt();
         col.updateable = record.value("updateable").toString().trimmed();
-
         columnsProperties.insert(record.value("table_name").toString(), col);
     }
 }

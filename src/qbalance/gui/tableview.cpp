@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
 #include <QtCore/QtGlobal>
+#include <QtCore/QDebug>
 
 #include <QtScript/QScriptContextInfo>
 //#include <QtCore/QEvent>
@@ -43,6 +44,8 @@ TableView::TableView(): QTableView()
     essence = nullptr;
     picture = nullptr;
     fieldCounter = 0;
+    hideZero = false;   // По умолчанию нулевые значения будем показывать
+    readOnly = false;
 }
 
 
@@ -119,7 +122,7 @@ void TableView::setEssence(Essence* ess)
     connect(essence, SIGNAL(photoLoaded()), this, SLOT(showPhoto()));
     connect(tableModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)), this, SLOT(setCurrentIndex(QModelIndex)));
 
-    setReadOnly(essence->isReadOnly());
+//    setReadOnly(essence->isReadOnly());
     setFormGrid(essence->getForm());
 }
 
@@ -339,6 +342,8 @@ void TableView::setColumnsHeaders()
                         break;
                     maxColumn = i;
                 }
+
+                setReadOnly(readOnly);
             }
             readSettings();
 
@@ -395,10 +400,10 @@ void TableView::showAllGridSections()
 MyItemDelegate* TableView::getColumnDelegate(FieldType fld)
 {
     MyItemDelegate* result = nullptr;
-    if (fld.type.toUpper() == "NUMERIC" ||
-        fld.type.toUpper() == "INTEGER")
+    if (fld.type.toUpper() == "NUMERIC" || fld.type.toUpper() == "INTEGER")
     {     // для числовых полей зададим свой самодельный делегат
         MyNumericItemDelegate* numericDelegate = new MyNumericItemDelegate(this, parent, fld.length, fld.precision);
+        numericDelegate->setHideZero(hideZero);
         result = static_cast<MyItemDelegate*>(numericDelegate);
     } else if (fld.type.toUpper() == "BOOLEAN")
     {
@@ -406,9 +411,7 @@ MyItemDelegate* TableView::getColumnDelegate(FieldType fld)
         result = static_cast<MyItemDelegate*>(booleanDelegate);
     } else
     {
-        if (fld.type.toUpper() == "CHARACTER" ||
-            fld.type.toUpper() == "CHARACTER VARYING" ||
-            fld.type.toUpper() == "TEXT")
+        if (fld.type.toUpper() == "CHARACTER" || fld.type.toUpper() == "CHARACTER VARYING" || fld.type.toUpper() == "TEXT")
         {
             MyLineItemDelegate* textDelegate = new MyLineItemDelegate(this, parent);
             textDelegate->setMaxLength(fld.length);
@@ -416,18 +419,14 @@ MyItemDelegate* TableView::getColumnDelegate(FieldType fld)
         }
         else
         {
-            if (fld.type.toUpper() == "DATE" ||
-                fld.type.toUpper().left(9) == "TIMESTAMP")
+            if (fld.type.toUpper() == "DATE" || fld.type.toUpper().left(9) == "TIMESTAMP")
             {
                 MyDateItemDelegate* dateDelegate = new MyDateItemDelegate(this, parent);
                 result = static_cast<MyItemDelegate*>(dateDelegate);
             }
         }
     }
-    if (result != nullptr)
-    {
-        result->setReadOnly(fld.readOnly);
-    }
+
     return result;
 }
 
@@ -576,21 +575,20 @@ void TableView::calculate()
 
 void TableView::setReadOnly(bool ro)
 {
-    if (parent != nullptr)
+    readOnly = ro;
+
+    for (int i = 0; i < fields.count(); i++)
     {
-//        app->getDBFactory()->getColumnsHeaders(essence->getTagName(), &fields);
-        for (int i = 0; i < fields.count(); i++)
-        {
-            MyItemDelegate* delegate = static_cast<MyItemDelegate*>(itemDelegateForColumn(i));
-            if (delegate != nullptr)
-            {
-                if (ro)
-                    delegate->setReadOnly(ro);
-                else
-                    delegate->setReadOnly(fields.at(i).readOnly);
-            }
-        }
+        MyItemDelegate* itemDelegate = static_cast<MyItemDelegate*>(itemDelegateForColumn(i));
+        if (itemDelegate != nullptr)
+            itemDelegate->setReadOnly(readOnly || fields.at(i).readOnly);
     }
+}
+
+
+bool TableView::isReadOnly()
+{
+    return readOnly;
 }
 
 
@@ -681,7 +679,7 @@ void TableView::writeSettings()
 }
 
 
-void TableView::appendColumnDefinition(int, QString column, QString header, bool readOnly)
+void TableView::appendColumnDefinition(int, QString column, QString header, bool readOnly, int length, int precision)
 {
     for (int i = 0; i < fields.count(); i++)
     {
@@ -693,6 +691,10 @@ void TableView::appendColumnDefinition(int, QString column, QString header, bool
             field.number = fieldCounter;
             field.header = header;
             field.readOnly = readOnly;
+            if (length > 0)
+                field.length = length;
+            if (precision > 0)
+                field.precision = precision;
             fields.removeAt(i);
             fields.insert(i, field);
             columnsHeadersSeted = false;
@@ -702,9 +704,9 @@ void TableView::appendColumnDefinition(int, QString column, QString header, bool
 }
 
 
-void TableView::appendColumnDefinition(QString column, QString header, bool readOnly)
+void TableView::appendColumnDefinition(QString column, QString header, bool readOnly, int length, int precision)
 {
-    appendColumnDefinition(0, column, header, readOnly);
+    appendColumnDefinition(0, column, header, readOnly, length, precision);
 }
 
 
@@ -715,7 +717,7 @@ void TableView::clearColumnDefinitions()
         FieldType field = fields.at(i);
         field.number = 0;
         field.header = "";
-        field.readOnly = true;
+        field.readOnly = false;
         fields.removeAt(i);
         fields.insert(i, field);
     }
@@ -739,4 +741,10 @@ void TableView::setCurrentChangedScripts(bool c)
 void TableView::setApp(TApplication* a)
 {
     app = a;
+}
+
+
+void TableView::setHideZero(bool hide)
+{
+    hideZero = hide;
 }

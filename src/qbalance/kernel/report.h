@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QtSql/QSqlQuery>
 #include <QtCore/QObject>
+#include <QtCore/QDate>
 #include "dictionary.h"
 
 class Report : public Dictionary {
@@ -29,6 +30,11 @@ class Report : public Dictionary {
 
 private:
     QString     selectStatement;
+    QString     account;
+    Dictionary* dict;
+    QDate       beginDate;
+    QDate       endDate;
+    bool        dictEnabled;
 
 protected:
     Report(QString = "", QObject* parent = nullptr);
@@ -43,9 +49,10 @@ public:
         }
 
     virtual bool open(QString = "", QString = "");
-    virtual void  setForm(QString = "");
+    virtual void close();
 
     virtual void preparePrintValues();                   // Готовит значения для печати
+
 
     QString getReportqlSelectStatement(int, QDate, QDate);     // Генерирует текст SQL-запроса для табличной части отчета
 };

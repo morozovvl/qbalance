@@ -1630,4 +1630,10 @@ void Essence::exportData(QString, QStringList fieldsList)
 }
 
 
+void Essence::setReadOnly(bool ro)
+{
+    tableModel->setReadOnly(ro);
+    form->setEnabled(!ro);
+}
+
 

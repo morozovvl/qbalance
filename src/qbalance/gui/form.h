@@ -70,9 +70,12 @@ public:
     virtual void setButtonsSignals();
     Q_INVOKABLE virtual bool isDefaultForm();
 
+    Q_INVOKABLE virtual QPushButton* addButton(QString);
+    Q_INVOKABLE virtual QPushButton* insertButton(QString, int = 0);
     Q_INVOKABLE virtual QPushButton* getButtonOk();
     Q_INVOKABLE virtual QPushButton* getButtonCancel();
-    Q_INVOKABLE virtual void setEnabled(bool) { ; }
+
+    Q_INVOKABLE virtual void setEnabled(bool);
     virtual void activateWidget() { ; }
     virtual void activateSubWindow();
     Q_INVOKABLE virtual void readSettings();
@@ -116,6 +119,7 @@ protected:
     QVBoxLayout*    vbxLayout;
     QPushButton*    buttonOk;
     QPushButton*    buttonCancel;
+    bool            enabled;
 
     virtual void    createForm(QString, QWidget* pwgt = nullptr);
 
