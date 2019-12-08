@@ -38,49 +38,54 @@ Report::Report(QString name, QObject* parent): Dictionary(name, parent)
 
 bool Report::open(QString acc, QString)
 {
+    bool result = false;
     account = acc;
     setTagName("оборот" + account);
 
     dict = app->getDictionary(db->getAccountsValue(account, "ИМЯСПРАВОЧНИКА").toString());
-    dictEnabled = dict->isEnabled();
-    dict->setEnabled(false);
-    dict->exec();
-    if (dict->isFormSelected())
+
+    if (dict != nullptr)
     {
-        CalendarForm* calendar = new CalendarForm();
-        calendar->open(app->getMainWindow()->centralWidget());
-        calendar->setBeginDate(app->getBeginDate());
-        calendar->setEndDate(app->getEndDate());
-        calendar->exec();
-        if (calendar->isFormSelected())
+        dictEnabled = dict->isEnabled();
+        dict->setEnabled(false);
+        dict->exec();
+        if (dict->isFormSelected())
         {
-            beginDate = calendar->getBeginDate();
-            endDate = calendar->getEndDate();
-            if (Dictionary::open(getReportqlSelectStatement(dict->getId(), beginDate, endDate)))
+            CalendarForm* calendar = new CalendarForm();
+            calendar->open(app->getMainWindow()->centralWidget());
+            calendar->setBeginDate(app->getBeginDate());
+            calendar->setEndDate(app->getEndDate());
+            calendar->exec();
+            if (calendar->isFormSelected())
             {
-                form->setFormTitle(QString("Обороты по счету %1 - %2").arg(account).arg(dict->getName()));
+                beginDate = calendar->getBeginDate();
+                endDate = calendar->getEndDate();
+                if (Dictionary::open(getReportqlSelectStatement(dict->getId(), beginDate, endDate)))
+                {
+                    form->setFormTitle(QString("Обороты по счету %1 - %2").arg(account).arg(dict->getName()));
 
-                TableView* table = form->getGrdTable();
-                table->setHideZero();
-                table->clearColumnDefinitions();
-                table->appendColumnDefinition("ДАТА", "Дата");
-                table->appendColumnDefinition("ОПЕРНОМЕР", "№ оп.");
-                table->appendColumnDefinition("ОПЕРИМЯ", "Наименование операции");
-                table->appendColumnDefinition("ДОКУМЕНТ", "Документ");
-                table->appendColumnDefinition("НОМЕР", "№ док.");
-                table->appendColumnDefinition("КОММЕНТАРИЙ", "Комментарий");
-                table->appendColumnDefinition("ДЕБЕТ", "Дебет", true, 10, 2);
-                table->appendColumnDefinition("КРЕДИТ", "Кредит", true, 10, 2);
+                    TableView* table = form->getGrdTable();
+                    table->setHideZero();
+                    table->clearColumnDefinitions();
+                    table->appendColumnDefinition("ДАТА", "Дата");
+                    table->appendColumnDefinition("ОПЕРНОМЕР", "№ оп.");
+                    table->appendColumnDefinition("ОПЕРИМЯ", "Наименование операции");
+                    table->appendColumnDefinition("ДОКУМЕНТ", "Документ");
+                    table->appendColumnDefinition("НОМЕР", "№ док.");
+                    table->appendColumnDefinition("КОММЕНТАРИЙ", "Комментарий");
+                    table->appendColumnDefinition("ДЕБЕТ", "Дебет", true, 10, 2);
+                    table->appendColumnDefinition("КРЕДИТ", "Кредит", true, 10, 2);
 
-                if (form->getButtonView() != nullptr)
-                    form->getButtonView()->setVisible(true);
+                    if (form->getButtonView() != nullptr)
+                        form->getButtonView()->setVisible(true);
 
-                return true;
+                    result = true;
+                }
             }
+            delete calendar;
         }
-        delete calendar;
     }
-    return false;
+    return result;
 }
 
 

@@ -30,6 +30,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "documents.h"
 #include "topers.h"
 #include "report.h"
+#include "reports.h"
 #include "tcpserver.h"
 #include "tcpclient.h"
 #include "../gui/guifactory.h"
@@ -83,6 +84,7 @@ TApplication::TApplication(int & argc, char** argv)
     gui = nullptr;
     dictionaryList = nullptr;
     topersList = nullptr;
+    reportsList = nullptr;
     driverFR = nullptr;
     barCodeReader = nullptr;
     barCodeReaded = false;
@@ -217,6 +219,12 @@ void TApplication::showDictionaries()
 void TApplication::showDocuments()
 {
     topersList->show();
+}
+
+
+void TApplication::showReports()
+{
+    reportsList->show();
 }
 
 
@@ -722,6 +730,7 @@ bool TApplication::initApplication()
 
                 dictionaryList = Dictionaries::create<Dictionaries>();
                 topersList = Topers::create<Topers>();
+                reportsList = Reports::create<Reports>();
 
                 if (!loadDefaultConfig)
                     readSettings();
@@ -860,6 +869,12 @@ void TApplication::close()
     {
         topersList->close();
         delete topersList;
+    }
+
+    if (reportsList != nullptr)
+    {
+        reportsList->close();
+        delete reportsList;
     }
 
     if (db != nullptr)
@@ -1999,6 +2014,9 @@ QString TApplication::getReportFile(QString tagName, bool autoPrint, QWidget* fo
 
 QString TApplication::getProcessFile(QString tagName, QWidget* formWidget, QRect rect)
 {
+    Dictionary* procs = getDictionary("доступ_к_обработкам");
+    procs->query();
+
     QString result;
     QDir dir = QDir(getScriptsPath());
     QString ext = ".js";
@@ -2043,8 +2061,11 @@ QString TApplication::getProcessFile(QString tagName, QWidget* formWidget, QRect
             if (file != oldFile)
             {
                 file.remove(ext, Qt::CaseInsensitive);                                  // И его суффикс
-                processes << file;                                                        // Оставшуюся часть (название отчета) поместим в меню
-                menu->addAction(file);
+                if (procs->locateValue("ИМЯ", file) >= 0)
+                {
+                    processes << file;                                                        // Оставшуюся часть (название отчета) поместим в меню
+                    menu->addAction(file);
+                }
             }
         }
     }
@@ -2268,20 +2289,6 @@ bool TApplication::readParameters(int argc, char *argv[])
         }
     }
     return lContinue;
-}
-
-
-void TApplication::showReports()
-{
-    Report* rep = Report::create<Report>();
-    if (rep->open("70"))
-    {
-        db->getDictionariesInAnalitics();
-        rep->query();
-        rep->exec();
-        rep->close();
-    }
-    delete rep;
 }
 
 

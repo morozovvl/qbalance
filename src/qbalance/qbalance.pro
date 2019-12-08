@@ -99,7 +99,6 @@ SOURCES += main.cpp \
     kernel/tcpclient.cpp \
     storage/mysqlrelationaltablemodel.cpp \
     storage/dbfactory.cpp \
-    report/reports.cpp \
     report/ooreportengine.cpp \
     report/reportengine.cpp \
     report/ooxmlreportengine.cpp \
@@ -121,7 +120,8 @@ SOURCES += main.cpp \
     gui/myuiloader.cpp \
     storage/postgresdbfactory.cpp \
     storage/sqlitedbfactory.cpp \
-    kernel/report.cpp
+    kernel/report.cpp \
+    kernel/reports.cpp
 
 HEADERS +=  gui/passwordform.h \
     gui/form.h \
@@ -168,7 +168,6 @@ HEADERS +=  gui/passwordform.h \
     kernel/tcpclient.h \
     storage/mysqlrelationaltablemodel.h \
     storage/dbfactory.h \
-    report/reports.h \
     report/ooreportengine.h \
     report/reportengine.h \
     report/ooxmlreportengine.h \
@@ -197,7 +196,8 @@ HEADERS +=  gui/passwordform.h \
     storage/postgresdbfactory.h \
     storage/sqlitedbfactory.h \
     storage/mymultilist.h \
-    kernel/report.h
+    kernel/report.h \
+    kernel/reports.h
 
 
 RESOURCES += ../../resources.qrc

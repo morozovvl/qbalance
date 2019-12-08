@@ -172,13 +172,12 @@ void MainWindow::createMenus()
     operAct = menuBar()->addAction(QObject::trUtf8("&Операции"));
     connect(operAct, SIGNAL(triggered()), this, SLOT(showDocuments()));
 
-    processAct = menuBar()->addAction(QObject::trUtf8("&Обработки"));
-    connect(processAct, SIGNAL(triggered()), this, SLOT(showProcesses()));
-
     reportMenu = menuBar()->addMenu(QObject::trUtf8("&Отчеты"));
-
     reportAct = reportMenu->addAction(QObject::trUtf8("&Отчеты"));
     connect(reportAct, SIGNAL(triggered()), this, SLOT(showReports()));
+
+    processAct = menuBar()->addAction(QObject::trUtf8("&Обработки"));
+    connect(processAct, SIGNAL(triggered()), this, SLOT(showProcesses()));
 
     queryAct = reportMenu->addAction(QObject::trUtf8("&Запросы"));
     connect(queryAct, SIGNAL(triggered()), this, SLOT(showQueries()));

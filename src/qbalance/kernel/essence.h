@@ -132,7 +132,7 @@ public:
     Q_INVOKABLE virtual QString         getName(int row = -1);
     Q_INVOKABLE virtual bool            setId(int);
     Q_INVOKABLE virtual int             locateId(int);            // Возвращает номер строки с заданным полем КОД
-    Q_INVOKABLE virtual int             locateValue(QString, QVariant);  // Возвращает номер строки с заданным значение поля
+    Q_INVOKABLE virtual int             locateValue(QString, QVariant);  // Возвращает номер строки с заданным значением поля
     Q_INVOKABLE virtual bool            isFieldExists(QString field);
     Q_INVOKABLE virtual QVariant        getValue(QString, int row = -1);                 // Возвращает значение заданного поля в текущей записи
     Q_INVOKABLE virtual QVariant        getOldValue(QString field);

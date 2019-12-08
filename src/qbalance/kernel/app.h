@@ -66,6 +66,7 @@ class Dictionary;
 class Dictionaries;
 class Saldo;
 class Topers;
+class Reports;
 class DBFactory;
 class GUIFactory;
 class Documents;
@@ -320,6 +321,7 @@ signals:
 private:
     Dictionaries*           dictionaryList;                               // Форма со списком справочников
     Topers*                 topersList;                                   // Форма со списком операций
+    Reports*                reportsList;                                   // Форма со списком операций
     static GUIFactory*      gui;
     QDate                   beginDate;
     QDate                   endDate;
