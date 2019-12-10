@@ -135,21 +135,19 @@ void SearchParameters::addString(QString name, int strNum)
         if (app != nullptr)
         {
             labelName = app->getDBFactory()->getDictionariesProperties(name, "имя_в_форме");
-//            name = name + "." + programNameFieldName;
+
             if (labelName.size() == 0)
-            {
                 labelName = name;
-            }
         }
     }
     else
     {
         Dictionary* dict = static_cast<Dictionary*>(parentForm->getParent());
         name = dict->getTableName();
+
         if (app != nullptr)
-        {
             labelName = "Наименование";
-        }
+
         // Проверим, имеется ли в связанном справочнике полнотекстовый поиск
         if (dict->isFtsEnabled())
         {

@@ -48,7 +48,7 @@ public:
             return p;
         }
 
-    virtual bool open(QString = "", QString = "");
+    virtual bool open(QDate, QDate, QString = "", QString = "");
     virtual void close();
 
     virtual void preparePrintValues();                   // Готовит значения для печати

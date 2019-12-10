@@ -106,6 +106,7 @@ bool FormGrid::isRightPercent()
     return rightPercent;
 }
 
+
 QPushButton* FormGrid::getButtonAdd()
 {
     return buttonAdd;
@@ -313,6 +314,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt)
 
     if (vbxLayout != nullptr)
         vbxLayout->setSpacing(1);
+
 }
 
 

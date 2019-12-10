@@ -2247,28 +2247,6 @@ QString DBFactory::driverName()
 }
 
 
-QSqlQuery DBFactory::getDictionariesInAnalitics()
-{
-    QString dictsList;
-    QStringList dicts = columnsProperties.keys();
-    for (int i = 0; i < dicts.count(); i++)
-    {
-        QString dictName = dicts.at(i);
-        QList<ColumnPropertyType> values = columnsProperties.values(dictName);
-        for (int i = 0; i < values.size(); i++)
-        {
-            if (values.at(i).name == "ИМЯ")
-            {
-                if (dictsList.size() > 0)
-                    dictsList.append(",");
-                dictsList.append(QString("'%1'").arg(dictName));
-            }
-        }
-    }
-    return execQuery(QString("SELECT * FROM счета WHERE lower(trim(ИМЯСПРАВОЧНИКА)) IN (%1) AND БАЛАНС;").arg(dictsList));
-}
-
-
 QString DBFactory::getCalcObjOborotCommand(QString cAcc, int nObj, QDate dDate1, QDate dDate2, bool showOborotAndSaldo)
 {
     QString command = QString(

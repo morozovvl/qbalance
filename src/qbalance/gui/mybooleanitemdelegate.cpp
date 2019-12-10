@@ -31,22 +31,23 @@ MyBooleanItemDelegate::MyBooleanItemDelegate(QObject* parent, FormGrid* form): M
 
 QWidget* MyBooleanItemDelegate::createEditor(QWidget*parent, const QStyleOptionViewItem&, const QModelIndex&) const
 {
-    QCheckBox* editorWidget = new QCheckBox(parent);
-    if (!readOnly)
+    QCheckBox* editorWidget = nullptr;
+    if (!menuMode)
     {
-        if (essence != nullptr)
+        editorWidget = new QCheckBox(parent);
+        if (!readOnly)
         {
-            essence->saveOldValues();
-            disconnect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
-            connect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
-            editorWidget->setDisabled(false);
+            if (essence != nullptr)
+            {
+                essence->saveOldValues();
+                disconnect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
+                connect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
+                editorWidget->setDisabled(false);
+            }
         }
+        else
+            editorWidget->setDisabled(true);
     }
-    else
-    {
-        editorWidget->setDisabled(true);
-    }
-
     return editorWidget;
 }
 

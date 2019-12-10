@@ -209,7 +209,10 @@ void Form::createForm(QString fileName, QWidget* pwgt)
 
         vbxLayout = new QVBoxLayout();
         vbxLayout->setObjectName("vbxLayout");
-        vbxLayout->addLayout(cmdButtonLayout);
+
+        if (getParent() == nullptr || !getParent()->isMenuMode())
+            vbxLayout->addLayout(cmdButtonLayout);
+
         formWidget->setLayout(vbxLayout);
 
         buttonOk = addButton("buttonOk");

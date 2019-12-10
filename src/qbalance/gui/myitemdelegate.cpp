@@ -30,12 +30,16 @@ MyItemDelegate::MyItemDelegate(QObject* par, FormGrid* form)
 : QItemDelegate(par)
 {
     essence = nullptr;
+    menuMode = false;
 
     columnMask = "";
     delegateType = String;
     setReadOnly(false);
     if (form != nullptr)
+    {
         essence = reinterpret_cast<Essence*>(form->getParent());
+        menuMode = essence->isMenuMode();
+    }
 }
 
 

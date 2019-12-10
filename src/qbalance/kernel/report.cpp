@@ -22,7 +22,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/formgrid.h"
 #include "../gui/tableview.h"
 #include "../gui/mainwindow.h"
-#include "../gui/calendarform.h"
 #include "../engine/documentscriptengine.h"
 #include "../engine/reportcontext.h"
 #include "../storage/mysqlrelationaltablemodel.h"
@@ -36,7 +35,7 @@ Report::Report(QString name, QObject* parent): Dictionary(name, parent)
 }
 
 
-bool Report::open(QString acc, QString)
+bool Report::open(QDate bDate, QDate eDate, QString acc, QString)
 {
     bool result = false;
     account = acc;
@@ -51,38 +50,29 @@ bool Report::open(QString acc, QString)
         dict->exec();
         if (dict->isFormSelected())
         {
-            CalendarForm* calendar = new CalendarForm();
-            calendar->open(app->getMainWindow()->centralWidget());
-            calendar->setBeginDate(app->getBeginDate());
-            calendar->setEndDate(app->getEndDate());
-            calendar->exec();
-            if (calendar->isFormSelected())
+            beginDate = bDate;
+            endDate = eDate;
+            if (Dictionary::open(getReportqlSelectStatement(dict->getId(), beginDate, endDate)))
             {
-                beginDate = calendar->getBeginDate();
-                endDate = calendar->getEndDate();
-                if (Dictionary::open(getReportqlSelectStatement(dict->getId(), beginDate, endDate)))
-                {
-                    form->setFormTitle(QString("Обороты по счету %1 - %2").arg(account).arg(dict->getName()));
+                form->setFormTitle(QString("Обороты по счету %1 - %2").arg(account).arg(dict->getName()));
 
-                    TableView* table = form->getGrdTable();
-                    table->setHideZero();
-                    table->clearColumnDefinitions();
-                    table->appendColumnDefinition("ДАТА", "Дата");
-                    table->appendColumnDefinition("ОПЕРНОМЕР", "№ оп.");
-                    table->appendColumnDefinition("ОПЕРИМЯ", "Наименование операции");
-                    table->appendColumnDefinition("ДОКУМЕНТ", "Документ");
-                    table->appendColumnDefinition("НОМЕР", "№ док.");
-                    table->appendColumnDefinition("КОММЕНТАРИЙ", "Комментарий");
-                    table->appendColumnDefinition("ДЕБЕТ", "Дебет", true, 10, 2);
-                    table->appendColumnDefinition("КРЕДИТ", "Кредит", true, 10, 2);
+                TableView* table = form->getGrdTable();
+                table->setHideZero();
+                table->clearColumnDefinitions();
+                table->appendColumnDefinition("ДАТА", "Дата");
+                table->appendColumnDefinition("ОПЕРНОМЕР", "№ оп.");
+                table->appendColumnDefinition("ОПЕРИМЯ", "Наименование операции");
+                table->appendColumnDefinition("ДОКУМЕНТ", "Документ");
+                table->appendColumnDefinition("НОМЕР", "№ док.");
+                table->appendColumnDefinition("КОММЕНТАРИЙ", "Комментарий");
+                table->appendColumnDefinition("ДЕБЕТ", "Дебет", true, 10, 2);
+                table->appendColumnDefinition("КРЕДИТ", "Кредит", true, 10, 2);
 
-                    if (form->getButtonView() != nullptr)
-                        form->getButtonView()->setVisible(true);
+                if (form->getButtonView() != nullptr)
+                    form->getButtonView()->setVisible(true);
 
-                    result = true;
-                }
+                result = true;
             }
-            delete calendar;
         }
     }
     return result;
@@ -91,7 +81,9 @@ bool Report::open(QString acc, QString)
 
 void Report::close()
 {
-    dict->setEnabled(dictEnabled);
+    if (dict != nullptr)
+        dict->setEnabled(dictEnabled);
+
     Dictionary::close();
 }
 

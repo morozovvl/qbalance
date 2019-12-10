@@ -22,10 +22,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QtCore/QString>
 #include "dictionary.h"
+#include "../gui/calendarform.h"
+
 
 class Reports : public Dictionary {
 
 private:
+CalendarForm* calendar;
 
 protected:
     Q_INVOKABLE virtual void setForm(QString = "");
@@ -46,6 +49,7 @@ public:
         }
 
     void cmdOk();
+    Q_INVOKABLE virtual void show();
 };
 
 #endif // REPORTS_H

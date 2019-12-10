@@ -105,7 +105,7 @@ protected:
     virtual void createForm(QString, QWidget* pwgt = nullptr);
 
 private:
-    bool    leftPercent;                        //
+    bool    leftPercent;
     bool    rightPercent;
 
 };

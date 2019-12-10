@@ -104,6 +104,7 @@ protected:
     bool                sortedTable;
     bool                cardReaderEnabled;
     QHash<QString, QVariant> printValues;
+    bool            menuMode;           // Форма справочника принимает форму меню
 
     virtual void        preparePrintValues();                   // Готовит значения для печати
     virtual void        prepareSelectCurrentRowCommand();
@@ -152,8 +153,6 @@ public:
 
 // Функции для работы с модулем GUI
     Q_INVOKABLE virtual FormGrid* getForm();
-    Q_INVOKABLE TableView* getGrdTable();
-    Q_INVOKABLE void setGrdTable(TableView* gt);
     Q_INVOKABLE virtual void cmdOk();                       // Обработка нажатий кнопок "Ok"
     Q_INVOKABLE virtual void cmdCancel();                   // и "Cancel"
     Q_INVOKABLE virtual bool isFormSelected();
@@ -192,6 +191,10 @@ public:
     Q_INVOKABLE bool isFormVisible();
     Q_INVOKABLE bool getIsDictionary();
     Q_INVOKABLE virtual bool isVisible();
+    Q_INVOKABLE TableView* getGrdTable();
+    Q_INVOKABLE void setGrdTable(TableView* gt);
+    Q_INVOKABLE virtual void    setMenuMode(bool);
+    Q_INVOKABLE virtual bool    isMenuMode();
 
 
 // Функции для обеспечения работы скриптов

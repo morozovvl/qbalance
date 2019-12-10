@@ -75,11 +75,14 @@ void FormGridSearch::createForm(QString fileName, QWidget* pwgt)
             connect(parameters, SIGNAL(requery()), this, SLOT(cmdRequery()));
 
             QHBoxLayout* hbxLayout = new QHBoxLayout();
-            QLabel* label = new QLabel(LABEL_SEARCH_PARAMETERS, formWidget);
-
             hbxLayout->insertWidget(0, parameters);
-            hbxLayout->insertWidget(0, label);
-
+/*
+            if (getParent() == nullptr || !getParent()->isMenuMode())
+            {
+                QLabel* label = new QLabel(LABEL_SEARCH_PARAMETERS, formWidget);
+                hbxLayout->insertWidget(0, label);
+            }
+*/
             vbxLayout->insertLayout(0, hbxLayout);
         }
         else

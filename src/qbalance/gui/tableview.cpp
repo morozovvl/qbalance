@@ -103,6 +103,9 @@ void TableView::open()
 
 void TableView::close()
 {
+    if (essence->isMenuMode())
+        disconnect(this, SIGNAL(doubleClicked(QModelIndex)), essence, SLOT(cmdOk()));
+
     disconnect(tableModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)), this, SLOT(setCurrentIndex(QModelIndex)));
     disconnect(essence, SIGNAL(photoLoaded()), this, SLOT(showPhoto()));
 
@@ -121,6 +124,9 @@ void TableView::setEssence(Essence* ess)
 
     connect(essence, SIGNAL(photoLoaded()), this, SLOT(showPhoto()));
     connect(tableModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)), this, SLOT(setCurrentIndex(QModelIndex)));
+
+    if (essence->isMenuMode())
+        connect(this, SIGNAL(doubleClicked(QModelIndex)), essence, SLOT(cmdOk()));
 
 //    setReadOnly(essence->isReadOnly());
     setFormGrid(essence->getForm());
@@ -219,7 +225,10 @@ void TableView::keyPressEvent(QKeyEvent* event)
             {
                 case Qt::Key_Return:
                     {
-                        selectNextColumn();
+                        if (essence->isMenuMode())
+                            essence->cmdOk();
+                        else
+                            selectNextColumn();
                         event->setAccepted(true);
                     }
                     break;

@@ -52,7 +52,8 @@ public:
         {
             T* p(new T(parent));
             p->postInitialize(parent);
-            p->open();
+            if (p->open())
+                p->query();
             return p;
         }
 
@@ -68,7 +69,6 @@ public:
     virtual void cmdOk();
     Q_INVOKABLE virtual bool add();        // Добавление справочника
     Q_INVOKABLE virtual bool remove(bool = false);     // Удаление справочника
-    Q_INVOKABLE virtual void show();                // Показать форму в немодальном режиме
     Q_INVOKABLE virtual void view();                    // Исправление свойств справочника
     void    setDocument(Document* doc);
     Document* getDocument();

@@ -26,6 +26,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/formgridsearch.h"
 #include "../gui/wizarddictionary.h"
 #include "../gui/dialog.h"
+#include "../gui/tableview.h"
 #include "../storage/dbfactory.h"
 
 
@@ -252,13 +253,6 @@ void Dictionaries::view()
     {
         removeDictionary(dictName);
     }
-}
-
-
-void Dictionaries::show()
-{
-    query();
-    Dictionary::show();
 }
 
 

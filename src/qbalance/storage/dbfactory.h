@@ -315,7 +315,6 @@ public:
     virtual QString getCurrentTimeStamp();
 
     virtual int querySize(QSqlQuery*) = 0;
-    virtual QSqlQuery getDictionariesInAnalitics();
 
     Q_INVOKABLE virtual QString getCalcObjOborotCommand(QString, int, QDate, QDate, bool = true);
 

@@ -78,9 +78,11 @@ protected:
     DelegateTypes           delegateType;
     bool                    readOnly;
     QStyleOptionViewItem setElementColor(QStyleOptionViewItem) const;
+    bool                    menuMode;
 
 private:
     QString                 fieldName;
+
 };
 
 #endif // MYITEMDELEGATE_H

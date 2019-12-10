@@ -64,6 +64,7 @@ Essence::Essence(QString name, QObject *parent): Table(name, parent)
     scriptEngine = nullptr;
     reportScriptEngine = nullptr;
     m_networkAccessManager = nullptr;
+    menuMode = false;
 }
 
 
@@ -149,12 +150,6 @@ int Essence::rowCount()
 FormGrid* Essence::getForm()
 {
     return form;
-}
-
-
-TableView* Essence::getGrdTable()
-{
-    return grdTable;
 }
 
 
@@ -651,6 +646,9 @@ void Essence::query(QString filter, bool)
         Table::query(filter);
     if (row >= 0)
         setCurrentRow(row);
+
+    if (form != nullptr)
+        form->setButtons();
  }
 
 
@@ -953,16 +951,6 @@ void Essence::close()
     closeScriptEngine();
 
     Table::close();
-}
-
-
-void Essence::setGrdTable(TableView* gt)
-{
-    if (gt != nullptr)
-    {
-        grdTable = gt;
-        grdTable->setEssence(this);
-    }
 }
 
 
@@ -1634,6 +1622,34 @@ void Essence::setReadOnly(bool ro)
 {
     tableModel->setReadOnly(ro);
     form->setEnabled(!ro);
+}
+
+
+TableView* Essence::getGrdTable()
+{
+    return grdTable;
+}
+
+
+void Essence::setGrdTable(TableView* gt)
+{
+    if (gt != nullptr)
+    {
+        grdTable = gt;
+        grdTable->setEssence(this);
+    }
+}
+
+
+void Essence::setMenuMode(bool mm)
+{
+    menuMode = mm;
+}
+
+
+bool Essence::isMenuMode()
+{
+    return menuMode;
 }
 
 

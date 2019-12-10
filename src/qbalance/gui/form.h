@@ -37,8 +37,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtXml/QDomDocument>
 #include <QtCore/QSettings>
 #include <QtCore/QUuid>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QVBoxLayout>
 #include <QtScript/QScriptValue>
 //#include <QtWidgets/QPrinter>
 //#include "mainwindow.h"

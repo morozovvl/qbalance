@@ -25,6 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/wizardoperation.h"
 #include "../gui/mainwindow.h"
 #include "../gui/dialog.h"
+#include "../gui/tableview.h"
 #include "../storage/dbfactory.h"
 
 
@@ -109,8 +110,8 @@ void Topers::view()
 
 void Topers::show()
 {
-    query();
     Dictionary::show();
+    grdTable->cmdRequery();
 }
 
 

@@ -82,20 +82,24 @@ void MyNumericItemDelegate::setColumnMask(QString mask/* = ""*/)
 
 QWidget* MyNumericItemDelegate::createEditor(QWidget*parent, const QStyleOptionViewItem&, const QModelIndex&) const
 {
-    QLineEdit* editorWidget = new QLineEdit(parent);
-    editorWidget->setAlignment(Qt::AlignRight);
-    if (!readOnly)
+    QLineEdit* editorWidget = nullptr;
+    if (!menuMode)
     {
-        if (essence != nullptr)
+        QLineEdit* editorWidget = new QLineEdit(parent);
+        editorWidget->setAlignment(Qt::AlignRight);
+        if (!readOnly)
         {
-            essence->saveOldValues();
-            disconnect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
-            connect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
+            if (essence != nullptr)
+            {
+                essence->saveOldValues();
+                disconnect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
+                connect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
+            }
+            editorWidget->setReadOnly(false);
         }
-        editorWidget->setReadOnly(false);
+        else
+            editorWidget->setReadOnly(true);
     }
-    else
-        editorWidget->setReadOnly(true);
     return editorWidget;
 }
 

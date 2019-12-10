@@ -60,6 +60,7 @@ protected:
     bool            locked;
     bool            getIdRefresh;
     bool            exact;          // Значение справочника должно быть определено при добавлении строки в документ
+
     SearchParameters* parameters;
 
     Dictionary(QObject* = nullptr);
