@@ -55,8 +55,6 @@ public:
         {
             T* p(new T(opNumber, parent));
             p->postInitialize(opNumber, parent);
-            if (p->open())
-                p->query();
             return p;
         }
 
@@ -77,7 +75,6 @@ public:
     Q_INVOKABLE virtual void setCurrentDocument(int);       // Зафиксировать текущий документ
     virtual void        preparePrintValues();                   // Готовит значения для печати
     virtual void showItog();
-    virtual bool calculate(bool update = true);
 
     static QString getDocumentSqlSelectStatement(int oper,
                                           QList<ToperType>*,

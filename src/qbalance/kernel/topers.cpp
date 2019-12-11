@@ -108,13 +108,6 @@ void Topers::view()
 }
 
 
-void Topers::show()
-{
-    Dictionary::show();
-    grdTable->cmdRequery();
-}
-
-
 void Topers::setForm(QString)
 {
     if (form != nullptr)

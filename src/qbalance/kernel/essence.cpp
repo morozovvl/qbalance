@@ -65,6 +65,7 @@ Essence::Essence(QString name, QObject *parent): Table(name, parent)
     reportScriptEngine = nullptr;
     m_networkAccessManager = nullptr;
     menuMode = false;
+    isView = false;
 }
 
 
@@ -91,6 +92,7 @@ void Essence::postInitialize(QString name, QObject* parent)
     sortedTable = true;
     idFieldName = db->getObjectName("код");
     nameFieldName = db->getObjectName("имя");
+    isView = db->isView(tableName);
     scriptFileName =  tagName;
     if (tagName.size() > 0)
         scriptFileName += ".qs";
@@ -427,7 +429,7 @@ bool Essence::isVisible()
 }
 
 
-bool Essence::calculate(bool)
+bool Essence::calculate(bool update)
 {
     bool lResult = false;
     if (scriptEngineEnabled && scriptEngine != nullptr)
@@ -439,12 +441,14 @@ bool Essence::calculate(bool)
             if (!scriptEngine->getScriptError())
             {
                 if (scriptEngine->getScriptResult())
-                {
                     lResult = true;
-                }
             }
         }
     }
+
+    if (update && !isView)
+        saveChanges();
+
     return lResult;
 }
 
@@ -660,8 +664,6 @@ QString Essence::getPhotoPath()
     {
         // Если путь, откуда нужно брать фотографии не установлен, то установим его по умолчанию для данного справочника
         path = db->getDictionaryPhotoPath(tableName);
-//        if (path.size() == 0)
-//            photoEnabled = false;
         photoPath = path;
         photoPathVerified = true;           // Чтоб больше не спрашивала
     }

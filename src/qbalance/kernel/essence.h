@@ -104,7 +104,8 @@ protected:
     bool                sortedTable;
     bool                cardReaderEnabled;
     QHash<QString, QVariant> printValues;
-    bool            menuMode;           // Форма справочника принимает форму меню
+    bool                menuMode;           // Форма справочника принимает форму меню
+    bool            isView;
 
     virtual void        preparePrintValues();                   // Готовит значения для печати
     virtual void        prepareSelectCurrentRowCommand();
@@ -147,7 +148,7 @@ public:
     Q_INVOKABLE virtual void            setOrderClause(QString = "") { ; }
     Q_INVOKABLE int                     getRowCount();
     Q_INVOKABLE int                     rowCount();
-    Q_INVOKABLE bool                    saveChanges();
+    Q_INVOKABLE virtual bool            saveChanges();
     Q_INVOKABLE void                    setReadOnly(bool);
 
 

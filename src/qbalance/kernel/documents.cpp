@@ -375,14 +375,6 @@ void Documents::showItog()
 }
 
 
-bool Documents::calculate(bool)
-{
-    bool lResult = true;
-    Essence::saveChanges();            // сохраним изменения
-    return lResult;
-}
-
-
 QString Documents::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* topersList, QList<FieldType>* columnsProperties, int* retPrv1)
 {
     QString selectStatement;

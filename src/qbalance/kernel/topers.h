@@ -43,14 +43,14 @@ public:
         {
             T* p(new T(parent));
             p->postInitialize(parent);
-            p->open();
+            if (p->open())
+                p->query();
             return p;
         }
 
     void cmdOk();
     Q_INVOKABLE virtual bool add();
     Q_INVOKABLE virtual bool remove();
-    Q_INVOKABLE virtual void show();
     Q_INVOKABLE virtual void view();
     Q_INVOKABLE virtual void setOrderClause(QString = "");
 };

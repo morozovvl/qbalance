@@ -41,7 +41,6 @@ private:
     bool            lsetIdEnabled;
     bool            isDepend;
     QString         dictTitle;
-    bool            isView;
     bool            lNameExist;
 
 protected:
@@ -78,7 +77,6 @@ public:
     Q_INVOKABLE virtual bool remove(bool = false);
     Q_INVOKABLE virtual void            query(QString filter = "", bool = false);
     Q_INVOKABLE virtual void            queryName(QString filter = "");
-    virtual bool                        calculate(bool update = true);
     Q_INVOKABLE virtual int      getId(int row = -1, bool = false);
     Q_INVOKABLE virtual void setOrderClause(QString = "");
     Q_INVOKABLE virtual void setSorted(bool sorted);

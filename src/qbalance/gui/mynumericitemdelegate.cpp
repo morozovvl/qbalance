@@ -85,7 +85,7 @@ QWidget* MyNumericItemDelegate::createEditor(QWidget*parent, const QStyleOptionV
     QLineEdit* editorWidget = nullptr;
     if (!menuMode)
     {
-        QLineEdit* editorWidget = new QLineEdit(parent);
+        editorWidget = new QLineEdit(parent);
         editorWidget->setAlignment(Qt::AlignRight);
         if (!readOnly)
         {

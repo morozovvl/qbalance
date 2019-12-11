@@ -202,10 +202,8 @@ bool Document::calculate(bool)
     bool lResult = false;
     if (enabled && !scriptEngine->getScriptError())             // Если это не повторный вход в функцию и разрешено редактирование документа
     {
-        if (Essence::calculate(false))           // После вычисление не сохранять
+        if (Essence::calculate())           // После вычисление не сохранять
         {   // Если в вычислениях не было ошибки
-            calcItog();                             // то посчитаем итоги
-            saveChanges();            // сохраним изменения
             docModified = true;
             lResult = true;
         }
@@ -300,10 +298,7 @@ bool Document::add()
         if (appendDocString() > 0)
         {
             if (getScriptEngine() != nullptr)
-            {
                 getScriptEngine()->eventAfterAddString();
-//                saveChanges();
-            }
         }
         else
             result = false;
@@ -367,7 +362,6 @@ int Document::addFromQuery(QString queryName)
             static_cast<DocumentScriptEngine*>(scriptEngine)->eventAppendFromQuery(queryName, &record);
 
         Dictionary::query();
-        calcItog();
         saveChanges();
     }
     return result;
@@ -1288,16 +1282,8 @@ int Document::appendDocStrings(int rowCount)
 
 bool Document::saveChanges()
 {
-    bool lResult = false;
-    parent->submit();
-    if (Essence::saveChanges())
-    {
-        parent->updateCurrentRow();
-        lResult = true;
-    }
-    else
-        parent->restoreOldValues();
-    return lResult;
+    calcItog();
+    return Essence::saveChanges();
 }
 
 

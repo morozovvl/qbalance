@@ -80,7 +80,6 @@ void Dictionary::postInitialize(QString name, QObject *parent)
     exact = true;
     lNameExist = false;
     filterEnabled = true;
-    isView = db->isView(tableName);
     lIsSet = db->isSet(tableName);
 
     QSqlRecord tableProperties = db->getDictionariesProperties(tableName);
@@ -432,20 +431,6 @@ void Dictionary::setValue(int id, QString name, QVariant value)
 {
     setId(id);
     Essence::setValue(name, value);
-}
-
-
-bool Dictionary::calculate(bool update) {
-    bool lResult = false;
-    if (Essence::calculate())
-    {   // Если в вычислениях не было ошибки
-        if (update && !isView)
-        {
-            saveChanges();
-        }
-        lResult = true;
-    }
-    return lResult;
 }
 
 

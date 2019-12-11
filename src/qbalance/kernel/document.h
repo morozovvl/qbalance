@@ -140,7 +140,7 @@ public:
     Q_INVOKABLE void calcItog();
     bool isSinglePrv();
     bool isQuanAccount();
-    Q_INVOKABLE bool saveChanges();
+    Q_INVOKABLE virtual bool saveChanges();
     Q_INVOKABLE bool lockDocument();
     Q_INVOKABLE void unlockDocument();
 

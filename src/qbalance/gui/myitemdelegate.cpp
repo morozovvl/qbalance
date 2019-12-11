@@ -130,9 +130,8 @@ void MyItemDelegate::setReadOnly(bool val)
 void MyItemDelegate::calculate()
 {
     if (essence != nullptr)
-    {
-        essence->calculate();  //123
-    }
+        essence->calculate();
+
 }
 
 
