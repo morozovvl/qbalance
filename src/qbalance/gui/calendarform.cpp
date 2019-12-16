@@ -42,15 +42,27 @@ CalendarForm::~CalendarForm()
 }
 
 
-QDate CalendarForm::getBeginDate()
+QDate CalendarForm::getBeginDate(int diff)
 {
-    return beginDate;
+    return beginDate.addDays(diff);
 }
 
 
-QDate CalendarForm::getEndDate()
+QDate CalendarForm::getEndDate(int diff)
 {
-    return endDate;
+    return endDate.addDays(diff);
+}
+
+
+QString CalendarForm::getBeginDateString(int diff)
+{
+    return getBeginDate(diff).toString(app->dateFormat());
+}
+
+
+QString CalendarForm::getEndDateString(int diff)
+{
+    return getEndDate(diff).toString(app->dateFormat());
 }
 
 

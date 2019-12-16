@@ -149,6 +149,7 @@ public:
     void setHostName(QString name);
     void setPort(int portNum);
     virtual int openDBDialog();
+    virtual void setConnectionTimeout(int = 0) { ; }
 
     // Создание и открытие БД
     virtual bool open();

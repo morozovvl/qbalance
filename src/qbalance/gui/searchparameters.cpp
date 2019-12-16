@@ -365,6 +365,14 @@ void SearchParameters::comboBoxEnterPressed(QWidget* wdgt)
             else
                 requery();
         }
+
+/*
+        QString dictName = cmb->objectName();
+        Dictionary* dict = dictionaries->getDictionary(dictName);
+        if (dict != nullptr)
+            dict->setFilter(getFilter(dictName));
+*/
+
         i++;
     }
 }

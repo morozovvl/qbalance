@@ -117,6 +117,7 @@ void TableView::setEssence(Essence* ess)
 {
     open();
     essence = ess;
+    parent = essence->getForm();
     app = essence->getApp();
     fields = essence->returnColumnsProperties();
     tableModel = essence->getTableModel();

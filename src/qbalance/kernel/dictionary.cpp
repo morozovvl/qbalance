@@ -42,6 +42,7 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
 {
     parentDict = nullptr;
     parameters = nullptr;
+    filter = "";
 }
 
 
@@ -865,6 +866,17 @@ void Dictionary::setSqlCommand(QString command)
     open(command);
 }
 
+
+void Dictionary::setFilter(QString f)
+{
+    filter = f;
+}
+
+
+QString Dictionary::getFilter() const
+{
+    return filter;
+}
 
 
 

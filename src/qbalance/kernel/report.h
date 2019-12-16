@@ -54,7 +54,7 @@ public:
     virtual void preparePrintValues();                   // Готовит значения для печати
 
 
-    QString getReportqlSelectStatement(int, QDate, QDate);     // Генерирует текст SQL-запроса для табличной части отчета
+    QString getReportSqlSelectStatement(int, QDate, QDate);     // Генерирует текст SQL-запроса для табличной части отчета
 };
 
 #endif // REPORT_H

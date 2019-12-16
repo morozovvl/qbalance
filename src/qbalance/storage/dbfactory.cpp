@@ -2250,7 +2250,7 @@ QString DBFactory::driverName()
 QString DBFactory::getCalcObjOborotCommand(QString cAcc, int nObj, QDate dDate1, QDate dDate2, bool showOborotAndSaldo)
 {
     QString command = QString(
-    "SELECT DISTINCT '1' AS ТИП, '%3'::DATE AS ДАТА, 0 AS ОПЕРНОМЕР, 'Сальдо начальное' AS ОПЕРИМЯ, 0 AS ДОККОД, '' AS ДОКУМЕНТ, '' AS НОМЕР, '' AS КОММЕНТАРИЙ, 0 AS СУММА, '' AS ДБСЧЕТ, '' AS КРСЧЕТ, \
+    "SELECT DISTINCT 1 AS ТИП, '%3'::DATE AS ДАТА, 0 AS ОПЕРНОМЕР, 'Сальдо начальное' AS ОПЕРИМЯ, 0 AS ДОККОД, '' AS ДОКУМЕНТ, '' AS НОМЕР, '' AS КОММЕНТАРИЙ, 0 AS СУММА, '' AS ДБСЧЕТ, '' AS КРСЧЕТ, \
             CASE WHEN S.КОЛ > 0 THEN S.КОЛ ELSE 0 END AS ДБКОЛ, \
             CASE WHEN S.САЛЬДО > 0 THEN S.САЛЬДО ELSE 0 END AS ДЕБЕТ, \
             CASE WHEN S.КОЛ < 0 THEN -S.КОЛ ELSE 0 END AS КРКОЛ, \
@@ -2273,13 +2273,13 @@ QString DBFactory::getCalcObjOborotCommand(QString cAcc, int nObj, QDate dDate1,
               WHERE P.КРСЧЕТ = '%1' AND P.КРКОД = %2) p) P2 \
               ) S \
     UNION \
-    SELECT '2' AS ТИП, D.ДАТА, D.ОПЕР AS ОПЕРНОМЕР, T.ИМЯ AS ОПЕРИМЯ, D.КОД AS ДОККОД, T.ОСНДОКУМЕНТ AS ДОКУМЕНТ, D.НОМЕР, D.КОММЕНТАРИЙ, D.СУММА, '%1' AS ДБСЧЕТ, P.КРСЧЕТ, SUM(P.КОЛ) AS ДБКОЛ, SUM(P.СУММА) AS ДЕБЕТ, 0 AS КРКОЛ, 0 AS КРЕДИТ \
+    SELECT 2 AS ТИП, D.ДАТА, D.ОПЕР AS ОПЕРНОМЕР, T.ИМЯ AS ОПЕРИМЯ, D.КОД AS ДОККОД, T.ОСНДОКУМЕНТ AS ДОКУМЕНТ, D.НОМЕР, D.КОММЕНТАРИЙ, D.СУММА, '%1' AS ДБСЧЕТ, P.КРСЧЕТ, SUM(P.КОЛ) AS ДБКОЛ, SUM(P.СУММА) AS ДЕБЕТ, 0 AS КРКОЛ, 0 AS КРЕДИТ \
     FROM проводки P INNER JOIN документы D ON P.ДОККОД=D.КОД \
                         INNER JOIN топер T ON P.ОПЕР = T.ОПЕР AND T.НОМЕР = 1 \
     WHERE P.ДБСЧЕТ = '%1' AND P.ДБКОД = %2 AND D.ДАТА >= '%3' AND D.ДАТА <= '%4' \
     GROUP BY D.ДАТА, D.ОПЕР, T.ИМЯ, D.КОД, T.ОСНДОКУМЕНТ, D.НОМЕР, D.КОММЕНТАРИЙ, D.СУММА, P.КРСЧЕТ \
     UNION \
-    SELECT '2' AS ТИП, D.ДАТА, D.ОПЕР AS ОПЕРНОМЕР, T.ИМЯ AS ОПЕРИМЯ, D.КОД AS ДОККОД, T.ОСНДОКУМЕНТ AS ДОКУМЕНТ, D.НОМЕР, D.КОММЕНТАРИЙ, D.СУММА, P.ДБСЧЕТ, '%1' AS КРСЧЕТ, 0 AS ДБКОЛ, 0 AS ДЕБЕТ, SUM(P.КОЛ) AS КРКОЛ, SUM(P.СУММА) AS КРЕДИТ \
+    SELECT 2 AS ТИП, D.ДАТА, D.ОПЕР AS ОПЕРНОМЕР, T.ИМЯ AS ОПЕРИМЯ, D.КОД AS ДОККОД, T.ОСНДОКУМЕНТ AS ДОКУМЕНТ, D.НОМЕР, D.КОММЕНТАРИЙ, D.СУММА, P.ДБСЧЕТ, '%1' AS КРСЧЕТ, 0 AS ДБКОЛ, 0 AS ДЕБЕТ, SUM(P.КОЛ) AS КРКОЛ, SUM(P.СУММА) AS КРЕДИТ \
     FROM проводки P INNER JOIN документы D ON P.ДОККОД=D.КОД \
                             INNER JOIN топер T ON P.ОПЕР = T.ОПЕР AND T.НОМЕР = 1 \
     WHERE P.КРСЧЕТ = '%1' AND P.КРКОД = %2 AND D.ДАТА >= '%3' AND D.ДАТА <= '%4' \
@@ -2287,7 +2287,7 @@ QString DBFactory::getCalcObjOborotCommand(QString cAcc, int nObj, QDate dDate1,
 
     if (showOborotAndSaldo)
             command.append(" UNION \
-    SELECT '3' AS ТИП, '%4'::DATE AS ДАТА, 0 AS ОПЕРНОМЕР, 'Обороты за период' AS ОПЕРИМЯ, 0 AS ДОККОД, '' AS ДОКУМЕНТ, '' AS НОМЕР, '' AS КОММЕНТАРИЙ, 0 AS СУММА, '' AS ДБСЧЕТ, '' AS КРСЧЕТ, O1.ДБКОЛ, O1.ДЕБЕТ, O2.КРКОЛ, O2.КРЕДИТ \
+    SELECT 3 AS ТИП, '%4'::DATE AS ДАТА, 0 AS ОПЕРНОМЕР, 'Обороты за период' AS ОПЕРИМЯ, 0 AS ДОККОД, '' AS ДОКУМЕНТ, '' AS НОМЕР, '' AS КОММЕНТАРИЙ, 0 AS СУММА, '' AS ДБСЧЕТ, '' AS КРСЧЕТ, O1.ДБКОЛ, O1.ДЕБЕТ, O2.КРКОЛ, O2.КРЕДИТ \
     FROM \
     (SELECT SUM(P.КОЛ) AS ДБКОЛ, SUM(P.СУММА) AS ДЕБЕТ \
     FROM проводки P INNER JOIN документы D ON P.ДОККОД=D.КОД \
@@ -2298,7 +2298,7 @@ QString DBFactory::getCalcObjOborotCommand(QString cAcc, int nObj, QDate dDate1,
                             INNER JOIN топер T ON P.ОПЕР = T.ОПЕР AND T.НОМЕР = 1 \
     WHERE P.КРСЧЕТ = '%1' AND P.КРКОД = %2 AND D.ДАТА >= '%3' AND D.ДАТА <= '%4') O2 \
     UNION \
-    SELECT '4' AS ТИП, '%4'::DATE AS ДАТА, 0 AS ОПЕРНОМЕР, 'Сальдо конечное' AS ОПЕРИМЯ, 0 AS ДОККОД, '' AS ДОКУМЕНТ, '' AS НОМЕР, '' AS КОММЕНТАРИЙ, 0 AS СУММА, '' AS ДБСЧЕТ, '' AS КРСЧЕТ, \
+    SELECT 4 AS ТИП, '%4'::DATE AS ДАТА, 0 AS ОПЕРНОМЕР, 'Сальдо конечное' AS ОПЕРИМЯ, 0 AS ДОККОД, '' AS ДОКУМЕНТ, '' AS НОМЕР, '' AS КОММЕНТАРИЙ, 0 AS СУММА, '' AS ДБСЧЕТ, '' AS КРСЧЕТ, \
             CASE WHEN S.КОЛ > 0 THEN S.КОЛ ELSE 0 END AS ДБКОЛ, \
             CASE WHEN S.САЛЬДО > 0 THEN S.САЛЬДО ELSE 0 END AS ДЕБЕТ, \
             CASE WHEN S.КОЛ < 0 THEN -S.КОЛ ELSE 0 END AS КРКОЛ, \

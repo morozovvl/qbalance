@@ -222,6 +222,8 @@ void Form::createForm(QString fileName, QWidget* pwgt)
     if (buttonOk != nullptr)
     {
         connect(buttonOk, SIGNAL(clicked()), SLOT(cmdOk()));
+        if (getParent() != nullptr && getParent()->isMenuMode())
+            buttonOk->hide();
     }
     if (buttonCancel != nullptr)
     {
@@ -237,7 +239,7 @@ void Form::createForm(QString fileName, QWidget* pwgt)
 
 QPushButton* Form::addButton(QString objectName)
 {
-    QPushButton* button = new QPushButton();
+    QPushButton* button = new QPushButton(getFormWidget());
     button->setObjectName(objectName);
     cmdButtonLayout->addWidget(button);
     return button;

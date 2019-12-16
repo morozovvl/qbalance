@@ -10,6 +10,7 @@ public:
     virtual bool open(QString, QString);
     virtual int openDBDialog();
     virtual void initDBFactory();
+    virtual void setConnectionTimeout(int = 0);
 
     virtual QString getConnectionName();
 

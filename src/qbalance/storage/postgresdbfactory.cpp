@@ -109,6 +109,12 @@ void PostgresDBFactory::initDBFactory()
 }
 
 
+void PostgresDBFactory::setConnectionTimeout(int secs)
+{
+    db->setConnectOptions("connect_timeout=" + QString::number(secs));
+}
+
+
 QString PostgresDBFactory::getConnectionName()
 {
     return QString("%1-%2-%3").arg(getHostName()).arg(getPort()).arg(getDatabaseName());

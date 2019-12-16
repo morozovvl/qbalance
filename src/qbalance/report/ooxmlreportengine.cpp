@@ -291,6 +291,10 @@ strNum - номер текущей строки тела таблицы
         }
         else
         {
+            QScriptValue var = scriptEngine->evaluate(cellText);    // то оценим его скриптовым движком
+            if (!scriptEngine->hasUncaughtException())
+                writeCell(cells.at(i), cellText, var.toVariant());                      // запишем результат оценки вместо текста ячейки
+
             result = false;
             break;  // элементов "[<...>]" в выражении больше нет, выходим
         }

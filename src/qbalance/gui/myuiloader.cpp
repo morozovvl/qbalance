@@ -1,3 +1,5 @@
+#include "../kernel/app.h"
+#include "../gui/mainwindow.h"
 #include "myuiloader.h"
 #include "dialog.h"
 #include "searchparameters.h"
@@ -16,6 +18,7 @@ QWidget* MyUiLoader::createWidget(const QString& className, QWidget* parent, con
     {
         Dialog* d = new Dialog(parent);
         d->setObjectName(name);
+        d->setApp(TApplication::exemplar());
         return d;
     }
     else if (className == "SearchParameters")

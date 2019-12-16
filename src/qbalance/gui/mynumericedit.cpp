@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 MyNumericEdit::MyNumericEdit(QWidget *parent): QLineEdit(parent) {
     decimals = 2;
     setAlignment(Qt::AlignRight);
-    setValue(0);
+    setValue(0.0);
 }
 
 /*

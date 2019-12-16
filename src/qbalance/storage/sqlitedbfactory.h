@@ -11,6 +11,7 @@ public:
     virtual bool open(QString = "", QString = "");
     virtual int openDBDialog();
     virtual QString getLogin();
+    virtual void setConnectionTimeout(int = 0);
 
     virtual QString getConnectionName();
     virtual void loadSystemTables();

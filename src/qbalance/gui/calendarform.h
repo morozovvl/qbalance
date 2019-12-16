@@ -38,8 +38,10 @@ public:
     CalendarForm(QObject* parent = nullptr);
     ~CalendarForm();
     virtual bool open(QWidget* pwgt = nullptr);
-    Q_INVOKABLE virtual QDate getBeginDate();
-    Q_INVOKABLE virtual QDate getEndDate();
+    Q_INVOKABLE virtual QDate getBeginDate(int = 0);
+    Q_INVOKABLE virtual QDate getEndDate(int = 0);
+    Q_INVOKABLE virtual QString getBeginDateString(int = 0);
+    Q_INVOKABLE virtual QString getEndDateString(int = 0);
     Q_INVOKABLE virtual void setBeginDate(QDate);
     Q_INVOKABLE virtual void setEndDate(QDate);
 public slots:

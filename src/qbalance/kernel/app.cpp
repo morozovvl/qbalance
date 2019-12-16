@@ -710,6 +710,7 @@ bool TApplication::initApplication()
 
     db  = new PostgresDBFactory();
 //    db  = new SQLiteDBFactory();
+    db->setConnectionTimeout(10);
 
     if (db->getDB()->isValid())
     {
@@ -723,6 +724,7 @@ bool TApplication::initApplication()
 
             if (result == 0)
             {   // БД открыть удалось
+
 
                 db->clearLockedDocumentList();
 
@@ -1174,8 +1176,9 @@ Dialog* TApplication::createForm(QString fileName)
         if (file.exists() && file.open(QIODevice::ReadOnly))
         {
             MyUiLoader formLoader(gui);
-            formLoader.setWorkingDirectory(getFormsPath());
-            formLoader.clearPluginPaths();
+//            formLoader.setWorkingDirectory(getFormsPath());
+            formLoader.setWorkingDirectory(applicationDirPath());
+//            formLoader.clearPluginPaths();
             formLoader.addPluginPath(applicationDirPath() + "/plugins/designer");
 
             formWidget = static_cast<Dialog*>(formLoader.load(&file));
@@ -1383,11 +1386,15 @@ void TApplication::setIcons(QWidget* formWidget)
 
 void TApplication::showError(QString error)
 {
-    if (!isScriptMode() && error.size() > 0)
-        gui->showError(error);
-    else
-        showMessageOnStatusBar(error + "\n");      // В скриптовом режиме сообщение будет выведено в консоль
-    debug(0, "Error: " + error);
+    error = error.trimmed();
+    if (error.size() > 0)
+    {
+        if (!isScriptMode())
+            gui->showError(error);
+        else
+            showMessageOnStatusBar(error + "\n");      // В скриптовом режиме сообщение будет выведено в консоль
+        debug(0, "Error: " + error);
+    }
 }
 
 

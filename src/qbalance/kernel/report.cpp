@@ -52,7 +52,7 @@ bool Report::open(QDate bDate, QDate eDate, QString acc, QString)
         {
             beginDate = bDate;
             endDate = eDate;
-            if (Dictionary::open(getReportqlSelectStatement(dict->getId(), beginDate, endDate)))
+            if (Dictionary::open(getReportSqlSelectStatement(dict->getId(), beginDate, endDate)))
             {
                 form->setFormTitle(QString("Обороты по счету %1 - %2").arg(account).arg(dict->getName()));
 
@@ -106,7 +106,7 @@ void Report::preparePrintValues()   // Готовит значения для п
 }
 
 
-QString Report::getReportqlSelectStatement(int id, QDate begDate, QDate endDate)
+QString Report::getReportSqlSelectStatement(int id, QDate begDate, QDate endDate)
 {
     QString command = db->getCalcObjOborotCommand(account, id, begDate, endDate);
     command = QString("SELECT ДАТА, ОПЕРНОМЕР, ОПЕРИМЯ, ДОКУМЕНТ, НОМЕР, КОММЕНТАРИЙ, ДЕБЕТ, КРЕДИТ FROM (%1) s").arg(command);
