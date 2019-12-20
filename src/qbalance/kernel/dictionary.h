@@ -60,6 +60,7 @@ protected:
     bool            getIdRefresh;
     bool            exact;          // Значение справочника должно быть определено при добавлении строки в документ
     QString         filter;
+//    bool            isFtsEnabled;
 
     SearchParameters* parameters;
 
@@ -133,7 +134,7 @@ public:
     Q_INVOKABLE virtual void            setSqlCommand(QString);
 
     Q_INVOKABLE virtual void            setFilter(QString);
-    Q_INVOKABLE virtual QString            getFilter() const;
+    Q_INVOKABLE virtual QString         getFilter(QString) const;
 };
 
 #endif // DICTIONARY_H

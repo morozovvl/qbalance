@@ -119,7 +119,7 @@ void TableView::setEssence(Essence* ess)
     essence = ess;
     parent = essence->getForm();
     app = essence->getApp();
-    fields = essence->returnColumnsProperties();
+    columnsProperties = essence->getColumnsProperties();
     tableModel = essence->getTableModel();
     QTableView::setModel(tableModel);
 
@@ -294,8 +294,8 @@ void TableView::setColumnsHeaders()
     {
         if (!columnsHeadersSeted)
         {
-            app->getDBFactory()->getColumnsHeaders(essence->getTagName(), &fields);
-            if (fields.count() > 0)
+            app->getDBFactory()->getColumnsHeaders(essence->getTagName(), columnsProperties);
+            if (columnsProperties->count() > 0)
             {
                 QHeaderView* header = horizontalHeader();
 
@@ -308,17 +308,17 @@ void TableView::setColumnsHeaders()
                 header->setSortIndicatorShown(true);
 
                 // Составим список столбцов, у которых поле number в списке fields больше 0
-                for (int i = 0; i < fields.count(); i++)
+                for (int i = 0; i < columnsProperties->count(); i++)
                 {
-                    if (fields.at(i).number > 0)
+                    if (columnsProperties->at(i).number > 0)
                     {
-                        MyItemDelegate* delegate = getColumnDelegate(fields.at(i));
+                        MyItemDelegate* delegate = getColumnDelegate(columnsProperties->at(i));
                         if (delegate != nullptr)
                         {
-                            delegate->setFieldName(fields.at(i).column);
+                            delegate->setFieldName(columnsProperties->at(i).column);
                             setItemDelegateForColumn(i, delegate);
                         }
-                        columns.insert(fields.at(i).number - 1, i);
+                        columns.insert(columnsProperties->at(i).number - 1, i);
                         fieldCounter++;
                     }
                 }
@@ -329,11 +329,11 @@ void TableView::setColumnsHeaders()
                 {
                     if (columns.contains(i))
                     {
-                        int fldIndex = tableModel->fieldIndex(fields.at(columns.value(i)).column);
+                        int fldIndex = tableModel->fieldIndex(columnsProperties->at(columns.value(i)).column);
                         int visualIndex = header->visualIndex(fldIndex);
                         header->moveSection(visualIndex, i);
                         header->showSection(visualIndex);
-                        tableModel->setHeaderData(fldIndex, Qt::Horizontal, fields.at(columns.value(i)).header);
+                        tableModel->setHeaderData(fldIndex, Qt::Horizontal, columnsProperties->at(columns.value(i)).header);
                     }
                     else
                         break;
@@ -376,7 +376,7 @@ void TableView::hideGridSection(QString columnName)
 {
     foreach (int i, columns.keys())
     {
-        if (fields.at(columns.value(i)).column == columnName)
+        if (columnsProperties->at(columns.value(i)).column == columnName)
         {
             horizontalHeader()->hideSection(horizontalHeader()->logicalIndex(i));
             return;
@@ -389,7 +389,7 @@ void TableView::showGridSection(QString columnName)
 {
     foreach (int i, columns.keys())
     {
-        if (fields.at(columns.value(i)).column == columnName)
+        if (columnsProperties->at(columns.value(i)).column == columnName)
         {
             horizontalHeader()->showSection(horizontalHeader()->logicalIndex(i));
             return;
@@ -571,27 +571,16 @@ void TableView::showPhoto()
     }
 }
 
-/*
-void TableView::calculate()
-{
-    setUpdatesEnabled(false);
-    if (!essence->calculate())
-        reset();
-    else
-        repaint();
-    setUpdatesEnabled(true);
-}
-*/
 
 void TableView::setReadOnly(bool ro)
 {
     readOnly = ro;
 
-    for (int i = 0; i < fields.count(); i++)
+    for (int i = 0; i < columnsProperties->count(); i++)
     {
         MyItemDelegate* itemDelegate = static_cast<MyItemDelegate*>(itemDelegateForColumn(i));
         if (itemDelegate != nullptr)
-            itemDelegate->setReadOnly(readOnly || fields.at(i).readOnly);
+            itemDelegate->setReadOnly(readOnly || columnsProperties->at(i).readOnly);
     }
 }
 
@@ -691,13 +680,13 @@ void TableView::writeSettings()
 
 void TableView::appendColumnDefinition(int, QString column, QString header, bool readOnly, int length, int precision)
 {
-    for (int i = 0; i < fields.count(); i++)
+    for (int i = 0; i < columnsProperties->count(); i++)
     {
-        if (fields.at(i).table.toUpper() == parent->getParent()->getQueryTableName().toUpper() &&
-            fields.at(i).column.toUpper() == column.toUpper()    )
+        if (columnsProperties->at(i).table.toUpper() == parent->getParent()->getQueryTableName().toUpper() &&
+            columnsProperties->at(i).column.toUpper() == column.toUpper()    )
         {
             fieldCounter++;
-            FieldType field = fields.at(i);
+            FieldType field = columnsProperties->at(i);
             field.number = fieldCounter;
             field.header = header;
             field.readOnly = readOnly;
@@ -705,8 +694,8 @@ void TableView::appendColumnDefinition(int, QString column, QString header, bool
                 field.length = length;
             if (precision > 0)
                 field.precision = precision;
-            fields.removeAt(i);
-            fields.insert(i, field);
+            columnsProperties->removeAt(i);
+            columnsProperties->insert(i, field);
             columnsHeadersSeted = false;
             break;
         }
@@ -722,14 +711,14 @@ void TableView::appendColumnDefinition(QString column, QString header, bool read
 
 void TableView::clearColumnDefinitions()
 {
-    for (int i = 0; i < fields.count(); i++)
+    for (int i = 0; i < columnsProperties->count(); i++)
     {
-        FieldType field = fields.at(i);
+        FieldType field = columnsProperties->at(i);
         field.number = 0;
         field.header = "";
         field.readOnly = false;
-        fields.removeAt(i);
-        fields.insert(i, field);
+        columnsProperties->removeAt(i);
+        columnsProperties->insert(i, field);
     }
     fieldCounter = 0;
     columnsHeadersSeted = false;
@@ -738,7 +727,7 @@ void TableView::clearColumnDefinitions()
 
 int TableView::getColumnsCount()
 {
-    return fields.count();
+    return columnsProperties->count();
 }
 
 

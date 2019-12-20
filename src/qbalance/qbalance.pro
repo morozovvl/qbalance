@@ -7,6 +7,8 @@
 #QMAKE_LFLAGS_DEBUG += -pg
 
 QMAKE_CXXFLAGS += -std=c++0x
+QMAKE_LFLAGS += -static-libgcc -static-libstdc++ -lm -Wl,--rpath='\$\$ORIGIN/lib64'
+#QMAKE_LFLAGS += -Wl,--dynamic-linker=/home/vladimir/qbalance3/lib64/ld-linux-x86-64.so.2
 
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0
 

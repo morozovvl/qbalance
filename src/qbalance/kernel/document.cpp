@@ -299,6 +299,7 @@ bool Document::add()
         {
             if (getScriptEngine() != nullptr)
                 getScriptEngine()->eventAfterAddString();
+            saveChanges();
         }
         else
             result = false;

@@ -57,7 +57,7 @@ public:
             return p;
         }
 
-    Q_INVOKABLE virtual Dictionary* getDictionary(QString);   // По умолчанию добавлять справочник
+    Q_INVOKABLE virtual Dictionary* getDictionary(QString, bool = true);   // По умолчанию добавлять справочник
     Q_INVOKABLE virtual Saldo* getSaldo(QString acc);
     Q_INVOKABLE virtual bool addDictionary(QString);
     Q_INVOKABLE virtual bool addSaldo(QString acc);

@@ -73,7 +73,7 @@ public:
     Q_INVOKABLE virtual void    showGridSection(QString);
     virtual void                showAllGridSections();
     virtual void                restoreCurrentIndex(QModelIndex);
-    virtual QList<FieldType>*   getFields() { return &fields; }
+    virtual QList<FieldType>*   getFields() { return columnsProperties; }
     Q_INVOKABLE virtual void    clearColumnDefinitions();
     Q_INVOKABLE virtual void    appendColumnDefinition(int number, QString column, QString header = "", bool readOnly = true, int length = 0, int precision = 0);
     Q_INVOKABLE virtual void    appendColumnDefinition(QString column, QString header = "", bool readOnly = true, int length = 0, int precision = 0);
@@ -92,7 +92,6 @@ public slots:
     virtual void                cmdView();
     virtual void                cmdRequery();
 
-//    virtual void                calculate();
     virtual void                showPhoto();
 
 protected:
@@ -110,7 +109,7 @@ private:
     Picture*                    picture;
     MySqlRelationalTableModel*  tableModel;
     QHash<int, int>             columns;            // Список видимых столбцов и их порядок
-    QList<FieldType>            fields;
+    QList<FieldType>*           columnsProperties;
     bool                        columnsSettingsReaded;
     bool                        currentChangedScripts;
     int                         fieldCounter;

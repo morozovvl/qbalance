@@ -72,8 +72,12 @@ bool Updates::open()
     connect(nwmanager, SIGNAL(finished(QNetworkReply*)), this, SLOT(transmissionFinished(QNetworkReply*)));
 
     // Если задан период проверки обновлений, то сразу же после запуска программы проверим их
-    if (app->getConfigValue("UPDATES_FTP_TIMEOUT").toInt() > 0)
+    if (app->getConfigValue("UPDATES_FTP_TIMEOUT").toInt() > 0 &&
+        (app->getConfigValue("UPDATES_FTP_PROGRAM").toBool() ||
+         app->getConfigValue("UPDATES_FTP_DB").toBool()))
+    {
         updateModified();
+    }
     return result;
 }
 
@@ -176,7 +180,7 @@ void Updates::putUpdates(QString path, QStringList filesList)
 {
     if (app->getConfigValue("UPDATES_FTP_URL").toString().size() > 0)
     {
-        isGetUpdates = false;
+//        isGetUpdates = false;
         foreach (QString fileName, filesList)
         {
             QFile* file = new QFile(app->applicationDataDirPath() + "/" + fileName);
@@ -193,7 +197,8 @@ void Updates::putUpdates(QString path, QStringList filesList)
 
 QNetworkRequest Updates::makeNetworkRequest(QString path, QString fileName)
 {
-    QString urlString = QString("ftp://%1/%2%3").arg(app->getConfigValue("UPDATES_FTP_URL").toString()).arg(path).arg(fileName);
+    QString confVal = app->getConfigValue("UPDATES_FTP_URL").toString();
+    QString urlString = QString("ftp://%1/%2%3").arg(confVal).arg(path).arg(fileName);
     QUrl url;
     url.setUrl(urlString);
     if (isGetUpdates)       // Если получаем обновления, то получаем их как обычный пользователь
@@ -225,17 +230,22 @@ void Updates::updateModified(bool getUpdates)
         // Если есть пароль администратора FTP сервера и загрузка обновлений еще не произведена
         if (app->getConfigValue("UPDATES_FTP_ADMIN_CLIENT_PASSWORD").toString().size() == 0 && !updatesDownloaded)
         {
-            removeDir(app->applicationDataDirPath() + "/" + updatesPath);
             updatesCount = 0;
+
+            removeDir(app->applicationDataDirPath() + "/" + updatesPath);
 
             request = makeNetworkRequest("program" + osPath, programUpdateXMLFile);
             nwmanager->get(request);
+
             files.insert(request.url().toString(), programUpdateXMLFile);
 
             if (app->isSA())    // Обновления базы данных загружаем только в случае, если мы под учеткой SA
             {
+                removeDir(app->applicationDataDirPath() + "/" + updatesDBPath);
+
                 request = makeNetworkRequest(updatesDBPath + "/", dbUpdateXMLFile);
                 nwmanager->get(request);
+
                 files.insert(request.url().toString(), updatesDBPath + "/" + dbUpdateXMLFile);
             }
         }
@@ -268,16 +278,14 @@ void Updates::updateModified(bool getUpdates)
 void Updates::transmissionFinished(QNetworkReply* reply)
 {
     QString urlString = reply->url().toString();
+
     // Если это операция выгрузки на сервер
     if (reply->operation() == QNetworkAccessManager::PutOperation)
     {
         if (reply->error() == QNetworkReply::NoError)
             app->print(QString("Выгружен %1").arg(reply->url().toString(QUrl::RemoveScheme | QUrl::RemoveUserInfo | QUrl::RemovePassword | QUrl::RemovePort)));
         else
-        {
-//            app->print(QString("Ошибка (%1) %2").arg(reply->error()).arg(reply->url().toString()));
             app->print(QString("Ошибка (%1) %2").arg(reply->error()).arg(reply->url().toString(QUrl::RemoveScheme | QUrl::RemoveUserInfo | QUrl::RemovePassword | QUrl::RemovePort)));
-        }
 
         files.remove(urlString);
 
@@ -304,55 +312,51 @@ void Updates::transmissionFinished(QNetworkReply* reply)
             if (files.count() == 0)
             {
                 // Составим список файлов, которые нужно загрузить или выгрузить
-                QStringList filesList = prepareFilesList("", programUpdateXMLFile);
-                if (filesList.count() > 0)
+                if (app->getConfigValue("UPDATES_FTP_PROGRAM").toBool())
                 {
-                    // Загрузим обновления
-                    if (isGetUpdates)
+                    QStringList filesList = prepareFilesList("", programUpdateXMLFile);
+                    if (filesList.count() > 0)
                     {
-                        updatesCount += filesList.count();  // Подсчитаем количество обновленных файлов
-                        getUpdates(updatesPath, "program" + osPath, filesList);              // Загрузим обновления
-                        app->showMessageOnStatusBar(QString("Найдены обновления файлов программы: %1. Загрузка...").arg(filesList.count()));
-                    }
-                    else if (app->getConfigValue("UPDATES_FTP_PROGRAM").toBool())
-                        // Выгрузим обновления, если разрешено
-                    {
-                        putUpdates("program" + osPath, filesList);              // Выгрузим обновления на сервер
+                        // Загрузим обновления
+                        if (isGetUpdates)
+                        {
+                            updatesCount += filesList.count();  // Подсчитаем количество обновленных файлов
+                            getUpdates(updatesPath, "program" + osPath, filesList);              // Загрузим обновления
+                            app->showMessageOnStatusBar(QString("Найдены обновления файлов программы: %1. Загрузка...").arg(filesList.count()));
+                        }
+                        else // Выгрузим обновления, если разрешено
+                        {
+                            putUpdates("program" + osPath, filesList);              // Выгрузим обновления на сервер
+                        }
                     }
                 }
 
                 // Добавим список обновлений базы данных, которые нужно загрузить или выгрузить. В том числе те, которых еще нет в списке
-                QStringList filesList1 = prepareFilesList(updatesDBPath, dbUpdateXMLFile, true);
-                if (filesList1.count() > 0)
+                if (app->getConfigValue("UPDATES_FTP_DB").toBool())
                 {
-                    // Загрузим обновления
-                    if (isGetUpdates)
+                    QStringList filesList1 = prepareFilesList(updatesDBPath, dbUpdateXMLFile, true);
+                    if (filesList1.count() > 0)
                     {
-                        // Уберем те обновления, которые загружать уже не нужно
-                        for (int i = 1; i <= app->getConst("Last_DB_Update").toInt(); i++)
+                        // Загрузим обновления
+                        if (isGetUpdates)
                         {
-                            filesList1.removeAll(QString("%1/%2.sql").arg(updatesDBPath).arg(i));
+                            // Уберем те обновления, которые загружать уже не нужно
+                            for (int i = 1; i <= app->getConst("Last_DB_Update").toInt(); i++)
+                            {
+                                filesList1.removeAll(QString("%1/%2.sql").arg(updatesDBPath).arg(i));
+                            }
+
+                            updatesCount += filesList1.count();  // Подсчитаем количество обновленных файлов
+                            getUpdates("", "", filesList1);              // Загрузим обновления
+                            app->showMessageOnStatusBar(QString("Найдены обновления базы данных: %1. Загрузка...").arg(filesList1.count()));
                         }
-
-                        updatesCount += filesList1.count();  // Подсчитаем количество обновленных файлов
-                        getUpdates("", "", filesList1);              // Загрузим обновления
-                        app->showMessageOnStatusBar(QString("Найдены обновления базы данных: %1. Загрузка...").arg(filesList1.count()));
+                        else // Выгрузим обновления, если разрешено
+                        {
+                            // Обновим описание файлов
+                            prepareTotalFilesList(updatesDBPath + "/" + dbUpdateXMLFile, getDBFilesList());
+                            putUpdates("", filesList1);              // Выгрузим обновления на сервер
+                        }
                     }
-                    // Выгрузим обновления, если разрешено
-                    else if (app->getConfigValue("UPDATES_FTP_DB").toBool())
-                    {
-                        // Обновим описание файлов
-                        prepareTotalFilesList(updatesDBPath + "/" + dbUpdateXMLFile, getDBFilesList());
-
-                        putUpdates("", filesList1);              // Выгрузим обновления на сервер
-                    }
-                }
-
-                // Если все обновления проверены и загружены, то сообщим об этом пользователю
-                if (filesList.count() == 0 && filesList1.count() == 0 && updatesCount > 0)
-                {
-                    updatesDownloaded = true;
-                    app->showMessage(QString("Обновлено файлов - %1. Необходимо перезапустить программу.").arg(updatesCount));
                 }
             }
         }
@@ -360,6 +364,14 @@ void Updates::transmissionFinished(QNetworkReply* reply)
         {
 //            app->print(QString("Ошибка (%1) %2").arg(reply->error()).arg(reply->url().toString()));
             app->print(QString("Ошибка (%1) %2").arg(reply->error()).arg(reply->url().toString(QUrl::RemoveScheme | QUrl::RemoveUserInfo | QUrl::RemovePassword | QUrl::RemovePort)));
+            files.remove(urlString);
+        }
+        // Если все обновления проверены и загружены, то сообщим об этом пользователю
+//                if (filesList.count() == 0 && filesList1.count() == 0 && updatesCount > 0)
+        if (files.count() == 0 && updatesCount > 0)
+        {
+            updatesDownloaded = true;
+            app->showMessage(QString("Обновлено файлов - %1. Необходимо перезапустить программу.").arg(updatesCount));
         }
     }
     reply->close();

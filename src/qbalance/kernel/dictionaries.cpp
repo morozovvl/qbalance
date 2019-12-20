@@ -90,14 +90,19 @@ bool Dictionaries::isSaldoExist()
 }
 
 
-Dictionary* Dictionaries::getDictionary(QString dictName)
+Dictionary* Dictionaries::getDictionary(QString dictName, bool addDict)
 {
     dictName = dictName.trimmed().toLower();
     if (dictName.size() == 0)
         return nullptr;
     if (!dictionariesList.contains(dictName))
     {             // Если справочник с таким именем не существует, то попробуем его создать
-        if (!addDictionary(dictName))
+        if (addDict)
+        {
+            if (!addDictionary(dictName))
+                return nullptr;
+        }
+        else
             return nullptr;
     }
     return dictionariesList.value(dictName);

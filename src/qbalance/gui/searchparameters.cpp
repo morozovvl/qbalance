@@ -356,6 +356,12 @@ void SearchParameters::comboBoxEnterPressed(QWidget* wdgt)
         MyComboBox* cmb = static_cast<MyComboBox*>(gridLayout->itemAtPosition(i, 1)->widget());
         if (cmb->objectName() == wdgt->objectName())
         {   // На этой ComboBox была нажата Enter
+            if (dictionaries != nullptr)
+            {
+                Dictionary* dict = dictionaries->getDictionary(cmb->objectName(), false);
+                if (dict != nullptr)
+                    dict->setFilter(cmb->lineEdit()->text());
+            }
             if ((i + 1) < gridLayout->rowCount())                               // Если ниже есть еще одна ComboBox
             {
                 cmb = static_cast<MyComboBox*>(gridLayout->itemAtPosition(i + 1, 1)->widget());
@@ -363,16 +369,11 @@ void SearchParameters::comboBoxEnterPressed(QWidget* wdgt)
                 cmb->setFocus();     // то переставим фокус на нее
             }
             else
+            {
+                // Пошлем сигнал обновления таблицы
                 requery();
+            }
         }
-
-/*
-        QString dictName = cmb->objectName();
-        Dictionary* dict = dictionaries->getDictionary(dictName);
-        if (dict != nullptr)
-            dict->setFilter(getFilter(dictName));
-*/
-
         i++;
     }
 }

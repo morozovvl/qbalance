@@ -85,16 +85,11 @@ bool OOXMLReportEngine::open(QString fileName, ReportContext* cont, bool justPri
 #elif defined(Q_OS_WIN)
                 zint->start(app->applicationDirPath() + zintCommandLine);
 #endif
-            if (app->waitProcessEnd(zint))
+            if (!zint->waitForStarted())
             {
-
-            }
-            else
-            {
-                app->showError(QObject::trUtf8("Не удалось запустить программу") + " zint");
+                app->showError(QObject::trUtf8("Не удалось запустить программу формирования штрихкода zint"));
                 return false;
             }
-
         }
         findTables();
         foreach (QString table, tablesForPrinting)
@@ -291,9 +286,14 @@ strNum - номер текущей строки тела таблицы
         }
         else
         {
-            QScriptValue var = scriptEngine->evaluate(cellText);    // то оценим его скриптовым движком
-            if (!scriptEngine->hasUncaughtException())
+            // Могут оставаться еще какие-нибудь выражения, оценим их скриптовым движком
+            QScriptValue var = scriptEngine->evaluate(cellText);
+            if (!scriptEngine->hasUncaughtException() &&
+                    var.toString() != "undefined" &&
+                    cellText != var.toString())
+            {
                 writeCell(cells.at(i), cellText, var.toVariant());                      // запишем результат оценки вместо текста ячейки
+            }
 
             result = false;
             break;  // элементов "[<...>]" в выражении больше нет, выходим

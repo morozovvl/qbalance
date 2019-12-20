@@ -75,15 +75,6 @@ bool OOXMLEngine::open(QString fName, QString sheet, bool ro)
         readOnly = ro;
         templateFileName = fileName;
         tmpDir = templateFileName + ".tmp";
-/*
-        // Создадим временный каталог
-        QTemporaryFile templateFile;
-//        templateFile.setFileTemplate(QDir().tempPath() + "/tmp_" + QFileInfo(fileName).fileName() + "_XXXXXX");
-        templateFile.setFileTemplate(QDir().tempPath() + "/" + fileName);
-        templateFile.open();
-        templateFile.close();
-//        tmpDir = templateFile.fileName() + ".tmp";
-*/
 
         if (QDir().mkdir(tmpDir))
         {
