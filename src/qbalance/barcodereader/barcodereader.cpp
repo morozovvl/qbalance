@@ -25,7 +25,6 @@ BarCodeReader::BarCodeReader(QObject *parent) :
 {
     app = nullptr;
     serialPort = nullptr;
-
     barCodeString = "";
 }
 
@@ -41,21 +40,21 @@ void BarCodeReader::setApp(TApplication* a)
 }
 
 
-bool BarCodeReader::open(QString port, int rate, int)
+bool BarCodeReader::open(QString port, int rate, int to)
 {
     bool result = false;
     if (app != nullptr)
     {
+        timeOut = to;
         serialPort = app->getSerialPort(port);
         if (serialPort != nullptr)
         {
             serialPort->setBaudRate(rate);
-//            serialPort->setTimeout(timeout);
             if (serialPort->open(QIODevice::ReadWrite))
             {
                 connect(serialPort, SIGNAL(readyRead()), this, SLOT(barCodeReadyRead()));
-                result = true;
             }
+            result = true;
         }
     }
     return result;
@@ -70,24 +69,42 @@ void BarCodeReader::close()
 }
 
 
-void BarCodeReader::barCodeReadyRead()
+bool BarCodeReader::barCodeReadyRead(QString str)
 {
-    if (serialPort->bytesAvailable())
-    {
-         QString readedPart;
-         do
-         {
-            readedPart = QString::fromLatin1(serialPort->readAll());
-            barCodeString.append(readedPart);
-            app->sleep(100);
-         } while (serialPort->bytesAvailable());
+    bool result = false;
 
-         if (barCodeString.size() > 0)
-         {
-            app->barCodeReadyRead(barCodeString.trimmed());
+    if (str.size() == 0)
+    {
+        if (serialPort->bytesAvailable())   // Если доступен сканер для COM порта, читаем с него
+        {
+            QString readedPart;
+            do
+            {
+                readedPart = QString::fromLatin1(serialPort->readAll());
+                barCodeString.append(readedPart);
+                app->sleep(timeOut);
+            } while (serialPort->bytesAvailable());
+        }
+
+        if (barCodeString.size() > 0)
+        {
+            QString bcString = barCodeString;
             barCodeString = "";
-         }
+            app->barCodeReadyRead(bcString);
+            result = true;
+        }
     }
+    else
+    {
+        if (str.size() > 1 || barCodeString.size() > 0)
+        {
+            barCodeString += str.trimmed();
+            QTimer::singleShot(timeOut, this, SLOT(barCodeReadyRead()));
+            result = true;
+        }
+    }
+
+    return result;
 }
 
 

@@ -105,7 +105,7 @@ protected:
     bool                cardReaderEnabled;
     QHash<QString, QVariant> printValues;
     bool                menuMode;           // Форма справочника принимает форму меню
-    bool            isView;
+    bool                isView;
 
     virtual void        preparePrintValues();                   // Готовит значения для печати
     virtual void        prepareSelectCurrentRowCommand();
@@ -228,7 +228,7 @@ public:
     Q_INVOKABLE         virtual QString getPhotoFile(QString copyTo = "");
     Q_INVOKABLE         virtual QString getLocalPhotoFile(QString = "");
     static bool         getFile(QString, QString, FileType);
-    virtual void        barCodeReaded(QString);    // прочитана строка со сканера штрих-кода
+    virtual bool        barCodeReaded(QString);    // прочитана строка со сканера штрих-кода
     virtual void        updateCurrentRow(int = 0);
     virtual QModelIndex getCurrentIndex();
     void setCurrentIndex(QModelIndex);

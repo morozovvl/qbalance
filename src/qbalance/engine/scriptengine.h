@@ -106,7 +106,7 @@ public:
     virtual QString preparePictureUrl(Essence*);
     virtual QString prepareBarCodeData(Essence*);
     virtual QString getFilter(QString = "");
-    virtual void eventBarCodeReaded(QString);
+    virtual bool eventBarCodeReaded(QString);
     virtual void eventCardCodeReaded(QString);
     virtual bool eventKeyPressed(int, int);
     friend bool isNumeric(ScriptEngine engine, QString field);

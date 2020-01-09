@@ -31,6 +31,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/dictionary.h"
 #include "../engine/scriptengine.h"
 #include "../storage/dbfactory.h"
+#include "../barcodereader/barcodereader.h"
 #include "mainwindow.h"
 #include "dialog.h"
 
@@ -430,6 +431,21 @@ void Form::setButtonsSignals()
 void Form::keyPressEvent(QKeyEvent *event)
 {
     event->setAccepted(false);
+
+    // Проверим ввод сканером штрихкода
+    if (app != nullptr)
+    {
+        BarCodeReader* barCodeReader = app->getBarCodeReader();
+
+        if (barCodeReader != nullptr)
+        {
+            if (barCodeReader->barCodeReadyRead(event->text()))
+            {
+                event->setAccepted(true);
+            }
+        }
+    }
+
     // Попробуем отдать обработку события скриптам
     ScriptEngine* engine = parent->getScriptEngine();
     if (engine != nullptr)
@@ -438,6 +454,7 @@ void Form::keyPressEvent(QKeyEvent *event)
         if (result)
             event->setAccepted(true);       // Если скрипт вернул ИСТИНА, то событие обработано
     }
+
     if (!event->isAccepted())
     {
         getFormWidget()->keyPressEvent(event);

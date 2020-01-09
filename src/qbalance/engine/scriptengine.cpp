@@ -1232,12 +1232,17 @@ void ScriptEngine::eventCalcTable()
 }
 
 
-void ScriptEngine::eventBarCodeReaded(QString barCode)
+bool ScriptEngine::eventBarCodeReaded(QString barCode)
 {
+    bool result = false;
+    QScriptValue res;
     QString eventName = "EventBarCodeReaded";
     QScriptValueList args;
     args << QScriptValue(barCode);
-    scriptCall(eventName, currentContext()->thisObject(), args);
+    res = scriptCall(eventName, currentContext()->thisObject(), args);
+    if (res.toString() != "undefined")
+        result = res.toBool();
+    return result;
 }
 
 

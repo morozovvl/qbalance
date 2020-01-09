@@ -72,24 +72,14 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-//    QTextCodec* codec = QTextCodec::codecForName("UTF-8");
-//    QTextCodec::setCodecForTr(codec);
-//    QTextCodec::setCodecForCStrings(codec);
-//    QTextCodec::setCodecForLocale(codec);
-//    QLocale::setDefault(QLocale(QLocale::Russian, QLocale::RussianFederation));
+    QTextCodec* codec = QTextCodec::codecForName("UTF-8");
+    QLocale::setDefault(QLocale(QLocale::Russian, QLocale::RussianFederation));
 
-//    TApplication application(argc, argv);
-
-//    application.setOrganizationName("Enterprise");
-//    application.setApplicationVersion(BUILD_NUMBER);
-
-//#if QT_VERSION < 0x050000
-//    QTextCodec::setCodecForTr(a.codec());
-//    QTextCodec::setCodecForCStrings(a.codec());
-//#endif
-//    QTextCodec::setCodecForLocale(codec);
-
-
+#if QT_VERSION < 0x050000
+    QTextCodec::setCodecForTr(codec);
+    QTextCodec::setCodecForCStrings(codec);
+#endif
+    QTextCodec::setCodecForLocale(codec);
 
     QStringList args;
     for (int i = 1; i < argc; i++)

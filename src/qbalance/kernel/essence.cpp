@@ -1351,16 +1351,18 @@ void Essence::restoreOldValues()
 }
 
 
-void Essence::barCodeReaded(QString barCode)
+bool Essence::barCodeReaded(QString barCode)
 {
+    bool result = false;
     if (scriptEngineEnabled && scriptEngine != nullptr && enabled)
     {
-        scriptEngine->eventBarCodeReaded(barCode);
+        result = scriptEngine->eventBarCodeReaded(barCode);
     }
 
     if (grdTable != nullptr)
         grdTable->setCurrentFocus();
     form->setButtons();
+    return result;
 }
 
 
@@ -1653,5 +1655,3 @@ bool Essence::isMenuMode()
 {
     return menuMode;
 }
-
-

@@ -231,8 +231,9 @@ public:
 
     Q_INVOKABLE QProcess* runProcess(QString, QString = "", bool = true);
     Q_INVOKABLE bool waitProcessEnd(QProcess *);
-    virtual void barCodeReadyRead(QString);
+    virtual bool barCodeReadyRead(QString);
     Q_INVOKABLE     bool    isBarCodeReaded();
+    Q_INVOKABLE BarCodeReader* getBarCodeReader();
     virtual void readCardReader(QKeyEvent*);
 
     Q_INVOKABLE void capturePhoto(QString fileName = "", QString deviceName = "");    // Захватить кадр с видеокамеры и записать в базу

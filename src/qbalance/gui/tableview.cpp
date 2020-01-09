@@ -212,12 +212,16 @@ void TableView::currentChanged(const QModelIndex &current, const QModelIndex &pr
 void TableView::keyPressEvent(QKeyEvent* event)
 {
     event->setAccepted(false);
+
     app->readCardReader(event);
+
     if (event->isAccepted())
     {
         return;
     }
+
     event->setAccepted(false);
+
     if (parent != nullptr)
     {
         if (event->modifiers() != Qt::ControlModifier)
@@ -265,10 +269,9 @@ void TableView::keyPressEvent(QKeyEvent* event)
                     break;
             }
         }
+
         if (!event->isAccepted())
-        {
             parent->keyPressEvent(event);
-        }
     }
     if (!event->isAccepted())
         QTableView::keyPressEvent(event);

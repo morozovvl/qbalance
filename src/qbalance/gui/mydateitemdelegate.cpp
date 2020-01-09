@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "mydateitemdelegate.h"
 #include "formgrid.h"
 #include "../kernel/dictionary.h"
+#include "../gui/mylineedit.h"
 
 
 MyDateItemDelegate::MyDateItemDelegate(QObject* parent, FormGrid* form): MyItemDelegate(parent, form)
@@ -30,12 +31,12 @@ MyDateItemDelegate::MyDateItemDelegate(QObject* parent, FormGrid* form): MyItemD
 }
 
 
-QWidget* MyDateItemDelegate::createEditor(QWidget*parent, const QStyleOptionViewItem&, const QModelIndex&) const
+QWidget* MyDateItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem&, const QModelIndex&) const
 {
-    QLineEdit* editorWidget = nullptr;
+    MyLineEdit* editorWidget = nullptr;
     if (!menuMode)
     {
-        editorWidget = new QLineEdit(parent);
+        editorWidget = new MyLineEdit(parent, essence->getApp());
         if (!readOnly)
         {
             if (essence != nullptr)

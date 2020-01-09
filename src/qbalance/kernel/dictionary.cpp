@@ -89,17 +89,15 @@ void Dictionary::postInitialize(QString name, QObject *parent)
         formTitle = tableProperties.value(db->getObjectName("доступ_к_справочникам.имя_в_форме")).toString().trimmed();
         if (app->isSA())
         {
-            lSelectable = true;
             lInsertable = true;
             lDeleteable = true;
             lUpdateable = true;
         }
         else
         {
-            lSelectable = tableProperties.value("selectable").toBool();
             lInsertable = tableProperties.value("insertable").toBool();
             lDeleteable = tableProperties.value("deleteable").toBool();
-            lUpdateable = tableProperties.value("updateable").toBool();
+            lUpdateable = !tableProperties.value("ТОЛЬКОЧТЕНИЕ").toBool();
         }
     }
     if (isView)
@@ -428,10 +426,10 @@ void Dictionary::setValue(QString name, QVariant value, int row)
 }
 
 
-void Dictionary::setValue(int id, QString name, QVariant value)
+void Dictionary::setValue(int id, QString name, QVariant value, int row)
 {
     setId(id);
-    Essence::setValue(name, value);
+    Essence::setValue(name, value, row);
 }
 
 
@@ -876,8 +874,8 @@ void Dictionary::setFilter(QString f)
 
 QString Dictionary::getFilter(QString defFilter) const
 {
+    QString filter;
 /*
-    QString result;
     if (filter.size() > 0)
     {
         QString text = filter;
@@ -944,8 +942,8 @@ QString Dictionary::getFilter(QString defFilter) const
     }
     if (defFilter.size() > 0 && filter.size() > 0)
         filter = " AND " + filter;
-    return defFilter + filter;
 */
+    return defFilter + filter;
 }
 
 

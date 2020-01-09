@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QtGlobal>
 
 #include "../kernel/app.h"
+#include "../kernel/dictionary.h"
 #include "dialog.h"
 #include "mainwindow.h"
 #include "form.h"
@@ -121,9 +122,9 @@ void Dialog::keyPressEvent(QKeyEvent *event)
     event->setAccepted(false);
     if (!event->isAccepted())
     {
-        if (event->modifiers() == Qt::ControlModifier)
+        if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
         {
-            if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
+            if (event->modifiers() == Qt::ControlModifier)
             {
                 cmdOk();
                 event->setAccepted(true);
@@ -138,6 +139,7 @@ void Dialog::keyPressEvent(QKeyEvent *event)
             }
         }
     }
+
     if (!event->isAccepted())
     {
         QDialog::keyPressEvent(event);

@@ -65,14 +65,7 @@ int main(int argc, char *argv[])
 //    mtrace();
 
     QLocale::setDefault(QLocale(QLocale::Russian, QLocale::RussianFederation));
-/*
-    QStringList paths = TApplication::libraryPaths();
-    paths.append(".");
-    paths.append("imageformats");
-    paths.append("platforms");
-    paths.append("sqldrivers");
-    TApplication::setLibraryPaths(paths);
-*/
+
     TApplication application(argc, argv);
 
     application.setOrganizationName("Enterprise");
@@ -98,7 +91,6 @@ int main(int argc, char *argv[])
 
     if (lStart)
     {
-
         application.debug(0, "\n");
         application.debug(0, QString("Program startup. v.%1").arg(application.applicationVersion()));
 
@@ -111,7 +103,6 @@ int main(int argc, char *argv[])
             TApplication::setStyle(QStyleFactory::create("plastique"));
             if (application.open())
             {
-
                 if (application.isScriptMode())
                 {
                     if (application.initApplication())

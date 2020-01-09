@@ -21,25 +21,27 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define BARCODEREADER_H
 
 #include <QtCore/QObject>
+#include <QtCore/QTime>
 #include "../serialport/qmyextserialport.h"
 
 class BarCodeReader : public QObject
 {
     Q_OBJECT
 public:
-    explicit BarCodeReader(QObject *parent = 0);
+    explicit BarCodeReader(QObject *parent = nullptr);
     ~BarCodeReader();
     virtual bool open(QString, int, int);
     virtual void close();
     virtual void setApp(TApplication* a);
     
 public slots:
-    void                    barCodeReadyRead();
+    virtual bool barCodeReadyRead(QString = "");
 
 private:
     QMyExtSerialPort*       serialPort;
     QString                 barCodeString;
     TApplication*           app;
+    int                     timeOut;
 };
 
 Q_DECLARE_INTERFACE(BarCodeReader, "org.QBalance.BarCodeReader")

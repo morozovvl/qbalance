@@ -126,7 +126,9 @@ public:
     void prepareValue(QString, Dictionary*);
     Q_INVOKABLE void prepareValue(QString, QVariant);
     Q_INVOKABLE virtual void setValue(QString name, QVariant value, int row = -1);
+    Q_INVOKABLE virtual void setValue(int, QString name, QVariant value, int row = -1);
     Q_INVOKABLE virtual QVariant getValue(QString, int row = -1);
+    Q_INVOKABLE virtual QVariant getValue(int, QString, int row = -1);
     Q_INVOKABLE void saveVariable(QString, QVariant);
     Q_INVOKABLE QVariant restoreVariable(QString);
     void saveVariablesToDB();

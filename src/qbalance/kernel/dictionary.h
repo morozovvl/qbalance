@@ -46,7 +46,6 @@ private:
 protected:
     QString         prototypeName;          // Имя справочника - прототипа
     Dictionary*     parentDict;
-    bool            lSelectable;
     bool            lIsSet;
     bool            lCanShow;
     bool            lMustShow;
@@ -83,7 +82,7 @@ public:
     Q_INVOKABLE virtual void setOrderClause(QString = "");
     Q_INVOKABLE virtual void setSorted(bool sorted);
     Q_INVOKABLE virtual void setValue(QString name, QVariant value, int row = -1);
-    Q_INVOKABLE virtual void setValue(int, QString, QVariant);
+    Q_INVOKABLE virtual void setValue(int, QString, QVariant, int row = -1);
 
 
 // Функции для работы справочника в составе документа

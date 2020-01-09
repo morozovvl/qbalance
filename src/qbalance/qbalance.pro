@@ -6,8 +6,8 @@
 #QMAKE_CXXFLAGS_DEBUG += -pg
 #QMAKE_LFLAGS_DEBUG += -pg
 
-QMAKE_CXXFLAGS += -std=c++0x
-QMAKE_LFLAGS += -static-libgcc -static-libstdc++ -lm -Wl,--rpath='\$\$ORIGIN/lib64'
+QMAKE_CXXFLAGS += -std=c++11
+#QMAKE_LFLAGS += -static -static-libgcc -static-libstdc++ -lm -Wl,--rpath='\$\$ORIGIN/lib64 -Wl, -Bdynamic -l:libsqlite3.so'
 #QMAKE_LFLAGS += -Wl,--dynamic-linker=/home/vladimir/qbalance3/lib64/ld-linux-x86-64.so.2
 
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0
@@ -123,7 +123,8 @@ SOURCES += main.cpp \
     storage/postgresdbfactory.cpp \
     storage/sqlitedbfactory.cpp \
     kernel/report.cpp \
-    kernel/reports.cpp
+    kernel/reports.cpp \
+    gui/mylineedit.cpp
 
 HEADERS +=  gui/passwordform.h \
     gui/form.h \
@@ -199,7 +200,8 @@ HEADERS +=  gui/passwordform.h \
     storage/sqlitedbfactory.h \
     storage/mymultilist.h \
     kernel/report.h \
-    kernel/reports.h
+    kernel/reports.h \
+    gui/mylineedit.h
 
 
 RESOURCES += ../../resources.qrc
@@ -233,7 +235,7 @@ unix {
  icons.files =  qbalance.png
  INSTALLS +=  target  desktop  icons
 # LIBS += ../../lib/libqextserialport.so
-    LIBS += /usr/lib64/libsqlite3.so
+    LIBS += -lsqlite3
 }
 
 windows {

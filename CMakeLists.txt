@@ -6,19 +6,15 @@ set(CMAKE_AUTORCC ON)
 
 file(READ "src/qbalance/version.h" ver)
 string(REPLACE "#define BUILD_NUMBER " "" ver ${ver})
-#string(REPLACE "\"" "" ver ${ver})
-#set(CPACK_PACKAGE_VERSION_MAJOR 0)
-#set(CPACK_PACKAGE_VERSION_MINOR 25)
-#set(CPACK_PACKAGE_VERSION_PATCH 1)
 set(VERSION ver)
 set(CPACK_PACKAGE_VERSION ${VERSION})
-set(CPACK_PACKAGE_RELEASE 1)
 
+set(CPACK_PACKAGE_RELEASE 1)
 
 set (PROJECT0 qbalance)
 set (PROJECT1 qb_main)
 
-SET (CMAKE_CXX_FLAGS "-ludev -Wl,--rpath=~/work/qbalance1/lib64 -Wl,--dynamic-linker=~/work/qbalance1/lib64/ld-linux-x86-64.so.2" )
+SET (CMAKE_CXX_FLAGS "-ludev" )
 
 find_package (Qt4 REQUIRED)
 include(${QT_USE_FILE})

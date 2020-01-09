@@ -513,6 +513,12 @@ void Document::setValue(QString name, QVariant value, int row)
 }
 
 
+void Document::setValue(int op, QString name, QVariant value, int row)
+{
+    setValue(QString("P%1__%2").arg(op).arg(name), value, row);
+}
+
+
 QVariant Document::getValue(QString name, int row)
 {
     QVariant result;
@@ -528,6 +534,12 @@ QVariant Document::getValue(QString name, int row)
     }
     result = Essence::getValue(name, row);
     return result;
+}
+
+
+QVariant Document::getValue(int op, QString name, int row)
+{
+    return getValue(QString("P%1__%2").arg(op).arg(name), row);
 }
 
 

@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
 #include <QtCore/QDate>
+#include <QtCore/QTextCodec>
 #include <QtCore/QObject>
 #include <QtCore/QTextCodec>
 #include <QtCore/QVariant>
@@ -351,6 +352,12 @@ TcpClient* TApplication::getTcpClient()
 bool TApplication::isBarCodeReaded()
 {
     return barCodeReaded;
+}
+
+
+BarCodeReader* TApplication::getBarCodeReader()
+{
+    return barCodeReader;
 }
 
 
@@ -724,7 +731,6 @@ bool TApplication::initApplication()
 
             if (result == 0)
             {   // БД открыть удалось
-
 
                 db->clearLockedDocumentList();
 
@@ -1608,18 +1614,18 @@ int TApplication::runScript(QString scrName)
 }
 
 
-void TApplication::barCodeReadyRead(QString barCodeString)
+bool TApplication::barCodeReadyRead(QString barCodeString)
 {
-    barCodeReaded = true;
+    barCodeReaded = false;
     Dialog* dialog = nullptr;
     if (getActiveSubWindow() != nullptr)
         dialog = static_cast<Dialog*>(getActiveSubWindow()->widget());
     if (dialog != nullptr)
     {
         if (QString(dialog->metaObject()->className()).compare("Dialog") == 0)
-            dialog->getForm()->getParent()->barCodeReaded(barCodeString.trimmed());
+            barCodeReaded = dialog->getForm()->getParent()->barCodeReaded(barCodeString.trimmed());
     }
-    barCodeReaded = false;
+    return barCodeReaded;
 }
 
 

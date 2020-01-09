@@ -131,7 +131,6 @@ void MyItemDelegate::calculate()
 {
     if (essence != nullptr)
         essence->calculate();
-
 }
 
 
@@ -139,4 +138,5 @@ void MyItemDelegate::setEssence(Essence* dict)
 {
     essence = dict;
 }
+
 
