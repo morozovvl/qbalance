@@ -36,6 +36,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "mydateitemdelegate.h"
 
 
+
 TableView::TableView(): QTableView()
 {
     app = nullptr;
@@ -211,18 +212,13 @@ void TableView::currentChanged(const QModelIndex &current, const QModelIndex &pr
 
 void TableView::keyPressEvent(QKeyEvent* event)
 {
-    event->setAccepted(false);
-
-    app->readCardReader(event);
-
-    if (event->isAccepted())
-    {
-        return;
-    }
 
     event->setAccepted(false);
 
-    if (parent != nullptr)
+    if (!event->isAccepted())
+        app->readCardReader(event);
+
+    if (parent != nullptr && !event->isAccepted())
     {
         if (event->modifiers() != Qt::ControlModifier)
         {
@@ -272,6 +268,7 @@ void TableView::keyPressEvent(QKeyEvent* event)
 
         if (!event->isAccepted())
             parent->keyPressEvent(event);
+
     }
     if (!event->isAccepted())
         QTableView::keyPressEvent(event);

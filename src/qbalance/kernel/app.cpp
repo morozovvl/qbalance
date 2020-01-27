@@ -608,7 +608,9 @@ QVariant TApplication::getConfigValue(QString name)
 {
     QVariant result;
     if (configs.contains(name))
+    {
         result = configs.value(name).value;
+    }
     return result;
 }
 
@@ -711,10 +713,6 @@ bool TApplication::initApplication()
     if (!loadDefaultConfig)
         readSettings();
 
-    tcpServer = new TcpServer(getConfigValue("REMOTE_PORT").toInt(), this);
-    tcpClient = new TcpClient(getConfigValue("REMOTE_HOST").toString(), getConfigValue("REMOTE_PORT").toInt(), this);
-    timeOut(getConfigValue(FR_NET_DRIVER_TIMEOUT).toInt());                                  // Подеждем, пока произойдет соенинение с сервером приложения
-
     db  = new PostgresDBFactory();
 //    db  = new SQLiteDBFactory();
     db->setConnectionTimeout(10);
@@ -732,6 +730,13 @@ bool TApplication::initApplication()
             if (result == 0)
             {   // БД открыть удалось
 
+                if (!loadDefaultConfig)
+                    readSettings();
+
+                tcpServer = new TcpServer(getConfigValue("REMOTE_PORT").toInt(), this);
+                tcpClient = new TcpClient(getConfigValue("REMOTE_HOST").toString(), getConfigValue("REMOTE_PORT").toInt(), this);
+                timeOut(getConfigValue(FR_NET_DRIVER_TIMEOUT).toInt());                                  // Подеждем, пока произойдет соенинение с сервером приложения
+
                 db->clearLockedDocumentList();
 
                 setDebugToBuffer(false);
@@ -739,9 +744,6 @@ bool TApplication::initApplication()
                 dictionaryList = Dictionaries::create<Dictionaries>();
                 topersList = Topers::create<Topers>();
                 reportsList = Reports::create<Reports>();
-
-                if (!loadDefaultConfig)
-                    readSettings();
 
                 if (!isScriptMode())
                     openPlugins();
@@ -1044,8 +1046,8 @@ QString TApplication::applicationDataDirPath()
     if (result.size() == 0)
     {
         result = applicationDirPath();
-        if (!result.contains(QDir::homePath()))
-            result = QDir::homePath();
+//        if (!result.contains(QDir::homePath()))
+//            result = QDir::homePath();
     }
     return result;
 }
@@ -1618,12 +1620,22 @@ bool TApplication::barCodeReadyRead(QString barCodeString)
 {
     barCodeReaded = false;
     Dialog* dialog = nullptr;
-    if (getActiveSubWindow() != nullptr)
-        dialog = static_cast<Dialog*>(getActiveSubWindow()->widget());
-    if (dialog != nullptr)
+
+    while (barCodeString.left(1) == "0")
     {
-        if (QString(dialog->metaObject()->className()).compare("Dialog") == 0)
-            barCodeReaded = dialog->getForm()->getParent()->barCodeReaded(barCodeString.trimmed());
+        barCodeString.remove(0, 1);
+    }
+
+    if (barCodeString.size() > 0)
+    {
+        if (getActiveSubWindow() != nullptr)
+            dialog = static_cast<Dialog*>(getActiveSubWindow()->widget());
+
+        if (dialog != nullptr)
+        {
+            if (QString(dialog->metaObject()->className()).compare("Dialog") == 0)
+                barCodeReaded = dialog->getForm()->getParent()->barCodeReaded(barCodeString.trimmed());
+        }
     }
     return barCodeReaded;
 }

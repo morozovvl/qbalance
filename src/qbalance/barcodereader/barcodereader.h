@@ -22,7 +22,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QtCore/QObject>
 #include <QtCore/QTime>
+#include <QtGui/QKeyEvent>
 #include "../serialport/qmyextserialport.h"
+
 
 class BarCodeReader : public QObject
 {
@@ -33,15 +35,19 @@ public:
     virtual bool open(QString, int, int);
     virtual void close();
     virtual void setApp(TApplication* a);
+    virtual QString getBarCodeString();
+    virtual void testBarCode(QKeyEvent *);
     
 public slots:
-    virtual bool barCodeReadyRead(QString = "");
+    virtual void barCodeReadyRead();
 
 private:
     QMyExtSerialPort*       serialPort;
     QString                 barCodeString;
     TApplication*           app;
     int                     timeOut;
+    QTime                   lastTime;
+    bool                    isBarCode;
 };
 
 Q_DECLARE_INTERFACE(BarCodeReader, "org.QBalance.BarCodeReader")

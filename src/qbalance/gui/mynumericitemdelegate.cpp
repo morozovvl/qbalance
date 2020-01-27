@@ -23,7 +23,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "mynumericitemdelegate.h"
 #include "formgrid.h"
 #include "../kernel/dictionary.h"
-#include "../gui/mylineedit.h"
 
 
 MyNumericItemDelegate::MyNumericItemDelegate(QObject* parent, FormGrid* form, int len, int prec)
@@ -83,10 +82,10 @@ void MyNumericItemDelegate::setColumnMask(QString mask/* = ""*/)
 
 QWidget* MyNumericItemDelegate::createEditor(QWidget*parent, const QStyleOptionViewItem&, const QModelIndex&) const
 {
-    MyLineEdit* editorWidget = nullptr;
+    QLineEdit* editorWidget = nullptr;
     if (!menuMode)
     {
-        editorWidget = new MyLineEdit(parent, essence->getApp());
+        editorWidget = new QLineEdit(parent);
         editorWidget->setAlignment(Qt::AlignRight);
         if (!readOnly)
         {

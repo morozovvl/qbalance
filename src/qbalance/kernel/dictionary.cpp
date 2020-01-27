@@ -875,74 +875,74 @@ void Dictionary::setFilter(QString f)
 QString Dictionary::getFilter(QString defFilter) const
 {
     QString filter;
-/*
-    if (filter.size() > 0)
-    {
-        QString text = filter;
-        bool isInt = true;
-        int id = 0;
-        if (text.size() > 0 && text.at(0).isDigit())
-            id = text.toInt(&isInt);    // Проверим, не является ли значение кодом
-        else
-        {
-            isInt = false;
-            text = text.trimmed();
-        }
-        QStringList paramList = text.split(QRegExp("\\s+"));
-        if (isFtsEnabled)   // Если включен полнотектовый поиск
-        {
-            result.append(QString("%1.fts @@ to_tsquery('").arg(db->getObjectNameCom(tableName)));
-            QString f = "";
-            foreach (QString param, paramList)
-            {
-                if (f.size() > 0)
-                    f.append("&");
-                f.append(param);
-            }
-            result.append(f + "')");
-        }
-        else
-        { // Если полнотекстовый поиск отключен
-            int subStrNum = 0;
-            foreach (QString param, paramList)
-            {
-                if (param.size() > 0)
-                {
-                    Dictionary* dict = dictionaries->getDictionary(tableName);    // Поместим связанный справочник в список справочников приложения
-                    if (dict != nullptr)
-                    {
-                        if (dict->getForm()->isLeftPercent() || subStrNum > 0)     // Отсутствие знака % актуально только для первого слова
-                            param = "%" + param;
-                        if (dict->getForm()->isRightPercent())
-                            param = param + "%";
-                    }
-                }
-                else
-                    param = "%" + param + "%";
-
-                if (result.size() > 0)
-                    result.append(" AND ");
-
-                QString fieldName = QString("%1.").arg(db->getObjectNameCom(tableName));
-                fieldName.append(app->getDBFactory()->getObjectNameCom(searchParameters[i].table + "." + searchParameters[i].field));
-                        filter.append(app->getDBFactory()->getILIKEexpression(fieldName, "'" + param + "'"));
-                        subStrNum++;
-                    }
-                }
-            }
-            if (isInt)
-            {
-                filter = QString("%1.%2 = %3").arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table))
-                                                       .arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table + ".КОД"))
-                                                       .arg(id);
-                filter = "(" + filter + ")";
-            }
-            break;
-        }
-    }
-    if (defFilter.size() > 0 && filter.size() > 0)
-        filter = " AND " + filter;
-*/
+//
+//    if (filter.size() > 0)
+//    {
+//        QString text = filter;
+//        bool isInt = true;
+//        int id = 0;
+//        if (text.size() > 0 && text.at(0).isDigit())
+//            id = text.toInt(&isInt);    // Проверим, не является ли значение кодом
+//        else
+//        {
+//            isInt = false;
+//            text = text.trimmed();
+//        }
+//        QStringList paramList = text.split(QRegExp("\\s+"));
+//        if (isFtsEnabled)   // Если включен полнотектовый поиск
+//        {
+//            result.append(QString("%1.fts @@ to_tsquery('").arg(db->getObjectNameCom(tableName)));
+//            QString f = "";
+//            foreach (QString param, paramList)
+//            {
+//                if (f.size() > 0)
+//                    f.append("&");
+//                f.append(param);
+//            }
+//            result.append(f + "')");
+//        }
+//        else
+//        { // Если полнотекстовый поиск отключен
+//            int subStrNum = 0;
+//            foreach (QString param, paramList)
+//            {
+//                if (param.size() > 0)
+//                {
+//                    Dictionary* dict = dictionaries->getDictionary(tableName);    // Поместим связанный справочник в список справочников приложения
+//                    if (dict != nullptr)
+//                    {
+//                        if (dict->getForm()->isLeftPercent() || subStrNum > 0)     // Отсутствие знака % актуально только для первого слова
+//                            param = "%" + param;
+//                        if (dict->getForm()->isRightPercent())
+//                            param = param + "%";
+//                    }
+//                }
+//                else
+//                    param = "%" + param + "%";
+//
+//                if (result.size() > 0)
+//                    result.append(" AND ");
+//
+//                QString fieldName = QString("%1.").arg(db->getObjectNameCom(tableName));
+//                fieldName.append(app->getDBFactory()->getObjectNameCom(searchParameters[i].table + "." + searchParameters[i].field));
+//                        filter.append(app->getDBFactory()->getILIKEexpression(fieldName, "'" + param + "'"));
+//                        subStrNum++;
+//                    }
+//                }
+//            }
+//            if (isInt)
+//            {
+//                filter = QString("%1.%2 = %3").arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table))
+//                                                       .arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table + ".КОД"))
+//                                                       .arg(id);
+//                filter = "(" + filter + ")";
+//            }
+//            break;
+//        }
+//    }
+//    if (defFilter.size() > 0 && filter.size() > 0)
+//        filter = " AND " + filter;
+//
     return defFilter + filter;
 }
 

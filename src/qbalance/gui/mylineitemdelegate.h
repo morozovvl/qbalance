@@ -36,6 +36,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QPointer>
 #include "myitemdelegate.h"
 
+
 class MyLineItemDelegate : public MyItemDelegate {
     Q_OBJECT
 public:

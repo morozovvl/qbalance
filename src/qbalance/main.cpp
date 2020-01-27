@@ -91,18 +91,18 @@ int main(int argc, char *argv[])
 
     if (lStart)
     {
-        application.debug(0, "\n");
-        application.debug(0, QString("Program startup. v.%1").arg(application.applicationVersion()));
-
-        // Если в качестве параметра задан скрипт, то приложение работает в скриптовом режиме
-        if (application.getScript().size() > 0)
-            application.setScriptMode(true);
-
-        if (!TApplication::isSendCommandMode())
+        if (application.open())
         {
-            TApplication::setStyle(QStyleFactory::create("plastique"));
-            if (application.open())
+            application.debug(0, "\n");
+            application.debug(0, QString("Program startup. v.%1").arg(application.applicationVersion()));
+
+            // Если в качестве параметра задан скрипт, то приложение работает в скриптовом режиме
+            if (application.getScript().size() > 0)
+                application.setScriptMode(true);
+
+            if (!TApplication::isSendCommandMode())
             {
+                TApplication::setStyle(QStyleFactory::create("plastique"));
                 if (application.isScriptMode())
                 {
                     if (application.initApplication())
@@ -125,15 +125,15 @@ int main(int argc, char *argv[])
                         lResult = application.exec();
                     }
                 }
-                application.close();
             }
+            application.debug(0, "Program shutdown.\n");
+            application.close();
         }
-        else
-        {
-            lResult = application.runScript(application.getScript());
-        }
+//        else
+//        {
+//            lResult = application.runScript(application.getScript());
+//        }
 
-        application.debug(0, "Program shutdown.\n");
         application.quit();
     }
     return lResult;

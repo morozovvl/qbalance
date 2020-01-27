@@ -235,6 +235,7 @@ void Form::createForm(QString fileName, QWidget* pwgt)
     freeWindow = !appendToMdi;
 
     formWidget->setForm(this);
+    formWidget->setAttribute(Qt::WA_KeyCompression);
 }
 
 
@@ -432,27 +433,32 @@ void Form::keyPressEvent(QKeyEvent *event)
 {
     event->setAccepted(false);
 
-    // Проверим ввод сканером штрихкода
-    if (app != nullptr)
-    {
-        BarCodeReader* barCodeReader = app->getBarCodeReader();
+//
+//    // Проверим ввод сканером штрихкода
+//    if (app != nullptr)
+//    {
+//        BarCodeReader* barCodeReader = app->getBarCodeReader();
+//
+//        if (barCodeReader != nullptr)
+//        {
+//            barCodeReader->testBarCode(event);
+//
+//            if (barCodeReader->getBarCodeString().size() == 1)
+//                event->setAccepted(true);
+//        }
+//    }
+//
 
-        if (barCodeReader != nullptr)
+    if (!event->isAccepted())
+    {
+        // Попробуем отдать обработку события скриптам
+        ScriptEngine* engine = parent->getScriptEngine();
+        if (engine != nullptr)
         {
-            if (barCodeReader->barCodeReadyRead(event->text()))
-            {
-                event->setAccepted(true);
-            }
+            bool result = engine->eventKeyPressed(event->key(), event->modifiers());
+            if (result)
+                event->setAccepted(true);       // Если скрипт вернул ИСТИНА, то событие обработано
         }
-    }
-
-    // Попробуем отдать обработку события скриптам
-    ScriptEngine* engine = parent->getScriptEngine();
-    if (engine != nullptr)
-    {
-        bool result = engine->eventKeyPressed(event->key(), event->modifiers());
-        if (result)
-            event->setAccepted(true);       // Если скрипт вернул ИСТИНА, то событие обработано
     }
 
     if (!event->isAccepted())

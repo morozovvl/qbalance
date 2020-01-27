@@ -6,9 +6,10 @@
 #QMAKE_CXXFLAGS_DEBUG += -pg
 #QMAKE_LFLAGS_DEBUG += -pg
 
-QMAKE_CXXFLAGS += -std=c++11
+#QMAKE_CXXFLAGS += -std=c++11
 #QMAKE_LFLAGS += -static -static-libgcc -static-libstdc++ -lm -Wl,--rpath='\$\$ORIGIN/lib64 -Wl, -Bdynamic -l:libsqlite3.so'
 #QMAKE_LFLAGS += -Wl,--dynamic-linker=/home/vladimir/qbalance3/lib64/ld-linux-x86-64.so.2
+#QMAKE_LFLAGS += -static -Wl, -Bdynamic -l:libsqlite3.so
 
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0
 
@@ -34,9 +35,9 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0
           core \
           gui \
           network \
-          script \
-          printsupport \
-          widgets
+          script
+#          printsupport \
+#          widgets
     include(../qextserialport/src/qextserialport.pri)
     CONFIG += designer \
               uitools
@@ -44,8 +45,6 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0
 
 
 APP_NAME = qb_main
-
-TARGET = ../../$${APP_NAME}
 
 DEFINES += APPLICATION_NAME=\\\"$${APP_NAME}\\\"
 
@@ -123,8 +122,7 @@ SOURCES += main.cpp \
     storage/postgresdbfactory.cpp \
     storage/sqlitedbfactory.cpp \
     kernel/report.cpp \
-    kernel/reports.cpp \
-    gui/mylineedit.cpp
+    kernel/reports.cpp
 
 HEADERS +=  gui/passwordform.h \
     gui/form.h \
@@ -200,8 +198,7 @@ HEADERS +=  gui/passwordform.h \
     storage/sqlitedbfactory.h \
     storage/mymultilist.h \
     kernel/report.h \
-    kernel/reports.h \
-    gui/mylineedit.h
+    kernel/reports.h
 
 
 RESOURCES += ../../resources.qrc
@@ -217,6 +214,8 @@ unix:RCC_DIR = ../qbalance
 win32:RCC_DIR = ../qbalance
 
 unix {
+    TARGET = ../../$${APP_NAME}
+
 # INCLUDEPATH = ../google-breakpad/src
 # HEADERS += crashhandler/crashhandler.h
 # SOURCES += crashhandler/crashhandler.cpp
@@ -239,6 +238,7 @@ unix {
 }
 
 windows {
+    TARGET = ../../../$${APP_NAME}
 #    RC_FILE+=resources.rc
 #    LIBS += ../../qextserialport1.dll
     LIBS += ../../sqlite3.dll

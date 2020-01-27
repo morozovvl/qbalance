@@ -736,7 +736,7 @@ void WizardOperation::getFieldsTable(QList<FieldType>* flds,  QTableWidget* fiel
         item->setData(Qt::UserRole, flds->at(i).number);
         fieldsTable->setItem(i, visibleField, item);
 
-        item = new QTableWidgetItem(flds->at(i).constReadOnly ? "true" : "false");
+        item = new QTableWidgetItem(flds->at(i).readOnly || flds->at(i).constReadOnly ? "true" : "false");
         if (flds->at(i).constReadOnly)
             item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
         fieldsTable->setItem(i, editableField, item);

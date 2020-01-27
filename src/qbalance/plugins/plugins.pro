@@ -5,9 +5,7 @@ greaterThan(QT_MAJOR_VERSION, 4)
           core \
           gui \
           network \
-          script \
-          printsupport \
-          widgets
+          script
 
   DEFINES += HAVE_QT5
 }
@@ -19,8 +17,6 @@ CONFIG += sql \
         gui \
         xml \
         network \
-        printsupport \
-        widgets \
         designer \
         uitools
 

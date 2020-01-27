@@ -26,6 +26,8 @@ BarCodeReader::BarCodeReader(QObject *parent) :
     app = nullptr;
     serialPort = nullptr;
     barCodeString = "";
+    lastTime = QTime::currentTime();
+    isBarCode = false;
 }
 
 
@@ -69,42 +71,56 @@ void BarCodeReader::close()
 }
 
 
-bool BarCodeReader::barCodeReadyRead(QString str)
+QString BarCodeReader::getBarCodeString()
 {
-    bool result = false;
+    return barCodeString;
+}
 
-    if (str.size() == 0)
+
+void BarCodeReader::testBarCode(QKeyEvent *event)
+{
+    QTime   time = QTime::currentTime();
+
+/*
+    if (time > lastTime.addMSecs(50))   // Прошло много времени с последнего нажатия, скорее всего это просто нажатие клавиши
     {
-        if (serialPort->bytesAvailable())   // Если доступен сканер для COM порта, читаем с него
-        {
-            QString readedPart;
-            do
-            {
-                readedPart = QString::fromLatin1(serialPort->readAll());
-                barCodeString.append(readedPart);
-                app->sleep(timeOut);
-            } while (serialPort->bytesAvailable());
-        }
-
-        if (barCodeString.size() > 0)
-        {
-            QString bcString = barCodeString;
-            barCodeString = "";
-            app->barCodeReadyRead(bcString);
-            result = true;
-        }
+        barCodeString = str;            // Начнем читать буфер клавиатуры сначала
+        isBarCode = false;              // И будем считать, что это не штрихкод
+        qDebug() << "1" << barCodeString;
     }
     else
     {
-        if (str.size() > 1 || barCodeString.size() > 0)
-        {
-            barCodeString += str.trimmed();
+        barCodeString += str.trimmed();     // Коды нажатий клавиш поступают быстро, будем копить в буфере нажатия
+        if (!isBarCode)                     // Запланируем обработку последовательности нажатий как штрихкод
             QTimer::singleShot(timeOut, this, SLOT(barCodeReadyRead()));
-            result = true;
-        }
+
+        isBarCode = true;                   // Сейчас будем предполагать, что это штрихкод
+        qDebug() << "2" << barCodeString;
     }
 
-    return result;
+    lastTime = time;                        // Запомним время последнего нажатия
+*/
+}
+
+
+void BarCodeReader::barCodeReadyRead()
+{
+    if (serialPort->bytesAvailable())   // Если доступен сканер для COM порта, читаем с него
+    {
+        QString readedPart;
+        do
+        {
+            readedPart = QString::fromLatin1(serialPort->readAll());
+            barCodeString.append(readedPart);
+            app->sleep(timeOut);
+        } while (serialPort->bytesAvailable());
+    }
+
+    if (barCodeString.size() > 0)
+    {
+        QString bcString = barCodeString;
+        app->barCodeReadyRead(bcString);
+    }
 }
 
 
