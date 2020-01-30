@@ -52,6 +52,11 @@ void Documents::postInitialize(int opNumber, QObject *parent)
     tagName    = QString("СписокДокументов%1").arg(operNumber);
     prefix = "АТРИБУТЫ__";
 
+    scriptFileName =  tagName;
+    if (tagName.size() > 0)
+        scriptFileName += ".qs";
+
+
     app->debug(1, "");
     app->debug(1, QString("Begin open documents list (ОПЕР=%1)").arg(operNumber));
 
@@ -70,6 +75,49 @@ void Documents::postInitialize(int opNumber, QObject *parent)
     doSubmit = true;
     lPrintable = true;
     photoEnabled = false;
+}
+
+
+bool Documents::open()
+{
+    bool result = false;
+    if (operNumber > 0 && Essence::open())
+    {     // Откроем этот справочник
+        setOrderClause();
+        prepareSelectCurrentRowCommand();
+
+        tableModel->setTestSelect(true);
+        query();
+        tableModel->setTestSelect(false);
+
+        currentDocument = Document::create<Document>(operNumber, this);
+        if (currentDocument->open())
+        {
+            currentDocument->setFormTitle(subFormTitle);
+//            scriptEngine = currentDocument->getScriptEngine();
+
+            reportScriptEngine = new DocumentScriptEngine(nullptr, this);
+            reportScriptEngine->setReportContext(&printValues);
+            reportScriptEngine->getReportContext()->setScriptEngine(reportScriptEngine);
+
+            result = true;
+        }
+    }
+    else
+        app->showError(QString(QObject::trUtf8("Запрещено просматривать операцию <%1> пользователю %2")).arg(formTitle, app->getLogin()));
+    app->debug(1, QString("End open documents list (ОПЕР=%1)").arg(operNumber));
+    app->debug(1, "");
+    return result;
+}
+
+
+void Documents::close()
+{
+    currentDocument->close();
+    delete currentDocument;
+    scriptEngine = nullptr;
+    currentDocument = nullptr;
+    Essence::close();
 }
 
 
@@ -183,44 +231,6 @@ void Documents::query(QString, bool)
 }
 
 
-bool Documents::open()
-{
-    bool result = false;
-    if (operNumber > 0 && Essence::open())
-    {     // Откроем этот справочник
-        setOrderClause();
-        prepareSelectCurrentRowCommand();
-
-        tableModel->setTestSelect(true);
-        query();
-        tableModel->setTestSelect(false);
-
-        currentDocument = Document::create<Document>(operNumber, this);
-        if (currentDocument->open())
-        {
-            currentDocument->setFormTitle(subFormTitle);
-            scriptEngine = currentDocument->getScriptEngine();
-            result = true;
-        }
-    }
-    else
-        app->showError(QString(QObject::trUtf8("Запрещено просматривать операцию <%1> пользователю %2")).arg(formTitle, app->getLogin()));
-    app->debug(1, QString("End open documents list (ОПЕР=%1)").arg(operNumber));
-    app->debug(1, "");
-    return result;
-}
-
-
-void Documents::close()
-{
-    currentDocument->close();
-    delete currentDocument;
-    scriptEngine = nullptr;
-    currentDocument = nullptr;
-    Essence::close();
-}
-
-
 void Documents::setOrderClause(QString orderClause)
 {
     if (orderClause.size() > 0)
@@ -290,7 +300,7 @@ void Documents::setForm(QString formName)
     form->appendToolTip("buttonView",       trUtf8("Просмотреть документ (F2)"));
     form->appendToolTip("buttonRequery",    trUtf8("Обновить список документов (загрузить повторно с сервера) (F3)"));
 
-    form->open(parentForm, this, formName);
+    form->open(parentForm, this, formName.size() == 0 ? tagName : formName);
     parameters = nullptr;
 }
 

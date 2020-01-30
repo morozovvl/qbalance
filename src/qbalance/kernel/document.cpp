@@ -58,19 +58,10 @@ void Document::postInitialize(int oper, Documents* par)
 
     parent = par;
     operNumber = oper;
-    lPrintable = true;
     tableName = db->getObjectName("проводки");
     tagName = QString("Документ%1").arg(oper);
     scriptFileName = TApplication::exemplar()->getScriptFileName(operNumber);
     idFieldName = "P1__" + db->getObjectName("код");
-    freePrv = 0;
-    localDictsOpened = false;
-    docModified = false;
-    doSubmit = false;                 // По умолчанию не будем обновлять записи в БД сразу, чтобы собрать обновления в транзакцию
-    photoEnabled = false;
-    quanAccount = false;
-    singlePrv = false;
-    locked = false;
 
     // Подготовим структуру для хранения локальных справочников
     dictionaries = Dictionaries::create<Dictionaries>();
@@ -102,6 +93,7 @@ void Document::postInitialize(int oper, Documents* par)
             quanAccount = true;                     // Используется количественный учет
     }
 
+    lPrintable = true;
     lInsertable = true;
     lDeleteable = true;
     lUpdateable = true;
@@ -109,6 +101,35 @@ void Document::postInitialize(int oper, Documents* par)
     lIsDocument = true;
     addingFromQuery = false;
     cardReaderEnabled = true;
+
+    freePrv = 0;
+    localDictsOpened = false;
+    docModified = false;
+    doSubmit = false;                 // По умолчанию не будем обновлять записи в БД сразу, чтобы собрать обновления в транзакцию
+    photoEnabled = false;
+    quanAccount = false;
+    singlePrv = false;
+    locked = false;
+
+}
+
+
+bool Document::open()
+{
+    if (operNumber > 0 && Essence::open())
+    {
+        setOrderClause();
+        return true;
+    }
+    return false;
+}
+
+
+void Document::close()
+{
+    Essence::close();
+    dictionaries->close();
+    delete dictionaries;
 }
 
 
@@ -844,25 +865,6 @@ void Document::prepareSelectCurrentRowCommand()
 }
 
 
-bool Document::open()
-{
-    if (operNumber > 0 && Essence::open())
-    {
-        setOrderClause();
-        return true;
-    }
-    return false;
-}
-
-
-void Document::close()
-{
-    Essence::close();
-    dictionaries->close();
-    delete dictionaries;
-}
-
-
 void Document::setForm(QString formName)
 {
     if (form != nullptr)
@@ -884,7 +886,7 @@ void Document::setForm(QString formName)
     form->appendToolTip("buttonSave", trUtf8("Экспорт документа"));
     form->appendToolTip("buttonLoad", trUtf8("Импорт документа"));
 
-    form->open(parentForm, static_cast<Document*>(this), formName.size() == 0 ? QString("Документ%1").arg(operNumber) : formName);
+    form->open(parentForm, static_cast<Document*>(this), formName.size() == 0 ? tagName : formName);
 }
 
 

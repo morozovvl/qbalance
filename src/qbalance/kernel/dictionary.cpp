@@ -109,6 +109,82 @@ void Dictionary::postInitialize(QString name, QObject *parent)
 }
 
 
+bool Dictionary::open(QString command, QString tName)
+{
+    if (tName == "undefined")
+        tName = "";
+
+    sqlCommand = command;
+
+    if (tName.size() > 0)
+        queryTableName = tName;
+
+    if (tagName.size() == 0)
+        tagName = tName;
+
+    if (dictTitle.size() == 0)
+        dictTitle = tagName;
+
+    if (Essence::open())
+    {
+        if (tableName.size() > 0)
+        {
+            // Проверим, имеется ли в справочнике полнотекстовый поиск
+            foreach (QString fieldName, fieldList)
+            {
+                if (fieldName == "fts")
+                {
+                    ftsEnabled = true;
+                }
+                if (fieldName.toUpper() == "ИМЯ")
+                {
+                    lNameExist = true;
+                }
+            }
+
+            setOrderClause();
+
+            prepareSelectCurrentRowCommand();
+
+            tableModel->setTestSelect(true);
+            query();
+            tableModel->setTestSelect(false);
+
+            if (isFieldExists(nameFieldName))
+                setPhotoNameField(nameFieldName);
+
+            FieldType fld;
+            int keyColumn   = 0;
+            for (int i = 0; i < columnsProperties.count(); i++)
+            {
+                fld = columnsProperties.at(i);
+
+                // Для основной таблицы сохраним информацию для обновления
+                if (fld.table == columnsProperties.at(0).table)
+                {
+                    if (fld.name == idFieldName)
+                        keyColumn = i;
+                    else if (fieldList.contains(fld.name))
+                        tableModel->setUpdateInfo(fld.name, fld.table, fld.name, fld.type, fld.length, fld.precision, i, keyColumn);
+                }
+            }
+
+            reportScriptEngine = new DocumentScriptEngine(nullptr, this);
+            reportScriptEngine->setReportContext(&printValues);
+            reportScriptEngine->getReportContext()->setScriptEngine(reportScriptEngine);
+        }
+        return true;
+    }
+    return false;
+}
+
+
+void Dictionary::close()
+{
+    Essence::close();
+}
+
+
 void Dictionary::queryName(QString filter)
 {
     query(db->getILIKEexpression(QString("\"%1\".\"ИМЯ\"").arg(tableName), "'%" + filter + "%'"));
@@ -534,85 +610,9 @@ void Dictionary::setForm(QString formName)
     parameters = static_cast<SearchParameters*>(form->getFormWidget()->findChild("searchParameters"));
 
     grdTable = form->getGrdTable();
-//123
+
     if (grdTable != nullptr)
         grdTable->setEssence(this);
-}
-
-
-bool Dictionary::open(QString command, QString tName)
-{
-    if (tName == "undefined")
-        tName = "";
-
-    sqlCommand = command;
-
-    if (tName.size() > 0)
-        queryTableName = tName;
-
-    if (tagName.size() == 0)
-        tagName = tName;
-
-    if (dictTitle.size() == 0)
-        dictTitle = tagName;
-
-    if (Essence::open())
-    {
-        if (tableName.size() > 0)
-        {
-            // Проверим, имеется ли в справочнике полнотекстовый поиск
-            foreach (QString fieldName, fieldList)
-            {
-                if (fieldName == "fts")
-                {
-                    ftsEnabled = true;
-                }
-                if (fieldName.toUpper() == "ИМЯ")
-                {
-                    lNameExist = true;
-                }
-            }
-
-            setOrderClause();
-
-            prepareSelectCurrentRowCommand();
-
-            tableModel->setTestSelect(true);
-            query();
-            tableModel->setTestSelect(false);
-
-            if (isFieldExists(nameFieldName))
-                setPhotoNameField(nameFieldName);
-
-            FieldType fld;
-            int keyColumn   = 0;
-            for (int i = 0; i < columnsProperties.count(); i++)
-            {
-                fld = columnsProperties.at(i);
-
-                // Для основной таблицы сохраним информацию для обновления
-                if (fld.table == columnsProperties.at(0).table)
-                {
-                    if (fld.name == idFieldName)
-                        keyColumn = i;
-                    else if (fieldList.contains(fld.name))
-                        tableModel->setUpdateInfo(fld.name, fld.table, fld.name, fld.type, fld.length, fld.precision, i, keyColumn);
-                }
-            }
-
-            reportScriptEngine = new DocumentScriptEngine(nullptr, this);
-            reportScriptEngine->setReportContext(&printValues);
-            reportScriptEngine->getReportContext()->setScriptEngine(reportScriptEngine);
-        }
-        return true;
-    }
-    return false;
-}
-
-
-void Dictionary::close()
-{
-    Essence::close();
 }
 
 
@@ -942,7 +942,7 @@ QString Dictionary::getFilter(QString defFilter) const
 //    }
 //    if (defFilter.size() > 0 && filter.size() > 0)
 //        filter = " AND " + filter;
-//
+
     return defFilter + filter;
 }
 

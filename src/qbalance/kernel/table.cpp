@@ -56,6 +56,32 @@ void Table::postInitialize(QString name, QObject *parent)
 }
 
 
+bool Table::open(QString command)
+{
+    if (command.size() > 0)
+        sqlCommand = command;
+    opened = setTableModel();
+    if (opened)
+    {
+        fieldList = getFieldsList();
+        if (fieldList.count() == 0)
+            opened = false;
+    }
+    return opened;
+}
+
+
+void Table::close()
+{
+    if (tableModel != nullptr)
+    {
+        tableModel->clear();
+        delete tableModel;
+    }
+    opened = false;
+}
+
+
 MySqlRelationalTableModel*  Table::getTableModel()
 {
     return tableModel;
@@ -185,32 +211,6 @@ void Table::query(QString filter)
         }
     }
  }
-
-
-bool Table::open(QString command)
-{
-    if (command.size() > 0)
-        sqlCommand = command;
-    opened = setTableModel();
-    if (opened)
-    {
-        fieldList = getFieldsList();
-        if (fieldList.count() == 0)
-            opened = false;
-    }
-    return opened;
-}
-
-
-void Table::close()
-{
-    if (tableModel != nullptr)
-    {
-        tableModel->clear();
-        delete tableModel;
-    }
-    opened = false;
-}
 
 
 bool Table::setTableModel(int level)

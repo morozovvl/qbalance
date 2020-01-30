@@ -76,9 +76,9 @@ public:
 // Функции для работы с моделью данных
     virtual bool add();
     Q_INVOKABLE virtual bool remove(bool = false);
-    Q_INVOKABLE virtual void            query(QString filter = "", bool = false);
-    Q_INVOKABLE virtual void            queryName(QString filter = "");
-    Q_INVOKABLE virtual int      getId(int row = -1, bool = false);
+    Q_INVOKABLE virtual void query(QString filter = "", bool = false);
+    Q_INVOKABLE virtual void queryName(QString filter = "");
+    Q_INVOKABLE virtual int  getId(int row = -1, bool = false);
     Q_INVOKABLE virtual void setOrderClause(QString = "");
     Q_INVOKABLE virtual void setSorted(bool sorted);
     Q_INVOKABLE virtual void setValue(QString name, QVariant value, int row = -1);

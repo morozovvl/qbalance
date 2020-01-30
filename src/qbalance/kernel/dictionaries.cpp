@@ -48,7 +48,7 @@ void Dictionaries::close()
 }
 
 
-void Dictionaries::postInitialize(QObject* parent)
+void Dictionaries::postInitialize(QString, QObject* parent)
 {
     Dictionary::postInitialize("доступ_к_справочникам", parent);
 

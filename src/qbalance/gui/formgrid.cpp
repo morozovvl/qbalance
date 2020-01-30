@@ -304,10 +304,12 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt)
             else
                 parent->setViewable(false);
         }
+
         // Подключим кнопку "Удалить"
         parent->setDeleteable(parent->isDeleteable());
         // Подключим кнопку "Добавить"
         parent->setInsertable(parent->isInsertable());
+
     }
 
     grdTables.append(grdTable);

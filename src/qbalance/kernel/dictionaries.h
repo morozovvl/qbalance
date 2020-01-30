@@ -37,7 +37,7 @@ private:
 
 protected:
     Dictionaries(QObject* = nullptr);
-    virtual void postInitialize(QObject*);
+    virtual void postInitialize(QString, QObject*);
 
 public:
     QHash<QString, Dictionary*> dictionariesList;                    // Объекты справочников
@@ -51,7 +51,7 @@ public:
         static T* create(QObject *parent = nullptr)
         {
             T* p(new T(parent));
-            p->postInitialize(parent);
+            p->postInitialize("", parent);
             if (p->open())
                 p->query();
             return p;

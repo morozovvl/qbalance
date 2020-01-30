@@ -113,6 +113,60 @@ void Essence::postInitialize(QString name, QObject* parent)
 }
 
 
+bool Essence::open(QString command)
+{
+    if (Table::open(command))
+    {
+        if (!app->isScriptMode())       // Если мы работаем не в скриптовом режиме, то создадим форму для этой сущности
+            initForm();
+
+        openScriptEngine();
+
+        if (form != nullptr)
+        {
+            grdTable = form->getGrdTable();
+            if (grdTable != nullptr)
+            {
+                grdTable->setEssence(this);
+                grdTable->setReadOnly(!lUpdateable);
+            }
+        }
+        reportScriptEngine = new DocumentScriptEngine(nullptr, this);
+        reportScriptEngine->setReportContext(&printValues);
+        reportScriptEngine->getReportContext()->setScriptEngine(reportScriptEngine);
+        return true;
+    }
+    return false;
+}
+
+
+void Essence::close()
+{
+    if (form != nullptr)
+    {
+        form->close();
+        if (form->isDefaultForm())
+        {
+            delete form;
+            form = nullptr;
+        }
+        else
+            form->deleteLater();
+    }
+
+    delete reportScriptEngine;
+    reportScriptEngine = nullptr;
+
+
+    if (m_networkAccessManager != nullptr)
+        delete m_networkAccessManager;
+
+    closeScriptEngine();
+
+    Table::close();
+}
+
+
 bool Essence::isFieldExists(QString field)
 {
     return getFieldsList().contains(field);
@@ -899,60 +953,6 @@ void Essence::view()
 {
     if (form != nullptr)
         form->getFormWidget()->setFocus(Qt::OtherFocusReason);
-}
-
-
-bool Essence::open(QString command)
-{
-    if (Table::open(command))
-    {
-        if (!app->isScriptMode())       // Если мы работаем не в скриптовом режиме, то создадим форму для этой сущности
-            initForm();
-
-        openScriptEngine();
-
-        if (form != nullptr)
-        {
-            grdTable = form->getGrdTable();
-            if (grdTable != nullptr)
-            {
-                grdTable->setEssence(this);
-                grdTable->setReadOnly(!lUpdateable);
-            }
-        }
-        reportScriptEngine = new DocumentScriptEngine(nullptr, this);
-        reportScriptEngine->setReportContext(&printValues);
-        reportScriptEngine->getReportContext()->setScriptEngine(reportScriptEngine);
-        return true;
-    }
-    return false;
-}
-
-
-void Essence::close()
-{
-    if (form != nullptr)
-    {
-        form->close();
-        if (form->isDefaultForm())
-        {
-            delete form;
-            form = nullptr;
-        }
-        else
-            form->deleteLater();
-    }
-
-    delete reportScriptEngine;
-    reportScriptEngine = nullptr;
-
-
-    if (m_networkAccessManager != nullptr)
-        delete m_networkAccessManager;
-
-    closeScriptEngine();
-
-    Table::close();
 }
 
 
