@@ -277,6 +277,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt)
     if (buttonRequery != nullptr)
         connect(buttonRequery, SIGNAL(clicked()), this, SLOT(cmdRequery()));
 
+/*
     // Подключим кнопку "Запрос"
     if (defaultForm)
     {
@@ -288,6 +289,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt)
 
     if (buttonQuery != nullptr)
         connect(buttonQuery, SIGNAL(clicked()), this, SLOT(cmdQuery()));
+*/
 
     // Подключим кнопку "Просмотреть"
     if (parent != nullptr)

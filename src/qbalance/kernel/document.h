@@ -134,7 +134,7 @@ public:
     void saveVariablesToDB();
     void restoreVariablesFromDB();
     Q_INVOKABLE virtual void setEnabled(bool);
-    Q_INVOKABLE FormDocument* getForm(bool = false);
+    Q_INVOKABLE FormDocument* getForm();
     Q_INVOKABLE virtual void setForm(QString = "");
     Q_INVOKABLE virtual void updateCurrentRow(int = 0);
     Q_INVOKABLE void loadDocument();        // Загружает документ перед тем, как его показать

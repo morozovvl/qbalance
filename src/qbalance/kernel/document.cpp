@@ -194,7 +194,7 @@ bool Document::getIsSingleString()
 }
 
 
-FormDocument* Document::getForm(bool)
+FormDocument* Document::getForm()
 {
     return static_cast<FormDocument*>(Essence::getForm());
 }

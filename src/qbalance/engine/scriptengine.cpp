@@ -954,6 +954,7 @@ bool ScriptEngine::evaluate()
                                    globalObject().property("EventKeyPressed"));
                 }
             }
+
             errorMessage = globalObject().property("errorMessage").toString();  // Вернем строку с описанием ошибки работы скрипта
             scriptResult = globalObject().property("scriptResult").toBool();    // Вернем результаты работы скрипта
             result = scriptResult;

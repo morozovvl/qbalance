@@ -477,6 +477,7 @@ Dialog* Essence::getFormWidget()
     return (form != nullptr ? form->getFormWidget() : nullptr);
 }
 
+
 bool Essence::isVisible()
 {
     return form->isVisible();

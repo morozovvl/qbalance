@@ -44,14 +44,19 @@ public slots:
     virtual void cmdAdd();
     virtual void cmdDelete();
     virtual void cmdView();
+    virtual void cmdRequery();
 
     void showItog();
     Q_INVOKABLE virtual void show();
-
+    Q_INVOKABLE virtual void showFilterEdit(bool);
+    Q_INVOKABLE virtual QLineEdit* getFilterEdit();
+    Q_INVOKABLE virtual QString    getFilter();
 
 private:
-     MyNumericEdit*    itogNumeric;
-     virtual void createForm(QString, QWidget* pwgt = nullptr);
+    QLabel*          filterLabel;
+    QLineEdit*      filterEdit;
+    MyNumericEdit*    itogNumeric;
+    virtual void createForm(QString, QWidget* pwgt = nullptr);
 };
 
 #endif //FORMDOCUMENTS_H

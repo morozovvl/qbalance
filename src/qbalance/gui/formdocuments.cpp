@@ -28,14 +28,24 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../storage/dbfactory.h"
 
 
+#define LABEL_FILTER   QObject::trUtf8("Фильтр:")
+
+
 FormDocuments::FormDocuments(): FormGrid()
 {
+    filterLabel = nullptr;
+    filterEdit = nullptr;
     itogNumeric = nullptr;
 }
 
 
 FormDocuments::~FormDocuments()
 {
+    if (filterLabel != nullptr)
+        delete filterLabel;
+
+    if (filterEdit != nullptr)
+        delete filterEdit;
 }
 
 
@@ -60,6 +70,18 @@ void FormDocuments::createForm(QString fileName, QWidget* pwgt)
         itogNumeric->setObjectName("itogNumeric");
         phbxItogLayout->addWidget(itogNumeric, 0, Qt::AlignRight);
         vbxLayout->insertLayout(1, phbxItogLayout);
+
+        QHBoxLayout* hbxFilterLayout = new QHBoxLayout();
+        filterLabel = new QLabel(LABEL_FILTER, formWidget);
+        filterLabel->setVisible(false);
+        filterEdit = new QLineEdit(formWidget);
+        filterEdit->setObjectName("filterEdit");
+        filterEdit->setVisible(false);
+        hbxFilterLayout->addWidget(filterLabel);
+        hbxFilterLayout->addWidget(filterEdit);
+        hbxFilterLayout->addStretch(1);
+        vbxLayout->insertLayout(0, hbxFilterLayout);
+        connect(filterEdit, SIGNAL(returnPressed()), this, SLOT(cmdRequery()));
     }
     else
     {
@@ -90,6 +112,13 @@ void FormDocuments::cmdView()
 }
 
 
+void FormDocuments::cmdRequery()
+{
+    FormGrid::cmdRequery();
+    showItog();
+}
+
+
 void FormDocuments::show()
 {
     FormGrid::show();
@@ -100,4 +129,26 @@ void FormDocuments::show()
 void FormDocuments::showItog()
 {
         itogNumeric->setValue(parent->getSumValue(db->getObjectName("документы.сумма")));
+}
+
+
+void FormDocuments::showFilterEdit(bool show)
+{
+    if (filterLabel != nullptr)
+        filterLabel->setVisible(show);
+
+    if (filterEdit != nullptr)
+        filterEdit->setVisible(show);
+}
+
+
+QLineEdit* FormDocuments::getFilterEdit()
+{
+    return filterEdit;
+}
+
+
+QString FormDocuments::getFilter()
+{
+    return filterEdit->text();
 }

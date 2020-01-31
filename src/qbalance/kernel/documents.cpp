@@ -71,7 +71,7 @@ void Documents::postInitialize(int opNumber, QObject *parent)
     lUpdateable = db->getTopersProperties(operNumber, "updateable").toBool();
 
     scriptEngine = nullptr;
-    scriptEngineEnabled = false;
+//    scriptEngineEnabled = false;
     doSubmit = true;
     lPrintable = true;
     photoEnabled = false;
@@ -95,11 +95,6 @@ bool Documents::open()
         {
             currentDocument->setFormTitle(subFormTitle);
 //            scriptEngine = currentDocument->getScriptEngine();
-
-            reportScriptEngine = new DocumentScriptEngine(nullptr, this);
-            reportScriptEngine->setReportContext(&printValues);
-            reportScriptEngine->getReportContext()->setScriptEngine(reportScriptEngine);
-
             result = true;
         }
     }
@@ -219,15 +214,43 @@ void Documents::setCurrentDocument(int strNum)
 }
 
 
-void Documents::query(QString, bool)
+void Documents::query(QString defaultFilter, bool)
 {
-    Essence::query(QString("%1 >= '%2' AND %1 <= '%3' AND %4=0 AND %5='%6'").arg(db->getObjectNameCom("документы.дата"))
-                                                                                                       .arg(app->getBeginDate().toString(app->dateFormat()))
-                                                                                                       .arg(app->getEndDate().toString(app->dateFormat()))
-                                                                                                       .arg(db->getObjectNameCom("документы.авто"))
-                                                                                                       .arg(db->getObjectNameCom("документы.опер"))
-                                                                                                       .arg(QString::number(operNumber)));
+    QString resFilter = defaultFilter;
 
+    if (resFilter.size() > 0)
+        resFilter.append(" AND ");
+
+    QStringList paramList = form->getFilter().split(QRegExp("\\s+"));
+    {
+        foreach (QString param, paramList)
+        {
+            if (param.size() > 0)
+            {
+                param = "%" + param + "%";
+
+                if (resFilter.size() > 0)
+                    resFilter.append(" AND ");
+
+                resFilter.append(app->getDBFactory()->getILIKEexpression("КОММЕНТАРИЙ", "'" + param + "'"));
+            }
+        }
+    }
+
+    if (scriptEngine != nullptr)
+        resFilter = scriptEngine->getFilter(resFilter);
+
+    if (resFilter.size() > 0)
+        resFilter.append(" AND ");
+
+    resFilter.append(QString("%1 >= '%2' AND %1 <= '%3' AND %4=0 AND %5='%6'").arg(db->getObjectNameCom("документы.дата"))
+            .arg(app->getBeginDate().toString(app->dateFormat()))
+            .arg(app->getEndDate().toString(app->dateFormat()))
+            .arg(db->getObjectNameCom("документы.авто"))
+            .arg(db->getObjectNameCom("документы.опер"))
+            .arg(QString::number(operNumber)));
+
+    Essence::query(resFilter);
 }
 
 
@@ -750,3 +773,24 @@ QString Documents::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
     }
     return selectStatement;
 }
+
+
+void Documents::setScriptEngine()
+{
+    scriptEngine = new DocumentScriptEngine(this);
+}
+
+
+DocumentScriptEngine* Documents::getScriptEngine()
+{
+    return static_cast<DocumentScriptEngine*>(scriptEngine);
+}
+
+
+FormDocuments* Documents::getForm()
+{
+    return static_cast<FormDocuments*>(Essence::getForm());
+}
+
+
+

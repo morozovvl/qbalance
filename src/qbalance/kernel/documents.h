@@ -25,6 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "dictionary.h"
 
 class Document;
+class FormDocuments;
 
 struct ToperType;
 
@@ -69,6 +70,7 @@ public:
     Q_INVOKABLE virtual QVariant getValue(QString, int = -1);
     QString getAttrPrefix();
     Q_INVOKABLE virtual void  setOrderClause(QString = "");
+    Q_INVOKABLE FormDocuments* getForm();
     Q_INVOKABLE virtual void  setForm(QString = "");
     Q_INVOKABLE Document* getDocument();
     Q_INVOKABLE Document* getDocument(int);
@@ -80,6 +82,9 @@ public:
                                           QList<ToperType>*,
                                           QList<FieldType>* = nullptr,
                                           int * = nullptr);     // Генерирует текст SQL-запроса для табличной части документа операции oper
+
+    virtual void setScriptEngine();
+    DocumentScriptEngine* getScriptEngine();
 };
 
 #endif // DOCUMENTS_H
