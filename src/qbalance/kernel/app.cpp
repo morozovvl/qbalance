@@ -93,6 +93,7 @@ TApplication::TApplication(int & argc, char** argv)
     bankTerminal = nullptr;
     updates = nullptr;
     tcpServer = nullptr;
+    tcpClient = nullptr;
     messagesWindow = nullptr;
 
     driverFRisValid = false;
@@ -734,7 +735,10 @@ bool TApplication::initApplication()
                     readSettings();
 
                 tcpServer = new TcpServer(getConfigValue("REMOTE_PORT").toInt(), this);
-                tcpClient = new TcpClient(getConfigValue("REMOTE_HOST").toString(), getConfigValue("REMOTE_PORT").toInt(), this);
+                tcpClient = new TcpClient(getConfigValue("REMOTE_HOST").toString(),
+                                          getConfigValue("REMOTE_PORT").toInt(),
+                                          this);
+
                 timeOut(getConfigValue(FR_NET_DRIVER_TIMEOUT).toInt());                                  // Подеждем, пока произойдет соенинение с сервером приложения
 
                 db->clearLockedDocumentList();
@@ -764,7 +768,7 @@ bool TApplication::initApplication()
                     if (updatesCnt > 0)
                     {
 //                            if (showYesNo(QString(QObject::trUtf8("Найдено обновлений базы данных: %1. Применить их?")).arg(updatesCnt)) == QMessageBox::Yes)
-                            db->loadUpdates();
+                          db->loadUpdates();
                     }
                 }
 

@@ -126,14 +126,14 @@ int main(int argc, char *argv[])
                     }
                 }
             }
+            else
+            {
+                lResult = application.runScript(application.getScript());
+            }
+
             application.debug(0, "Program shutdown.\n");
             application.close();
         }
-//        else
-//        {
-//            lResult = application.runScript(application.getScript());
-//        }
-
         application.quit();
     }
     return lResult;
