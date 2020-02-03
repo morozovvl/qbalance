@@ -153,7 +153,7 @@ public:
 
 
 // Функции для работы с модулем GUI
-    Q_INVOKABLE FormGrid* getForm();
+    Q_INVOKABLE virtual FormGrid* getForm();
     Q_INVOKABLE virtual void cmdOk();                       // Обработка нажатий кнопок "Ok"
     Q_INVOKABLE virtual void cmdCancel();                   // и "Cancel"
     Q_INVOKABLE virtual bool isFormSelected();

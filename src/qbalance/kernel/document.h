@@ -51,7 +51,6 @@ private:
     int                             operNumber;
     int                             docId;
     int                             prv1;
-    int                             freePrv;            // Номер "свободной" проводки
     bool                            isSingleString;     // В документе должна присутствовать только одна строка (для платежных поручений, например)
     QList<QString>                  attrFields;         // Имена полей атрибутов документа, которые могут добавляться при добавлении новой строки
     QString                         selectStatement;
@@ -65,7 +64,8 @@ private:
 
     bool showNextDict();
     void showItog();
-    int findFreePrv();              // Ищет строку, в которой отображена "свободная" проводка, т.к. она может быть и не в первой строке
+    int     findFreePrv(int);              // Ищет строку, в которой отображена "свободная" проводка, т.к. она может быть и не в первой строке
+    bool    isFreePrv(int);
     bool                            checkConstDicts();
 
 protected:
@@ -134,7 +134,6 @@ public:
     void saveVariablesToDB();
     void restoreVariablesFromDB();
     Q_INVOKABLE virtual void setEnabled(bool);
-    Q_INVOKABLE FormDocument* getForm();
     Q_INVOKABLE virtual void setForm(QString = "");
     Q_INVOKABLE virtual void updateCurrentRow(int = 0);
     Q_INVOKABLE void loadDocument();        // Загружает документ перед тем, как его показать

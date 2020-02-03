@@ -621,7 +621,7 @@ void Dictionary::setConst(bool isConst)
     lIsConst = isConst;
     if (dictionaries != nullptr && dictionaries->getDocument() != nullptr)      // Если справочник является локальным к документу
     {                                                               // То на форме документа мы должны его переместить в строку параметров документа
-        FormDocument* docForm = dictionaries->getDocument()->getForm();
+        FormDocument* docForm = static_cast<FormDocument*>(dictionaries->getDocument()->getForm());
         if (docForm != nullptr)
         {
             DocParameters* docPar = docForm->getDocParameters();

@@ -79,7 +79,7 @@ void FormDocuments::createForm(QString fileName, QWidget* pwgt)
         filterEdit->setVisible(false);
         hbxFilterLayout->addWidget(filterLabel);
         hbxFilterLayout->addWidget(filterEdit);
-        hbxFilterLayout->addStretch(1);
+//        hbxFilterLayout->addStretch(1);
         vbxLayout->insertLayout(0, hbxFilterLayout);
         connect(filterEdit, SIGNAL(returnPressed()), this, SLOT(cmdRequery()));
     }

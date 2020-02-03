@@ -786,11 +786,3 @@ DocumentScriptEngine* Documents::getScriptEngine()
     return static_cast<DocumentScriptEngine*>(scriptEngine);
 }
 
-
-FormDocuments* Documents::getForm()
-{
-    return static_cast<FormDocuments*>(Essence::getForm());
-}
-
-
-

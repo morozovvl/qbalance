@@ -76,16 +76,6 @@ void Document::postInitialize(int oper, Documents* par)
     // Проверим, должна ли быть в документе только одна строка
     isSingleString = topersList->at(0).isSingleString;
 
-    // Проверим, есть ли в документе "свободная" проводка
-    for (int i = 0; i < topersList->count(); i++)
-    {
-        if (topersList->at(i).freePrv)
-        {
-            freePrv = topersList->at(i).number;
-            break;
-        }
-    }
-
     // Проверим есть ли количественный учет
     for (int i = 0; i < topersList->count(); i++)
     {
@@ -102,7 +92,6 @@ void Document::postInitialize(int oper, Documents* par)
     addingFromQuery = false;
     cardReaderEnabled = true;
 
-    freePrv = 0;
     localDictsOpened = false;
     docModified = false;
     doSubmit = false;                 // По умолчанию не будем обновлять записи в БД сразу, чтобы собрать обновления в транзакцию
@@ -191,12 +180,6 @@ void Document::setDocId(int doc)
 bool Document::getIsSingleString()
 {
     return isSingleString;
-}
-
-
-FormDocument* Document::getForm()
-{
-    return static_cast<FormDocument*>(Essence::getForm());
 }
 
 
@@ -524,9 +507,9 @@ void Document::setValue(QString name, QVariant value, int row)
     {
         int __pos = name.indexOf("__");
         int operNum = name.mid(1, __pos - 1).toInt();
-        if (operNum == freePrv)     // Если мы хотим сохранить значение в свободной проводке
+        if (isFreePrv(operNum))     // Если мы хотим сохранить значение в свободной проводке
         {
-            Essence::setValue(name, value, (row < 0 ? findFreePrv() : row));
+            Essence::setValue(name, value, (row < 0 ? findFreePrv(operNum) : row));
             return;
         }
     }
@@ -547,9 +530,9 @@ QVariant Document::getValue(QString name, int row)
     {
         int __pos = name.indexOf("__");
         int operNum = name.mid(1, __pos - 1).toInt();
-        if (operNum == freePrv)     // Если мы хотим получить значение из свободной проводки
+        if (isFreePrv(operNum))     // Если мы хотим получить значение из свободной проводки
         {
-            result = Essence::getValue(name, (row < 0 ? findFreePrv() : row));
+            result = Essence::getValue(name, (row < 0 ? findFreePrv(operNum) : row));
             return result;
         }
     }
@@ -564,15 +547,30 @@ QVariant Document::getValue(int op, QString name, int row)
 }
 
 
-int Document::findFreePrv()
+int Document::findFreePrv(int op)
 {
-    QString idFieldName = QString("P%1__%2").arg(freePrv).arg(db->getObjectName("проводки.код"));
+    QString idFieldName = QString("P%1__%2").arg(op).arg(db->getObjectName("проводки.код"));
     for (int row = 0; row < tableModel->rowCount(); row++)
     {
         if (Essence::getValue(idFieldName, row).toInt() > 0)
             return row;
     }
     return 0;
+}
+
+
+bool Document::isFreePrv(int op)
+{
+    bool result = false;
+    for (int i = 0; i < topersList->count(); i++)
+    {
+        if (topersList->at(i).number == op && topersList->at(i).freePrv)
+        {
+            result = true;
+            break;
+        }
+    }
+    return result;
 }
 
 
@@ -1247,8 +1245,8 @@ void Document::setDate(QString date)
 {
     QString field = db->getObjectName("документы.дата");
     parent->setValue(field, QVariant(date));
-    getForm()->getDateEdit()->setDate(parent->getValue(field).toDate());
-    getForm()->getDateEdit()->repaint();
+    static_cast<FormDocument*>(getForm())->getDateEdit()->setDate(parent->getValue(field).toDate());
+    static_cast<FormDocument*>(getForm())->getDateEdit()->repaint();
 }
 
 
@@ -1263,8 +1261,8 @@ void Document::setNumber(QString number)
 {
     QString field = db->getObjectName("документы.номер");
     parent->setValue(field, QVariant(number));
-    getForm()->getNumberEdit()->repaint();
-    getForm()->getNumberEdit()->setText(getParent()->getValue(field).toString());
+    static_cast<FormDocument*>(getForm())->getNumberEdit()->repaint();
+    static_cast<FormDocument*>(getForm())->getNumberEdit()->setText(getParent()->getValue(field).toString());
 
 }
 
@@ -1278,7 +1276,7 @@ QString Document::getNumber()
 
 void Document::showParameterText(QString dictName)
 {
-    getForm()->showParameterText(dictName);
+    static_cast<FormDocument*>(getForm())->showParameterText(dictName);
 }
 
 
@@ -1297,8 +1295,13 @@ int Document::appendDocStrings(int rowCount)
 
 bool Document::saveChanges()
 {
+    bool result = false;
+
     calcItog();
-    return Essence::saveChanges();
+    result = Essence::saveChanges();
+    if (result)
+        parent->updateCurrentRow();
+    return result;
 }
 
 

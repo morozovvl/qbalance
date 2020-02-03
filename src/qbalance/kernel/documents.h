@@ -70,7 +70,6 @@ public:
     Q_INVOKABLE virtual QVariant getValue(QString, int = -1);
     QString getAttrPrefix();
     Q_INVOKABLE virtual void  setOrderClause(QString = "");
-    Q_INVOKABLE FormDocuments* getForm();
     Q_INVOKABLE virtual void  setForm(QString = "");
     Q_INVOKABLE Document* getDocument();
     Q_INVOKABLE Document* getDocument(int);
