@@ -30,7 +30,7 @@ Q_DECLARE_METATYPE(SqlFieldClass*)
 SqlFieldClass::SqlFieldClass(QScriptEngine* engine)
      : QObject(engine), QScriptClass(engine)
 {
-    proto = engine->newQObject(new SqlFieldPrototype(this));
+    proto = engine->newQObject(new SqlFieldPrototype(this), QScriptEngine::ScriptOwnership);
     proto.setPrototype(engine->globalObject().property("Object").property("prototype"));
     ctor = engine->newFunction(construct, proto);
     ctor.setData(engine->toScriptValue(this));

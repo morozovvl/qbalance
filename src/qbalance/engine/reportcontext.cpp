@@ -37,6 +37,11 @@ ReportContext::ReportContext(QHash<QString, QVariant>* d, QObject *parent) :
 }
 
 
+ReportContext::~ReportContext()
+{
+}
+
+
 int ReportContext::count()
 {
     return data->count();

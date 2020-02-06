@@ -33,7 +33,8 @@ class ReportContext : public QObject
 {
     Q_OBJECT
 public:
-    explicit ReportContext(QHash<QString, QVariant>*, QObject *parent = nullptr);
+    ReportContext(QHash<QString, QVariant>*, QObject *parent = nullptr);
+    ~ReportContext();
     Q_INVOKABLE int count();
     Q_INVOKABLE virtual QVariant getValue(QString);
     Q_INVOKABLE virtual QVariant getValue(QString, int);

@@ -33,7 +33,7 @@ Updates::Updates(TApplication* a, QObject *parent): QObject(parent)
     programUpdateXMLFile = "updates.xml";
     updatesDBPath = "updates_db/" + app->getDBFactory()->getDatabaseName();
     dbUpdateXMLFile = "updates_db.xml";
-    nwmanager = new QNetworkAccessManager();
+    nwmanager = new QNetworkAccessManager(this);
 
     // Для правильного обновления программы необходимо различать операционную систему и ее битность
 #if defined(Q_OS_LINUX)

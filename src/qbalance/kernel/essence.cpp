@@ -1369,9 +1369,13 @@ bool Essence::barCodeReaded(QString barCode)
 
 void Essence::cardCodeReaded(QString cardCode)
 {
-    if (scriptEngineEnabled && scriptEngine != nullptr && enabled && cardReaderEnabled)
+    if (scriptEngineEnabled && scriptEngine != nullptr && enabled && cardReaderEnabled && form != nullptr)
     {
-        scriptEngine->eventCardCodeReaded(cardCode);
+        Dialog* frm = form->getFormWidget();
+        if (frm != nullptr && frm->isVisible() && frm->isActiveWindow())
+        {
+            scriptEngine->eventCardCodeReaded(cardCode);
+        }
     }
 }
 

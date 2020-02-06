@@ -65,6 +65,16 @@ DocumentScriptEngine::DocumentScriptEngine(QHash<QString, QVariant>* context, Es
 }
 
 
+DocumentScriptEngine::~DocumentScriptEngine()
+{
+    if (reportContext != nullptr)
+    {
+        delete reportContext;
+        reportContext = nullptr;
+    }
+}
+
+
 void DocumentScriptEngine::setReportContext(QHash<QString, QVariant>* context)
 {
     reportContext = new ReportContext(context);
@@ -91,7 +101,7 @@ void DocumentScriptEngine::loadScriptObjects()
     // инициализируем глобальные объекты скрипта печати
     if (reportContext != nullptr)
     {
-        globalObject().setProperty("reportContext", newQObject(reportContext));
+        globalObject().setProperty("reportContext", newQObject(reportContext, QScriptEngine::ScriptOwnership));
     }
 }
 

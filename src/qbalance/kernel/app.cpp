@@ -1221,7 +1221,7 @@ QObject* TApplication::createPlugin(QString fileName)
 #endif
     if (QDir().exists(pluginFile))
     {
-        QPluginLoader loader(pluginFile);
+        QPluginLoader loader(pluginFile, this);
         loader.setLoadHints(QLibrary::ResolveAllSymbolsHint);
         loader.load();
         if (loader.isLoaded())

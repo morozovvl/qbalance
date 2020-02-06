@@ -30,7 +30,7 @@ Q_DECLARE_METATYPE(SqlRecordClass*)
 SqlRecordClass::SqlRecordClass(QScriptEngine *engine, SqlFieldClass* fieldClass)
      : QObject(engine), QScriptClass(engine)
 {
-    proto = engine->newQObject(new SqlRecordPrototype(this, fieldClass));
+    proto = engine->newQObject(new SqlRecordPrototype(this, fieldClass), QScriptEngine::ScriptOwnership);
     proto.setPrototype(engine->globalObject().property("Object").property("prototype"));
     ctor = engine->newFunction(construct, proto);
     ctor.setData(engine->toScriptValue(this));

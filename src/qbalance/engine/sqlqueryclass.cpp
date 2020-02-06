@@ -31,7 +31,7 @@ Q_DECLARE_METATYPE(SqlQueryClass*)
 SqlQueryClass::SqlQueryClass(QScriptEngine* engine, SqlRecordClass* recordClass)
      : QObject(engine), QScriptClass(engine)
 {
-    proto = engine->newQObject(new SqlQueryPrototype(this, recordClass));
+    proto = engine->newQObject(new SqlQueryPrototype(this, recordClass), QScriptEngine::ScriptOwnership);
     proto.setPrototype(engine->globalObject().property("Object").property("prototype"));
     ctor = engine->newFunction(construct, proto);
     ctor.setData(engine->toScriptValue(this));
