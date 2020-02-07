@@ -51,12 +51,15 @@ MySqlRelationalTableModel::MySqlRelationalTableModel(QString tName, Table* par) 
     selectCommand = "";
     testSelect = false;
     fullDebugInfo = false;
+    updateInfo = new QHash<int, UpdateInfoStruct>;
 }
 
 
 MySqlRelationalTableModel::~MySqlRelationalTableModel()
 {
-    updateInfo.clear();
+    updateInfo->clear();
+    delete updateInfo;
+    updateInfo = nullptr;
 }
 
 
@@ -257,7 +260,7 @@ QString MySqlRelationalTableModel::escapedRelationField(const QString &tableName
 
 void MySqlRelationalTableModel::setUpdateInfo(QString originField, QString table, QString field, QString type, int len, int prec, int fieldColumn, int keyFieldColumn)
 {
-    if (!updateInfo.contains(fieldColumn) && field.toUpper() != "FTS")
+    if (!updateInfo->contains(fieldColumn) && field.toUpper() != "FTS")
     {
         UpdateInfoStruct info;
         info.originField = originField;
@@ -267,7 +270,7 @@ void MySqlRelationalTableModel::setUpdateInfo(QString originField, QString table
         info.type = type;
         info.length = len;
         info.precision = prec;
-        updateInfo.insert(fieldColumn, info);
+        updateInfo->insert(fieldColumn, info);
     }
 }
 
@@ -278,26 +281,26 @@ bool MySqlRelationalTableModel::prepareCommand(const QModelIndex& index)
     {
         int columnIndex = index.column();
         int rowIndex = index.row();
-        if (updateInfo.contains(columnIndex))
+        if (updateInfo->contains(columnIndex))
         {
             QString value;
-            QString fieldName = updateInfo.value(columnIndex).originField;
+            QString fieldName = updateInfo->value(columnIndex).originField;
             QVariant recValue = static_cast<Essence*>(parent)->getValue(fieldName, rowIndex);
             // Возьмем исходное значение из модели, которое необходимо сохранить в базу
             // Определим его тип для того, чтобы правильно подготовить текст команды сохранения для сервера
-            QString type = updateInfo.value(columnIndex).type.toUpper();
+            QString type = updateInfo->value(columnIndex).type.toUpper();
 
-            value = prepareValueToWrite(type, recValue, updateInfo.value(columnIndex).precision);
+            value = prepareValueToWrite(type, recValue, updateInfo->value(columnIndex).precision);
 
             // Сгенерируем для сервера команду сохранения значения из модели
             if (value.size() > 0)
             {
-                int id = record(rowIndex).value(updateInfo.value(columnIndex).keyFieldColumn).toInt();
+                int id = record(rowIndex).value(updateInfo->value(columnIndex).keyFieldColumn).toInt();
                 if (id > 0)
                 {
                     UpdateValues values;
-                    values.table = updateInfo.value(columnIndex).table;
-                    values.field = updateInfo.value(columnIndex).field;
+                    values.table = updateInfo->value(columnIndex).table;
+                    values.field = updateInfo->value(columnIndex).field;
                     values.value = value;
                     values.recId = id;
                     db->appendCommand(values);

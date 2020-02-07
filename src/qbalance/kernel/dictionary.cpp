@@ -54,6 +54,11 @@ Dictionary::Dictionary(QObject *parent)
 
 Dictionary::~Dictionary()
 {
+    if (tableModel != nullptr)
+    {
+        delete tableModel;
+        tableModel = nullptr;
+    }
 }
 
 

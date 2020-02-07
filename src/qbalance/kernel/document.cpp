@@ -49,6 +49,11 @@ Document::Document(int, Documents*): Dictionary()
 
 Document::~Document()
 {
+    if (tableModel != nullptr)
+    {
+        delete tableModel;
+        tableModel = nullptr;
+    }
 }
 
 

@@ -250,7 +250,7 @@ QPushButton* Form::addButton(QString objectName)
 
 QPushButton* Form::insertButton(QString objectName, int order)
 {
-    QPushButton* button = new QPushButton();
+    QPushButton* button = new QPushButton(getFormWidget());
     button->setObjectName(objectName);
     cmdButtonLayout->insertWidget(order, button);
     return button;

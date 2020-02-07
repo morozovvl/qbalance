@@ -334,11 +334,11 @@ Q_DECLARE_METATYPE(DriverFR*)
 QScriptValue DriverFRConstructor(QScriptContext *, QScriptEngine *engine) {
 //    DriverFR *object = new DriverFR(TApplication::exemplar());
     DriverFR *object = static_cast<DriverFR*>(TApplication::exemplar()->createPlugin("DriverFR"));
-    return engine->newQObject(object, QScriptEngine::ScriptOwnership);
+    return engine->newQObject(object/*, QScriptEngine::ScriptOwnership*/);
 }
 
 QScriptValue DriverFRToScriptValue(QScriptEngine *engine, DriverFR* const &in) {
-    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
+    return engine->newQObject(in/*, QScriptEngine::ScriptOwnership*/);
 }
 
 void DriverFRFromScriptValue(const QScriptValue &object, DriverFR* &out) {
@@ -351,11 +351,11 @@ Q_DECLARE_METATYPE(BankTerminal*)
 
 QScriptValue BankTerminalConstructor(QScriptContext *, QScriptEngine *engine) {
     BankTerminal *object = static_cast<BankTerminal*>(TApplication::exemplar()->createPlugin(BANK_TERMINAL_PLUGIN_NAME));
-    return engine->newQObject(object, QScriptEngine::ScriptOwnership);
+    return engine->newQObject(object/*, QScriptEngine::ScriptOwnership*/);
 }
 
 QScriptValue BankTerminalToScriptValue(QScriptEngine *engine, BankTerminal* const &in) {
-    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
+    return engine->newQObject(in/*, QScriptEngine::ScriptOwnership*/);
 }
 
 void BankTerminalFromScriptValue(const QScriptValue &object, BankTerminal* &out) {
@@ -368,11 +368,11 @@ Q_DECLARE_METATYPE(EventLoop*)
 
 QScriptValue EventLoopConstructor(QScriptContext *, QScriptEngine *engine) {
      EventLoop *object = new EventLoop();
-     return engine->newQObject(object, QScriptEngine::ScriptOwnership);
+     return engine->newQObject(object/*, QScriptEngine::ScriptOwnership*/);
 }
 
 QScriptValue EventLoopToScriptValue(QScriptEngine *engine, EventLoop* const &in) {
-    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
+    return engine->newQObject(in/*, QScriptEngine::ScriptOwnership*/);
 }
 
 void EventLoopFromScriptValue(const QScriptValue &object, EventLoop* &out) {
@@ -385,11 +385,11 @@ Q_DECLARE_METATYPE(Picture*)
 
 QScriptValue PictureConstructor(QScriptContext *, QScriptEngine *engine) {
      Picture* object = new Picture();
-     return engine->newQObject(object, QScriptEngine::ScriptOwnership);
+     return engine->newQObject(object/*, QScriptEngine::ScriptOwnership*/);
 }
 
 QScriptValue PictureToScriptValue(QScriptEngine *engine, Picture* const &in) {
-    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
+    return engine->newQObject(in/*, QScriptEngine::ScriptOwnership*/);
 }
 
 void PictureFromScriptValue(const QScriptValue &object, Picture* &out) {
@@ -406,11 +406,11 @@ QScriptValue DictionaryConstructor(QScriptContext *context, QScriptEngine *engin
         tableName = context->argument(0).toString();
 
     Dictionary* dict = Dictionary::create<Dictionary>(tableName);
-    return engine->newQObject(dict, QScriptEngine::ScriptOwnership);
+    return engine->newQObject(dict/*, QScriptEngine::ScriptOwnership*/);
 }
 
 QScriptValue DictionaryToScriptValue(QScriptEngine *engine, Dictionary* const &in) {
-    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
+    return engine->newQObject(in/*, QScriptEngine::ScriptOwnership*/);
 }
 
 void DictionaryFromScriptValue(const QScriptValue &object, Dictionary* &out) {
@@ -422,7 +422,7 @@ void DictionaryFromScriptValue(const QScriptValue &object, Dictionary* &out) {
 Q_DECLARE_METATYPE(ReportContext*)
 
 QScriptValue ReportContextToScriptValue(QScriptEngine *engine, ReportContext* const &in) {
-    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
+    return engine->newQObject(in/*, QScriptEngine::ScriptOwnership*/);
 }
 
 void ReportContextFromScriptValue(const QScriptValue &object, ReportContext* &out) {
@@ -435,11 +435,11 @@ Q_DECLARE_METATYPE(Saldo*)
 
 QScriptValue SaldoConstructor(QScriptContext *context, QScriptEngine *engine) {
      Saldo* object = Saldo::create<Saldo>(context->argument(0).toString(), context->argument(1).toString());
-     return engine->newQObject(object, QScriptEngine::ScriptOwnership);
+     return engine->newQObject(object/*, QScriptEngine::ScriptOwnership*/);
 }
 
 QScriptValue SaldoToScriptValue(QScriptEngine *engine, Saldo* const &in) {
-    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
+    return engine->newQObject(in/*, QScriptEngine::ScriptOwnership*/);
 }
 
 void SaldoFromScriptValue(const QScriptValue &object, Saldo* &out) {
@@ -451,11 +451,11 @@ Q_DECLARE_METATYPE(Dictionaries*)
 
 QScriptValue DictionariesConstructor(QScriptContext*, QScriptEngine *engine) {
      Dictionaries* dicts = Dictionaries::create<Dictionaries>();
-     return engine->newQObject(dicts, QScriptEngine::ScriptOwnership);
+     return engine->newQObject(dicts/*, QScriptEngine::ScriptOwnership*/);
 }
 
 QScriptValue DictionariesToScriptValue(QScriptEngine *engine, Dictionaries* const &in) {
-    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
+    return engine->newQObject(in/*, QScriptEngine::ScriptOwnership*/);
 }
 
 void DictionariesFromScriptValue(const QScriptValue &object, Dictionaries* &out) {
@@ -468,7 +468,7 @@ Q_DECLARE_METATYPE(Documents*)
 
 QScriptValue DocumentsConstructor(QScriptContext *context, QScriptEngine *engine) {
      Documents* doc = Documents::create<Documents>(context->argument(0).toInteger());
-     return engine->newQObject(doc, QScriptEngine::ScriptOwnership);
+     return engine->newQObject(doc/*, QScriptEngine::ScriptOwnership*/);
 }
 
 
@@ -490,11 +490,11 @@ QScriptValue DocumentConstructor(QScriptContext *context, QScriptEngine *engine)
     DocumentsFromScriptValue(context->argument(1), docs);
     Document *object = Document::create<Document>(context->argument(0).toInteger(), docs);
 
-    return engine->newQObject(object, QScriptEngine::ScriptOwnership);
+    return engine->newQObject(object/*, QScriptEngine::ScriptOwnership*/);
 }
 
 QScriptValue DocumentToScriptValue(QScriptEngine *engine, Document* const &in) {
-    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
+    return engine->newQObject(in/*, QScriptEngine::ScriptOwnership*/);
 }
 
 void DocumentFromScriptValue(const QScriptValue &object, Document* &out) {
@@ -505,11 +505,11 @@ void DocumentFromScriptValue(const QScriptValue &object, Document* &out) {
 // класс Dialog
 QScriptValue qDialogConstructor(QScriptContext *, QScriptEngine *engine) {
      Dialog *object = new Dialog();
-     return engine->newQObject(object, QScriptEngine::ScriptOwnership);
+     return engine->newQObject(object/*, QScriptEngine::ScriptOwnership*/);
 }
 
 QScriptValue qDialogToScriptValue(QScriptEngine *engine, Dialog* const &in) {
-    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
+    return engine->newQObject(in/*, QScriptEngine::ScriptOwnership*/);
 }
 
 void qDialogFromScriptValue(const QScriptValue &object, Dialog* &out) {
@@ -518,7 +518,7 @@ void qDialogFromScriptValue(const QScriptValue &object, Dialog* &out) {
 
 // класс QLineEdit
 QScriptValue qLineEditToScriptValue(QScriptEngine *engine, QLineEdit* const &in) {
-    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
+    return engine->newQObject(in/*, QScriptEngine::ScriptOwnership*/);
 }
 
 void qLineEditFromScriptValue(const QScriptValue &object, QLineEdit* &out) {
@@ -532,11 +532,11 @@ QScriptValue FormConstructor(QScriptContext *context, QScriptEngine *engine) {
      Form *object = new Form();
      object->open(TApplication::exemplar()->getMainWindow()->centralWidget(), nullptr, context->argument(0).toString());
      object->setButtonsSignals();
-     return engine->newQObject(object, QScriptEngine::ScriptOwnership);
+     return engine->newQObject(object/*, QScriptEngine::ScriptOwnership*/);
 }
 
 QScriptValue FormToScriptValue(QScriptEngine *engine, Form* const &in) {
-    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
+    return engine->newQObject(in/*, QScriptEngine::ScriptOwnership*/);
 }
 
 void FormFromScriptValue(const QScriptValue &object, Form* &out) {
@@ -551,11 +551,11 @@ QScriptValue FormGridConstructor(QScriptContext *context, QScriptEngine *engine)
      FormGrid *object = new FormGrid();
      object->open(TApplication::exemplar()->getMainWindow()->centralWidget(), nullptr, context->argument(0).toString());
      object->setButtonsSignals();
-     return engine->newQObject(object, QScriptEngine::ScriptOwnership);
+     return engine->newQObject(object/*, QScriptEngine::ScriptOwnership*/);
 }
 
 QScriptValue FormGridToScriptValue(QScriptEngine *engine, FormGrid* const &in) {
-    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
+    return engine->newQObject(in/*, QScriptEngine::ScriptOwnership*/);
 }
 
 void FormGridFromScriptValue(const QScriptValue &object, FormGrid* &out) {
@@ -570,11 +570,11 @@ QScriptValue FormGridSearchConstructor(QScriptContext *context, QScriptEngine *e
      FormGridSearch *object = new FormGridSearch();
      object->open(TApplication::exemplar()->getMainWindow()->centralWidget(), nullptr, context->argument(0).toString());
      object->setButtonsSignals();
-     return engine->newQObject(object, QScriptEngine::ScriptOwnership);
+     return engine->newQObject(object/*, QScriptEngine::ScriptOwnership*/);
 }
 
 QScriptValue FormGridSearchToScriptValue(QScriptEngine *engine, FormGridSearch* const &in) {
-    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
+    return engine->newQObject(in/*, QScriptEngine::ScriptOwnership*/);
 }
 
 void FormGridSearchFromScriptValue(const QScriptValue &object, FormGridSearch* &out) {
@@ -587,7 +587,7 @@ Q_DECLARE_METATYPE(TableView*)
 
 
 QScriptValue TableViewToScriptValue(QScriptEngine *engine, TableView* const &in) {
-    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
+    return engine->newQObject(in/*, QScriptEngine::ScriptOwnership*/);
 }
 
 void TableViewFromScriptValue(const QScriptValue &object, TableView* &out) {
@@ -600,11 +600,11 @@ Q_DECLARE_METATYPE(OOXMLEngine*)
 
 QScriptValue OOXMLEngineConstructor(QScriptContext *, QScriptEngine *engine) {
      OOXMLEngine *object = new OOXMLEngine();
-     return engine->newQObject(object, QScriptEngine::ScriptOwnership);
+     return engine->newQObject(object/*, QScriptEngine::ScriptOwnership*/);
 }
 
 QScriptValue OOXMLEngineToScriptValue(QScriptEngine *engine, OOXMLEngine* const &in) {
-    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
+    return engine->newQObject(in/*, QScriptEngine::ScriptOwnership*/);
 }
 
 void OOXMLEngineFromScriptValue(const QScriptValue &object, OOXMLEngine* &out) {
@@ -617,11 +617,11 @@ Q_DECLARE_METATYPE(MyProgressDialog*)
 
 QScriptValue MyProgressDialogConstructor(QScriptContext* context, QScriptEngine *engine) {
      MyProgressDialog *object = new MyProgressDialog(context->argument(0).toString(), TApplication::exemplar()->getMainWindow()->centralWidget());
-     return engine->newQObject(object, QScriptEngine::ScriptOwnership);
+     return engine->newQObject(object/*, QScriptEngine::ScriptOwnership*/);
 }
 
 QScriptValue MyProgressDialogToScriptValue(QScriptEngine *engine, MyProgressDialog* const &in) {
-    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
+    return engine->newQObject(in/*, QScriptEngine::ScriptOwnership*/);
 }
 
 void MyProgressDialogFromScriptValue(const QScriptValue &object, MyProgressDialog* &out) {
@@ -639,14 +639,14 @@ QScriptValue CalendarFormConstructor(QScriptContext *, QScriptEngine *engine)
      {
         object->setBeginDate(TApplication::exemplar()->getBeginDate());
         object->setEndDate(TApplication::exemplar()->getEndDate());
-        return engine->newQObject(object, QScriptEngine::ScriptOwnership);
+        return engine->newQObject(object/*, QScriptEngine::ScriptOwnership*/);
      }
      return QScriptValue();
 }
 
 QScriptValue CalendarFormToScriptValue(QScriptEngine *engine, CalendarForm* const &in)
 {
-    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
+    return engine->newQObject(in/*, QScriptEngine::ScriptOwnership*/);
 }
 
 void CalendarFormFromScriptValue(const QScriptValue &object, CalendarForm* &out)
@@ -660,11 +660,11 @@ Q_DECLARE_METATYPE(QPushButton*)
 
 QScriptValue QPushButtonConstructor(QScriptContext *, QScriptEngine *engine) {
      QPushButton* object = new QPushButton();
-     return engine->newQObject(object, QScriptEngine::ScriptOwnership);
+     return engine->newQObject(object/*, QScriptEngine::ScriptOwnership*/);
 }
 
 QScriptValue QPushButtonToScriptValue(QScriptEngine *engine, QPushButton* const &in) {
-    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
+    return engine->newQObject(in/*, QScriptEngine::ScriptOwnership*/);
 }
 
 void QPushButtonFromScriptValue(const QScriptValue &object, QPushButton* &out) {
@@ -698,13 +698,13 @@ QScriptValue QFileDialogConstructor(QScriptContext *context, QScriptEngine *engi
     {
         object = new QFileDialog(TApplication::exemplar()->getMainWindow()->centralWidget(), Qt::SubWindow);
     }
-    return engine->newQObject(object, QScriptEngine::ScriptOwnership);
+    return engine->newQObject(object/*, QScriptEngine::ScriptOwnership*/);
 }
 
 
 QScriptValue QFileDialogToScriptValue(QScriptEngine *engine, QFileDialog* const &in)
 {
-    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
+    return engine->newQObject(in/*, QScriptEngine::ScriptOwnership*/);
 }
 
 void QFileDialogFromScriptValue(const QScriptValue &object, QFileDialog* &out)
@@ -835,7 +835,7 @@ void ScriptEngine::loadScriptObjects()
     // Объявим классы для работы с пользовательскими формами
     qScriptRegisterMetaType(this, DriverFRToScriptValue, DriverFRFromScriptValue);
     globalObject().setProperty("DriverFR", newQMetaObject(&QObject::staticMetaObject, newFunction(DriverFRConstructor)));
-//    globalObject().setProperty("DriverFR", newQObject(app->getDrvFR(), QScriptEngine::ScriptOwnership));
+//    globalObject().setProperty("DriverFR", newQObject(app->getDrvFR()/*, QScriptEngine::ScriptOwnership*/));
     qScriptRegisterMetaType(this, BankTerminalToScriptValue, BankTerminalFromScriptValue);
     globalObject().setProperty("BankTerminal", newQMetaObject(&QObject::staticMetaObject, newFunction(BankTerminalConstructor)));
     qScriptRegisterMetaType(this, EventLoopToScriptValue, EventLoopFromScriptValue);
@@ -884,19 +884,19 @@ void ScriptEngine::loadScriptObjects()
     // Объявим глобальные переменные и объекты
     if (parent != nullptr)
     {
-        globalObject().setProperty("form", newQObject((static_cast<Document*>(getParent()))->getForm(), QScriptEngine::ScriptOwnership));
-        globalObject().setProperty("table", newQObject(getParent(), QScriptEngine::ScriptOwnership));
+        globalObject().setProperty("form", newQObject((static_cast<Document*>(getParent()))->getForm()/*, QScriptEngine::ScriptOwnership*/));
+        globalObject().setProperty("table", newQObject(getParent()/*, QScriptEngine::ScriptOwnership*/));
     }
     else
     {
-        globalObject().setProperty("form", newQObject(app->getMainWindow(), QScriptEngine::ScriptOwnership));
+        globalObject().setProperty("form", newQObject(app->getMainWindow()/*, QScriptEngine::ScriptOwnership*/));
         globalObject().setProperty("table", 0);
     }
     globalObject().setProperty("isDocumentScript", false);   // скрипт выполняется в документе или в приложении
     globalObject().setProperty("scriptResult", true);   // результат работы скрипта
     globalObject().setProperty("errorMessage", errorMessage);   // текст с описанием ошибки работы скрипта
-    globalObject().setProperty("db", newQObject(app->getDBFactory(), QScriptEngine::ScriptOwnership));
-    globalObject().setProperty("app", newQObject(app, QScriptEngine::ScriptOwnership));
+    globalObject().setProperty("db", newQObject(app->getDBFactory()/*, QScriptEngine::ScriptOwnership*/));
+    globalObject().setProperty("app", newQObject(app/*, QScriptEngine::ScriptOwnership*/));
     globalObject().setProperty("getCurrentFieldName", newFunction(getCurrentFieldName));
     globalObject().setProperty("getRowCount", newFunction(getRowCount));
     globalObject().setProperty("getDictionary", newFunction(getDictionary));
@@ -913,10 +913,10 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("DateString", newFunction(DateString));
 
     if (document != nullptr)
-        globalObject().setProperty("document", newQObject(document, QScriptEngine::ScriptOwnership));
+        globalObject().setProperty("document", newQObject(document/*, QScriptEngine::ScriptOwnership*/));
 
     if (documents != nullptr)
-        globalObject().setProperty("documents", newQObject(documents, QScriptEngine::ScriptOwnership));
+        globalObject().setProperty("documents", newQObject(documents/*, QScriptEngine::ScriptOwnership*/));
 
     foreach (const QString &ext, availableExtensions())
     {
@@ -979,7 +979,7 @@ void ScriptEngine::eventInitForm(Form* form)
 {
     QString eventName = "EventInitForm";
     QScriptValueList args;
-    args << newQObject(static_cast<FormGrid*>(form), QScriptEngine::ScriptOwnership);
+    args << newQObject(static_cast<FormGrid*>(form)/*, QScriptEngine::ScriptOwnership*/);
     scriptCall(eventName, currentContext()->thisObject(), args);
 }
 
@@ -988,7 +988,7 @@ void ScriptEngine::eventBeforeShowForm(Form* form)
 {
     QString eventName = "EventBeforeShowForm";
     QScriptValueList args;
-    args << newQObject(static_cast<FormGrid*>(form), QScriptEngine::ScriptOwnership);
+    args << newQObject(static_cast<FormGrid*>(form)/*, QScriptEngine::ScriptOwnership*/);
     scriptCall(eventName, currentContext()->thisObject(), args);
 }
 
@@ -997,7 +997,7 @@ void ScriptEngine::eventAfterShowForm(Form* form)
 {
     QString eventName = "EventAfterShowForm";
     QScriptValueList args;
-    args << newQObject(static_cast<FormGrid*>(form), QScriptEngine::ScriptOwnership);
+    args << newQObject(static_cast<FormGrid*>(form)/*, QScriptEngine::ScriptOwnership*/);
     scriptCall(eventName, currentContext()->thisObject(), args);
 }
 
@@ -1009,7 +1009,7 @@ bool ScriptEngine::eventBeforeHideForm(Form* form)
     QScriptValue res;
     QString eventName = "EventBeforeHideForm";
     QScriptValueList args;
-    args << newQObject(static_cast<FormGrid*>(form), QScriptEngine::ScriptOwnership);
+    args << newQObject(static_cast<FormGrid*>(form)/*, QScriptEngine::ScriptOwnership*/);
     res = scriptCall(eventName, currentContext()->thisObject(), args);
     if (res.toString() != "undefined")
         result = res.toBool();
@@ -1021,7 +1021,7 @@ void ScriptEngine::eventAfterHideForm(Form* form)
 {
     QString eventName = "EventAfterHideForm";
     QScriptValueList args;
-    args << newQObject(static_cast<FormGrid*>(form), QScriptEngine::ScriptOwnership);
+    args << newQObject(static_cast<FormGrid*>(form)/*, QScriptEngine::ScriptOwnership*/);
     scriptCall(eventName, currentContext()->thisObject(), args);
 }
 
@@ -1030,7 +1030,7 @@ void ScriptEngine::eventCloseForm(Form* form)
 {
     QString eventName = "EventCloseForm";
     QScriptValueList args;
-    args << newQObject(static_cast<FormGrid*>(form), QScriptEngine::ScriptOwnership);
+    args << newQObject(static_cast<FormGrid*>(form)/*, QScriptEngine::ScriptOwnership*/);
     scriptCall(eventName, currentContext()->thisObject(), args);
 }
 
@@ -1039,7 +1039,7 @@ void ScriptEngine::eventImport(Form* form)
 {
     QString eventName = "EventImport";
     QScriptValueList args;
-    args << newQObject(static_cast<FormGrid*>(form), QScriptEngine::ScriptOwnership);
+    args << newQObject(static_cast<FormGrid*>(form)/*, QScriptEngine::ScriptOwnership*/);
     scriptCall(eventName, currentContext()->thisObject(), args);
 }
 
@@ -1048,7 +1048,7 @@ void ScriptEngine::eventExport(Form* form)
 {
     QString eventName = "EventExport";
     QScriptValueList args;
-    args << newQObject(static_cast<FormGrid*>(form), QScriptEngine::ScriptOwnership);
+    args << newQObject(static_cast<FormGrid*>(form)/*, QScriptEngine::ScriptOwnership*/);
     scriptCall(eventName, currentContext()->thisObject(), args);
 }
 
@@ -1178,7 +1178,7 @@ QString ScriptEngine::preparePictureUrl(Essence* essence)
     QString result;
     QString eventName = "PreparePictureUrl";
     QScriptValueList args;
-    args << newQObject(essence, QScriptEngine::ScriptOwnership);
+    args << newQObject(essence/*, QScriptEngine::ScriptOwnership*/);
     QScriptValue res = scriptCall(eventName, currentContext()->thisObject(), args);
     if (!res.isValid() || res.isUndefined())
         result = "";
@@ -1197,7 +1197,7 @@ QString ScriptEngine::prepareBarCodeData(Essence* essence)
     QString result;
     QString eventName = "PrepareBarCodeData";
     QScriptValueList args;
-    args << newQObject(essence, QScriptEngine::ScriptOwnership);
+    args << newQObject(essence/*, QScriptEngine::ScriptOwnership*/);
     QScriptValue res = scriptCall(eventName, currentContext()->thisObject(), args);
     if (!res.isValid() || res.isUndefined())
         result = "";

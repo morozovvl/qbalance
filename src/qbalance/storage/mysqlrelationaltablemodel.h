@@ -95,7 +95,7 @@ private:
 // Свойства для обслуживания SQL запросов
     QString                 selectCommand;
     QString                 sortClause;
-    QHash<int, UpdateInfoStruct>     updateInfo;
+    QHash<int, UpdateInfoStruct>*     updateInfo;
 
 // Прочие свойства
     QString                 tableAlias;

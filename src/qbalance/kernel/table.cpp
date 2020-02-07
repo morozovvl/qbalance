@@ -38,6 +38,11 @@ Table::Table(QString, QObject *parent): QObject(parent)
 
 Table::~Table()
 {
+    if (tableModel != nullptr)
+    {
+        delete tableModel;
+        tableModel = nullptr;
+    }
 }
 
 
@@ -73,11 +78,12 @@ bool Table::open(QString command)
 
 void Table::close()
 {
+/*
     if (tableModel != nullptr)
     {
         tableModel->clear();
-        delete tableModel;
     }
+*/
     opened = false;
 }
 
