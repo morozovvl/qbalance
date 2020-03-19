@@ -44,7 +44,7 @@ class MyValueEditor : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MyValueEditor(ConfigEntry&, ConfigForm*, QWidget *parent = nullptr);
+    explicit MyValueEditor(ConfigEntry&, ConfigForm*, QWidget *parent = 0 /*nullptr*/);
     ~MyValueEditor();
     QWidget* getEditor();
 

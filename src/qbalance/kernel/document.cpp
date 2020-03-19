@@ -49,10 +49,10 @@ Document::Document(int, Documents*): Dictionary()
 
 Document::~Document()
 {
-    if (tableModel != nullptr)
+    if (tableModel != 0 /*nullptr*/)
     {
         delete tableModel;
-        tableModel = nullptr;
+        tableModel = 0 /*nullptr*/;
     }
 }
 
@@ -258,7 +258,7 @@ void Document::calcItog()
 void Document::showItog()
 {
     MyNumericEdit* itogWidget = static_cast<MyNumericEdit*>(form->getFormWidget()->findChild("itogNumeric"));
-    if (itogWidget != nullptr)
+    if (itogWidget != 0 /*nullptr*/)
     {
         QVariant value = parent->getValue(db->getObjectName("документы.сумма"));
         itogWidget->setValue(value);
@@ -278,7 +278,7 @@ bool Document::add()
         {
             result = true;
 
-            if (scriptEngineEnabled && scriptEngine != nullptr)
+            if (scriptEngineEnabled && scriptEngine != 0 /*nullptr*/)
                 result = scriptEngine->eventBeforeAddString();
 
             if (result)
@@ -306,7 +306,7 @@ bool Document::add()
         }
         if (appendDocString() > 0)
         {
-            if (getScriptEngine() != nullptr)
+            if (getScriptEngine() != 0 /*nullptr*/)
                 getScriptEngine()->eventAfterAddString();
             saveChanges();
         }
@@ -327,7 +327,7 @@ int Document::addFromQuery(QString queryName)
         if (db->getDictionariesProperties(queryName).value(db->getObjectName("доступ_к_справочникам.меню")).toBool())
         {
             Dictionary* dict = app->getDictionaries()->getDictionary(queryName);
-            if (dict != nullptr)
+            if (dict != 0 /*nullptr*/)
             {
                 dict->exec();
                 if (dict->isFormSelected())
@@ -416,7 +416,7 @@ bool Document::remove(bool noAsk)
         int strNum = getValue(QString("P1__%1").arg(db->getObjectName("проводки.стр"))).toInt();
         if (Essence::remove(noAsk))
         {
-            if (scriptEngineEnabled && scriptEngine != nullptr)
+            if (scriptEngineEnabled && scriptEngine != 0 /*nullptr*/)
                 canRemove = scriptEngine->eventBeforeDeleteString();
 
             if (canRemove)
@@ -424,7 +424,7 @@ bool Document::remove(bool noAsk)
                 if (db->removeDocStr(docId, strNum))
                 {
                     Dictionary::query();
-                    if (scriptEngineEnabled && scriptEngine != nullptr)
+                    if (scriptEngineEnabled && scriptEngine != 0 /*nullptr*/)
                         scriptEngine->eventAfterDeleteString();
                     calcItog();
                     db->execCommands();
@@ -658,7 +658,7 @@ void Document::loadDocument()
                     Dictionary* childDict = getDictionariesList()->value(dictName);
                     childDict->setCanShow(false);
                     processedDictNames.append(dictName);
-                    if (childDict != nullptr && childDict->isConst())
+                    if (childDict != 0 /*nullptr*/ && childDict->isConst())
                     {
                         // Установим сначала значение основного справочника
                         int val = getValue(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.кркод")), 0).toInt();
@@ -706,7 +706,7 @@ void Document::loadDocument()
                     Dictionary* childDict = getDictionariesList()->value(dictName);
                     childDict->setCanShow(true);
                     processedDictNames.append(dictName);
-                    if (childDict != nullptr)
+                    if (childDict != 0 /*nullptr*/)
                     {
                         if (childDict->isConst())
                         {
@@ -789,7 +789,7 @@ void Document::setConstDictId(QString dName, QVariant id)
                 if (constDict->isConst())
                 {
                     Dictionary* parentDict = constDict->getParentDict();
-                    if (parentDict != nullptr && parentDict->getPrototypeName() == dictName)
+                    if (parentDict != 0 /*nullptr*/ && parentDict->getPrototypeName() == dictName)
                     {
                         constDict->setIdEnabled(false);
                         dict = getDictionariesList()->value(dictName);
@@ -825,7 +825,7 @@ void Document::setConstDictId(QString dName, QVariant id)
                 if (constDict->isConst())
                 {
                     Dictionary* parentDict = constDict->getParentDict();
-                    if (parentDict != nullptr && parentDict->getPrototypeName() == dictName)
+                    if (parentDict != 0 /*nullptr*/ && parentDict->getPrototypeName() == dictName)
                     {
                         constDict->setIdEnabled(false);
                         dict = getDictionariesList()->value(dictName);
@@ -870,7 +870,7 @@ void Document::prepareSelectCurrentRowCommand()
 
 void Document::setForm(QString formName)
 {
-    if (form != nullptr)
+    if (form != 0 /*nullptr*/)
     {
         form->close();
         delete form;
@@ -951,7 +951,7 @@ bool Document::setTableModel(int)
             {
                 Saldo* saldo = dictionaries->getSaldo(dictsList.at(i).acc);
                 SearchParameters* searchParameters = static_cast<FormGridSearch*>(saldo->getForm())->getSearchParameters();
-                if (searchParameters != nullptr)
+                if (searchParameters != 0 /*nullptr*/)
                     searchParameters->setDictionaries(dictionaries);
                 saldo->setAutoLoaded(true);
                 Dictionary* dict = dictionaries->getDictionary(dictsList.at(i).prototype);
@@ -963,7 +963,7 @@ bool Document::setTableModel(int)
                 if (dictsList.at(i).isConst)
                     dict->setConst(true);
                 SearchParameters* searchParameters = static_cast<FormGridSearch*>(dict->getForm())->getSearchParameters();
-                if (searchParameters != nullptr)
+                if (searchParameters != 0 /*nullptr*/)
                     searchParameters->setDictionaries(dictionaries);
                 dict->setAutoLoaded(true);
             }
@@ -1047,7 +1047,7 @@ bool Document::showNextDict()
             }
         }
     }
-    if (anyShown && scriptEngineEnabled && scriptEngine != nullptr)
+    if (anyShown && scriptEngineEnabled && scriptEngine != 0 /*nullptr*/)
         anyShown = scriptEngine->eventAfterShowNextDicts();
 
     foreach(QString dictName, lockedDicts)
@@ -1168,7 +1168,7 @@ int Document::appendDocString(bool repaint)
         tableModel->insertRow(newRow);
         setCurrentRow(newRow);
         updateCurrentRow(result);
-        if (grdTable != nullptr)
+        if (grdTable != 0 /*nullptr*/)
         {
             grdTable->repaint();
             grdTable->setCurrentFocus();
@@ -1200,7 +1200,7 @@ void Document::updateCurrentRow(int strNum)
 
 void Document::preparePrintValues()
 {
-    if (reportScriptEngine != nullptr)
+    if (reportScriptEngine != 0 /*nullptr*/)
     {
         // Зарядим постоянные справочники
         foreach (QString dictName, getDictionariesList()->keys())

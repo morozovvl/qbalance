@@ -38,13 +38,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 Form::Form(QObject* par): QObject(par)
 {
-    parent = nullptr;
-    formWidget = nullptr;
-    cmdButtonLayout = nullptr;
-    vbxLayout = nullptr;
-    buttonOk = nullptr;
-    buttonCancel = nullptr;
-    subWindow = nullptr;
+    parent = 0 /*nullptr*/;
+    formWidget = 0 /*nullptr*/;
+    cmdButtonLayout = 0 /*nullptr*/;
+    vbxLayout = 0 /*nullptr*/;
+    buttonOk = 0 /*nullptr*/;
+    buttonCancel = 0 /*nullptr*/;
+    subWindow = 0 /*nullptr*/;
 
     appendToMdi = true;
     app = TApplication::exemplar();
@@ -58,17 +58,6 @@ Form::Form(QObject* par): QObject(par)
 //    palette.setColor(QPalette::ToolTipBase, Qt::yellow);
     palette.setColor(QPalette::ToolTipText, Qt::black);
     QToolTip::setPalette(palette);
-}
-
-
-Form::~Form()
-{
-    if (formWidget != nullptr)
-    {
-        if (defaultForm)
-            delete formWidget;
-    }
-    toolTips.clear();
 }
 
 
@@ -89,12 +78,12 @@ bool Form::open(QWidget* pwgt, Essence* par, QString fName)
     foreach (QString key, toolTips.keys())
     {
         QPushButton* button = static_cast<QPushButton*>(formWidget->findChild(key));
-        if (button != nullptr && button->toolTip().isEmpty())
+        if (button != 0 /*nullptr*/ && button->toolTip().isEmpty())
             button->setToolTip(toolTips.value(key, ""));
     }
 
     // Подключим обработчик кард-ридера
-    if (parent != nullptr)
+    if (parent != 0 /*nullptr*/)
     {
         connect(app, SIGNAL(cardCodeReaded(QString)), parent, SLOT(cardCodeReaded(QString)));
     }
@@ -106,8 +95,44 @@ bool Form::open(QWidget* pwgt, Essence* par, QString fName)
 void Form::close()
 {
     hide();
+
+    if (parent != 0 /*nullptr*/)
+        disconnect(app);
+
+    QList<QPushButton*> allButtons = formWidget->findChildren<QPushButton*>();
+    foreach (QPushButton* button, allButtons)
+    {
+        disconnect(button);
+    }
+
+    if (buttonCancel != 0 /*nullptr*/)
+        disconnect(buttonCancel);
+
+    if (buttonOk != 0 /*nullptr*/)
+        disconnect(buttonOk);
+
+    toolTips.clear();
+
     if (formWidget->isFormWidgetChanged())
         writeSettings();
+
+    if (defaultForm)
+    {
+        if (cmdButtonLayout != 0 /*nullptr*/)
+        {
+            delete cmdButtonLayout;
+            cmdButtonLayout = 0 /*nullptr*/;
+        }
+        if (vbxLayout != 0 /*nullptr*/)
+        {
+            delete vbxLayout;
+            vbxLayout = 0 /*nullptr*/;
+        }
+    }
+
+    if (formWidget != 0 /*nullptr*/)
+        formWidget->deleteLater();
+
 }
 
 
@@ -119,7 +144,7 @@ Dialog* Form::getFormWidget()
 
 bool Form::isVisible()
 {
-    return subWindow != nullptr ? subWindow->isVisible() : false;
+    return subWindow != 0 /*nullptr*/ ? subWindow->isVisible() : false;
 }
 
 
@@ -172,20 +197,20 @@ void Form::buttonPressedSignalSend()
 
 void Form::createForm(QString fileName, QWidget* pwgt)
 {
-    if (parent != nullptr)
+    if (parent != 0 /*nullptr*/)
     {
         configName = getParent()->getTagName();
     }
     setObjectName(configName);
     uiCreated = false;
-    formWidget = nullptr;
+    formWidget = 0 /*nullptr*/;
     defaultForm = true;
     script = "";
     if (fileName != "mainform")
     {
         formWidget = app->createForm(fileName);
     }
-    if (formWidget != nullptr)
+    if (formWidget != 0 /*nullptr*/)
     {   // Если была найдена нестандартная пользовательская форма
         formWidget->setApp(app);
         formWidget->setParent(pwgt);
@@ -211,7 +236,7 @@ void Form::createForm(QString fileName, QWidget* pwgt)
         vbxLayout = new QVBoxLayout();
         vbxLayout->setObjectName("vbxLayout");
 
-        if (getParent() == nullptr || !getParent()->isMenuMode())
+        if (getParent() == 0 /*nullptr*/ || !getParent()->isMenuMode())
             vbxLayout->addLayout(cmdButtonLayout);
 
         formWidget->setLayout(vbxLayout);
@@ -220,13 +245,13 @@ void Form::createForm(QString fileName, QWidget* pwgt)
         buttonCancel = addButton("buttonCancel");
     }
 
-    if (buttonOk != nullptr)
+    if (buttonOk != 0 /*nullptr*/)
     {
         connect(buttonOk, SIGNAL(clicked()), SLOT(cmdOk()));
-        if (getParent() != nullptr && getParent()->isMenuMode())
+        if (getParent() != 0 /*nullptr*/ && getParent()->isMenuMode())
             buttonOk->hide();
     }
-    if (buttonCancel != nullptr)
+    if (buttonCancel != 0 /*nullptr*/)
     {
         connect(buttonCancel, SIGNAL(clicked()), SLOT(cmdCancel()));
         buttonCancel->hide();
@@ -260,7 +285,7 @@ QPushButton* Form::insertButton(QString objectName, int order)
 void Form::cmdOk()
 {
     lSelected = true;
-    if (parent != nullptr)
+    if (parent != 0 /*nullptr*/)
     {
         parent->cmdOk();
         parent->hide();
@@ -273,7 +298,7 @@ void Form::cmdOk()
 void Form::cmdCancel()
 {
     lSelected = false;
-    if (parent != nullptr)
+    if (parent != 0 /*nullptr*/)
     {
         parent->cmdCancel();
         parent->hide();
@@ -285,17 +310,17 @@ void Form::cmdCancel()
 
 int Form::exec()
 {
-    if (formWidget != nullptr)
+    if (formWidget != 0 /*nullptr*/)
     {
         lSelected = false;
-        if (subWindow != nullptr)
+        if (subWindow != 0 /*nullptr*/)
         {
             int x = (app->getMainWindow()->width() - subWindow->width()) / 2;
             int y = (app->getMainWindow()->height() - subWindow->height()) / 2;
             int w = subWindow->width();
             int h = subWindow->height();
             app->getMainWindow()->removeMdiWindow(subWindow);
-            subWindow = nullptr;
+            subWindow = 0 /*nullptr*/;
             formWidget->setGeometry(x, y, w, h);
             formWidget->setParent(app->getMainWindow());
             formWidget->setWindowFlags(Qt::Dialog);
@@ -304,7 +329,7 @@ int Form::exec()
         formWidget->exec();
         formWidget->done(0);
         getSubWindow();
-        if (activeWidget != nullptr)
+        if (activeWidget != 0 /*nullptr*/)
             activeWidget->activateWindow();
         return lSelected;
     }
@@ -314,12 +339,12 @@ int Form::exec()
 
 void Form::show()
 {
-    if (formWidget != nullptr)
+    if (formWidget != 0 /*nullptr*/)
     {
         lSelected = false;
         checkVisibility();
         formWidget->show();
-        if (getSubWindow() != nullptr)
+        if (getSubWindow() != 0 /*nullptr*/)
         {
             subWindow->show();
             activateSubWindow();
@@ -330,16 +355,16 @@ void Form::show()
 
 QMdiSubWindow* Form::getSubWindow()
 {
-    if (app != nullptr && !freeWindow)
+    if (app != 0 /*nullptr*/ && !freeWindow)
     {
-        if (subWindow == nullptr)
+        if (subWindow == 0 /*nullptr*/)
         {
             subWindow = app->getMainWindow()->appendMdiWindow(formWidget);
             subWindow->setGeometry(formWidget->rect());
         }
         return subWindow;
     }
-    return nullptr;
+    return 0 /*nullptr*/;
 }
 
 
@@ -352,7 +377,7 @@ void Form::activateSubWindow()
 void Form::checkVisibility()
 {
     // Проверим, не уползло ли окно за пределы видимости. Если оно за пределами видимости, то вернем его
-    if (getSubWindow() != nullptr)
+    if (getSubWindow() != 0 /*nullptr*/)
     {
         int x = getSubWindow()->x();
         int y = getSubWindow()->y();
@@ -381,12 +406,12 @@ void Form::checkVisibility()
 
 void Form::hide()
 {
-    if (formWidget != nullptr)
+    if (formWidget != 0 /*nullptr*/)
     {
         formWidget->hide();
         if (!freeWindow)
         {
-            if (subWindow != nullptr)
+            if (subWindow != 0 /*nullptr*/)
                 subWindow->hide();
         }
     }
@@ -395,10 +420,10 @@ void Form::hide()
 
 void Form::gotoCenter()
 {   // Переместить форму в центр родительского виджета
-    if (formWidget != nullptr)
+    if (formWidget != 0 /*nullptr*/)
     {
         QRect rect;
-        if (formWidget->parentWidget() != nullptr)
+        if (formWidget->parentWidget() != 0 /*nullptr*/)
             rect = formWidget->parentWidget()->geometry();
         else
             rect = app->desktop()->screen()->geometry();
@@ -433,27 +458,28 @@ void Form::keyPressEvent(QKeyEvent *event)
 {
     event->setAccepted(false);
 
-//
 //    // Проверим ввод сканером штрихкода
-//    if (app != nullptr)
-//    {
-//        BarCodeReader* barCodeReader = app->getBarCodeReader();
-//
-//        if (barCodeReader != nullptr)
-//        {
-//            barCodeReader->testBarCode(event);
-//
+    if (app != 0 /*nullptr*/)
+    {
+        BarCodeReader* barCodeReader = app->getBarCodeReader();
+
+        if (barCodeReader != 0 /*nullptr*/)
+        {
+            if (barCodeReader->testBarCode(event->text()))
+            {
+                event->setAccepted(true);
+            }
+
 //            if (barCodeReader->getBarCodeString().size() == 1)
 //                event->setAccepted(true);
-//        }
-//    }
-//
+        }
+    }
 
     if (!event->isAccepted())
     {
         // Попробуем отдать обработку события скриптам
         ScriptEngine* engine = parent->getScriptEngine();
-        if (engine != nullptr)
+        if (engine != 0 /*nullptr*/)
         {
             bool result = engine->eventKeyPressed(event->key(), event->modifiers());
             if (result)
@@ -473,7 +499,7 @@ void Form::readSettings()
     // Установим координаты и размеры окна
     QWidget* widget;
     widget = getSubWindow();
-    if (widget == nullptr)
+    if (widget == 0 /*nullptr*/)
         widget = formWidget;
 
     QHash<QString, int> settingValues;
@@ -515,7 +541,7 @@ void Form::writeSettings()
 {
     // Сохраним координаты и размеры окна
     QWidget* widget = static_cast<QWidget*>(getSubWindow());
-    if (widget == nullptr)
+    if (widget == 0 /*nullptr*/)
         widget = static_cast<QWidget*>(formWidget);
 
     // Сохраним данные локально, на компьютере пользователя

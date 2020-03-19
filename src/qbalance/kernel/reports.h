@@ -33,14 +33,14 @@ CalendarForm* calendar;
 protected:
     Q_INVOKABLE virtual void setForm(QString = "");
 
-    Reports(QObject* parent = nullptr);
-    virtual void postInitialize(QObject* parent = nullptr);
+    Reports(QObject* parent = 0 /*nullptr*/);
+    virtual void postInitialize(QObject* parent = 0 /*nullptr*/);
 
 public:
     ~Reports();
 
     template <class T>
-        static T* create(QObject* parent = nullptr)
+        static T* create(QObject* parent = 0 /*nullptr*/)
         {
             T* p(new T(parent));
             p->postInitialize(parent);

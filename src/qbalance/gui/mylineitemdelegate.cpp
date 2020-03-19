@@ -38,14 +38,14 @@ void MyLineItemDelegate::setMaxLength(int l)
 
 QWidget* MyLineItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem&, const QModelIndex&) const
 {
-    QLineEdit* editorWidget = nullptr;
+    QLineEdit* editorWidget = 0 /*nullptr*/;
     if (!menuMode)
     {
         editorWidget = new QLineEdit(parent);
         editorWidget->setMaxLength(length);
         if (!readOnly)
         {
-            if (essence != nullptr)
+            if (essence != 0 /*nullptr*/)
             {
                 essence->saveOldValues();
                 disconnect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));

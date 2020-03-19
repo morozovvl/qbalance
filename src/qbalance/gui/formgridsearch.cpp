@@ -30,7 +30,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 FormGridSearch::FormGridSearch(QObject* parent) : FormGrid(parent)
 {
-    parameters = nullptr;
+    parameters = 0 /*nullptr*/;
 }
 
 
@@ -51,7 +51,7 @@ void FormGridSearch::createForm(QString fileName, QWidget* pwgt)
     formWidget->resize(600, formWidget->height());
     if (defaultForm)
     {
-        if (vbxLayout != nullptr)
+        if (vbxLayout != 0 /*nullptr*/)
         {
             parameters = new SearchParameters();
             parameters->setObjectName("searchParameters");
@@ -61,7 +61,7 @@ void FormGridSearch::createForm(QString fileName, QWidget* pwgt)
     {
         parameters = static_cast<SearchParameters*>(formWidget->findChild("searchParameters"));
     }
-    if (parameters != nullptr)
+    if (parameters != 0 /*nullptr*/)
     {
         parameters->setDictionaries(static_cast<Dictionary*>(parent)->getDictionaries());
         parameters->setParent(formWidget);
@@ -77,7 +77,7 @@ void FormGridSearch::createForm(QString fileName, QWidget* pwgt)
             QHBoxLayout* hbxLayout = new QHBoxLayout();
             hbxLayout->insertWidget(0, parameters);
 //
-//            if (getParent() == nullptr || !getParent()->isMenuMode())
+//            if (getParent() == 0 /*nullptr*/ || !getParent()->isMenuMode())
 //            {
 //                QLabel* label = new QLabel(LABEL_SEARCH_PARAMETERS, formWidget);
 //                hbxLayout->insertWidget(0, label);
@@ -89,7 +89,7 @@ void FormGridSearch::createForm(QString fileName, QWidget* pwgt)
         {
             if (defaultForm)
                 delete parameters;
-            parameters = nullptr;
+            parameters = 0 /*nullptr*/;
         }
     }
 }
@@ -99,11 +99,11 @@ void FormGridSearch::close()
 {
     if (defaultForm)
     {
-        if (parameters != nullptr)
+        if (parameters != 0 /*nullptr*/)
         {
             parameters->close();
             delete parameters;
-            parameters = nullptr;
+            parameters = 0 /*nullptr*/;
         }
     }
     FormGrid::close();
@@ -118,7 +118,7 @@ void FormGridSearch::setParameter(QString tableName, QString parameter)
 
 QString FormGridSearch::getFilter()
 {
-    if (parameters != nullptr)
+    if (parameters != 0 /*nullptr*/)
         return parameters->getFilter();
     return QString();
 }
@@ -126,7 +126,7 @@ QString FormGridSearch::getFilter()
 
 QString FormGridSearch::getFilter(QString dictName, QString filter)
 {
-    if (parameters != nullptr)
+    if (parameters != 0 /*nullptr*/)
         return parameters->getFilter(dictName, filter);
     return QString();
 }
@@ -134,7 +134,7 @@ QString FormGridSearch::getFilter(QString dictName, QString filter)
 
 QString FormGridSearch::getSearchValue(QString dictName)
 {
-    if (parameters != nullptr)
+    if (parameters != 0 /*nullptr*/)
         return parameters->getSearchValue(dictName);
     return QString();
 }
@@ -142,7 +142,7 @@ QString FormGridSearch::getSearchValue(QString dictName)
 
 void FormGridSearch::activateWidget()
 {
-    if (parameters != nullptr)
+    if (parameters != 0 /*nullptr*/)
         parameters->setFocus();
 }
 

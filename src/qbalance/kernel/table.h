@@ -53,14 +53,14 @@ protected:
     QStringList                         fieldList;
 
 
-    Table(QString = "", QObject* = nullptr);
+    Table(QString = "", QObject* = 0 /*nullptr*/);
     virtual void postInitialize(QString, QObject*);
 
 public:
     virtual ~Table() = 0;
 
     template <class T>
-        static T* create(QString name = "", QObject* parent = nullptr)
+        static T* create(QString name = "", QObject* parent = 0 /*nullptr*/)
         {
             T* p(new T(name, parent));
             p->postInitialize(name, parent);

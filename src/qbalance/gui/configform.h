@@ -49,9 +49,9 @@ class ConfigForm : public Form
 public:
     QSignalMapper *signalMapper;
 
-    ConfigForm(QObject* parent = nullptr);
+    ConfigForm(QObject* parent = 0 /*nullptr*/);
     ~ConfigForm();
-    virtual bool open(QWidget* pwgt = nullptr);
+    virtual bool open(QWidget* pwgt = 0 /*nullptr*/);
 
 public slots:
     virtual void cmdOk();

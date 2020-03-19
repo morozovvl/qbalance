@@ -36,7 +36,7 @@ private:
     bool        lIsSaldoExist;
 
 protected:
-    Dictionaries(QObject* = nullptr);
+    Dictionaries(QObject* = 0 /*nullptr*/);
     virtual void postInitialize(QString, QObject*);
 
 public:
@@ -48,7 +48,7 @@ public:
     Q_INVOKABLE virtual void close();
 
     template <class T>
-        static T* create(QObject *parent = nullptr)
+        static T* create(QObject *parent = 0 /*nullptr*/)
         {
             T* p(new T(parent));
             p->postInitialize("", parent);
@@ -57,9 +57,9 @@ public:
             return p;
         }
 
-    Q_INVOKABLE virtual Dictionary* getDictionary(QString, bool = true);   // По умолчанию добавлять справочник
+    Q_INVOKABLE virtual Dictionary* getDictionary(QString, bool = true, bool = true);   // По умолчанию добавлять справочник
     Q_INVOKABLE virtual Saldo* getSaldo(QString acc);
-    Q_INVOKABLE virtual bool addDictionary(QString);
+    Q_INVOKABLE virtual bool addDictionary(QString, bool = true);
     Q_INVOKABLE virtual bool addSaldo(QString acc);
     Q_INVOKABLE virtual void removeDictionary(QString);
     Q_INVOKABLE virtual void removeAll();

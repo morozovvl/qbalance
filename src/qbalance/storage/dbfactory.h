@@ -245,11 +245,11 @@ public:
     QHash<int, UserInfo> getUserList();
 
     // Работа с ошибками
-    Q_INVOKABLE virtual bool exec(QString = "", bool = true, QSqlDatabase* = nullptr);
+    Q_INVOKABLE virtual bool exec(QString = "", bool = true, QSqlDatabase* = 0 /*nullptr*/);
     Q_INVOKABLE void exec(QStringList);
     Q_INVOKABLE bool execQueryFile(QString, bool = true);
     bool execSystem(QString command, QString tableName);       // Будет вызываться там, где необходима проверка изменения системных таблиц
-    Q_INVOKABLE virtual QSqlQuery execQuery(QString, bool = true, QSqlDatabase* = nullptr) = 0;
+    Q_INVOKABLE virtual QSqlQuery execQuery(QString, bool = true, QSqlDatabase* = 0 /*nullptr*/) = 0;
 
     Q_INVOKABLE virtual QString getObjectName(const QString&);       // транслирует имена объектов БД из "внутренних" в реальные наименования
     Q_INVOKABLE virtual QString getObjectNameCom(const QString&);                        // то же самое, только результат возвращает в кавычках (применяется при генерации SQL команд)

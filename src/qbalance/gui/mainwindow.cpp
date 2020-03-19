@@ -418,7 +418,7 @@ void MainWindow::writeSettings()
 
 QMdiSubWindow* MainWindow::appendMdiWindow(QWidget* dialogWidget)
 {
-    if (dialogWidget != nullptr)
+    if (dialogWidget != 0 /*nullptr*/)
     {
         // Сначала попытаемся найти окно QMdiSubWindow, в котором виджет dialogWidget отображался ранее
         foreach (QMdiSubWindow *subWindow, workSpace->subWindowList()) {
@@ -433,13 +433,13 @@ QMdiSubWindow* MainWindow::appendMdiWindow(QWidget* dialogWidget)
         subWindow->setWidget(dialogWidget);
         return workSpace->addSubWindow(subWindow, Qt::Window);
     }
-    return nullptr;
+    return 0 /*nullptr*/;
 }
 
 
 QMdiSubWindow* MainWindow::findMdiWindow(QWidget* dialogWidget)
 {
-    if (dialogWidget != nullptr)
+    if (dialogWidget != 0 /*nullptr*/)
     {
         foreach (QMdiSubWindow *subWindow, workSpace->subWindowList()) {
             Dialog* widget = qobject_cast<Dialog*>(subWindow->widget());
@@ -447,16 +447,16 @@ QMdiSubWindow* MainWindow::findMdiWindow(QWidget* dialogWidget)
                 return subWindow;
         }
     }
-    return nullptr;
+    return 0 /*nullptr*/;
 }
 
 
 void MainWindow::removeMdiWindow(QMdiSubWindow* subWindow)
 {
-    if (subWindow != nullptr)
+    if (subWindow != 0 /*nullptr*/)
     {
         workSpace->setActiveSubWindow(subWindow);
-        subWindow->setWidget(nullptr);    // Обнулим указатель на виджет, чтобы при удалении подокна оно одновременно не удалило и виджет
+        subWindow->setWidget(0 /*nullptr*/);    // Обнулим указатель на виджет, чтобы при удалении подокна оно одновременно не удалило и виджет
         workSpace->removeSubWindow(subWindow);
         delete subWindow;
     }

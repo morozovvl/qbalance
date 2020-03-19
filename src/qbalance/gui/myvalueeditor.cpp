@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 MyValueEditor::MyValueEditor(ConfigEntry& val, ConfigForm* confForm, QWidget *parent): QWidget(parent)
 {
     value = &val;
-    widget = nullptr;
+    widget = 0 /*nullptr*/;
     configForm = confForm;
 
     if (value->valueType == CONFIG_VALUE_BOUND)

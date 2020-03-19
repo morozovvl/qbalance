@@ -33,7 +33,7 @@ ReportContext::ReportContext(QHash<QString, QVariant>* d, QObject *parent) :
     lastStrNum = 0;
     tableName = "таблица";
     currentRow = 0;
-    scriptEngine = nullptr;
+    scriptEngine = 0 /*nullptr*/;
 }
 
 
@@ -223,7 +223,6 @@ int ReportContext::getCurrentRow()
 
 void ReportContext::clear()
 {
-    data->clear();
     lastStrNum = 0;
     currentRow = 0;
     rowCounts.clear();

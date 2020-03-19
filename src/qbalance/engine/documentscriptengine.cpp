@@ -52,25 +52,26 @@ QScriptValue restoreVariable(QScriptContext* context, QScriptEngine* engine) {
 DocumentScriptEngine::DocumentScriptEngine(Essence* parent)
 :ScriptEngine(parent)
 {
-    reportContext = nullptr;
+    reportContext = new ReportContext(0 /*nullptr*/);
+    reportContext->setScriptEngine(this);
 }
 
 
 DocumentScriptEngine::DocumentScriptEngine(QHash<QString, QVariant>* context, Essence *parent)
 :ScriptEngine(parent)
 {
-    reportContext = nullptr;
-    if (context != nullptr)
-        reportContext = new ReportContext(context);
+    reportContext = new ReportContext(context);
+    reportContext->setScriptEngine(this);
 }
 
 
 DocumentScriptEngine::~DocumentScriptEngine()
 {
-    if (reportContext != nullptr)
+    if (reportContext != 0 /*nullptr*/)
     {
+        reportContext->clear();
         delete reportContext;
-        reportContext = nullptr;
+        reportContext = 0 /*nullptr*/;
     }
 }
 
@@ -93,13 +94,13 @@ void DocumentScriptEngine::loadScriptObjects()
     globalObject().setProperty("getSaldo", newFunction(getSaldo));
     globalObject().setProperty("saveVariable", newFunction(saveVariable));
     globalObject().setProperty("restoreVariable", newFunction(restoreVariable));
-    if (documents != nullptr)
+    if (documents != 0 /*nullptr*/)
         globalObject().setProperty("isDocumentScript", true);   // скрипт выполняется в контексте документа
     else
         globalObject().setProperty("isDocumentScript", false);
 
     // инициализируем глобальные объекты скрипта печати
-    if (reportContext != nullptr)
+    if (reportContext != 0 /*nullptr*/)
     {
         globalObject().setProperty("reportContext", newQObject(reportContext, QScriptEngine::ScriptOwnership));
     }
@@ -119,7 +120,7 @@ void DocumentScriptEngine::eventAppendFromQuery(QString queryName, QSqlRecord* v
     QScriptValueList args;
     args << newVariant(QVariant(queryName));
     args << row;
-    scriptCall(eventName, QScriptValue(), args);
+    scriptCall(eventName, currentContext()->thisObject(), args);
 }
 
 
@@ -130,7 +131,7 @@ bool DocumentScriptEngine::eventBeforeLinePrint(int strNum)
     QString eventName = "EventBeforeLinePrint";
     QScriptValueList args;
     args << newVariant(QVariant(strNum));
-    res = scriptCall(eventName, QScriptValue(), args);
+    res = scriptCall(eventName, currentContext()->thisObject(), args);
     if (res.toString() != "undefined")
         result = res.toBool();
     return result;
@@ -142,14 +143,14 @@ void DocumentScriptEngine::eventAfterLinePrint(int strNum)
     QString eventName = "EventAfterLinePrint";
     QScriptValueList args;
     args << newVariant(QVariant(strNum));
-    scriptCall(eventName, QScriptValue(), args);
+    scriptCall(eventName, currentContext()->thisObject(), args);
 }
 
 
 void DocumentScriptEngine::eventBeforeTotalPrint()
 {
     QString eventName = "EventBeforeTotalPrint";
-    scriptCall(eventName, QScriptValue());
+    scriptCall(eventName, currentContext()->thisObject());
 }
 
 

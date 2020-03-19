@@ -26,7 +26,7 @@ class MySyntaxHighlighter : public QSyntaxHighlighter
 {
     Q_OBJECT
 public:
-    MySyntaxHighlighter(QTextDocument *parent = nullptr);
+    MySyntaxHighlighter(QTextDocument *parent = 0 /*nullptr*/);
 
 protected:
     void highlightBlock(const QString &text);

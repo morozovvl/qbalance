@@ -40,7 +40,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 class MyLineItemDelegate : public MyItemDelegate {
     Q_OBJECT
 public:
-    MyLineItemDelegate(QObject*, FormGrid* = nullptr);
+    MyLineItemDelegate(QObject*, FormGrid* = 0 /*nullptr*/);
     virtual void    setMaxLength(int l);
     virtual QWidget* createEditor(QWidget*, const QStyleOptionViewItem &, const QModelIndex &) const;
 private:

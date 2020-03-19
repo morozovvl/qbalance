@@ -109,11 +109,13 @@ protected:
 
     virtual void        preparePrintValues();                   // Готовит значения для печати
     virtual void        prepareSelectCurrentRowCommand();
-    void                openScriptEngine();
-    void                closeScriptEngine();
+    virtual void        openScriptEngine();
+    virtual void        closeScriptEngine();
+    virtual void        openReportScriptEngine();
+    virtual void        closeReportScriptEngine();
     bool                isDocumentLoading();
 
-    Essence(QString = "", QObject* = nullptr);
+    Essence(QString = "", QObject* = 0 /*nullptr*/);
     virtual void postInitialize(QString, QObject*);
 
 public:
@@ -199,6 +201,7 @@ public:
 
 
 // Функции для обеспечения работы скриптов
+    Q_INVOKABLE virtual void openScripts();
     virtual void        setScriptEngine();
     ScriptEngine*       getScriptEngine();
     DocumentScriptEngine*       getReportScriptEngine();

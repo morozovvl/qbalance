@@ -33,19 +33,34 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 FormDocuments::FormDocuments(): FormGrid()
 {
-    filterLabel = nullptr;
-    filterEdit = nullptr;
-    itogNumeric = nullptr;
+    filterLabel = 0 /*nullptr*/;
+    filterEdit = 0 /*nullptr*/;
+    itogNumeric = 0 /*nullptr*/;
 }
 
 
-FormDocuments::~FormDocuments()
+void FormDocuments::close()
 {
-    if (filterLabel != nullptr)
-        delete filterLabel;
+    if (defaultForm)
+    {
+        if (filterLabel != 0 /*nullptr*/)
+        {
+            delete filterLabel;
+            filterLabel = 0 /*nullptr*/;
+        }
 
-    if (filterEdit != nullptr)
-        delete filterEdit;
+        if (filterEdit != 0 /*nullptr*/)
+        {
+            delete filterEdit;
+            filterEdit = 0 /*nullptr*/;
+        }
+
+        if (itogNumeric != 0 /*nullptr*/)
+        {
+            delete itogNumeric;
+            itogNumeric = 0 /*nullptr*/;
+        }
+    }
 }
 
 
@@ -134,10 +149,10 @@ void FormDocuments::showItog()
 
 void FormDocuments::showFilterEdit(bool show)
 {
-    if (filterLabel != nullptr)
+    if (filterLabel != 0 /*nullptr*/)
         filterLabel->setVisible(show);
 
-    if (filterEdit != nullptr)
+    if (filterEdit != 0 /*nullptr*/)
         filterEdit->setVisible(show);
 }
 

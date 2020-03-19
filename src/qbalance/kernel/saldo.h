@@ -33,14 +33,14 @@ private:
 
 protected:
     virtual bool    setTableModel(int = 0);
-    Saldo(QString, QString, QObject* parent = nullptr);
+    Saldo(QString, QString, QObject* parent = 0 /*nullptr*/);
     virtual void postInitialize(QString, QString, QObject*);
 
 public:
     ~Saldo();
 
     template <class T>
-        static T* create(QString acc, QString name = "", QObject* parent = nullptr)
+        static T* create(QString acc, QString name = "", QObject* parent = 0 /*nullptr*/)
         {
             T* p(new T(acc, name, parent));
             p->postInitialize(acc, name, parent);

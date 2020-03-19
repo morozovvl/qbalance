@@ -32,10 +32,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/mycombobox.h"
 
 SearchParameters::SearchParameters(QWidget* parentWidget): QFrame(parentWidget) {
-    app = nullptr;
-    gridLayout = nullptr;
-    parentForm = nullptr;
-    dictionaries = nullptr;
+    app = 0 /*nullptr*/;
+    gridLayout = 0 /*nullptr*/;
+    parentForm = 0 /*nullptr*/;
+    dictionaries = 0 /*nullptr*/;
 }
 
 
@@ -83,7 +83,7 @@ void SearchParameters::setFieldsList(QStringList fldList)
     setLineWidth(1);
     setFrameStyle(QFrame::Panel | QFrame::Raised);
     int strNum = 0;
-    if (gridLayout == nullptr)
+    if (gridLayout == 0 /*nullptr*/)
     {
         gridLayout = new QGridLayout(this);
         gridLayout->setVerticalSpacing(1);
@@ -132,7 +132,7 @@ void SearchParameters::addString(QString name, int strNum)
         button->setFocusPolicy(Qt::NoFocus);            // Запретим переход на кнопку по клавише TAB
         gridLayout->addWidget(button, strNum, 2, 1, 1);
         connect(button, SIGNAL(clicked()), this, SLOT(dictionaryButtonPressed()));
-        if (app != nullptr)
+        if (app != 0 /*nullptr*/)
         {
             labelName = app->getDBFactory()->getDictionariesProperties(name, "имя_в_форме");
 
@@ -145,7 +145,7 @@ void SearchParameters::addString(QString name, int strNum)
         Dictionary* dict = static_cast<Dictionary*>(parentForm->getParent());
         name = dict->getTableName();
 
-        if (app != nullptr)
+        if (app != 0 /*nullptr*/)
             labelName = "Наименование";
 
         // Проверим, имеется ли в связанном справочнике полнотекстовый поиск
@@ -183,7 +183,7 @@ QVector<sParam> SearchParameters::getParameters()
         par.value = text;
         // Определим, включен ли полнотекстовый поиск
         QCheckBox* chb = this->findChild<QCheckBox*>(field);
-        par.isFtsEnabled = (chb != nullptr ? chb->isChecked(): false);
+        par.isFtsEnabled = (chb != 0 /*nullptr*/ ? chb->isChecked(): false);
         param.append(par);
     }
     return param;
@@ -247,10 +247,10 @@ QString SearchParameters::getFilter(QString dictName, QString defFilter)
                 {
                     if (param.size() > 0)
                     {
-                        if (parentForm != nullptr && dictionaries != nullptr)
+                        if (parentForm != 0 /*nullptr*/ && dictionaries != 0 /*nullptr*/)
                         {
                             Dictionary* dict = dictionaries->getDictionary(searchParameters[i].table);    // Поместим связанный справочник в список справочников приложения
-                            if (dict != nullptr)
+                            if (dict != 0 /*nullptr*/)
                             {
                                 if (dict->getForm()->isLeftPercent() || subStrNum > 0)     // Отсутствие знака % актуально только для первого слова
                                     param = "%" + param;
@@ -320,15 +320,15 @@ QString SearchParameters::getSearchValue(QString dictName)
 
 void SearchParameters::dictionaryButtonPressed()
 {
-    if (dictionaries != nullptr)
+    if (dictionaries != 0 /*nullptr*/)
     {
         Dictionary* dict = dictionaries->getDictionary(sender()->objectName());    // Поместим связанный справочник в список справочников приложения
-        if (dict != nullptr) {
+        if (dict != 0 /*nullptr*/) {
             dict->exec();
             if (dict->isFormSelected())
             {
                 MyComboBox* cmb = static_cast<MyComboBox*>(this->findChild<QObject*>(sender()->objectName()));
-                if (cmb != nullptr)
+                if (cmb != 0 /*nullptr*/)
                 {
                     QString text = dict->getValue(programNameFieldName).toString().trimmed();
                     int index = cmb->findText(text);
@@ -356,10 +356,10 @@ void SearchParameters::comboBoxEnterPressed(QWidget* wdgt)
         MyComboBox* cmb = static_cast<MyComboBox*>(gridLayout->itemAtPosition(i, 1)->widget());
         if (cmb->objectName() == wdgt->objectName())
         {   // На этой ComboBox была нажата Enter
-            if (dictionaries != nullptr)
+            if (dictionaries != 0 /*nullptr*/)
             {
                 Dictionary* dict = dictionaries->getDictionary(cmb->objectName(), false);
-                if (dict != nullptr)
+                if (dict != 0 /*nullptr*/)
                     dict->setFilter(cmb->lineEdit()->text());
             }
             if ((i + 1) < gridLayout->rowCount())                               // Если ниже есть еще одна ComboBox
@@ -387,10 +387,10 @@ void SearchParameters::setFocus()
         for (int i = 0; i < gridLayout->rowCount(); i++)
         {
             QLayoutItem* item = gridLayout->itemAtPosition(i, 1);
-            if (item != nullptr)
+            if (item != 0 /*nullptr*/)
             {
                 MyComboBox* widget = static_cast<MyComboBox*>(item->widget());
-                if (widget != nullptr && QString::compare(widget->metaObject()->className(), "MyComboBox") == 0)
+                if (widget != 0 /*nullptr*/ && QString::compare(widget->metaObject()->className(), "MyComboBox") == 0)
                 {
                     widget->lineEdit()->selectAll();
                     if (i == 0)
@@ -411,7 +411,7 @@ void SearchParameters::keyPressEvent(QKeyEvent *event)
 void SearchParameters::setParent(QWidget* parent)
 {
     QFrame::setParent(parent);
-    if (gridLayout != nullptr)
+    if (gridLayout != 0 /*nullptr*/)
         gridLayout->setParent(parent);
 }
 
@@ -428,10 +428,10 @@ void SearchParameters::clearAllComboBoxes()
     for (int i = 0; i < gridLayout->rowCount(); i++)
     {
         QLayoutItem* item = gridLayout->itemAtPosition(i, 1);
-        if (item != nullptr)
+        if (item != 0 /*nullptr*/)
         {
             MyComboBox* widget = static_cast<MyComboBox*>(item->widget());
-            if (widget != nullptr && QString::compare(widget->metaObject()->className(), "MyComboBox") == 0)
+            if (widget != 0 /*nullptr*/ && QString::compare(widget->metaObject()->className(), "MyComboBox") == 0)
             {
                 widget->lineEdit()->clear();
             }

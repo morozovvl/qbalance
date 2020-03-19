@@ -1,1 +1,1 @@
-#define BUILD_NUMBER "0.44"
+#define BUILD_NUMBER "0.47"

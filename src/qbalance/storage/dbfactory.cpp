@@ -32,10 +32,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 DBFactory::DBFactory() : QObject()
 {
     app = TApplication::exemplar();
-    db = nullptr;
-    dbExtend = nullptr;
+    db = 0 /*nullptr*/;
+    dbExtend = 0 /*nullptr*/;
     updateNum = 0;
-    proc = nullptr;
+    proc = 0 /*nullptr*/;
     dbIsOpened = false;
     extDbExist = false;
 
@@ -387,12 +387,12 @@ void DBFactory::close()
 {
     clearError();
 
-    if(db != nullptr && db->isOpen())
+    if(db != 0 /*nullptr*/ && db->isOpen())
     {
         db->close();
     }
 
-    if(dbExtend != nullptr && dbExtend->isOpen())
+    if(dbExtend != 0 /*nullptr*/ && dbExtend->isOpen())
     {
         dbExtend->close();
     }
@@ -405,7 +405,7 @@ bool DBFactory::exec(QString str, bool showError, QSqlDatabase* db)
 
     clearError();
     QSqlQuery* query;
-    if (db != nullptr && db->isValid())
+    if (db != 0 /*nullptr*/ && db->isValid())
         query = new QSqlQuery(*db);
     else
         query = new QSqlQuery();

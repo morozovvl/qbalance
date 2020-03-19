@@ -122,6 +122,7 @@ public:
     QHash<QString, Documents*> documents;                        // Объекты списков документов
     static int userid;
     static QString username;
+    static QString login;
     static QString password;
     static QString host;
     static int port;
@@ -254,12 +255,12 @@ public:
     Q_INVOKABLE virtual void sleep(int);
 
     Q_INVOKABLE void setDirName(QString str);
-    Q_INVOKABLE QString getOpenFileName(QWidget* parent = nullptr, const QString caption = QString(), const QString dir = QString(), const QString filter = QString(), QString* selectedFilter = nullptr, QFileDialog::Options options = 0);
+    Q_INVOKABLE QString getOpenFileName(QWidget* parent = 0 /*nullptr*/, const QString caption = QString(), const QString dir = QString(), const QString filter = QString(), QString* selectedFilter = 0 /*nullptr*/, QFileDialog::Options options = 0);
 
     void saveCustomization();
     void printReportWithoutCleaning();
     Q_INVOKABLE virtual int runScript(QString);
-    Q_INVOKABLE void printReport(QString, QSqlQuery* = nullptr);
+    Q_INVOKABLE void printReport(QString, QSqlQuery* = 0 /*nullptr*/);
     Q_INVOKABLE void printReport(QString, Dictionary*);
     Q_INVOKABLE QString getScript();                                  // Вернуть название скрипта, заданного в параметрах при запуске программы
     Q_INVOKABLE QString getScriptParameter(int = 0);
@@ -282,12 +283,13 @@ public:
     ScriptEngine*   getLastScriptStack();
 
     QObject*        createPlugin(QString);
-    virtual QMyExtSerialPort* getSerialPort(const QString & name, QMyExtSerialPort::QueryMode mode = QMyExtSerialPort::EventDriven, QObject * parent = nullptr);
+    virtual QMyExtSerialPort* getSerialPort(const QString & name, QMyExtSerialPort::QueryMode mode = QMyExtSerialPort::EventDriven, QObject * parent = 0 /*nullptr*/);
     virtual MyProgressDialog* getMyProgressDialog(QString mess);
     QString         getReportFile(QString, bool, QWidget*, QRect);
     QString         getProcessFile(QString, QWidget*, QRect);
 
     void    openPlugins();
+    void    closePlugins();
 
 // Работа с пользовательской конфигурацией программы
     virtual QVariant        getConfigValue(QString name);
@@ -315,6 +317,7 @@ public slots:
     void loadScriptFile();
     void loadReportFile();
     void loadFormFile();
+
 
 signals:
     void cardCodeReaded(QString);

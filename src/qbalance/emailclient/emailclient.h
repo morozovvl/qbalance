@@ -29,10 +29,11 @@ class EMailClient : public SmtpClient
 {
     Q_OBJECT
 public:
-    explicit EMailClient(const QString & host = "localhost", int port = 25, ConnectionType ct = TcpConnection);
+    EMailClient(const QString & host = "localhost", int port = 25, ConnectionType ct = TcpConnection);
     virtual ~EMailClient();
     virtual bool    open();
     virtual void    close();
+    virtual int sendMail();
 
 signals:
 

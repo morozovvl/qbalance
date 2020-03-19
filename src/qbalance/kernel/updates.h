@@ -62,7 +62,7 @@ private:
     bool                removeDir(const QString &);                             // Удаляет каталоги с вложенными подкаталогами
 
 public:
-    Updates(TApplication*, QObject *parent = nullptr);
+    Updates(TApplication*, QObject *parent = 0 /*nullptr*/);
     ~Updates();
     bool    open();
     void    close();

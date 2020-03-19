@@ -30,24 +30,24 @@ class BarCodeReader : public QObject
 {
     Q_OBJECT
 public:
-    explicit BarCodeReader(QObject *parent = nullptr);
+    explicit BarCodeReader(QObject *parent = 0 /*nullptr*/);
     ~BarCodeReader();
     virtual bool open(QString, int, int);
     virtual void close();
     virtual void setApp(TApplication* a);
     virtual QString getBarCodeString();
-    virtual void testBarCode(QKeyEvent *);
-    
+
 public slots:
     virtual void barCodeReadyRead();
+    virtual bool testBarCode(QString = "");
 
 private:
     QMyExtSerialPort*       serialPort;
     QString                 barCodeString;
     TApplication*           app;
     int                     timeOut;
+    int                     barCodeSymsEntered;
     QTime                   lastTime;
-    bool                    isBarCode;
 };
 
 Q_DECLARE_INTERFACE(BarCodeReader, "org.QBalance.BarCodeReader")

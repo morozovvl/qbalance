@@ -48,8 +48,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 GUIFactory::GUIFactory()
 {
-    db = nullptr;
-    mainWindow = nullptr;
+    db = 0 /*nullptr*/;
+    mainWindow = 0 /*nullptr*/;
     app = TApplication::exemplar();
 }
 
@@ -77,131 +77,116 @@ int GUIFactory::getLastPort()
     return lastPort;
 }
 
+
 int GUIFactory::openDB()
 {
-// Функция пытается создать соединение с БД. В случае удачи возвращает 0.
-// В случае неудачи возвращает следующие коды ошибок:
-//      -1: Пользователь нажал кнопку "Отмена"
-//      -2: Ошибка соединения с сервером
-//      -3: Неверно введен пароль
-//      -4: Пользователь отказался от ввода пароля
+    // Функция пытается создать соединение с БД. В случае удачи возвращает 0.
+    // В случае неудачи возвращает следующие коды ошибок:
+    //      -1: Пользователь нажал кнопку "Отмена"
+    //      -2: Ошибка соединения с сервером
+    //      -3: Неверно введен пароль
+    //      -4: Пользователь отказался от ввода пароля
 
     int returnCode = 0;     // По умолчанию будем считать, что удалось открыть БД
-    QHash<int, UserInfo> users;
-    int key = 0;
 
     app->setWriteDebug(false);
     db = app->getDBFactory();
-    if (TApplication::host.size() > 0 &&
-        TApplication::port != 0 &&
-        TApplication::database.size() > 0 &&
-        TApplication::username.size() > 0 &&
-        TApplication::password.size() > 0)
-    {
-        returnCode = -1;
-        db->setHostName(TApplication::host);
-        db->setPort(TApplication::port);
-        db->setDatabaseName(TApplication::database);
-        if (db->open("test", "*"))
-        {
-            users = db->getUserList();
-            foreach (key, users.keys())
-            {
-                if (users.value(key).loginName == TApplication::username ||
-                    users.value(key).loginName + " " + users.value(key).userName == TApplication::username)
-                {
-                    app->setWriteDebug(true);
-                    if (db->open(users.value(key).loginName, TApplication::password))
-                    {
-                        app->userid = users.value(key).id;
-                        returnCode = 0;
-                        break;
-                    }
-                }
-            }
-        }
-    }
-    else
-    {
-        ConnectionForm* connForm = new ConnectionForm();
-        connForm->open();
-        connForm->initForm(db->getHostName(), db->getDatabaseName(), db->getPort());
-        if (connForm->exec(db))
-        {
-            lastHostName = db->getHostName();
-            lastDbName = db->getDatabaseName();
-            lastPort = db->getPort();
-            if (db->open("test", "*"))
-            {
-                bool formSelected;
-                QString login, password;
 
-                PassWordForm* frm = new PassWordForm(app->getMainWindow());
-                users = db->getUserList();
-                foreach (int key, users.keys())
-                    frm->addLogin(QString(users.value(key).loginName + " " + users.value(key).userName).trimmed());
-                db->close();
-                frm->open();
-                frm->exec();
-                formSelected = frm->isFormSelected();
-                login = frm->getLogin();
-                password = frm->getPassword();
-                frm->hide();
-                frm->close();
-                delete frm;
-
-                if (formSelected)
-                {   // Пользователь нажал кнопку "Ok"
-                    QString userName;
-                    foreach (key, users.keys())
-                    {
-                        if (QString("%1 %2").arg(users.value(key).loginName).arg(users.value(key).userName).trimmed() == login)
-                        {
-                            login = users.value(key).loginName.trimmed();
-                            userName = users.value(key).userName.trimmed();
-                            app->username = userName;
-                            app->userid = users.value(key).id;
-                            break;
-                        }
-                    }
-                    app->setWriteDebug(true);
-                    if (db->open(login, password))
-                    {
-                        app->password = password;
-                    }
-                    else
-                    {
-                        showError(QObject::trUtf8("Неверно введен пароль."));
-                        returnCode = -3;
-                    }
-                }
-                else
-                    returnCode = -4;  //  Пользователь нажал кнопку "Отмена"
-            }
-            else
-                returnCode = -2; // Ошибка соединения с сервером
+    if (app->host.size() == 0 || app->port == 0 || app->database.size() == 0)
+    {
+        ConnectionForm connForm;
+        connForm.open();
+        connForm.initForm(db->getHostName(), db->getDatabaseName(), db->getPort());
+        if (connForm.exec(db))
+        {
+            app->host = db->getHostName();
+            app->database = db->getDatabaseName();
+            app->port = db->getPort();
+            lastHostName = app->host;
+            lastDbName = app->database;
+            lastPort = app->port;
         }
         else
             returnCode = -1;  //  Пользователь нажал кнопку "Отмена"
-        connForm->close();
-        delete connForm;
+    }
+
+    if (returnCode == 0)
+    {
+        db->setHostName(app->host);
+        db->setPort(app->port);
+        db->setDatabaseName(app->database);
+        if (db->open("test", "*"))
+        {
+            bool formSelected = true;
+            QHash<int, UserInfo> users = db->getUserList();
+            if (app->login.size() == 0 || app->password.size() == 0)
+            {
+                app->login = "";
+                app->password = "";
+                PassWordForm frm(app->getMainWindow());
+                foreach (int key, users.keys())
+                    frm.addLogin(QString(users.value(key).loginName + " " + users.value(key).userName).trimmed());
+                db->close();
+                frm.open();
+                frm.exec();
+                if (frm.isFormSelected())
+                {
+                    app->login = frm.getLogin();
+                    app->password = frm.getPassword();
+                }
+                else
+                    formSelected = true;
+                frm.hide();
+                frm.close();
+            }
+
+            returnCode = -4;  //  По умолчанию пользователь нажал кнопку "Отмена"
+            if (formSelected)
+            {
+                if (app->login.size() > 0/* && app->password.size() > 0*/)
+                {
+                    foreach (int key, users.keys())
+                    {
+                        if (users.value(key).loginName == app->login ||
+                            users.value(key).loginName + " " + users.value(key).userName == app->login)
+                        {
+                            app->setWriteDebug(true);
+                            app->login = users.value(key).loginName;
+                            app->username = users.value(key).userName;
+                            if (db->open(app->login, app->password))
+                            {
+                                app->userid = users.value(key).id;
+                                returnCode = 0;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        else
+            returnCode = -2; // Ошибка соединения с сервером
     }
     return returnCode;
 }
 
-void GUIFactory::closeDB() {
+
+void GUIFactory::closeDB()
+{
     if (db->isOpened())
         db->close();
 }
 
 
-void GUIFactory::setPeriod() {
+void GUIFactory::setPeriod()
+{
     CalendarForm* calendar = new CalendarForm();
     calendar->open(mainWindow->centralWidget());
     calendar->setBeginDate(app->getBeginDate());
     calendar->setEndDate(app->getEndDate());
     calendar->exec();
-    if (calendar->isFormSelected()) {
+    if (calendar->isFormSelected())
+    {
         app->setBeginDate(calendar->getBeginDate());
         app->setEndDate(calendar->getEndDate());
         app->getDBFactory()->setPeriod(calendar->getBeginDate(), calendar->getEndDate());
@@ -210,7 +195,8 @@ void GUIFactory::setPeriod() {
 }
 
 
-void GUIFactory::show() {
+void GUIFactory::show()
+{
     mainWindow->show();
 }
 
@@ -225,10 +211,10 @@ int GUIFactory::showError(QString errorText)
 {
     Qt::WindowModality WidgetModality = Qt::WindowModal;
     QWidget* widget = app->activeWindow();
-    if (widget == nullptr)
+    if (widget == 0 /*nullptr*/)
         widget = app->getMainWindow()->getWorkSpace()->activeSubWindow();
 
-    if (widget != nullptr)
+    if (widget != 0 /*nullptr*/)
     {
         WidgetModality = widget->windowModality();
         widget->setWindowModality(Qt::NonModal);
@@ -241,7 +227,7 @@ int GUIFactory::showError(QString errorText)
     msgBox.setWindowTitle("Ошибка!");
     msgBox.exec();
 
-    if (widget != nullptr)
+    if (widget != 0 /*nullptr*/)
     {
         widget->setWindowModality(WidgetModality);
         widget->activateWindow();
@@ -250,17 +236,19 @@ int GUIFactory::showError(QString errorText)
 }
 
 
-int GUIFactory::showMessage(QString message, QString question, QMessageBox::StandardButtons buttons, QMessageBox::StandardButton defButton) {
+int GUIFactory::showMessage(QString message, QString question, QMessageBox::StandardButtons buttons, QMessageBox::StandardButton defButton)
+{
     int result = 0;
-    QMdiSubWindow* window = nullptr;
-    if (mainWindow != nullptr)
+    QMdiSubWindow* window = 0 /*nullptr*/;
+    if (mainWindow != 0 /*nullptr*/)
         window = mainWindow->getWorkSpace()->activeSubWindow();
     QMessageBox msgBox(window);
     msgBox.setWindowModality(Qt::ApplicationModal);
     msgBox.setParent(app->getMainWindow(), Qt::Dialog);
     msgBox.setWindowTitle(QObject::trUtf8("Внимание!"));
     msgBox.setText(message);
-    if (question.size() > 0) {          // Если пользователю задан вопрос, то предусмотреть варианты ответа
+    if (question.size() > 0)
+    {          // Если пользователю задан вопрос, то предусмотреть варианты ответа
         msgBox.setIcon(QMessageBox::Question);
         msgBox.setInformativeText(question);
         msgBox.setStandardButtons(buttons);
@@ -270,7 +258,8 @@ int GUIFactory::showMessage(QString message, QString question, QMessageBox::Stan
         QAbstractButton* buttonNo = msgBox.button(QMessageBox::No);
         buttonNo->setIcon(QIcon(":buttonCancel"));
      }
-    else {                              // Вопрос не задан, значит выведем только кнопку "Ok"
+    else
+    {                              // Вопрос не задан, значит выведем только кнопку "Ok"
         msgBox.setIcon(QMessageBox::Information);
     }
     msgBox.setMinimumWidth(400);
@@ -279,7 +268,7 @@ int GUIFactory::showMessage(QString message, QString question, QMessageBox::Stan
     msgBox.activateWindow();
     msgBox.raise();
     result = msgBox.exec();
-    if (window != nullptr)
+    if (window != 0 /*nullptr*/)
         mainWindow->getWorkSpace()->setActiveSubWindow(window);
     return result;
 }
@@ -291,18 +280,21 @@ int GUIFactory::showYesNo(QString question)
 }
 
 
-bool GUIFactory::open() {
+bool GUIFactory::open()
+{
     mainWindow = new MainWindow(this);
     mainWindow->open();
     return true;
 }
 
-void GUIFactory::close() {
+void GUIFactory::close()
+{
     mainWindow->close();
     delete mainWindow;
 }
 
-void GUIFactory::setWindowTitle(QString title) {
+void GUIFactory::setWindowTitle(QString title)
+{
     if (title.size() > 0)
         mainWindow->setWindowTitle(title);
 }

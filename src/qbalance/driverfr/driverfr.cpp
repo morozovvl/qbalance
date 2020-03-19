@@ -405,11 +405,11 @@ DriverFR::DriverFR(QObject *parent) : QObject(parent)
     remote = false;
     locked = false;
     codec = QTextCodec::codecForName("Windows-1251");
-    app = nullptr;
-    progressDialog = nullptr;
+    app = 0 /*nullptr*/;
+    progressDialog = 0 /*nullptr*/;
     showProgressBar = false;
     maxTries = MAX_TRIES;
-    serialPort = nullptr;
+    serialPort = 0 /*nullptr*/;
 }
 
 
@@ -422,7 +422,7 @@ DriverFR::~DriverFR()
 bool DriverFR::open(QString port, int rate, int timeout, int password)
 {
     bool result = false;
-    if (app == nullptr)
+    if (app == 0 /*nullptr*/)
         return result;
     locked = false;
     // Установление связи с ккм
@@ -432,7 +432,7 @@ bool DriverFR::open(QString port, int rate, int timeout, int password)
     fr.Timeout       = timeout;
     fr.Password      = password;
     serialPort = app->getSerialPort(port);
-    if (serialPort != nullptr)
+    if (serialPort != 0 /*nullptr*/)
     {
         // Сначала поищем на удаленном компьютере, т.к. это быстрее
         if (serialPort->getTcpClient()->isValid() && app->getConfigValue("FR_USE_REMOTE").toBool())
@@ -440,7 +440,7 @@ bool DriverFR::open(QString port, int rate, int timeout, int password)
             remote = true;
             serialPort->setRemote(remote);
 
-//            fr.PortNumber = nullptr;
+//            fr.PortNumber = 0 /*nullptr*/;
 //            fr.BaudRate = app->getConfigValue("FR_DRIVER_BOUD_RATE").toInt();
 //            if (remote)
 //                fr.Timeout = app->getConfigValue("FR_REMOTE_DRIVER_TIMEOUT").toInt();
@@ -484,7 +484,7 @@ bool DriverFR::open(QString port, int rate, int timeout, int password)
         if (result)
         {
             serialPort->setRemote(remote);
-            if (app->getGUIFactory() != nullptr)
+            if (app->getGUIFactory() != 0 /*nullptr*/)
             {
                 progressDialog = app->getMyProgressDialog(trUtf8("Ожидайте окончания работы фискального регистратора..."));
                 progressDialog->resize(600, progressDialog->height());
@@ -1231,7 +1231,7 @@ int DriverFR::GetShortECRStatus()
 //        fr.FMSoftVersion[0] = a.buff[18];
 //        fr.FMSoftVersion[1] = 0x2e;
 //        fr.FMSoftVersion[2] = a.buff[19];
-//        fr.FMSoftVersion[3] = nullptr;
+//        fr.FMSoftVersion[3] = 0 /*nullptr*/;
 //        fr.FMBuild = evalint((unsigned char*)&a.buff + 20, 2);
 //        evaldate((unsigned char*)&a.buff + 22, &fr.FMSoftDate);
 //        evaldate((unsigned char*)&a.buff + 25, &fr.Date);

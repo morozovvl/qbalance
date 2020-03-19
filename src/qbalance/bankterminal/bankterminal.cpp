@@ -29,9 +29,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 BankTerminal::BankTerminal(QObject *parent) : QObject(parent)
 {
-    app = nullptr;
-    driverFR = nullptr;
-    termProcess = nullptr;
+    app = 0 /*nullptr*/;
+    driverFR = 0 /*nullptr*/;
+    termProcess = 0 /*nullptr*/;
 
     path = "";
 #if  defined(Q_OS_LINUX)
@@ -76,7 +76,7 @@ void BankTerminal::removeConfigs()
 bool BankTerminal::open()
 {
     bool result = false;
-    if (app != nullptr)
+    if (app != 0 /*nullptr*/)
     {
         path = app->getConfigValue(BANK_TERMINAL_PATH).toString();
         program = path + program;
@@ -98,7 +98,7 @@ bool BankTerminal::open()
         {
             TcpClient* tcpClient = app->getTcpClient();
             // а теперь поищем на удаленном, если TcpClient исправен
-            if (tcpClient != nullptr)
+            if (tcpClient != 0 /*nullptr*/)
             {
                 if (tcpClient->sendToServer(BANK_TERMINAL_IS_READY) && tcpClient->waitResult())
                 {
@@ -122,7 +122,7 @@ bool BankTerminal::open()
 
 void BankTerminal::close()
 {
-    if (termProcess != nullptr)
+    if (termProcess != 0 /*nullptr*/)
         delete termProcess;
 }
 
@@ -174,7 +174,7 @@ bool BankTerminal::process(int oper, int sum, int type, int track)
     {
         TcpClient* tcpClient = app->getTcpClient();
         // а теперь поищем на удаленном, если указан его IP
-        if (tcpClient != nullptr)
+        if (tcpClient != 0 /*nullptr*/)
         {
             if (tcpClient->sendToServer(BANK_TERMINAL_IS_LOCKED) && tcpClient->waitResult())
             {
@@ -271,7 +271,7 @@ void BankTerminal::printSlip()
     {
         locked = true;
         QString fileName = path + "p";
-        if (QFileInfo(fileName).exists() && driverFR != nullptr)
+        if (QFileInfo(fileName).exists() && driverFR != 0 /*nullptr*/)
         {
             QFile file(fileName);
             if (file.open(QIODevice::ReadOnly | QIODevice::Text))

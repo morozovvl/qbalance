@@ -32,7 +32,7 @@ class MyProgressDialog : public QProgressDialog
 {
     Q_OBJECT
 public:
-    MyProgressDialog(QString = "", QWidget* = nullptr);
+    MyProgressDialog(QString = "", QWidget* = 0 /*nullptr*/);
     ~MyProgressDialog();
     Q_INVOKABLE virtual void setTitle(QString);
     Q_INVOKABLE virtual bool isEscapeKeyPressed();

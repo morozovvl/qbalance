@@ -84,7 +84,7 @@ void Reports::show()
 
 void Reports::setForm(QString)
 {
-    if (form != nullptr)
+    if (form != 0 /*nullptr*/)
     {
         form->close();
         delete form;

@@ -49,7 +49,7 @@ class Picture: public QFrame {
     Q_OBJECT
 
 public:
-    Picture(QWidget* parent = nullptr);
+    Picture(QWidget* parent = 0 /*nullptr*/);
     ~Picture();
     Q_INVOKABLE virtual void show(QString);
     virtual void showBigPicture();
@@ -59,7 +59,7 @@ public:
     Q_INVOKABLE virtual QString getPhotoFileName();
     Q_INVOKABLE virtual void setPhotoWindowTitle(QString);
     virtual void        setIsBig(bool big);
-    virtual void        setForm(FormGrid* f = nullptr);
+    virtual void        setForm(FormGrid* f = 0 /*nullptr*/);
     virtual bool        isPictureExist();
 
 protected:

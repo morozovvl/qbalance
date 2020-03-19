@@ -39,7 +39,7 @@ class MyDateItemDelegate : public MyItemDelegate
 {
     Q_OBJECT
 public:
-    MyDateItemDelegate(QObject*, FormGrid* = nullptr);
+    MyDateItemDelegate(QObject*, FormGrid* = 0 /*nullptr*/);
     virtual QWidget* createEditor(QWidget*, const QStyleOptionViewItem &, const QModelIndex &) const;
 };
 

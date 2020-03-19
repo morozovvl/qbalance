@@ -45,7 +45,7 @@ class DBFactory;
 class ConnectionForm : public Form {
     Q_OBJECT
 public:
-    ConnectionForm(QObject* parent = nullptr);
+    ConnectionForm(QObject* parent = 0 /*nullptr*/);
     ~ConnectionForm();
     virtual void initForm(QString, QString, int, bool readSettings = true);
     QString connectionName();

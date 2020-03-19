@@ -37,11 +37,11 @@ public:
     Q_INVOKABLE virtual int getInsertReturningId(QString, QString, QString);
 
     virtual void setFile(QString, FileType, QByteArray, bool = false);
-    Q_INVOKABLE virtual bool exec(QString = "", bool = true, QSqlDatabase* = nullptr);
+    Q_INVOKABLE virtual bool exec(QString = "", bool = true, QSqlDatabase* = 0 /*nullptr*/);
 
     virtual QDate toDate(QVariant);
 
-    Q_INVOKABLE virtual QSqlQuery execQuery(QString, bool = true, QSqlDatabase* = nullptr);
+    Q_INVOKABLE virtual QSqlQuery execQuery(QString, bool = true, QSqlDatabase* = 0 /*nullptr*/);
 
     virtual int querySize(QSqlQuery*);
 

@@ -31,7 +31,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 Report::Report(QString name, QObject* parent): Dictionary(name, parent)
 {
-    dict = nullptr;
+    dict = 0 /*nullptr*/;
 }
 
 
@@ -43,7 +43,7 @@ bool Report::open(QDate bDate, QDate eDate, QString acc, QString)
 
     dict = app->getDictionary(db->getAccountsValue(account, "ИМЯСПРАВОЧНИКА").toString());
 
-    if (dict != nullptr)
+    if (dict != 0 /*nullptr*/)
     {
         dictEnabled = dict->isEnabled();
         dict->setEnabled(false);
@@ -68,7 +68,7 @@ bool Report::open(QDate bDate, QDate eDate, QString acc, QString)
                 table->appendColumnDefinition("ДЕБЕТ", "Дебет", true, 10, 2);
                 table->appendColumnDefinition("КРЕДИТ", "Кредит", true, 10, 2);
 
-                if (form->getButtonView() != nullptr)
+                if (form->getButtonView() != 0 /*nullptr*/)
                     form->getButtonView()->setVisible(true);
 
                 result = true;
@@ -81,7 +81,7 @@ bool Report::open(QDate bDate, QDate eDate, QString acc, QString)
 
 void Report::close()
 {
-    if (dict != nullptr)
+    if (dict != 0 /*nullptr*/)
         dict->setEnabled(dictEnabled);
 
     Dictionary::close();

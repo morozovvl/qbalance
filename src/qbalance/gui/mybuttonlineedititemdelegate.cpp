@@ -36,13 +36,13 @@ void MyButtonLineEditItemDelegate::setFormOnPushButton(QString (*form)())
 
 QWidget* MyButtonLineEditItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem&, const QModelIndex&) const
 {
-    MyButtonLineEdit* editorWidget = nullptr;
+    MyButtonLineEdit* editorWidget = 0 /*nullptr*/;
     if (!menuMode)
     {
         editorWidget = new MyButtonLineEdit(parent);
         if (!readOnly)
         {
-            if (essence != nullptr)
+            if (essence != 0 /*nullptr*/)
             {
                 essence->saveOldValues();
                 disconnect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));

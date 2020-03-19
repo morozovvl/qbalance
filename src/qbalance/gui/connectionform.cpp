@@ -75,11 +75,11 @@ void ConnectionForm::initForm(QString hostName, QString dbName, int portNum, boo
     ptopLayout->addWidget(ptxtPort, 2, 1);
     ptopLayout->addWidget(ptxtDatabase, 3, 1);
     QVBoxLayout* vbxLayout = static_cast<QVBoxLayout*>(formWidget->findChild("vbxLayout"));
-    if (vbxLayout != nullptr)
+    if (vbxLayout != 0 /*nullptr*/)
     {
         vbxLayout->insertLayout(0, ptopLayout);
         QHBoxLayout* cmdButtonLayout = static_cast<QHBoxLayout*>(formWidget->findChild("cmdButtonLayout"));
-        if (cmdButtonLayout != nullptr)
+        if (cmdButtonLayout != 0 /*nullptr*/)
         {
             QPushButton* buttonDelete = insertButton("buttonDelete");
             buttonDelete->setToolTip(trUtf8("Удалить настройки подключения"));

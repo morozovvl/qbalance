@@ -28,7 +28,7 @@ class CardCodeReader : public QObject
 {
     Q_OBJECT
 public:
-    explicit CardCodeReader(QObject *parent = nullptr);
+    explicit CardCodeReader(QObject *parent = 0 /*nullptr*/);
     virtual bool open();
     virtual void close();
     virtual void setApp(TApplication* a);

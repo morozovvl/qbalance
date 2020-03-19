@@ -35,7 +35,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 MessageWindow::MessageWindow() : QObject()
 {
-    subWindow = nullptr;
+    subWindow = 0 /*nullptr*/;
     app = TApplication::exemplar();
     configName = "messagesWindow";
     textEditor = new QTextEdit();
@@ -44,7 +44,7 @@ MessageWindow::MessageWindow() : QObject()
 
     if (app->getMainWindow()->isVisible() && !app->isScriptMode())
     {
-        if (subWindow == nullptr)
+        if (subWindow == 0 /*nullptr*/)
             subWindow = app->getMainWindow()->appendMdiWindow(textEditor);
     }
 
@@ -56,10 +56,10 @@ MessageWindow::MessageWindow() : QObject()
 MessageWindow::~MessageWindow()
 {
     writeSettings();
-    if (subWindow != nullptr)
+    if (subWindow != 0 /*nullptr*/)
     {
         app->getMainWindow()->removeMdiWindow(subWindow);
-        subWindow = nullptr;
+        subWindow = 0 /*nullptr*/;
     }
     delete textEditor;
 }
@@ -86,7 +86,7 @@ void MessageWindow::show()
 {
     if (app->getMainWindow()->isVisible() && !app->isScriptMode())
     {
-        if (subWindow != nullptr)
+        if (subWindow != 0 /*nullptr*/)
         {
             textEditor->show();
             subWindow->show();
@@ -104,7 +104,7 @@ void MessageWindow::show()
 
 void MessageWindow::hide()
 {
-    if (subWindow != nullptr)
+    if (subWindow != 0 /*nullptr*/)
     {
         subWindow->hide();
     }
@@ -153,7 +153,7 @@ void MessageWindow::readSettings()
     int w = settingValues.value("width");
     int h = settingValues.value("height");
 
-    if (subWindow != nullptr)
+    if (subWindow != 0 /*nullptr*/)
         subWindow->setGeometry(x, y, w, h);
     else
         textEditor->setGeometry(x, y, w, h);
@@ -165,7 +165,7 @@ void MessageWindow::writeSettings()
     // Сохраним данные локально, на компьютере пользователя
     int x, y, w, h;
 
-    if (subWindow != nullptr)
+    if (subWindow != 0 /*nullptr*/)
     {
         x = subWindow->geometry().x();
         y = subWindow->geometry().y();

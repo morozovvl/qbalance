@@ -30,19 +30,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 Dialog::Dialog(QWidget *parent, Qt::WindowFlags f):
     QDialog(parent, f)
 {
-    app = nullptr;
-    form = nullptr;
-    buttonOk = nullptr;
-    buttonCancel = nullptr;
+    app = 0 /*nullptr*/;
+    form = 0 /*nullptr*/;
+    buttonOk = 0 /*nullptr*/;
+    buttonCancel = 0 /*nullptr*/;
 
     isSelected = false;
     formChanged = false;
     moveCount = 1;
-}
-
-
-Dialog::~Dialog()
-{
 }
 
 
@@ -64,11 +59,11 @@ void Dialog::setApp(TApplication* a)
     setParent(app->getMainWindow(), Qt::Dialog);
 
     buttonOk = static_cast<QPushButton*>(this->findChild("buttonOk"));
-    if (buttonOk != nullptr)
+    if (buttonOk != 0 /*nullptr*/)
         connect(buttonOk, SIGNAL(clicked()), this, SLOT(cmdOk()));
 
     buttonCancel = static_cast<QPushButton*>(this->findChild("buttonCancel"));
-    if (buttonCancel != nullptr)
+    if (buttonCancel != 0 /*nullptr*/)
         connect(buttonCancel, SIGNAL(clicked()), this, SLOT(cmdCancel()));
 }
 
@@ -76,7 +71,7 @@ void Dialog::setApp(TApplication* a)
 void Dialog::cmdOk()
 {
     isSelected = true;
-    if (form != nullptr)
+    if (form != 0 /*nullptr*/)
         form->cmdOk();
     else
         accept();
@@ -86,7 +81,7 @@ void Dialog::cmdOk()
 void Dialog::cmdCancel()
 {
     isSelected = false;
-    if (form != nullptr)
+    if (form != 0 /*nullptr*/)
         form->cmdCancel();
     else
         accept();
@@ -95,7 +90,7 @@ void Dialog::cmdCancel()
 
 bool Dialog::isFormSelected()
 {
-    if (form != nullptr)
+    if (form != 0 /*nullptr*/)
         return form->isFormSelected();
     return isSelected;
 }
@@ -105,7 +100,7 @@ void Dialog::showEvent(QShowEvent* event)
 {
     isSelected = false;
     QDialog::showEvent(event);
-    if (form != nullptr)
+    if (form != 0 /*nullptr*/)
         form->activateWidget();
 }
 

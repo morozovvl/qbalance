@@ -42,7 +42,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 class MyBooleanItemDelegate : public MyItemDelegate {
     Q_OBJECT
 public:
-    MyBooleanItemDelegate(QObject*, FormGrid* = nullptr);
+    MyBooleanItemDelegate(QObject*, FormGrid* = 0 /*nullptr*/);
     virtual QWidget* createEditor(QWidget*, const QStyleOptionViewItem &, const QModelIndex &) const;
     virtual void paint(QPainter*, const QStyleOptionViewItem&, const QModelIndex&) const;
 };

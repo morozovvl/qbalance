@@ -38,7 +38,7 @@ class SearchParameters;
 class MyComboBox : public QComboBox {
    Q_OBJECT
 public:
-    MyComboBox(QWidget* parent = nullptr);
+    MyComboBox(QWidget* parent = 0 /*nullptr*/);
     ~MyComboBox();
     virtual void setSearchParameters(SearchParameters* sp);
 

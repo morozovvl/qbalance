@@ -37,7 +37,7 @@ class MyButtonLineEdit : public QWidget
     Q_OBJECT
     Q_PROPERTY(QString value READ value WRITE setValue)
 public:
-    MyButtonLineEdit(QWidget *parent = nullptr);
+    MyButtonLineEdit(QWidget *parent = 0 /*nullptr*/);
     ~MyButtonLineEdit();
     QString value();
     void setValue(QString text);

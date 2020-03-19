@@ -39,11 +39,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 TableView::TableView(): QTableView()
 {
-    app = nullptr;
-    parent = nullptr;
-    tableModel = nullptr;
-    essence = nullptr;
-    picture = nullptr;
+    app = 0 /*nullptr*/;
+    parent = 0 /*nullptr*/;
+    tableModel = 0 /*nullptr*/;
+    essence = 0 /*nullptr*/;
+    picture = 0 /*nullptr*/;
     fieldCounter = 0;
     hideZero = false;   // По умолчанию нулевые значения будем показывать
     readOnly = false;
@@ -175,7 +175,7 @@ void TableView::setCurrentFocus()
 
 void TableView::cmdView()
 {
-    if (picture != nullptr)
+    if (picture != 0 /*nullptr*/)
         picture->hide();
     essence->view();
 }
@@ -192,7 +192,7 @@ void TableView::currentChanged(const QModelIndex &current, const QModelIndex &pr
 {
     if (current.row() != previous.row())
     {
-        if (essence != nullptr)
+        if (essence != 0 /*nullptr*/)
             essence->beforeRowChanged();
     }
 
@@ -200,7 +200,7 @@ void TableView::currentChanged(const QModelIndex &current, const QModelIndex &pr
 
     if (current.row() != previous.row() && currentChangedScripts)
     {
-        if (essence != nullptr)
+        if (essence != 0 /*nullptr*/)
         {
             essence->afterRowChanged();
             if (essence->isPhotoEnabled())
@@ -218,7 +218,7 @@ void TableView::keyPressEvent(QKeyEvent* event)
     if (!event->isAccepted())
         app->readCardReader(event);
 
-    if (parent != nullptr && !event->isAccepted())
+    if (parent != 0 /*nullptr*/ && !event->isAccepted())
     {
         if (event->modifiers() != Qt::ControlModifier)
         {
@@ -290,7 +290,7 @@ void TableView::restoreCurrentIndex(QModelIndex index)
 
 void TableView::setColumnsHeaders()
 {
-    if (parent != nullptr)
+    if (parent != 0 /*nullptr*/)
     {
         if (!columnsHeadersSeted)
         {
@@ -313,7 +313,7 @@ void TableView::setColumnsHeaders()
                     if (columnsProperties->at(i).number > 0)
                     {
                         MyItemDelegate* delegate = getColumnDelegate(columnsProperties->at(i));
-                        if (delegate != nullptr)
+                        if (delegate != 0 /*nullptr*/)
                         {
                             delegate->setFieldName(columnsProperties->at(i).column);
                             setItemDelegateForColumn(i, delegate);
@@ -409,7 +409,7 @@ void TableView::showAllGridSections()
 
 MyItemDelegate* TableView::getColumnDelegate(FieldType fld)
 {
-    MyItemDelegate* result = nullptr;
+    MyItemDelegate* result = 0 /*nullptr*/;
     if (fld.type.toUpper() == "NUMERIC" || fld.type.toUpper() == "INTEGER")
     {     // для числовых полей зададим свой самодельный делегат
         MyNumericItemDelegate* numericDelegate = new MyNumericItemDelegate(this, parent, fld.length, fld.precision);
@@ -443,7 +443,7 @@ MyItemDelegate* TableView::getColumnDelegate(FieldType fld)
 
 bool TableView::columnIsReadOnly()
 {
-    if (tableModel != nullptr && tableModel->rowCount() > 0)
+    if (tableModel != 0 /*nullptr*/ && tableModel->rowCount() > 0)
     {
         QModelIndex index = currentIndex();
         if (!index.isValid())
@@ -453,7 +453,7 @@ bool TableView::columnIsReadOnly()
         if (!horizontalHeader()->isSectionHidden(logicalIndex))
         {
             MyItemDelegate* delegate = static_cast<MyItemDelegate*>(itemDelegateForColumn(logicalIndex));
-            if (delegate != nullptr && !delegate->isReadOnly())    // Если эта колонка для редактирования
+            if (delegate != 0 /*nullptr*/ && !delegate->isReadOnly())    // Если эта колонка для редактирования
             {
                 return false;
             }
@@ -466,7 +466,7 @@ bool TableView::columnIsReadOnly()
 void TableView::selectNextColumn()
 // Ищет следующую колонку для редактирования
 {
-    if (tableModel != nullptr && tableModel->rowCount() > 0)
+    if (tableModel != 0 /*nullptr*/ && tableModel->rowCount() > 0)
     {
         QModelIndex index = currentIndex();
         if (!index.isValid())
@@ -496,7 +496,7 @@ void TableView::selectNextColumn()
             if (!horizontalHeader()->isSectionHidden(logicalIndex))
             {
                 MyItemDelegate* delegate = static_cast<MyItemDelegate*>(itemDelegateForColumn(logicalIndex));
-                if (delegate != nullptr && !delegate->isReadOnly())    // Если эта колонка для редактирования
+                if (delegate != 0 /*nullptr*/ && !delegate->isReadOnly())    // Если эта колонка для редактирования
                 {
                     setCurrentIndex(newIndex);
                     break;
@@ -542,7 +542,7 @@ void TableView::selectPreviousColumn()
         {
             setCurrentIndex(newIndex);
             MyItemDelegate* delegate = static_cast<MyItemDelegate*>(itemDelegateForColumn(logicalIndex));
-            if (delegate != nullptr && !delegate->isReadOnly())    // Если эта колонка для редактирования
+            if (delegate != 0 /*nullptr*/ && !delegate->isReadOnly())    // Если эта колонка для редактирования
                 break;
         }
         if (column == oldColumn)                            // Выход из бесконечного цикла в случае, если ни одного поля для редактирования не найдено
@@ -554,7 +554,7 @@ void TableView::selectPreviousColumn()
 void TableView::showPhoto()
 {
     QString photoFileName = "";
-    if (picture != nullptr && essence != nullptr)
+    if (picture != 0 /*nullptr*/ && essence != 0 /*nullptr*/)
     {
         if (tableModel->rowCount() > 0)
         {
@@ -579,7 +579,7 @@ void TableView::setReadOnly(bool ro)
     for (int i = 0; i < columnsProperties->count(); i++)
     {
         MyItemDelegate* itemDelegate = static_cast<MyItemDelegate*>(itemDelegateForColumn(i));
-        if (itemDelegate != nullptr)
+        if (itemDelegate != 0 /*nullptr*/)
             itemDelegate->setReadOnly(readOnly || columnsProperties->at(i).readOnly);
     }
 }

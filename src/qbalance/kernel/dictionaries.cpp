@@ -32,7 +32,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 Dictionaries::Dictionaries(QObject *parent): Dictionary("", parent)
 {
-    document = nullptr;
+    document = 0 /*nullptr*/;
 }
 
 
@@ -57,10 +57,10 @@ void Dictionaries::postInitialize(QString, QObject* parent)
     lDeleteable = app->isSA();       // Если работает пользователь SA, то можно попытаться удалить справочник
     lUpdateable = false;
     lPrintable = false;
-    document = nullptr;
+    document = 0 /*nullptr*/;
     lIsSaldoExist = false;
     formTitle = QObject::trUtf8("Справочники");
-    scriptEngine = nullptr;
+    scriptEngine = 0 /*nullptr*/;
     scriptEngineEnabled = false;
     photoEnabled = false;
 }
@@ -90,20 +90,20 @@ bool Dictionaries::isSaldoExist()
 }
 
 
-Dictionary* Dictionaries::getDictionary(QString dictName, bool addDict)
+Dictionary* Dictionaries::getDictionary(QString dictName, bool addDict, bool createScripts)
 {
     dictName = dictName.trimmed().toLower();
     if (dictName.size() == 0)
-        return nullptr;
+        return 0 /*nullptr*/;
     if (!dictionariesList.contains(dictName))
     {             // Если справочник с таким именем не существует, то попробуем его создать
         if (addDict)
         {
-            if (!addDictionary(dictName))
-                return nullptr;
+            if (!addDictionary(dictName, createScripts))
+                return 0 /*nullptr*/;
         }
         else
-            return nullptr;
+            return 0 /*nullptr*/;
     }
     return dictionariesList.value(dictName);
 }
@@ -112,19 +112,19 @@ Dictionary* Dictionaries::getDictionary(QString dictName, bool addDict)
 Saldo* Dictionaries::getSaldo(QString acc)
 {
     if (acc.size() == 0)
-        return nullptr;
+        return 0 /*nullptr*/;
     QString alias = "saldo" + acc;
     if (!dictionariesList.contains(alias))
     {             // Если справочник с таким именем не существует, то попробуем его создать
         if (!addSaldo(acc))
-            return nullptr;
+            return 0 /*nullptr*/;
     }
     lIsSaldoExist = true;
     return static_cast<Saldo*>(dictionariesList[alias]);
 }
 
 
-bool Dictionaries::addDictionary(QString dictName)
+bool Dictionaries::addDictionary(QString dictName, bool createScripts)
 {
     dictName = dictName.trimmed().toLower();
     if (dictName.size() == 0)
@@ -134,6 +134,7 @@ bool Dictionaries::addDictionary(QString dictName)
         Dictionary* dict = Dictionary::create<Dictionary>(dictName, this);
 
         dict->setDictionaries(this);
+        dict->setScriptEngineEnabled(createScripts);
 
         if (dict->open())
         {
@@ -151,7 +152,7 @@ bool Dictionaries::addDictionary(QString dictName)
                     foreach (QString dictName, dict->getChildDicts())
                     {
                         Dictionary* childDict = getDictionary(dictName);
-                        if (childDict != nullptr)
+                        if (childDict != 0 /*nullptr*/)
                             childDict->setParentDict(dict);
                     }
                 }
@@ -288,8 +289,9 @@ void Dictionaries::cmdOk()
     if (dictName.size() > 0) {
         Dictionaries* dicts = app->getDictionaries();
         Dictionary* dict = dicts->getDictionary(dictName);         // Откроем справочник и подсправочники 1-го уровня
-        if (dict != nullptr)
+        if (dict != 0 /*nullptr*/)
         {
+            dict->openScripts();
             dict->show();
         }
     }
@@ -298,7 +300,7 @@ void Dictionaries::cmdOk()
 
 void Dictionaries::setForm(QString formName)
 {
-    if (form != nullptr)
+    if (form != 0 /*nullptr*/)
     {
         form->close();
         delete form;

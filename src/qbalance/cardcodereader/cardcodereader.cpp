@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 CardCodeReader::CardCodeReader(QObject *parent) :
     QObject(parent)
 {
-    app = nullptr;
+    app = 0 /*nullptr*/;
 }
 
 

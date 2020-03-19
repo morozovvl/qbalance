@@ -60,7 +60,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 QMyExtSerialPort::~QMyExtSerialPort()
 {
-    tcpClient = nullptr;
+    tcpClient = 0 /*nullptr*/;
 }
 
 
@@ -184,7 +184,7 @@ qint64 QMyExtSerialPort::readData(char* data, qint64 maxSize, bool fromRemote)
         tryReceiveExit = true;              // Не будем больше постоянно опрашивать COM порт
         appendLog(false, QByteArray(data, static_cast<int>(maxSize)).toHex().data(), fromRemote);
     }
-    else if (tcpClient != nullptr  && tcpClient->isValid()&& !fromRemote)
+    else if (tcpClient != 0 /*nullptr*/  && tcpClient->isValid()&& !fromRemote)
     {
         QString command = QString("=fr=<<%1").arg(maxSize);
         if (tcpClient->sendToServer(command))
@@ -224,7 +224,7 @@ qint64 QMyExtSerialPort::writeData(const char * data, qint64 maxSize, bool fromR
 
         appendLog(true, QByteArray(data, static_cast<int>(maxSize)).toHex().data(), fromRemote);
     }
-    else if (tcpClient != nullptr && tcpClient->isValid() && !fromRemote)
+    else if (tcpClient != 0 /*nullptr*/ && tcpClient->isValid() && !fromRemote)
     {
         if (tcpClient->sendToServer("=fr=>>" + QString(QByteArray(data, static_cast<int>(maxSize)).toHex().data())))
         {
@@ -251,7 +251,7 @@ qint64 QMyExtSerialPort::writeData(QString string, bool fromRemote)
 bool QMyExtSerialPort::isReadyDriverFR()
 {
     bool result = false;
-    if (tcpClient != nullptr && tcpClient->isValid())
+    if (tcpClient != 0 /*nullptr*/ && tcpClient->isValid())
     {
         if (tcpClient->sendToServer("driverFRisReady") && tcpClient->waitResult())
         {
@@ -267,7 +267,7 @@ bool QMyExtSerialPort::isReadyDriverFR()
 bool QMyExtSerialPort::isLockedDriverFR()
 {
     bool result = false;
-    if (remote && tcpClient != nullptr && tcpClient->isValid())
+    if (remote && tcpClient != 0 /*nullptr*/ && tcpClient->isValid())
     {
         if (tcpClient->sendToServer("isLockedDriverFR") && tcpClient->waitResult())
         {
@@ -282,7 +282,7 @@ bool QMyExtSerialPort::isLockedDriverFR()
 bool QMyExtSerialPort::setLock(bool lock)
 {
     bool locked = false;
-    if (remote && tcpClient != nullptr && tcpClient->isValid())
+    if (remote && tcpClient != 0 /*nullptr*/ && tcpClient->isValid())
     {
         QString command;
         if (lock)
@@ -331,7 +331,7 @@ void QMyExtSerialPort::appendLog(bool out, QString str, bool fromRemote)
 
 void QMyExtSerialPort::writeLog(QString str, bool fromRemote)
 {
-    if (remote && tcpClient != nullptr && tcpClient->isValid())
+    if (remote && tcpClient != 0 /*nullptr*/ && tcpClient->isValid())
     {
         tcpClient->sendToServer(QString("=fr=writeLog=%1").arg(str));
     }

@@ -79,7 +79,7 @@ private:
     MyNumericEdit*    itogNumeric;
     QMenu*          queriesMenu;
     QTextEdit*      textEdit;
-    virtual void createForm(QString, QWidget* pwgt = nullptr);
+    virtual void createForm(QString, QWidget* pwgt = 0 /*nullptr*/);
 //    virtual QDomElement createWidgetsStructure();
 
 private slots:

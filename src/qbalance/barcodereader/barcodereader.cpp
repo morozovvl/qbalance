@@ -23,11 +23,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 BarCodeReader::BarCodeReader(QObject *parent) :
     QObject(parent)
 {
-    app = nullptr;
-    serialPort = nullptr;
+    app = 0 /*nullptr*/;
+    serialPort = 0 /*nullptr*/;
     barCodeString = "";
     lastTime = QTime::currentTime();
-    isBarCode = false;
+    barCodeSymsEntered = 0;
 }
 
 
@@ -45,18 +45,18 @@ void BarCodeReader::setApp(TApplication* a)
 bool BarCodeReader::open(QString port, int rate, int to)
 {
     bool result = false;
-    if (app != nullptr)
+    if (app != 0 /*nullptr*/)
     {
         timeOut = to;
         serialPort = app->getSerialPort(port);
-        if (serialPort != nullptr)
+        if (serialPort != 0 /*nullptr*/)
         {
             serialPort->setBaudRate(rate);
             if (serialPort->open(QIODevice::ReadWrite))
             {
                 connect(serialPort, SIGNAL(readyRead()), this, SLOT(barCodeReadyRead()));
+                result = true;
             }
-            result = true;
         }
     }
     return result;
@@ -66,40 +66,36 @@ bool BarCodeReader::open(QString port, int rate, int to)
 void BarCodeReader::close()
 {
     serialPort->close();
-    if (serialPort != nullptr)
+    if (serialPort != 0 /*nullptr*/)
         delete serialPort;
 }
 
 
 QString BarCodeReader::getBarCodeString()
 {
-    return barCodeString;
+    QString result = barCodeString;
+    barCodeString = "";
+    return result;
 }
 
 
-void BarCodeReader::testBarCode(QKeyEvent *event)
+bool BarCodeReader::testBarCode(QString str)
 {
+    bool result = false;
     QTime   time = QTime::currentTime();
 
-/*
-    if (time > lastTime.addMSecs(50))   // Прошло много времени с последнего нажатия, скорее всего это просто нажатие клавиши
-    {
-        barCodeString = str;            // Начнем читать буфер клавиатуры сначала
-        isBarCode = false;              // И будем считать, что это не штрихкод
-        qDebug() << "1" << barCodeString;
-    }
-    else
+    if (time <= lastTime.addMSecs(10) || (str.size() > 1))   // Прошло много времени с последнего нажатия, скорее всего это просто нажатие клавиши
     {
         barCodeString += str.trimmed();     // Коды нажатий клавиш поступают быстро, будем копить в буфере нажатия
-        if (!isBarCode)                     // Запланируем обработку последовательности нажатий как штрихкод
-            QTimer::singleShot(timeOut, this, SLOT(barCodeReadyRead()));
-
-        isBarCode = true;                   // Сейчас будем предполагать, что это штрихкод
-        qDebug() << "2" << barCodeString;
+        result = true;                   // Сейчас будем предполагать, что это штрихкод
+        QTimer::singleShot(50, this, SLOT(testBarCode()));
     }
-
+    else if (barCodeString.size() > 0)
+    {
+        app->barCodeReadyRead(getBarCodeString());
+    }
     lastTime = time;                        // Запомним время последнего нажатия
-*/
+    return result;
 }
 
 
@@ -117,10 +113,7 @@ void BarCodeReader::barCodeReadyRead()
     }
 
     if (barCodeString.size() > 0)
-    {
-        QString bcString = barCodeString;
-        app->barCodeReadyRead(bcString);
-    }
+        app->barCodeReadyRead(barCodeString);
 }
 
 

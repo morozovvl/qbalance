@@ -59,7 +59,7 @@ MySqlRelationalTableModel::~MySqlRelationalTableModel()
 {
     updateInfo->clear();
     delete updateInfo;
-    updateInfo = nullptr;
+    updateInfo = 0 /*nullptr*/;
 }
 
 
@@ -237,7 +237,7 @@ QString MySqlRelationalTableModel::selectStatement() const
         else
             query.replace(lastIndex, 8, "WHERE " + filter() + " ORDER BY");
     }
-    if (parent != nullptr)
+    if (parent != 0 /*nullptr*/)
         query = parent->transformSelectStatement(query);
     if (testSelect)
         query = "SELECT * FROM (" + query + ") s LIMIT 0";

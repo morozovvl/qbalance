@@ -31,17 +31,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 Table::Table(QString, QObject *parent): QObject(parent)
 {
-    db = nullptr;
-    tableModel = nullptr;
+    db = 0 /*nullptr*/;
+    tableModel = 0 /*nullptr*/;
 }
 
 
 Table::~Table()
 {
-    if (tableModel != nullptr)
+    if (tableModel != 0 /*nullptr*/)
     {
         delete tableModel;
-        tableModel = nullptr;
+        tableModel = 0 /*nullptr*/;
     }
 }
 
@@ -78,12 +78,12 @@ bool Table::open(QString command)
 
 void Table::close()
 {
-/*
-    if (tableModel != nullptr)
+    if (tableModel != 0 /*nullptr*/)
     {
-        tableModel->clear();
+        delete tableModel;
+        tableModel = 0 /*nullptr*/;
     }
-*/
+
     opened = false;
 }
 
@@ -163,7 +163,7 @@ QList<FieldType> Table::returnColumnsProperties()
 
 void Table::query(QString filter)
 {
-    if (tableModel != nullptr)
+    if (tableModel != 0 /*nullptr*/)
     {
         tableModel->setFilter(filter);
         if (tableModel->rowCount() == 0)
@@ -234,7 +234,7 @@ bool Table::setTableModel(int level)
 
 void Table::setOrderClause(QString sort)
 {
-    if (tableModel != nullptr)
+    if (tableModel != 0 /*nullptr*/)
         tableModel->setOrderClause(sort);
 }
 

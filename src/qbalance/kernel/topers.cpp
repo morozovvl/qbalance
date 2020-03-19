@@ -60,7 +60,9 @@ void Topers::addDocument(int opNumber)
 {
     if (opNumber > 0) {
         Documents* doc = TApplication::exemplar()->getDocuments(opNumber);
-        if (doc != nullptr) {
+        if (doc != 0 /*nullptr*/)
+        {
+            doc->openScripts();
             doc->show();
         }
     }
@@ -110,7 +112,7 @@ void Topers::view()
 
 void Topers::setForm(QString)
 {
-    if (form != nullptr)
+    if (form != 0 /*nullptr*/)
     {
         form->close();
         delete form;

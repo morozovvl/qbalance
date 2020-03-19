@@ -63,8 +63,8 @@ protected:
 
     SearchParameters* parameters;
 
-    Dictionary(QObject* = nullptr);
-    Dictionary(QString, QObject* = nullptr);
+    Dictionary(QObject* = 0 /*nullptr*/);
+    Dictionary(QString, QObject* = 0 /*nullptr*/);
     virtual void postInitialize(QString, QObject*);
 
 public:

@@ -36,9 +36,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 DocParameters::DocParameters(QWidget* pwgt): QFrame(pwgt)
 {
-    app = nullptr;            // По умолчанию нет ссылки на приложение. Ссылку устанавливает само приложение
-    dictionaries = nullptr;
-    parentForm = nullptr;
+    app = 0 /*nullptr*/;            // По умолчанию нет ссылки на приложение. Ссылку устанавливает само приложение
+    dictionaries = 0 /*nullptr*/;
+    parentForm = 0 /*nullptr*/;
     strNum = 0;
 
     setLineWidth(2);
@@ -92,7 +92,7 @@ void DocParameters::addString(QString name)
     gridLayout->addWidget(button, strNum, 2, 1, 1);
     connect(button, SIGNAL(clicked()), this, SLOT(dictionaryButtonPressed()));        // При нажатии этой кнопки будем показывать связанный справочник
     lineEdit->setObjectName(name);
-    if (app != nullptr)
+    if (app != 0 /*nullptr*/)
     {
         QString labelName = app->getDBFactory()->getDictionariesProperties(name, __NAME_IN_FORM__);
         if (labelName.size() == 0)
@@ -136,7 +136,7 @@ void DocParameters::dictionaryButtonPressed()
 
 void DocParameters::showText(QString dictName)
 {   // На форме документа выводит текущие значения поля ИМЯ постоянных справочников
-    if (dictionaries != nullptr)
+    if (dictionaries != 0 /*nullptr*/)
     {
         QLineEdit* lineEdit = this->findChild<QLineEdit*>(dictName);
         lineEdit->setText(dictionaries->value(dictName)->getValue(programNameFieldName).toString().trimmed());

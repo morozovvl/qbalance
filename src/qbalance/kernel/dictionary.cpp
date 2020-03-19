@@ -40,8 +40,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
 {
-    parentDict = nullptr;
-    parameters = nullptr;
+    parentDict = 0 /*nullptr*/;
+    parameters = 0 /*nullptr*/;
     filter = "";
 }
 
@@ -54,10 +54,10 @@ Dictionary::Dictionary(QObject *parent)
 
 Dictionary::~Dictionary()
 {
-    if (tableModel != nullptr)
+    if (tableModel != 0 /*nullptr*/)
     {
         delete tableModel;
-        tableModel = nullptr;
+        tableModel = 0 /*nullptr*/;
     }
 }
 
@@ -78,10 +78,10 @@ void Dictionary::postInitialize(QString name, QObject *parent)
     lIsSaldo = false;
     lIsAutoLoaded = false;
     lsetIdEnabled = true;
-    parentDict = nullptr;
+    parentDict = 0 /*nullptr*/;
     locked = false;
     getIdRefresh = true;
-    parameters = nullptr;
+    parameters = 0 /*nullptr*/;
     doSubmit = true;
     exact = true;
     lNameExist = false;
@@ -173,10 +173,6 @@ bool Dictionary::open(QString command, QString tName)
                         tableModel->setUpdateInfo(fld.name, fld.table, fld.name, fld.type, fld.length, fld.precision, i, keyColumn);
                 }
             }
-
-            reportScriptEngine = new DocumentScriptEngine(nullptr, this);
-            reportScriptEngine->setReportContext(&printValues);
-            reportScriptEngine->getReportContext()->setScriptEngine(reportScriptEngine);
         }
         return true;
     }
@@ -370,7 +366,7 @@ bool Dictionary::add()
         return result;
     }
 
-    if (scriptEngineEnabled && scriptEngine != nullptr)
+    if (scriptEngineEnabled && scriptEngine != 0 /*nullptr*/)
         result = scriptEngine->eventBeforeAddString();
 
     if (result)
@@ -379,7 +375,7 @@ bool Dictionary::add()
         result = true;
         if (!isSet())
         {
-            if (parameters != nullptr)
+            if (parameters != 0 /*nullptr*/)
             {
                 QVector<sParam> searchParameters = parameters->getParameters();
                 if (searchParameters.size() > 0)
@@ -440,7 +436,7 @@ bool Dictionary::add()
                     result = true;
                 }
             }
-            if (grdTable != nullptr)
+            if (grdTable != 0 /*nullptr*/)
                 grdTable->setCurrentFocus();
         }
     }
@@ -454,7 +450,7 @@ QString Dictionary::getSearchExpression(QString tName)
     QString tableName = tName;
     if (tableName.size() == 0)
         tableName = getTableName();
-    if (parameters != nullptr)
+    if (parameters != 0 /*nullptr*/)
     {
         QVector<sParam> searchParameters = parameters->getParameters();
         if (searchParameters.size() > 0)
@@ -479,7 +475,7 @@ bool Dictionary::remove(bool noAsk)
     if (lDeleteable)
     {
         if (Essence::remove(noAsk)) {
-            if (scriptEngineEnabled && scriptEngine != nullptr)
+            if (scriptEngineEnabled && scriptEngine != 0 /*nullptr*/)
                 canRemove = scriptEngine->eventBeforeDeleteString();
 
             if (canRemove)
@@ -531,7 +527,7 @@ int Dictionary::getId(int row, bool forceToRefresh)
                 name.remove(0, 4);                          // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
                 name = name.toLower();                      // и переведем в нижний регистр, т.к. имена таблиц в БД могут быть только маленькими буквами
                 Dictionary* dict = dictionaries->getDictionary(name);
-                if (dict != nullptr)                       // Если удалось открыть справочник
+                if (dict != 0 /*nullptr*/)                       // Если удалось открыть справочник
                 {
                     int id = dict->getId();
                     if (dict->getExact())
@@ -593,12 +589,12 @@ bool Dictionary::setId(int id)
 
 void Dictionary::setForm(QString formName)
 {
-    if (form != nullptr && form->isDefaultForm())
+    if (form != 0 /*nullptr*/ && form->isDefaultForm())
     {
-        grdTable = nullptr;
+        grdTable = 0 /*nullptr*/;
         form->close();
         delete form;
-        form = nullptr;
+        form = 0 /*nullptr*/;
     }
 
     form = new FormGridSearch();
@@ -616,7 +612,7 @@ void Dictionary::setForm(QString formName)
 
     grdTable = form->getGrdTable();
 
-    if (grdTable != nullptr)
+    if (grdTable != 0 /*nullptr*/)
         grdTable->setEssence(this);
 }
 
@@ -624,10 +620,10 @@ void Dictionary::setForm(QString formName)
 void Dictionary::setConst(bool isConst)
 {
     lIsConst = isConst;
-    if (dictionaries != nullptr && dictionaries->getDocument() != nullptr)      // Если справочник является локальным к документу
+    if (dictionaries != 0 /*nullptr*/ && dictionaries->getDocument() != 0 /*nullptr*/)      // Если справочник является локальным к документу
     {                                                               // То на форме документа мы должны его переместить в строку параметров документа
         FormDocument* docForm = static_cast<FormDocument*>(dictionaries->getDocument()->getForm());
-        if (docForm != nullptr)
+        if (docForm != 0 /*nullptr*/)
         {
             DocParameters* docPar = docForm->getDocParameters();
             if (isConst)
@@ -699,7 +695,7 @@ void Dictionary::query(QString defaultFilter, bool exactlyDefaultFilter)
     QString resFilter = defaultFilter;
     if (!exactlyDefaultFilter && filterEnabled)
     {
-        if (form != nullptr)
+        if (form != 0 /*nullptr*/)
         {
             QString filter = form->getFilter();
             if (filter.size() > 0)
@@ -713,7 +709,7 @@ void Dictionary::query(QString defaultFilter, bool exactlyDefaultFilter)
 
         if (!isDocumentLoading())
         {
-            if (scriptEngine != nullptr)
+            if (scriptEngine != 0 /*nullptr*/)
             {
                 resFilter = scriptEngine->getFilter(resFilter);
             }
@@ -722,9 +718,9 @@ void Dictionary::query(QString defaultFilter, bool exactlyDefaultFilter)
 
     Essence::query(resFilter);
 
-    if (tableModel != nullptr)
+    if (tableModel != 0 /*nullptr*/)
     {
-        if (tableModel->rowCount() > 0 && grdTable != nullptr)
+        if (tableModel->rowCount() > 0 && grdTable != 0 /*nullptr*/)
         {
             QModelIndex index = getCurrentIndex();
 
@@ -815,9 +811,9 @@ void Dictionary::prepareSelectCurrentRowCommand()
 
 void Dictionary::preparePrintValues()
 {
-    if (reportScriptEngine != nullptr)
+    if (reportScriptEngine != 0 /*nullptr*/)
     {
-        if (parameters != nullptr)
+        if (parameters != 0 /*nullptr*/)
         {
             QVector<sParam> searchParameters = parameters->getParameters();
             if (searchParameters.size() > 0)
@@ -914,7 +910,7 @@ QString Dictionary::getFilter(QString defFilter) const
 //                if (param.size() > 0)
 //                {
 //                    Dictionary* dict = dictionaries->getDictionary(tableName);    // Поместим связанный справочник в список справочников приложения
-//                    if (dict != nullptr)
+//                    if (dict != 0 /*nullptr*/)
 //                    {
 //                        if (dict->getForm()->isLeftPercent() || subStrNum > 0)     // Отсутствие знака % актуально только для первого слова
 //                            param = "%" + param;

@@ -36,7 +36,7 @@ class MyNumericEditPlugin : public QObject, public QDesignerCustomWidgetInterfac
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 
 public:
-    MyNumericEditPlugin( QObject *parent = nullptr );
+    MyNumericEditPlugin( QObject *parent = 0 /*nullptr*/ );
 
     bool isContainer() const;
     bool isInitialized() const;

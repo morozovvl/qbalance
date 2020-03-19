@@ -37,11 +37,11 @@ private:
     bool        dictEnabled;
 
 protected:
-    Report(QString = "", QObject* parent = nullptr);
+    Report(QString = "", QObject* parent = 0 /*nullptr*/);
 
 public:
     template <class T>
-        static T* create(QString name = "", QObject* parent = nullptr)
+        static T* create(QString name = "", QObject* parent = 0 /*nullptr*/)
         {
             T* p(new T(name, parent));
             p->postInitialize(name, parent);

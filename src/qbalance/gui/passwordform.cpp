@@ -68,7 +68,7 @@ bool PassWordForm::open(QWidget* pwgt)
 
         connect(PasswordEditor, SIGNAL(returnPressed()), this, SLOT(cmdOk()));
         QVBoxLayout* vbxLayout = static_cast<QVBoxLayout*>(formWidget->findChild("vbxLayout"));
-        if (vbxLayout != nullptr)
+        if (vbxLayout != 0 /*nullptr*/)
             vbxLayout->insertLayout(0, layout);
         formWidget->setMinimumHeight(100);
         formWidget->setMinimumWidth(500);

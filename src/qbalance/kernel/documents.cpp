@@ -33,7 +33,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 Documents::Documents(int, QObject *parent): Dictionary(parent)
 {
-    currentDocument = nullptr;
+    currentDocument = 0 /*nullptr*/;
 }
 
 
@@ -70,7 +70,7 @@ void Documents::postInitialize(int opNumber, QObject *parent)
     lDeleteable = db->getTopersProperties(operNumber, "deleteable").toBool();
     lUpdateable = db->getTopersProperties(operNumber, "updateable").toBool();
 
-    scriptEngine = nullptr;
+    scriptEngine = 0 /*nullptr*/;
 //    scriptEngineEnabled = false;
     doSubmit = true;
     lPrintable = true;
@@ -110,8 +110,8 @@ void Documents::close()
 {
     currentDocument->close();
     delete currentDocument;
-    scriptEngine = nullptr;
-    currentDocument = nullptr;
+    scriptEngine = 0 /*nullptr*/;
+    currentDocument = 0 /*nullptr*/;
     Essence::close();
 }
 
@@ -182,13 +182,13 @@ bool Documents::remove(bool noAsk)
         if (Essence::remove(noAsk))
         {
             scriptEngineEnabled = true;
-            if (scriptEngine != nullptr)
+            if (scriptEngine != 0 /*nullptr*/)
                    canRemove = scriptEngine->eventBeforeDeleteDocument();
             if (canRemove)
             {
                 db->removeDoc(getValue("код").toInt());
                 query();
-                if (scriptEngine != nullptr)
+                if (scriptEngine != 0 /*nullptr*/)
                        scriptEngine->eventAfterDeleteDocument();
                 result = true;
             }
@@ -237,7 +237,7 @@ void Documents::query(QString defaultFilter, bool)
         }
     }
 
-    if (scriptEngine != nullptr)
+    if (scriptEngine != 0 /*nullptr*/)
         resFilter = scriptEngine->getFilter(resFilter);
 
     if (resFilter.size() > 0)
@@ -310,7 +310,7 @@ QVariant Documents::getValue(QString n, int row)
 
 void Documents::setForm(QString formName)
 {
-    if (form != nullptr)
+    if (form != 0 /*nullptr*/)
     {
         form->close();
         delete form;
@@ -324,7 +324,7 @@ void Documents::setForm(QString formName)
     form->appendToolTip("buttonRequery",    trUtf8("Обновить список документов (загрузить повторно с сервера) (F3)"));
 
     form->open(parentForm, this, formName.size() == 0 ? tagName : formName);
-    parameters = nullptr;
+    parameters = 0 /*nullptr*/;
 }
 
 
@@ -391,7 +391,7 @@ bool Documents::setTableModel(int)
 
 void Documents::preparePrintValues()
 {
-    if (reportScriptEngine != nullptr)
+    if (reportScriptEngine != 0 /*nullptr*/)
     {
         reportScriptEngine->getReportContext()->setValue("документы.ДАТА", getValue(db->getObjectName("документы.дата")));
         reportScriptEngine->getReportContext()->setValue("документы.СУММА", getSumValue(db->getObjectName("документы.сумма")));
@@ -403,7 +403,7 @@ void Documents::preparePrintValues()
 
 void Documents::showItog()
 {
-    if (form != nullptr)
+    if (form != 0 /*nullptr*/)
         static_cast<FormDocuments*>(form)->showItog();
 }
 
@@ -421,7 +421,7 @@ QString Documents::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
     {
         QString selectClause, fromClause, whereClause;
         int prv, prv1 = 0;
-        if (columnsProperties != nullptr)
+        if (columnsProperties != 0 /*nullptr*/)
             columnsProperties->clear();
 
         // Создадим клаузу проводок в секции SELECT
@@ -441,7 +441,7 @@ QString Documents::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                     selectClause.append(QString("p%1.\"%2\" AS \"P%1__%3\"").arg(prv).arg(db->getObjectName("проводки." + field)).arg(field.toUpper()));  // запишем в клаузу элемент <таблица>.<поле> с именем <таблица>__<поле>
                     for (int i = 0; i < fields.count(); i++)
                     {
-                        if (fields.at(i).table == tableName && fields.at(i).name.toUpper() == field.toUpper() && columnsProperties != nullptr)
+                        if (fields.at(i).table == tableName && fields.at(i).name.toUpper() == field.toUpper() && columnsProperties != 0 /*nullptr*/)
                             db->addColumnProperties(columnsProperties, tableName, QString("P%1__%2").arg(prv).arg(field), fields.at(i).type, fields.at(i).length, fields.at(i).precision, fields.at(i).readOnly, fields.at(i).constReadOnly);
                     }
                 }
@@ -508,7 +508,7 @@ QString Documents::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                                         setSelectClause.append(QString(",\"%1\".\"%2\" AS \"%3\"").arg(setDictName).arg(setDictFieldName).arg(alias));
                                         selectClause.append(QString(",\"%1\".\"%2\" AS \"%2\"").arg(prDictName).arg(alias));
                                         for (int i = 0; i < fields.count(); i++)
-                                            if (fields.at(i).table == setDictName && fields.at(i).name.toUpper() == setDictFieldName.toUpper() && columnsProperties != nullptr)
+                                            if (fields.at(i).table == setDictName && fields.at(i).name.toUpper() == setDictFieldName.toUpper() && columnsProperties != 0 /*nullptr*/)
                                                 db->addColumnProperties(columnsProperties, prDictName, alias, fields.at(i).type, fields.at(i).length, fields.at(i).precision, true, true, 0, 1);
                                         columns.append(alias);
                                     }
@@ -528,7 +528,7 @@ QString Documents::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                                 {
                                     selectClause.append(QString(",%1.\"%2\" AS \"%3\"").arg(prDictName).arg(fieldName).arg(alias));
                                     for (int i = 0; i < fields.count(); i++)
-                                        if (fields.at(i).table == dictName && fields.at(i).name.toUpper() == fieldName.toUpper() && columnsProperties != nullptr)
+                                        if (fields.at(i).table == dictName && fields.at(i).name.toUpper() == fieldName.toUpper() && columnsProperties != 0 /*nullptr*/)
                                             db->addColumnProperties(columnsProperties, prDictName, QString("%1%2__%3").arg(prefix.size() > 0 ? prDictName__ : "").arg(dictName).arg(fieldName.toUpper()), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true, true, 0, 1);
                                     columns.append(alias);
                                 }
@@ -549,7 +549,7 @@ QString Documents::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                             {
                                 selectClause.append(QString(",%1.\"%2\" AS \"%3\"").arg(prDictName).arg(field).arg(alias));
                                 for (int i = 0; i < fields.count(); i++)
-                                    if (fields.at(i).table == dictName && fields.at(i).name.toUpper() == field.toUpper() && columnsProperties != nullptr)
+                                    if (fields.at(i).table == dictName && fields.at(i).name.toUpper() == field.toUpper() && columnsProperties != 0 /*nullptr*/)
                                         db->addColumnProperties(columnsProperties, prDictName, QString("%1%2__%3").arg(prefix.size() > 0 ? prDictName__ : "").arg(dictName).arg(field.toUpper()), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true, true, 0, 1);
                                 columns.append(alias);
                             }
@@ -595,7 +595,7 @@ QString Documents::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                                           setSelectClause.append(QString(",\"%1\".\"%2\" AS \"%3\"").arg(setDictName).arg(setDictFieldName).arg(alias));
                                           selectClause.append(QString(",\"%1\".\"%2\" AS \"%2\"").arg(prDictName).arg(alias));
                                           for (int i = 0; i < fields.count(); i++)
-                                              if (fields.at(i).table == setDictName && fields.at(i).name.toUpper() == setDictFieldName.toUpper() && columnsProperties != nullptr)
+                                              if (fields.at(i).table == setDictName && fields.at(i).name.toUpper() == setDictFieldName.toUpper() && columnsProperties != 0 /*nullptr*/)
                                                   db->addColumnProperties(columnsProperties, prDictName, alias, fields.at(i).type, fields.at(i).length, fields.at(i).precision, true, true, 0, 1);
                                           columns.append(alias);
                                       }
@@ -615,7 +615,7 @@ QString Documents::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                                   {
                                       selectClause.append(QString(",%1.\"%2\" AS \"%3\"").arg(prDictName).arg(fieldName).arg(alias));
                                       for (int i = 0; i < fields.count(); i++)
-                                          if (fields.at(i).table == dictName && fields.at(i).name.toUpper() == fieldName.toUpper() && columnsProperties != nullptr)
+                                          if (fields.at(i).table == dictName && fields.at(i).name.toUpper() == fieldName.toUpper() && columnsProperties != 0 /*nullptr*/)
                                               db->addColumnProperties(columnsProperties, prDictName, QString("%1%2__%3").arg(prefix.size() > 0 ? prDictName__ : "").arg(dictName).arg(fieldName.toUpper()), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true, true, 0, 1);
                                       columns.append(alias);
                                   }
@@ -636,7 +636,7 @@ QString Documents::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                             {
                                 selectClause.append(QString(",%1.\"%2\" AS \"%3\"").arg(prDictName).arg(field).arg(alias));
                                 for (int i = 0; i < fields.count(); i++)
-                                    if (fields.at(i).table == dictName && fields.at(i).name.toUpper() == field.toUpper() && columnsProperties != nullptr)
+                                    if (fields.at(i).table == dictName && fields.at(i).name.toUpper() == field.toUpper() && columnsProperties != 0 /*nullptr*/)
                                         db->addColumnProperties(columnsProperties, prDictName, QString("%1%2__%3").arg(prefix.size() > 0 ? prDictName__ : "").arg(dictName).arg(field.toUpper()), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true, true, 0, 1);
                                 columns.append(alias);
                             }
@@ -658,18 +658,18 @@ QString Documents::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                     field = db->getObjectName("сальдо.конкол");
                     selectClause.append(QString(",%1.\"%2\" AS \"%3__%4\"").arg(dictName).arg(field).arg(dictName.toUpper()).arg(field.toUpper()));
                     for (int i  = 0; i < fields.count(); i++)
-                        if (fields.at(i).table == salTableName && fields.at(i).name.toUpper() == field.toUpper() && columnsProperties != nullptr)
+                        if (fields.at(i).table == salTableName && fields.at(i).name.toUpper() == field.toUpper() && columnsProperties != 0 /*nullptr*/)
                             db->addColumnProperties(columnsProperties, salTableName, QString("%1__%2").arg(dictName).arg(field.toUpper()), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true, true, 0, 1);
                     field = db->getObjectName("сальдо.концена");
                     selectClause.append(QString(",%1.\"%2\" AS \"%3__%4\"").arg(dictName).arg(field).arg(dictName.toUpper()).arg(field.toUpper()));
                     for (int i  = 0; i < fields.count(); i++)
-                        if (fields.at(i).table == salTableName && fields.at(i).name.toUpper() == field.toUpper() && columnsProperties != nullptr)
+                        if (fields.at(i).table == salTableName && fields.at(i).name.toUpper() == field.toUpper() && columnsProperties != 0 /*nullptr*/)
                             db->addColumnProperties(columnsProperties, salTableName, QString("%1__%2").arg(dictName).arg(field.toUpper()), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true, true, 0, 1);
                 }
                 field = db->getObjectName("сальдо.консальдо");
                 selectClause.append(QString(",%1.\"%2\" AS \"%3__%4\"").arg(dictName).arg(field).arg(dictName.toUpper()).arg(field.toUpper()));
                 for (int i  = 0; i < fields.count(); i++)
-                    if (fields.at(i).table == salTableName && fields.at(i).name.toUpper() == field.toUpper() && columnsProperties != nullptr)
+                    if (fields.at(i).table == salTableName && fields.at(i).name.toUpper() == field.toUpper() && columnsProperties != 0 /*nullptr*/)
                         db->addColumnProperties(columnsProperties, salTableName, QString("%1__%2").arg(dictName).arg(field.toUpper()), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true, true, 0, 1);
                 fromClause.append(QString(" LEFT OUTER JOIN %1 %2 ON p.\"P%3__%4\"=%2.%5 AND p.\"P%3__%6\"=%2.%7").arg(db->getObjectNameCom("сальдо")).arg(dictName).arg(prv).arg(db->getObjectName("проводки.дбсчет").toUpper()).arg(db->getObjectNameCom("сальдо.счет")).arg(db->getObjectName("проводки.дбкод").toUpper()).arg(db->getObjectNameCom("сальдо.код")));
             }
@@ -681,18 +681,18 @@ QString Documents::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                     field = db->getObjectName("сальдо.конкол");
                     selectClause.append(QString(",%1.\"%2\" AS \"%3__%4\"").arg(dictName).arg(field).arg(dictName.toUpper()).arg(field.toUpper()));
                     for (int i  = 0; i < fields.count(); i++)
-                        if (fields.at(i).table == salTableName && fields.at(i).name.toUpper() == field.toUpper() && columnsProperties != nullptr)
+                        if (fields.at(i).table == salTableName && fields.at(i).name.toUpper() == field.toUpper() && columnsProperties != 0 /*nullptr*/)
                             db->addColumnProperties(columnsProperties, salTableName, QString("%1__%2").arg(dictName).arg(field.toUpper()), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true, true, 0, 1);
                     field = db->getObjectName("сальдо.концена");
                     selectClause.append(QString(",%1.\"%2\" AS \"%3__%4\"").arg(dictName).arg(field).arg(dictName.toUpper()).arg(field.toUpper()));
                     for (int i  = 0; i < fields.count(); i++)
-                        if (fields.at(i).table == salTableName && fields.at(i).name.toUpper() == field.toUpper() && columnsProperties != nullptr)
+                        if (fields.at(i).table == salTableName && fields.at(i).name.toUpper() == field.toUpper() && columnsProperties != 0 /*nullptr*/)
                             db->addColumnProperties(columnsProperties, salTableName, QString("%1__%2").arg(dictName).arg(field.toUpper()), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true, true, 0, 1);
                 }
                 field = db->getObjectName("сальдо.консальдо");
                 selectClause.append(QString(",%1.\"%2\" AS \"%3__%4\"").arg(dictName).arg(field).arg(dictName.toUpper()).arg(field.toUpper()));
                 for (int i  = 0; i < fields.count(); i++)
-                    if (fields.at(i).table == salTableName && fields.at(i).name.toUpper() == field.toUpper() && columnsProperties != nullptr)
+                    if (fields.at(i).table == salTableName && fields.at(i).name.toUpper() == field.toUpper() && columnsProperties != 0 /*nullptr*/)
                         db->addColumnProperties(columnsProperties, salTableName, QString("%1__%2").arg(dictName).arg(field.toUpper()), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true, true, 0, 1);
                 fromClause.append(QString(" LEFT OUTER JOIN %1 %2 ON p.\"P%3__%4\"=%2.%5 AND p.\"P%3__%6\"=%2.%7").arg(db->getObjectNameCom("сальдо")).arg(dictName).arg(prv).arg(db->getObjectName("проводки.крсчет").toUpper()).arg(db->getObjectNameCom("сальдо.счет")).arg(db->getObjectName("проводки.кркод").toUpper()).arg(db->getObjectNameCom("сальдо.код")));
             }
@@ -718,7 +718,7 @@ QString Documents::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                     }
                     attrSelectClause.append(QString("a.\"%1\" AS %2,").arg(fieldName).arg(fieldName.toUpper()));
                     for (int i = 0; i < fields.count(); i++)
-                        if (fields.at(i).table == attrName && fields.at(i).name.toUpper() == fieldName.toUpper() && columnsProperties != nullptr)
+                        if (fields.at(i).table == attrName && fields.at(i).name.toUpper() == fieldName.toUpper() && columnsProperties != 0 /*nullptr*/)
                             db->addColumnProperties(columnsProperties, attrName, fieldName, fields.at(i).type, fields.at(i).length, fields.at(i).precision, false, false, 0, 1);
                     db->getColumnsProperties(&fields, dictName, tableName);
                     foreach (QString dictFieldName, db->getFieldsList(dictName, 0))
@@ -728,7 +728,7 @@ QString Documents::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                         if (!columns.contains(alias))
                         {
                             for (int i = 0; i < fields.count(); i++)
-                                if (fields.at(i).table == dictName && fields.at(i).name.toUpper() == dictFieldName.toUpper() && columnsProperties != nullptr)
+                                if (fields.at(i).table == dictName && fields.at(i).name.toUpper() == dictFieldName.toUpper() && columnsProperties != 0 /*nullptr*/)
                                     db->addColumnProperties(columnsProperties, dictName, QString("%1__%2").arg(dictName).arg(dictFieldName.toUpper()), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true, true, 0, 1);
                             columns.append(alias);
                         }
@@ -742,7 +742,7 @@ QString Documents::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                     if (!columns.contains(alias))
                     {
                         for (int i = 0; i < fields.count(); i++)
-                            if (fields.at(i).table == attrName && fields.at(i).name.toUpper() == fieldName.toUpper() && columnsProperties != nullptr)
+                            if (fields.at(i).table == attrName && fields.at(i).name.toUpper() == fieldName.toUpper() && columnsProperties != 0 /*nullptr*/)
                                 db->addColumnProperties(columnsProperties, attrName, fieldName, fields.at(i).type, fields.at(i).length, fields.at(i).precision, false, false);
                         columns.append(alias);
                     }
@@ -761,7 +761,7 @@ QString Documents::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                                                                                                           .arg(db->getObjectName("атрибуты.стр").toUpper())
                                                                                                           .arg(db->getObjectNameCom("атрибуты.стр")));
         }
-        if (retPrv1 != nullptr)
+        if (retPrv1 != 0 /*nullptr*/)
             *retPrv1 = prv1;
         if (topersList->at(0).attributes && topersList->at(0).number == 0)
             selectStatement = selectClause + " FROM " + fromClause + QString(" ORDER BY %1 ASC;").arg(db->getObjectNameCom("атрибуты.стр"));

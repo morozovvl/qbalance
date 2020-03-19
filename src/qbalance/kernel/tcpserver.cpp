@@ -137,7 +137,7 @@ void TcpServer::sendToClient(QTcpSocket* pSocket, QString str)
 void TcpServer::processRequest(QTcpSocket* pClientSocket, QString str)
 {
     QString resStr;
-    if (app != nullptr && app->getDrvFR() != nullptr)
+    if (app != 0 /*nullptr*/ && app->getDrvFR() != 0 /*nullptr*/)
     {
         app->debug(5, QString("From %1: %2").arg(pClientSocket->peerAddress().toString()).arg(str));
         if (str.left(4) == "=fr=" && app->drvFRisValid())

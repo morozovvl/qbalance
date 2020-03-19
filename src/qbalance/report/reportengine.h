@@ -32,7 +32,7 @@ class DocumentScriptEngine;
 class ReportEngine : public QObject {
     Q_OBJECT
 public:
-    ReportEngine(DocumentScriptEngine* = nullptr);
+    ReportEngine(DocumentScriptEngine* = 0 /*nullptr*/);
     ~ReportEngine();
     virtual bool open();
     virtual void close() { ; }

@@ -29,13 +29,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 MyItemDelegate::MyItemDelegate(QObject* par, FormGrid* form)
 : QItemDelegate(par)
 {
-    essence = nullptr;
+    essence = 0 /*nullptr*/;
     menuMode = false;
 
     columnMask = "";
     delegateType = String;
     setReadOnly(false);
-    if (form != nullptr)
+    if (form != 0 /*nullptr*/)
     {
         essence = reinterpret_cast<Essence*>(form->getParent());
         menuMode = essence->isMenuMode();
@@ -129,7 +129,7 @@ void MyItemDelegate::setReadOnly(bool val)
 
 void MyItemDelegate::calculate()
 {
-    if (essence != nullptr)
+    if (essence != 0 /*nullptr*/)
         essence->calculate();
 }
 

@@ -32,7 +32,7 @@ public:
     virtual void setFile(QString, FileType, QByteArray, bool = false);
     virtual QDate toDate(QVariant);
 
-    Q_INVOKABLE virtual QSqlQuery execQuery(QString, bool = true, QSqlDatabase* = nullptr);
+    Q_INVOKABLE virtual QSqlQuery execQuery(QString, bool = true, QSqlDatabase* = 0 /*nullptr*/);
 
     virtual int querySize(QSqlQuery*);
 

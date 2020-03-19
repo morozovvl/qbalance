@@ -26,7 +26,7 @@ class EventLoop : public QEventLoop
 {
     Q_OBJECT
 public:
-    explicit EventLoop(QObject *parent = nullptr);
+    explicit EventLoop(QObject *parent = 0 /*nullptr*/);
     Q_INVOKABLE int	exec();
     Q_INVOKABLE void	exit(int returnCode = 0);
     Q_INVOKABLE bool	isRunning() const;

@@ -40,7 +40,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 class MyNumericEdit : public QLineEdit {
     Q_OBJECT
 public:
-    MyNumericEdit(QWidget *parent = nullptr);
+    MyNumericEdit(QWidget *parent = 0 /*nullptr*/);
     Q_INVOKABLE virtual void setValue(QVariant);
 //    Q_INVOKABLE virtual QVariant getValue();
     Q_INVOKABLE virtual void setDecimals(int);

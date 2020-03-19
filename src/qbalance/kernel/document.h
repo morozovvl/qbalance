@@ -80,7 +80,7 @@ public:
     ~Document();
 
     template <class T>
-        static T* create(int opNumber, Documents *parent = nullptr)
+        static T* create(int opNumber, Documents *parent = 0 /*nullptr*/)
         {
             T* p(new T(opNumber, parent));
             p->postInitialize(opNumber, parent);

@@ -58,7 +58,7 @@ class MyItemDelegate : public QItemDelegate {
     Q_OBJECT
 
 public:
-    MyItemDelegate(QObject*, FormGrid* = nullptr);
+    MyItemDelegate(QObject*, FormGrid* = 0 /*nullptr*/);
     ~MyItemDelegate();
     virtual void paint(QPainter*, const QStyleOptionViewItem&, const QModelIndex&) const;
     virtual void setColumnMask(const QString mask = "");

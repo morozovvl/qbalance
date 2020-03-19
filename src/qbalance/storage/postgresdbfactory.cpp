@@ -416,7 +416,7 @@ QSqlQuery PostgresDBFactory::execQuery(QString str, bool showError, QSqlDatabase
     clearError();
     QSqlQuery result;
     QSqlQuery* query;
-    if (extDb != nullptr && extDb->isValid())
+    if (extDb != 0 /*nullptr*/ && extDb->isValid())
         query = new QSqlQuery(*extDb);
     else
         query = new QSqlQuery();

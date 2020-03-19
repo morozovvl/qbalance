@@ -60,7 +60,7 @@ class BankTerminal : public QObject
 {
     Q_OBJECT
 public:
-    explicit BankTerminal(QObject *parent = nullptr);
+    explicit BankTerminal(QObject *parent = 0 /*nullptr*/);
     ~BankTerminal();
     virtual bool open();
     virtual void close();

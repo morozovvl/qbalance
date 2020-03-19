@@ -33,7 +33,7 @@ class ReportContext : public QObject
 {
     Q_OBJECT
 public:
-    ReportContext(QHash<QString, QVariant>*, QObject *parent = nullptr);
+    ReportContext(QHash<QString, QVariant>*, QObject *parent = 0 /*nullptr*/);
     ~ReportContext();
     Q_INVOKABLE int count();
     Q_INVOKABLE virtual QVariant getValue(QString);
@@ -54,7 +54,7 @@ public:
     void        setCurrentRow(int);
     int         getCurrentRow();
     void        clear();
-    void        setScriptEngine(DocumentScriptEngine* = nullptr);
+    void        setScriptEngine(DocumentScriptEngine* = 0 /*nullptr*/);
 
 private:
     QHash<QString, QVariant>*    data;

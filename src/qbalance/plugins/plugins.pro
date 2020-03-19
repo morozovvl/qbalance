@@ -21,7 +21,7 @@ CONFIG += sql \
         uitools
 
 unix:TARGET = ../../../plugins/designer/plugins
-win32:TARGET = ../../../../plugins/designer/plugins
+win32:TARGET = ../../../plugins/designer/plugins
 
 TEMPLATE = lib
 

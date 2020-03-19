@@ -59,7 +59,7 @@ struct EventFunction {
 class ScriptEngine : public QScriptEngine {
     Q_OBJECT
 public:
-    ScriptEngine(Essence* parent = nullptr);
+    ScriptEngine(Essence* parent = 0 /*nullptr*/);
     ~ScriptEngine();
     virtual bool open(QString fileName = "");
     virtual void close();

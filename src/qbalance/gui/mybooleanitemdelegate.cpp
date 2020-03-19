@@ -31,13 +31,13 @@ MyBooleanItemDelegate::MyBooleanItemDelegate(QObject* parent, FormGrid* form): M
 
 QWidget* MyBooleanItemDelegate::createEditor(QWidget*parent, const QStyleOptionViewItem&, const QModelIndex&) const
 {
-    QCheckBox* editorWidget = nullptr;
+    QCheckBox* editorWidget = 0 /*nullptr*/;
     if (!menuMode)
     {
         editorWidget = new QCheckBox(parent);
         if (!readOnly)
         {
-            if (essence != nullptr)
+            if (essence != 0 /*nullptr*/)
             {
                 essence->saveOldValues();
                 disconnect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));

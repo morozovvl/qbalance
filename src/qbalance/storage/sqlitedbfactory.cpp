@@ -64,7 +64,7 @@ static void calcEndSaldo(sqlite3 *db, QString acc, long id)
    double      endPrice    = 0.0;
 
     QString command = QString("SELECT КОЛ, САЛЬДО, ДБКОЛ, ДЕБЕТ, КРКОЛ, КРЕДИТ FROM сальдо WHERE СЧЕТ = '%1' AND КОД = %2;").arg(acc).arg(id);
-    sqlite3_prepare_v2(db, command.toUtf8().data(), -1, &stmt, nullptr);
+    sqlite3_prepare_v2(db, command.toUtf8().data(), -1, &stmt, 0 /*nullptr*/);
     if ((rc = sqlite3_step(stmt)) == SQLITE_ROW)
     {
         quan    = sqlite3_column_double(stmt, 0);
@@ -90,7 +90,7 @@ static void calcEndSaldo(sqlite3 *db, QString acc, long id)
             .arg(acc)
             .arg(id);
 
-    sqlite3_exec(db, command.toUtf8().data(), nullptr, nullptr, nullptr);
+    sqlite3_exec(db, command.toUtf8().data(), 0 /*nullptr*/, 0 /*nullptr*/, 0 /*nullptr*/);
 }
 
 
@@ -101,7 +101,7 @@ static void insertNewSaldo(sqlite3 *db, QString acc, long id)
     sqlite3_stmt *stmt;
     int analiticAcc = 0;
 
-    sqlite3_prepare_v2(db, QString("SELECT АНАЛИТИКА FROM счета WHERE СЧЕТ = '%1';").arg(acc).toUtf8().data(), -1, &stmt, nullptr);
+    sqlite3_prepare_v2(db, QString("SELECT АНАЛИТИКА FROM счета WHERE СЧЕТ = '%1';").arg(acc).toUtf8().data(), -1, &stmt, 0 /*nullptr*/);
     if (sqlite3_step(stmt) == SQLITE_ROW)
         analiticAcc = sqlite3_column_int(stmt, 0);
     sqlite3_finalize(stmt);
@@ -110,22 +110,22 @@ static void insertNewSaldo(sqlite3 *db, QString acc, long id)
     {
         if (id > 0)
         {
-            sqlite3_prepare_v2(db, QString("SELECT COUNT(*) FROM сальдо WHERE СЧЕТ = '%1' AND КОД = %2;").arg(acc).arg(id).toUtf8().data(), -1, &stmt, nullptr);
+            sqlite3_prepare_v2(db, QString("SELECT COUNT(*) FROM сальдо WHERE СЧЕТ = '%1' AND КОД = %2;").arg(acc).arg(id).toUtf8().data(), -1, &stmt, 0 /*nullptr*/);
             if (sqlite3_step(stmt) == SQLITE_ROW)
             {
                 if (sqlite3_column_int(stmt, 0) == 0)
-                    sqlite3_exec(db, QString("INSERT INTO сальдо (СЧЕТ, КОД)  VALUES ('%1', %2);").arg(acc).arg(id).toUtf8().data(), nullptr, nullptr, nullptr);
+                    sqlite3_exec(db, QString("INSERT INTO сальдо (СЧЕТ, КОД)  VALUES ('%1', %2);").arg(acc).arg(id).toUtf8().data(), 0 /*nullptr*/, 0 /*nullptr*/, 0 /*nullptr*/);
             }
             sqlite3_finalize(stmt);
         }
     }
     else
     {
-        sqlite3_prepare_v2(db, QString("SELECT COUNT(*) FROM сальдо WHERE СЧЕТ = '%1' AND КОД = 0;").arg(acc).toUtf8().data(), -1, &stmt, nullptr);
+        sqlite3_prepare_v2(db, QString("SELECT COUNT(*) FROM сальдо WHERE СЧЕТ = '%1' AND КОД = 0;").arg(acc).toUtf8().data(), -1, &stmt, 0 /*nullptr*/);
         if (sqlite3_step(stmt) == SQLITE_ROW)
         {
             if (sqlite3_column_int(stmt, 0) == 0)
-                sqlite3_exec(db, QString("INSERT INTO сальдо (СЧЕТ, КОД)  VALUES ('%1', 0);").arg(acc).toUtf8().data(), nullptr, nullptr, nullptr);
+                sqlite3_exec(db, QString("INSERT INTO сальдо (СЧЕТ, КОД)  VALUES ('%1', 0);").arg(acc).toUtf8().data(), 0 /*nullptr*/, 0 /*nullptr*/, 0 /*nullptr*/);
         }
         sqlite3_finalize(stmt);
     }
@@ -140,7 +140,7 @@ static void calcDbSaldo(sqlite3 *db, QString acc, long id,double quan,double sum
     int balanceAcc = 0;     // Счет является балансовым (1) или нет (0)
     int analiticAcc = 0;
 
-    sqlite3_prepare_v2(db, QString("SELECT БАЛАНС, АНАЛИТИКА FROM счета WHERE СЧЕТ = '%1';").arg(acc).toUtf8().data(), -1, &stmt, nullptr);
+    sqlite3_prepare_v2(db, QString("SELECT БАЛАНС, АНАЛИТИКА FROM счета WHERE СЧЕТ = '%1';").arg(acc).toUtf8().data(), -1, &stmt, 0 /*nullptr*/);
     if ((rc = sqlite3_step(stmt)) == SQLITE_ROW)
     {
         balanceAcc = sqlite3_column_int(stmt, 0);
@@ -154,7 +154,7 @@ static void calcDbSaldo(sqlite3 *db, QString acc, long id,double quan,double sum
        double      debet;
 
         QString command = QString("SELECT ДБКОЛ, ДЕБЕТ FROM сальдо WHERE СЧЕТ = '%1' AND КОД = %2;").arg(acc).arg(id);
-        sqlite3_prepare_v2(db, command.toUtf8().data(), -1, &stmt, nullptr);
+        sqlite3_prepare_v2(db, command.toUtf8().data(), -1, &stmt, 0 /*nullptr*/);
         if ((rc = sqlite3_step(stmt)) == SQLITE_ROW)
         {
             dbQuan    = sqlite3_column_double(stmt, 0);
@@ -171,7 +171,7 @@ static void calcDbSaldo(sqlite3 *db, QString acc, long id,double quan,double sum
             .arg(acc)
             .arg(id);
 
-        rc = sqlite3_exec(db, command.toUtf8().data(), nullptr, nullptr, nullptr);
+        rc = sqlite3_exec(db, command.toUtf8().data(), 0 /*nullptr*/, 0 /*nullptr*/, 0 /*nullptr*/);
         calcEndSaldo(db, acc, id);
     }
 }
@@ -187,7 +187,7 @@ static void calcCrSaldo(sqlite3 *db, QString acc, long id,double quan,double sum
     int balanceAcc = 0;     // Счет является балансовым (1) или нет (0)
     int analiticAcc = 0;
 
-    sqlite3_prepare_v2(db, QString("SELECT БАЛАНС, АНАЛИТИКА FROM счета WHERE СЧЕТ = '%1';").arg(acc).toUtf8().data(), -1, &stmt, nullptr);
+    sqlite3_prepare_v2(db, QString("SELECT БАЛАНС, АНАЛИТИКА FROM счета WHERE СЧЕТ = '%1';").arg(acc).toUtf8().data(), -1, &stmt, 0 /*nullptr*/);
     if ((rc = sqlite3_step(stmt)) == SQLITE_ROW)
     {
         balanceAcc = sqlite3_column_int(stmt, 0);
@@ -201,7 +201,7 @@ static void calcCrSaldo(sqlite3 *db, QString acc, long id,double quan,double sum
        double credit;
 
         QString command = QString("SELECT КРКОЛ, КРЕДИТ FROM сальдо WHERE СЧЕТ = '%1' AND КОД = %2;").arg(acc).arg(id);
-        sqlite3_prepare_v2(db, command.toUtf8().data(), -1, &stmt, nullptr);
+        sqlite3_prepare_v2(db, command.toUtf8().data(), -1, &stmt, 0 /*nullptr*/);
         if ((rc = sqlite3_step(stmt)) == SQLITE_ROW)
         {
             crQuan   = sqlite3_column_double(stmt, 0);
@@ -222,7 +222,7 @@ static void calcCrSaldo(sqlite3 *db, QString acc, long id,double quan,double sum
 
         qDebug() << command;
 
-        rc = sqlite3_exec(db, command.toUtf8().data(), nullptr, nullptr, nullptr);
+        rc = sqlite3_exec(db, command.toUtf8().data(), 0 /*nullptr*/, 0 /*nullptr*/, 0 /*nullptr*/);
         calcEndSaldo(db, acc, id);
     }
 }
@@ -243,7 +243,7 @@ static void insertPrvFunc(sqlite3_context *context, int, sqlite3_value **argv)
    double      newSum = fromString((char*)sqlite3_value_text(argv[5]));
     QString     newOper((char*)sqlite3_value_text(argv[6]));
 
-    sqlite3_prepare_v2(db, QString("SELECT СЧИТАТЬ FROM топер WHERE ОПЕР = %1 AND НОМЕР = 1;").arg(newOper).toUtf8().data(), -1, &stmt, nullptr);
+    sqlite3_prepare_v2(db, QString("SELECT СЧИТАТЬ FROM топер WHERE ОПЕР = %1 AND НОМЕР = 1;").arg(newOper).toUtf8().data(), -1, &stmt, 0 /*nullptr*/);
     if (sqlite3_step(stmt) == SQLITE_ROW)
         if (sqlite3_column_int(stmt, 0) == 1)
         {
@@ -460,26 +460,26 @@ bool SQLiteDBFactory::open(QString, QString)
             if (v.isValid() && qstrcmp(v.typeName(), "sqlite3*") == 0)
             {
                 sqlite3 *db_handle = *static_cast<sqlite3 **>(v.data());
-                if (db_handle != nullptr)
+                if (db_handle != 0 /*nullptr*/)
                 {
                     sqlite3_initialize();
 
-                    sqlite3_create_function(db_handle, "upper", 1, SQLITE_UTF8, nullptr, &upperFunc, nullptr, nullptr);
-                    sqlite3_create_function(db_handle, "UPPER", 1, SQLITE_UTF8, nullptr, &upperFunc, nullptr, nullptr);
-                    sqlite3_create_function(db_handle, "Upper", 1, SQLITE_UTF8, nullptr, &upperFunc, nullptr, nullptr);
+                    sqlite3_create_function(db_handle, "upper", 1, SQLITE_UTF8, 0 /*nullptr*/, &upperFunc, 0 /*nullptr*/, 0 /*nullptr*/);
+                    sqlite3_create_function(db_handle, "UPPER", 1, SQLITE_UTF8, 0 /*nullptr*/, &upperFunc, 0 /*nullptr*/, 0 /*nullptr*/);
+                    sqlite3_create_function(db_handle, "Upper", 1, SQLITE_UTF8, 0 /*nullptr*/, &upperFunc, 0 /*nullptr*/, 0 /*nullptr*/);
 
-                    sqlite3_create_function(db_handle, "lower", 1, SQLITE_UTF8, nullptr, &lowerFunc, nullptr, nullptr);
-                    sqlite3_create_function(db_handle, "LOWER", 1, SQLITE_UTF8, nullptr, &lowerFunc, nullptr, nullptr);
-                    sqlite3_create_function(db_handle, "Lower", 1, SQLITE_UTF8, nullptr, &lowerFunc, nullptr, nullptr);
+                    sqlite3_create_function(db_handle, "lower", 1, SQLITE_UTF8, 0 /*nullptr*/, &lowerFunc, 0 /*nullptr*/, 0 /*nullptr*/);
+                    sqlite3_create_function(db_handle, "LOWER", 1, SQLITE_UTF8, 0 /*nullptr*/, &lowerFunc, 0 /*nullptr*/, 0 /*nullptr*/);
+                    sqlite3_create_function(db_handle, "Lower", 1, SQLITE_UTF8, 0 /*nullptr*/, &lowerFunc, 0 /*nullptr*/, 0 /*nullptr*/);
 
 
-                    sqlite3_create_function(db_handle, "encode", 2, SQLITE_UTF8, nullptr, &encodeFunc, nullptr, nullptr);
-                    sqlite3_create_function(db_handle, "ENCODE", 2, SQLITE_UTF8, nullptr, &encodeFunc, nullptr, nullptr);
-                    sqlite3_create_function(db_handle, "Encode", 2, SQLITE_UTF8, nullptr, &encodeFunc, nullptr, nullptr);
+                    sqlite3_create_function(db_handle, "encode", 2, SQLITE_UTF8, 0 /*nullptr*/, &encodeFunc, 0 /*nullptr*/, 0 /*nullptr*/);
+                    sqlite3_create_function(db_handle, "ENCODE", 2, SQLITE_UTF8, 0 /*nullptr*/, &encodeFunc, 0 /*nullptr*/, 0 /*nullptr*/);
+                    sqlite3_create_function(db_handle, "Encode", 2, SQLITE_UTF8, 0 /*nullptr*/, &encodeFunc, 0 /*nullptr*/, 0 /*nullptr*/);
 
-                    sqlite3_create_function(db_handle, "insertPrv", 7, SQLITE_UTF8, nullptr, &insertPrvFunc, nullptr, nullptr);
-                    sqlite3_create_function(db_handle, "calcPrv", 12, SQLITE_UTF8, nullptr, &calcPrvFunc, nullptr, nullptr);
-                    sqlite3_create_function(db_handle, "removePrv", 6, SQLITE_UTF8, nullptr, &removePrvFunc, nullptr, nullptr);
+                    sqlite3_create_function(db_handle, "insertPrv", 7, SQLITE_UTF8, 0 /*nullptr*/, &insertPrvFunc, 0 /*nullptr*/, 0 /*nullptr*/);
+                    sqlite3_create_function(db_handle, "calcPrv", 12, SQLITE_UTF8, 0 /*nullptr*/, &calcPrvFunc, 0 /*nullptr*/, 0 /*nullptr*/);
+                    sqlite3_create_function(db_handle, "removePrv", 6, SQLITE_UTF8, 0 /*nullptr*/, &removePrvFunc, 0 /*nullptr*/, 0 /*nullptr*/);
 
                 }
             }
@@ -1141,7 +1141,7 @@ QSqlQuery SQLiteDBFactory::execQuery(QString str, bool showError, QSqlDatabase* 
     clearError();
     QSqlQuery result;
     QSqlQuery* query;
-    if (extDb != nullptr && extDb->isValid())
+    if (extDb != 0 /*nullptr*/ && extDb->isValid())
         query = new QSqlQuery(*extDb);
     else
         query = new QSqlQuery();

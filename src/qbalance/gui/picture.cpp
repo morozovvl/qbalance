@@ -41,8 +41,8 @@ Picture::Picture(QWidget* parent): QFrame(parent) {
                         qRound(QApplication::desktop()->availableGeometry().width() * 0.8),
                         qRound(QApplication::desktop()->availableGeometry().height() * 0.8));
     photoWindowTitle = "";
-    app = nullptr;
-    form = nullptr;
+    app = 0 /*nullptr*/;
+    form = 0 /*nullptr*/;
     pictureExist = false;
 }
 

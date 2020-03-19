@@ -32,13 +32,13 @@ MyDateItemDelegate::MyDateItemDelegate(QObject* parent, FormGrid* form): MyItemD
 
 QWidget* MyDateItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem&, const QModelIndex&) const
 {
-    QLineEdit* editorWidget = nullptr;
+    QLineEdit* editorWidget = 0 /*nullptr*/;
     if (!menuMode)
     {
         editorWidget = new QLineEdit(parent);
         if (!readOnly)
         {
-            if (essence != nullptr)
+            if (essence != 0 /*nullptr*/)
             {
                 essence->saveOldValues();
                 disconnect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));

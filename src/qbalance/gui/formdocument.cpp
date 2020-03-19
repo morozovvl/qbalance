@@ -41,15 +41,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 FormDocument::FormDocument(): FormGrid()
 {
-    dateEdit = nullptr;
-    numberEdit = nullptr;
-    parameters = nullptr;
-    itogNumeric = nullptr;
-    textEdit = nullptr;
-    buttonQueryAdd = nullptr;
-    queriesMenu = nullptr;
-    parent = nullptr;
-    formWidget = nullptr;
+    dateEdit = 0 /*nullptr*/;
+    numberEdit = 0 /*nullptr*/;
+    parameters = 0 /*nullptr*/;
+    itogNumeric = 0 /*nullptr*/;
+    textEdit = 0 /*nullptr*/;
+    buttonQueryAdd = 0 /*nullptr*/;
+    queriesMenu = 0 /*nullptr*/;
+    parent = 0 /*nullptr*/;
+    formWidget = 0 /*nullptr*/;
 }
 
 
@@ -78,7 +78,7 @@ QLineEdit* FormDocument::getNumberEdit()
 
 void FormDocument::showParameterText(QString dictName)
 {
-    if (parameters != nullptr)
+    if (parameters != 0 /*nullptr*/)
         parameters->showText(dictName);
 }
 
@@ -105,7 +105,7 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt)
 {
     FormGrid::createForm(fileName, pwgt);
     // Подключим кнопку "Добавить из запроса"
-    if (parent != nullptr)
+    if (parent != 0 /*nullptr*/)
     {
         if (defaultForm)
         {
@@ -113,12 +113,12 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt)
         }
         else
         {
-            if (formWidget != nullptr)
+            if (formWidget != 0 /*nullptr*/)
             {
                 buttonQueryAdd = static_cast<QPushButton*>(formWidget->findChild("buttonQueryAdd"));
             }
         }
-        if (buttonQueryAdd != nullptr)
+        if (buttonQueryAdd != 0 /*nullptr*/)
         {
             connect(buttonQueryAdd, SIGNAL(clicked()), this, SLOT(cmdQueryAdd()));
 
@@ -149,7 +149,7 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt)
     }
     if (defaultForm)
     {
-        if (vbxLayout != nullptr)
+        if (vbxLayout != 0 /*nullptr*/)
         {
             // Вставим текстовое содержимое документа
 
@@ -188,12 +188,12 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt)
                 parameters = new DocParameters();
                 parameters->setObjectName("docParameters");
             }
-            if (parameters != nullptr)
+            if (parameters != 0 /*nullptr*/)
             {
                 QHBoxLayout* phbxLayout = new QHBoxLayout();
                 phbxLayout->setObjectName("phbxLayout");
                 phbxLayout->insertWidget(0, parameters);
-                if (vbxLayout != nullptr)
+                if (vbxLayout != 0 /*nullptr*/)
                 {
                     vbxLayout->insertLayout(0, phbxLayout);
                 }
@@ -225,7 +225,7 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt)
         itogNumeric     = static_cast<MyNumericEdit*>(formWidget->findChild("itogNumeric"));
         textEdit        = static_cast<QTextEdit*>(formWidget->findChild("commentText"));
     }
-    if (parameters != nullptr)
+    if (parameters != 0 /*nullptr*/)
     {
         parameters->setDictionaries(getParent()->getDictionariesList());
         parameters->setFormDocument(this);
@@ -243,11 +243,11 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt)
     // Если в документе должна быть только одна строка, то заблокируем кнопки "Добавить" и "Удалить"
     if (getParent()->getIsSingleString())
     {
-        if (buttonAdd != nullptr)
+        if (buttonAdd != 0 /*nullptr*/)
             buttonAdd->hide();
-        if (buttonQueryAdd != nullptr)
+        if (buttonQueryAdd != 0 /*nullptr*/)
             buttonQueryAdd->hide();
-        if (buttonDelete != nullptr)
+        if (buttonDelete != 0 /*nullptr*/)
             buttonDelete->hide();
     }
 }
@@ -255,19 +255,20 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt)
 
 void FormDocument::show()
 {
-    if (dateEdit != nullptr)
+    if (dateEdit != 0 /*nullptr*/)
         dateEdit->setDate(db->toDate(getParent()->getParent()->getValue("ДАТА")));
-    if (numberEdit != nullptr)
+    if (numberEdit != 0 /*nullptr*/)
         numberEdit->setText(getParent()->getParent()->getValue("НОМЕР").toString());
-    if (itogNumeric != nullptr)
+    if (itogNumeric != 0 /*nullptr*/)
         itogNumeric->setValue(getParent()->getParent()->getValue("СУММА"));
-    if (parameters != nullptr)
+    if (parameters != 0 /*nullptr*/)
     {
         foreach (QString dictName, parameters->getKeys())
             parameters->showText(dictName);
     }
-    if (textEdit != nullptr)
+    if (textEdit != 0 /*nullptr*/)
         textEdit->setText(getParent()->getParent()->getValue("описание").toString());
+
     FormGrid::show();
     if (parent->getCurrentRow() + 1 > parent->rowCount())
     {
@@ -288,7 +289,7 @@ void FormDocument::hide()
 void FormDocument::cmdOk()
 {
     FormGrid::cmdOk();
-    if (getParent() != nullptr)
+    if (getParent() != 0 /*nullptr*/)
     {
         saveDate(dateEdit->date());
         saveNumber(numberEdit->text());
@@ -305,7 +306,7 @@ void FormDocument::cmdOk()
 void FormDocument::cmdCancel()
 {
     FormGrid::cmdCancel();
-    if (getParent() != nullptr)
+    if (getParent() != 0 /*nullptr*/)
     {
         getParent()->getParent()->getGrdTable()->setFocus();
     }
@@ -315,7 +316,7 @@ void FormDocument::cmdCancel()
 void FormDocument::cmdQueryAdd()
 {
     QAction* action = queriesMenu->exec(formWidget->mapToGlobal(QPoint(cmdButtonLayout->contentsRect().x() + 100, cmdButtonLayout->contentsRect().y()-queriesMenu->height())));
-    if (action != nullptr)
+    if (action != 0 /*nullptr*/)
     {
         getParent()->addFromQuery(action->data().toString().trimmed());
     }
@@ -326,7 +327,7 @@ void FormDocument::cmdQueryAdd()
 
 void FormDocument::parametersChangedEvent()
 {
-    if (getParent()->getScriptEngine() != nullptr) {
+    if (getParent()->getScriptEngine() != 0 /*nullptr*/) {
         getParent()->getScriptEngine()->eventParametersChanged();
     }
 }
@@ -337,11 +338,11 @@ void FormDocument::setEnabled(bool enabled)
     FormGrid::setEnabled(enabled);
     dateEdit->setReadOnly(!enabled);
     numberEdit->setReadOnly(!enabled);
-    if (textEdit != nullptr)
+    if (textEdit != 0 /*nullptr*/)
         textEdit->setEnabled(!enabled);
-    if (parameters != nullptr)
+    if (parameters != 0 /*nullptr*/)
         parameters->setEnabled(enabled);
-    if (queriesMenu != nullptr)
+    if (queriesMenu != 0 /*nullptr*/)
         queriesMenu->setEnabled(enabled);
 }
 
@@ -360,7 +361,7 @@ void FormDocument::saveNumber(QString text)
 
 void FormDocument::addQueryMenuAction(QString name, QString comment)
 {
-    if (queriesMenu != nullptr)
+    if (queriesMenu != 0 /*nullptr*/)
     {
         QAction* action = new QAction(comment, queriesMenu);
         action->setData(name);

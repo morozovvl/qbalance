@@ -38,7 +38,8 @@ class FormDocuments : public FormGrid {
 
 public:
      FormDocuments();
-     ~FormDocuments();
+
+     virtual void close();
 
 public slots:
     virtual void cmdAdd();
@@ -56,7 +57,7 @@ private:
     QLabel*          filterLabel;
     QLineEdit*      filterEdit;
     MyNumericEdit*    itogNumeric;
-    virtual void createForm(QString, QWidget* pwgt = nullptr);
+    virtual void createForm(QString, QWidget* pwgt = 0 /*nullptr*/);
 };
 
 #endif //FORMDOCUMENTS_H

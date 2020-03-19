@@ -36,7 +36,7 @@ WizardForm::WizardForm(QObject* parent): Form(parent)
 {
     result = true;
     frameIndex = 0;
-    currentFrame = nullptr;
+    currentFrame = 0 /*nullptr*/;
 }
 
 

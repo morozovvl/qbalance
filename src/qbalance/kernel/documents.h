@@ -45,14 +45,14 @@ private:
 protected:
     virtual bool        setTableModel(int = 0);
 
-    Documents(int, QObject* parent = nullptr);
+    Documents(int, QObject* parent = 0 /*nullptr*/);
     virtual void postInitialize(int, QObject*);
 
 public:
     ~Documents();
 
     template <class T>
-        static T* create(int opNumber, QObject *parent = nullptr)
+        static T* create(int opNumber, QObject *parent = 0 /*nullptr*/)
         {
             T* p(new T(opNumber, parent));
             p->postInitialize(opNumber, parent);
@@ -79,8 +79,8 @@ public:
 
     static QString getDocumentSqlSelectStatement(int oper,
                                           QList<ToperType>*,
-                                          QList<FieldType>* = nullptr,
-                                          int * = nullptr);     // Генерирует текст SQL-запроса для табличной части документа операции oper
+                                          QList<FieldType>* = 0 /*nullptr*/,
+                                          int * = 0 /*nullptr*/);     // Генерирует текст SQL-запроса для табличной части документа операции oper
 
     virtual void setScriptEngine();
     DocumentScriptEngine* getScriptEngine();

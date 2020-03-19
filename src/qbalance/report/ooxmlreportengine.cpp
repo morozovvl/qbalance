@@ -32,8 +32,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 OOXMLReportEngine::OOXMLReportEngine(Essence* ess, DocumentScriptEngine* engine) : ReportEngine(engine)
 {
-    app = nullptr;
-    context = nullptr;
+    app = 0 /*nullptr*/;
+    context = 0 /*nullptr*/;
 
     app = TApplication::exemplar();
     essence = ess;
@@ -41,11 +41,13 @@ OOXMLReportEngine::OOXMLReportEngine(Essence* ess, DocumentScriptEngine* engine)
     ooPath = "";
     tableNameForPrinting = "";
     fileName = "";
+    ooProcess = new QProcess();
 }
 
 
 OOXMLReportEngine::~OOXMLReportEngine()
 {
+//    ooProcess->deleteLater();
     delete ooxmlEngine;
 }
 
@@ -64,6 +66,7 @@ void OOXMLReportEngine::setFileName(QString fName)
 
 bool OOXMLReportEngine::open(QString fileName, ReportContext* cont, bool justPrint, int copyCount, QString printerName)
 {
+    bool result = false;
     int strNumber = 0;
     if (ooxmlEngine->open(fileName))
     {
@@ -98,7 +101,7 @@ bool OOXMLReportEngine::open(QString fileName, ReportContext* cont, bool justPri
             writeVariables(strNumber);       // Перепишем переменные из контекста печати в файл content.xml
         }
 
-        if (scriptEngine != nullptr)
+        if (scriptEngine != 0 /*nullptr*/)
             scriptEngine->eventBeforeTotalPrint();
 
         writeHeader();
@@ -124,7 +127,6 @@ bool OOXMLReportEngine::open(QString fileName, ReportContext* cont, bool justPri
             ooPath += "soffice.exe";
 #endif
         }
-        QProcess* ooProcess = new QProcess();
         QStringList commandLine;
         commandLine << "--calc" << "--invisible" << "--quickstart";
         if (justPrint && printerName.size() > 0)
@@ -134,9 +136,9 @@ bool OOXMLReportEngine::open(QString fileName, ReportContext* cont, bool justPri
         if (!ooProcess->waitForStarted())    // Подождем 1 секунду и если процесс не запустился
             TApplication::exemplar()->showError(QObject::trUtf8("Не удалось запустить") + " Open Office" + ". " + ooProcess->errorString());                  // выдадим сообщение об ошибке
         else
-            return true;
+            result = true;
     }
-    return false;
+    return result;
 }
 
 
@@ -287,14 +289,16 @@ strNum - номер текущей строки тела таблицы
         else
         {
             // Могут оставаться еще какие-нибудь выражения, оценим их скриптовым движком
-            QScriptValue var = scriptEngine->evaluate(cellText);
-            if (!scriptEngine->hasUncaughtException() &&
+            if (cellText.left(1) == "=")
+            {
+                QScriptValue var = scriptEngine->evaluate(cellText);
+                if (!scriptEngine->hasUncaughtException() &&
                     var.toString() != "undefined" &&
                     cellText != var.toString())
-            {
-                writeCell(cells.at(i), cellText, var.toVariant());                      // запишем результат оценки вместо текста ячейки
+                {
+                    writeCell(cells.at(i), cellText, var.toVariant());                      // запишем результат оценки вместо текста ячейки
+                }
             }
-
             result = false;
             break;  // элементов "[<...>]" в выражении больше нет, выходим
         }
