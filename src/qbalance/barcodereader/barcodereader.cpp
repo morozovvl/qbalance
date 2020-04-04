@@ -52,6 +52,7 @@ bool BarCodeReader::open(QString port, int rate, int to)
         if (serialPort != 0 /*nullptr*/)
         {
             serialPort->setBaudRate(rate);
+//            serialPort->setTimeout(timeOut);
             if (serialPort->open(QIODevice::ReadWrite))
             {
                 connect(serialPort, SIGNAL(readyRead()), this, SLOT(barCodeReadyRead()));
@@ -113,7 +114,10 @@ void BarCodeReader::barCodeReadyRead()
     }
 
     if (barCodeString.size() > 0)
+    {
         app->barCodeReadyRead(barCodeString);
+        barCodeString = "";
+    }
 }
 
 

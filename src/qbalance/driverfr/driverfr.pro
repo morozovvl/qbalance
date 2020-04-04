@@ -1,5 +1,4 @@
 CONFIG += plugin
-CONFIG += debug
 
 unix:TARGET = ../../../plugins/driverfr
 win32:TARGET = ../../../../plugins/driverfr

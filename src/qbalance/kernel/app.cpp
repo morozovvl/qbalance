@@ -748,10 +748,12 @@ bool TApplication::initApplication()
 
                 dictionaryList = Dictionaries::create<Dictionaries>();
                 topersList = Topers::create<Topers>();
-                reportsList = Reports::create<Reports>();
 
                 if (!isScriptMode())
+                {
+                    reportsList = Reports::create<Reports>();
                     openPlugins();
+                }
 
                 gui->showMenus();
 
@@ -850,12 +852,6 @@ void TApplication::close()
         delete updates;
     }
 
-    if (driverFR)
-    {
-        driverFR->close();
-        delete driverFR;
-    }
-
     if (tcpServer != 0 /*nullptr*/)
         delete tcpServer;
 
@@ -884,10 +880,10 @@ void TApplication::close()
                 }
             }
 
-            if (dictionaryList != 0 /*nullptr*/)
+            if (reportsList != 0 /*nullptr*/)
             {
-                dictionaryList->close();
-                delete dictionaryList;
+                reportsList->close();
+                delete reportsList;
             }
 
             if (topersList != 0 /*nullptr*/)
@@ -896,11 +892,12 @@ void TApplication::close()
                 delete topersList;
             }
 
-            if (reportsList != 0 /*nullptr*/)
+            if (dictionaryList != 0 /*nullptr*/)
             {
-                reportsList->close();
-                delete reportsList;
+                dictionaryList->close();
+                delete dictionaryList;
             }
+
         }
 
         db->close();
@@ -1033,6 +1030,13 @@ void TApplication::closePlugins()
         cardCodeReader->close();
         delete cardCodeReader;
         cardCodeReader = 0 /*nullptr*/;
+    }
+
+    if (driverFR != 0 /*nullptr*/)
+    {
+        driverFR->close();
+        delete driverFR;
+        driverFR != 0;
     }
 }
 

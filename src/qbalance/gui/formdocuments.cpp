@@ -61,6 +61,7 @@ void FormDocuments::close()
             itogNumeric = 0 /*nullptr*/;
         }
     }
+    FormGrid::close();
 }
 
 

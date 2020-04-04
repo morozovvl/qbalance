@@ -1118,41 +1118,49 @@ bool ScriptEngine::eventAfterShowNextDicts()
 }
 
 
-bool ScriptEngine::eventBeforeDeleteDocument()
+bool ScriptEngine::eventBeforeDeleteDocument(int id)
 {
     bool result = true;
     QScriptValue res;
     QString eventName = "EventBeforeDeleteDocument";
-    res = scriptCall(eventName, currentContext()->thisObject());
+    QScriptValueList args;
+    args << QScriptValue(id);
+    res = scriptCall(eventName, currentContext()->thisObject(), args);
     if (res.toString() != "undefined")
         result = res.toBool();
     return result;
 }
 
 
-void ScriptEngine::eventAfterDeleteDocument()
+void ScriptEngine::eventAfterDeleteDocument(int id)
 {
     QString eventName = "EventAfterDeleteDocument";
-    scriptCall(eventName, currentContext()->thisObject());
+    QScriptValueList args;
+    args << QScriptValue(id);
+    scriptCall(eventName, currentContext()->thisObject(), args);
 }
 
 
-bool ScriptEngine::eventBeforeDeleteString()
+bool ScriptEngine::eventBeforeDeleteString(int id)
 {
     bool result = true;
     QScriptValue res;
     QString eventName = "EventBeforeDeleteString";
-    res = scriptCall(eventName, currentContext()->thisObject());
+    QScriptValueList args;
+    args << QScriptValue(id);
+    res = scriptCall(eventName, currentContext()->thisObject(), args);
     if (res.toString() != "undefined")
         result = res.toBool();
     return result;
 }
 
 
-void ScriptEngine::eventAfterDeleteString()
+void ScriptEngine::eventAfterDeleteString(int id)
 {
     QString eventName = "EventAfterDeleteString";
-    scriptCall(eventName, currentContext()->thisObject());
+    QScriptValueList args;
+    args << QScriptValue(id);
+    scriptCall(eventName, currentContext()->thisObject(), args);
 }
 
 
@@ -1389,9 +1397,6 @@ QHash<QString, EventFunction>* ScriptEngine::getEventsList()
     func.comment = QObject::trUtf8("Событие происходит при нажатии на кнопку Запрос");
     appendEvent("EventQuery()", &func);
 
-    func.comment = QObject::trUtf8("Событие происходит после удаления документа");
-    appendEvent("EventAfterDeleteDocument()", &func);
-
     func.comment = QObject::trUtf8("Событие происходит перед созданием документа печати и предназначено для создания новых данных для документа");
     appendEvent("EventPreparePrintValues()", &func);
 
@@ -1420,16 +1425,19 @@ QHash<QString, EventFunction>* ScriptEngine::getEventsList()
     func.body = "return true;";
     appendEvent("EventBeforeAddString()", &func);
 
-    func.comment = QObject::trUtf8("Событие происходит перед удалением документа");
+    func.comment = QObject::trUtf8("Событие происходит перед удалением документа id");
     func.body = "return true;";
-    appendEvent("EventBeforeDeleteDocument()", &func);
+    appendEvent("EventBeforeDeleteDocument(id)", &func);
 
-    func.comment = QObject::trUtf8("Событие происходит перед удалением строки из документа");
+    func.comment = QObject::trUtf8("Событие происходит после удаления документа id");
+    appendEvent("EventAfterDeleteDocument(id)", &func);
+
+    func.comment = QObject::trUtf8("Событие происходит перед удалением строки id из документа");
     func.body = "return true;";
-    appendEvent("EventBeforeDeleteString()", &func);
+    appendEvent("EventBeforeDeleteString(id)", &func);
 
-    func.comment = QObject::trUtf8("Событие происходит после удаления строки из документа");
-    appendEvent("EventAfterDeleteString()", &func);
+    func.comment = QObject::trUtf8("Событие происходит после удаления строки id из документа");
+    appendEvent("EventAfterDeleteString(id)", &func);
 
     func.comment = QObject::trUtf8("Событие происходит после показа всех необходимых справочников при добавлении строки в документ");
     func.body = "return true;";

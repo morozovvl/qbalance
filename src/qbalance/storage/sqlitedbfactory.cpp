@@ -804,11 +804,10 @@ int SQLiteDBFactory::addDoc(int operNumber, QDate dDate)
 }
 
 
-void SQLiteDBFactory::removeDoc(int nDocId)
+bool SQLiteDBFactory::removeDoc(int nDocId)
 {
+   int result = 0;
    clearError();
-
-   beginTransaction();
 
    int nOperNum = getValue(QString("SELECT %1 FROM %2 WHERE %3 = %4 LIMIT 1;")
                            .arg(getObjectNameCom("документы.ОПЕР"))
@@ -842,7 +841,7 @@ void SQLiteDBFactory::removeDoc(int nDocId)
             .arg(getObjectNameCom(docAttrTableName + ".КОД"))
             .arg(nDocId));
 
-    commitTransaction();
+    return result;
 }
 
 

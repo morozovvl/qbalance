@@ -417,7 +417,7 @@ bool Document::remove(bool noAsk)
         if (Essence::remove(noAsk))
         {
             if (scriptEngineEnabled && scriptEngine != 0 /*nullptr*/)
-                canRemove = scriptEngine->eventBeforeDeleteString();
+                canRemove = scriptEngine->eventBeforeDeleteString(docId);
 
             if (canRemove)
             {
@@ -425,7 +425,7 @@ bool Document::remove(bool noAsk)
                 {
                     Dictionary::query();
                     if (scriptEngineEnabled && scriptEngine != 0 /*nullptr*/)
-                        scriptEngine->eventAfterDeleteString();
+                        scriptEngine->eventAfterDeleteString(docId);
                     calcItog();
                     db->execCommands();
                     return true;

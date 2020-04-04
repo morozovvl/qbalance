@@ -156,7 +156,9 @@ bool Dictionaries::addDictionary(QString dictName, bool createScripts)
                             childDict->setParentDict(dict);
                     }
                 }
-                dict->setPhotoPath(getValue(db->getObjectName("доступ_к_справочникам.фото")).toString().trimmed());
+                // Если еще не установлен путь к фотографиям, то установим его по умолчанию
+                if (dict->getPhotoPath().size() == 0)
+                    dict->setPhotoPath(getValue("ФОТО", locateValue("СПРАВОЧНИК", dictName)).toString().trimmed());
             }
 
             return true;
@@ -183,6 +185,7 @@ bool Dictionaries::addSaldo(QString acc)
 
         if (saldo->open())
         {
+            saldo->setPhotoPath(getValue("ФОТО", locateValue("СПРАВОЧНИК", dictName)).toString().trimmed());
             saldo->getFormWidget()->setWindowTitle(QString(QObject::trUtf8("Остаток на счете %1")).arg(acc));
             dictionariesList.insert(alias, saldo);
             saldo->setQuan(true);

@@ -84,10 +84,10 @@ public:
     virtual bool eventBeforeAddString();
     virtual void eventAfterAddString();
     virtual bool eventAfterShowNextDicts();
-    virtual bool eventBeforeDeleteDocument();
-    virtual void eventAfterDeleteDocument();
-    virtual bool eventBeforeDeleteString();
-    virtual void eventAfterDeleteString();
+    virtual bool eventBeforeDeleteDocument(int);
+    virtual void eventAfterDeleteDocument(int);
+    virtual bool eventBeforeDeleteString(int);
+    virtual void eventAfterDeleteString(int);
     virtual void eventInitForm(Form*);
     virtual void eventBeforeShowForm(Form*);
     virtual void eventAfterShowForm(Form*);

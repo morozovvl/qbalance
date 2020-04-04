@@ -58,13 +58,14 @@ void Dialog::setApp(TApplication* a)
     app = a;
     setParent(app->getMainWindow(), Qt::Dialog);
 
-    buttonOk = static_cast<QPushButton*>(this->findChild("buttonOk"));
-    if (buttonOk != 0 /*nullptr*/)
-        connect(buttonOk, SIGNAL(clicked()), this, SLOT(cmdOk()));
+//    buttonOk = static_cast<QPushButton*>(this->findChild("buttonOk"));
+//    if (buttonOk != 0 /*nullptr*/)
+//        connect(buttonOk, SIGNAL(clicked()), this, SLOT(cmdOk()));
+//
+//    buttonCancel = static_cast<QPushButton*>(this->findChild("buttonCancel"));
+//    if (buttonCancel != 0 /*nullptr*/)
+//        connect(buttonCancel, SIGNAL(clicked()), this, SLOT(cmdCancel()));
 
-    buttonCancel = static_cast<QPushButton*>(this->findChild("buttonCancel"));
-    if (buttonCancel != 0 /*nullptr*/)
-        connect(buttonCancel, SIGNAL(clicked()), this, SLOT(cmdCancel()));
 }
 
 

@@ -182,14 +182,19 @@ bool Documents::remove(bool noAsk)
         if (Essence::remove(noAsk))
         {
             scriptEngineEnabled = true;
+            int id = getValue("КОД").toInt();
             if (scriptEngine != 0 /*nullptr*/)
-                   canRemove = scriptEngine->eventBeforeDeleteDocument();
+                   canRemove = scriptEngine->eventBeforeDeleteDocument(id);
             if (canRemove)
             {
-                db->removeDoc(getValue("код").toInt());
+                db->beginTransaction();
+                if (db->removeDoc(id))
+                {
+                    if (scriptEngine != 0 /*nullptr*/)
+                           scriptEngine->eventAfterDeleteDocument(id);
+                }
+                db->commitTransaction();
                 query();
-                if (scriptEngine != 0 /*nullptr*/)
-                       scriptEngine->eventAfterDeleteDocument();
                 result = true;
             }
             scriptEngineEnabled = false;

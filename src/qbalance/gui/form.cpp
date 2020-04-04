@@ -533,6 +533,27 @@ void Form::readSettings()
     int w = settingValues.value("width", 400);
     int h = settingValues.value("height", 200);
 
+/*
+    int maxheight = app->getMainWindow()->getWorkSpace()->geometry().height() - app->getMainWindow()->getWorkSpace()->geometry().y(); // - 88;
+    int maxwidth  = app->getMainWindow()->getWorkSpace()->geometry().width()  - app->getMainWindow()->getWorkSpace()->geometry().x();
+
+    if ((x + w) > maxwidth)
+    {
+        x = 0;
+        w = maxwidth;
+    }
+
+    if (getParent() != 0)
+        qDebug() << getParent()->getTableName();
+
+    qDebug() <<  y << h << y + h << app->getMainWindow()->getWorkSpace()->geometry().height() << app->getMainWindow()->getWorkSpace()->geometry().y() << maxheight;
+
+    if ((y + h) > maxheight)
+    {
+        y = 0;
+        h = maxheight;
+    }
+*/
     widget->setGeometry(x, y, w, h);
 }
 

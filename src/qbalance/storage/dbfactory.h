@@ -184,7 +184,7 @@ public:
     virtual void    clearLockedDocumentList() {;}
 
     virtual int addDoc(int, QDate);                                                             // Создать новый документ по типовой операции operNumber с датой date
-    Q_INVOKABLE virtual void removeDoc(int);                                                    // Удалить документ с идентификатором docId
+    Q_INVOKABLE virtual bool removeDoc(int);                                                    // Удалить документ с идентификатором docId
     virtual int addDocStr(int, int, QString = "''", int = 1, int = 0);    // Добавить новую строку в документ по типовой операции operNumber
                                                                                                         // с идентификатором docId. В строке cParam через запятую находится информация об идентификаторах объектов учета,
                                                                                                         // их количестве, цене и сумме или строка cParam может быть пустой

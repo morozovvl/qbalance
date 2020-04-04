@@ -28,7 +28,7 @@ public:
     virtual QString getFalseValue();
 
     virtual int addDoc(int, QDate = QDate::currentDate());       // Создать новый документ по типовой операции operNumber с датой date
-    virtual void removeDoc(int);                                 // Удалить документ с идентификатором docId
+    virtual bool removeDoc(int);                                 // Удалить документ с идентификатором docId
     virtual int addDocStr(int, int, QString = "", int = 1, int = 0);    // Добавить новую строку в документ по типовой операции operNumber
     virtual bool removeDocStr(int, int);                                                          // Удалить строку в документе docId под номером nDocStr
 

@@ -1193,14 +1193,17 @@ int DBFactory::addDoc(int operNumber, QDate date)
 }
 
 
-void DBFactory::removeDoc(int docId)
+bool DBFactory::removeDoc(int docId)
 {
+    bool result = false;
     clearError();
     if (lockDocument(docId))
     {
         exec(QString("SELECT sp_DeleteDoc(%1);").arg(docId));
         unlockDocument(docId);
+        result = true;
     }
+    return result;
 }
 
 

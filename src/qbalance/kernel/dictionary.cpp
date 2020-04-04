@@ -474,13 +474,15 @@ bool Dictionary::remove(bool noAsk)
     bool canRemove = true;
     if (lDeleteable)
     {
-        if (Essence::remove(noAsk)) {
+        if (Essence::remove(noAsk))
+        {
+            int id = getValue("КОД").toInt();
             if (scriptEngineEnabled && scriptEngine != 0 /*nullptr*/)
-                canRemove = scriptEngine->eventBeforeDeleteString();
+                canRemove = scriptEngine->eventBeforeDeleteString(id);
 
             if (canRemove)
             {
-                if (db->removeDictValue(tableName, getValue("КОД").toInt()))
+                if (db->removeDictValue(tableName, id))
                 {
                     query();
                     return true;

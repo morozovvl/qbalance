@@ -198,7 +198,7 @@ void TableView::currentChanged(const QModelIndex &current, const QModelIndex &pr
 
     QTableView::currentChanged(current, previous);
 
-    if (current.row() != previous.row() && currentChangedScripts)
+    if (current.row() != previous.row()/* && currentChangedScripts*/)
     {
         if (essence != 0 /*nullptr*/)
         {
