@@ -744,7 +744,7 @@ QString Essence::getPhotoFile(QString copyTo)
     if (phEnabled || copyTo.size() > 0)
     {
         // Сначала получим имя поля из которого будем брать значение идентификатора
-        if (photoIdField.size() == 0 && (isDictionary || app->getConfigValue("GET_PICTURE_FROM_SERVER_IN_DOCUMENT").toBool()))
+        if (photoIdField.size() == 0 && isDictionary)
         {
             // Если имя поля, из которого нужно брать идентификатор фотографии не установлено, то будем считать идентификатором код позиции
             photoIdField = db->getObjectName("код");
@@ -760,20 +760,17 @@ QString Essence::getPhotoFile(QString copyTo)
                 file = getLocalPhotoFile();
                 if (isDictionary && file.size() > 0)
                 {
-                    if (!QFile(file).exists() && phEnabled)
+                    if ((!QFile(file).exists() || !app->isSA()) && phEnabled)
                     {   // Локальный файл с фотографией не найден, попробуем получить фотографию с нашего сервера. Будем делать это только для справочника, а не для документа
                         // Мы знаем, под каким именем искать фотографию на нашем сервере, то попробуем обратиться к нему за фотографией
-                        if (db->getFileCheckSum(localFile, PictureFileType, true) != 0)
-                        {
-                            QByteArray picture = db->getFile(localFile, PictureFileType, true); // Получить файл с картинкой из расширенной базы
-                            if (picture.size() > 0)
-                            {   // Если удалось получить какую-то фотографию
-                                app->saveFile(file, &picture);
-                                if (copyTo.size() > 0)
-                                    app->saveFileToServer(app->getPhotosPath(copyTo), file, PictureFileType, true);   // Если указано, что фотографию нужно скопировать, то скопируем ее
-                            }
+                        QByteArray picture = db->getFile(localFile, PictureFileType, true); // Получить файл с картинкой из расширенной базы
+                        if (picture.size() > 0)
+                        {   // Если удалось получить какую-то фотографию
+                            app->saveFile(file, &picture);
+                            if (copyTo.size() > 0 && app->isSA())
+                                app->saveFileToServer(app->getPhotosPath(copyTo), file, PictureFileType, true);   // Если указано, что фотографию нужно скопировать, то скопируем ее
                         }
-                        if (!QFile(file).exists())
+                        if (!QFile(file).exists() && app->isSA())
                         {   // Фотография не найдена на сервере, попробуем получить фотографию из Интернета
                             pictureUrl = preparePictureUrl();
                             file = pictureUrl;
@@ -811,10 +808,13 @@ QString Essence::getPhotoFile(QString copyTo)
                     }
                     else
                     {   // Локальный файл с фотографией найден. Проверим, имеется ли он на сервере в расширенной базе и если что, то сохраним его там
-                        app->saveFileToServer(file, localFile, PictureFileType, true);
-                        if (copyTo.size() > 0)
+                        if (app->isSA())
                         {
-                            app->saveFileToServer(file, copyTo, PictureFileType, true);   // Если указано, что фотографию нужно скопировать, то скопируем ее
+                            app->saveFileToServer(file, localFile, PictureFileType, true);
+                            if (copyTo.size() > 0)
+                            {
+                                app->saveFileToServer(file, copyTo, PictureFileType, true);   // Если указано, что фотографию нужно скопировать, то скопируем ее
+                            }
                         }
                     }
                 }

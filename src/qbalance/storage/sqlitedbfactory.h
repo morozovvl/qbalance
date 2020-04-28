@@ -29,7 +29,7 @@ public:
 
     virtual int addDoc(int, QDate = QDate::currentDate());       // Создать новый документ по типовой операции operNumber с датой date
     virtual bool removeDoc(int);                                 // Удалить документ с идентификатором docId
-    virtual int addDocStr(int, int, QString = "", int = 1, int = 0);    // Добавить новую строку в документ по типовой операции operNumber
+    Q_INVOKABLE virtual int addDocStr(int, int, QString = "", int = 1, int = 0);    // Добавить новую строку в документ по типовой операции operNumber
     virtual bool removeDocStr(int, int);                                                          // Удалить строку в документе docId под номером nDocStr
 
     virtual QString getCurrentTimeStamp();
@@ -44,6 +44,11 @@ public:
     Q_INVOKABLE virtual QSqlQuery execQuery(QString, bool = true, QSqlDatabase* = 0 /*nullptr*/);
 
     virtual int querySize(QSqlQuery*);
+/*
+    Q_INVOKABLE virtual bool beginTransaction();
+    Q_INVOKABLE virtual void commitTransaction();
+    Q_INVOKABLE virtual void rollbackTransaction();
+*/
 
 private:
     void _reloadColumnProperties(QString, QString);

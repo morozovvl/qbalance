@@ -185,7 +185,7 @@ public:
 
     virtual int addDoc(int, QDate);                                                             // Создать новый документ по типовой операции operNumber с датой date
     Q_INVOKABLE virtual bool removeDoc(int);                                                    // Удалить документ с идентификатором docId
-    virtual int addDocStr(int, int, QString = "''", int = 1, int = 0);    // Добавить новую строку в документ по типовой операции operNumber
+    Q_INVOKABLE virtual int addDocStr(int, int, QString = "''", int = 1, int = 0);    // Добавить новую строку в документ по типовой операции operNumber
                                                                                                         // с идентификатором docId. В строке cParam через запятую находится информация об идентификаторах объектов учета,
                                                                                                         // их количестве, цене и сумме или строка cParam может быть пустой
                                                                                                         // nQuan - сколько строк вставить, nDocStr - вставить строку с номером
@@ -254,9 +254,9 @@ public:
     Q_INVOKABLE virtual QString getObjectName(const QString&);       // транслирует имена объектов БД из "внутренних" в реальные наименования
     Q_INVOKABLE virtual QString getObjectNameCom(const QString&);                        // то же самое, только результат возвращает в кавычках (применяется при генерации SQL команд)
 
-    Q_INVOKABLE bool beginTransaction();
-    Q_INVOKABLE void commitTransaction();
-    Q_INVOKABLE void rollbackTransaction();
+    Q_INVOKABLE virtual bool beginTransaction();
+    Q_INVOKABLE virtual void commitTransaction();
+    Q_INVOKABLE virtual void rollbackTransaction();
 
     virtual void loadSystemTables();
 

@@ -1036,7 +1036,7 @@ void TApplication::closePlugins()
     {
         driverFR->close();
         delete driverFR;
-        driverFR != 0;
+        driverFR = 0;
     }
 }
 

@@ -245,7 +245,7 @@ QString SearchParameters::getFilter(QString dictName, QString defFilter)
                 int subStrNum = 0;
                 foreach (QString param, paramList)
                 {
-                    if (param.size() > 0)
+                    if (param.trimmed().size() > 0)
                     {
                         if (parentForm != 0 /*nullptr*/ && dictionaries != 0 /*nullptr*/)
                         {

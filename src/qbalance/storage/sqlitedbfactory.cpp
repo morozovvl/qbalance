@@ -1162,5 +1162,23 @@ int SQLiteDBFactory::querySize(QSqlQuery* q)
     return q->at() + 1;
 }
 
+/*
+bool SQLiteDBFactory::beginTransaction()
+{
+    return exec("BEGIN;");
+}
+
+
+void SQLiteDBFactory::commitTransaction()
+{
+    exec("COMMIT;");
+}
+
+
+void SQLiteDBFactory::rollbackTransaction()
+{
+    exec("ROLLBACK;");
+}
+*/
 
 //#undef double
