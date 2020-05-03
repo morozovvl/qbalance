@@ -23,6 +23,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QObject>
 #include <QtNetwork/QTcpServer>
 #include <QtNetwork/QNetworkSession>
+#include "../driverfr/driverfr.h"
+
 
 class TApplication;
 
@@ -32,6 +34,8 @@ class TcpServer : public QObject
 
 public:
     TcpServer(quint16 nPort, QObject *parent = 0 /*nullptr*/);
+    virtual void    open();
+    virtual void    close();
     virtual void    pingClient(QString);
     virtual bool    getPingOk();
 
@@ -51,6 +55,7 @@ private:
     TApplication*   app;
     bool            pingOk;
     QHash<QString, QTcpSocket*>      clients;           // Список обслуживаемых клиентов
+    DriverFR*           driverFR;
     void    sendToClient(QTcpSocket*, QString);
     void    processRequest(QTcpSocket*, QString);
 

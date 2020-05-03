@@ -136,6 +136,7 @@ void QMyExtSerialPort::close()
 #endif
 }
 
+
 void QMyExtSerialPort::tryReceive()
 {
 #if QT_VERSION >= 0x050000
@@ -153,6 +154,7 @@ void QMyExtSerialPort::tryReceive()
         QTimer::singleShot(1, this, SLOT(tryReceive()));
     }
 }
+
 
 qint64 QMyExtSerialPort::readData(char* data, qint64 maxSize, bool fromRemote)
 {

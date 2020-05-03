@@ -331,14 +331,8 @@ QScriptValue DateString(QScriptContext* context, QScriptEngine*)
 // класс DriverFR
 Q_DECLARE_METATYPE(DriverFR*)
 
-QScriptValue DriverFRConstructor(QScriptContext *, QScriptEngine *engine) {
-//    DriverFR *object = new DriverFR(TApplication::exemplar());
-    DriverFR *object = static_cast<DriverFR*>(TApplication::exemplar()->createPlugin("DriverFR"));
-    return engine->newQObject(object, QScriptEngine::ScriptOwnership);
-}
-
 QScriptValue DriverFRToScriptValue(QScriptEngine *engine, DriverFR* const &in) {
-    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
+    return engine->newQObject(in);
 }
 
 void DriverFRFromScriptValue(const QScriptValue &object, DriverFR* &out) {
@@ -834,8 +828,7 @@ void ScriptEngine::loadScriptObjects()
 
     // Объявим классы для работы с пользовательскими формами
     qScriptRegisterMetaType(this, DriverFRToScriptValue, DriverFRFromScriptValue);
-    globalObject().setProperty("DriverFR", newQMetaObject(&QObject::staticMetaObject, newFunction(DriverFRConstructor)));
-//    globalObject().setProperty("DriverFR", newQObject(app->getDrvFR()/*, QScriptEngine::ScriptOwnership*/));
+    globalObject().setProperty("DriverFR", newQObject(app->getDrvFR()));
     qScriptRegisterMetaType(this, BankTerminalToScriptValue, BankTerminalFromScriptValue);
     globalObject().setProperty("BankTerminal", newQMetaObject(&QObject::staticMetaObject, newFunction(BankTerminalConstructor)));
     qScriptRegisterMetaType(this, EventLoopToScriptValue, EventLoopFromScriptValue);

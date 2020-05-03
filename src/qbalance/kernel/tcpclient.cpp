@@ -50,29 +50,8 @@ QString TcpClient::getResult()
 void TcpClient::slotReadyRead()
 {
     resultReady = false;
-    QDataStream in(m_pTcpSocket);
-    in.setVersion(QDataStream::Qt_4_0);
-    for(;;)
-    {
-        if (!m_nNextBlockSize)
-        {
-            if (m_pTcpSocket->bytesAvailable() < static_cast<quint16>(sizeof(quint16)))
-            {
-                break;
-            }
-            in >> m_nNextBlockSize;
-        }
-        if (m_pTcpSocket->bytesAvailable() < m_nNextBlockSize)
-        {
-            break;
-        }
-        m_nNextBlockSize = 0;
 
-        QString str;
-        in >> str;
-
-        result = str;
-    }
+    result = QString(m_pTcpSocket->readAll().data()).simplified();
     app->debug(5, QString("From %1: %2").arg(m_pTcpSocket->peerAddress().toString()).arg(result));
 
     if (result == "*ping*")
@@ -116,13 +95,10 @@ bool TcpClient::sendToServer(QString str)
         m_pTcpSocket->waitForConnected(app->getConfigValue(MAX_NET_TIMEOUT).toInt());
     }
     resultReady = false;                    // Результат запроса еще не готов
-    QByteArray arrBlock;
-    QDataStream out(&arrBlock, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_0);
-    out << quint16(0) << str;
-    out.device()->seek(0);
-    out << quint16(arrBlock.size() - sizeof(quint16));
-    m_pTcpSocket->write(arrBlock);
+
+    QString s = QString(str).append("\r\n");
+    m_pTcpSocket->write(s.toAscii().data());
+
     app->debug(5, QString("To %1: %2").arg(m_pTcpSocket->peerAddress().toString()).arg(str));
     return m_pTcpSocket->waitForReadyRead(app->getConfigValue(MAX_NET_TIMEOUT).toInt());      // Будем ждать ответа от сервера в течение 1 сек
 }

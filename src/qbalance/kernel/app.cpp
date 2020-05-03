@@ -712,8 +712,8 @@ bool TApplication::initApplication()
 
     initConfig();
 
-    if (!loadDefaultConfig)
-        readSettings();
+//    if (!loadDefaultConfig)
+//        readSettings();
 
     db  = new PostgresDBFactory();
 //    db  = new SQLiteDBFactory();
@@ -739,7 +739,6 @@ bool TApplication::initApplication()
                 tcpClient = new TcpClient(getConfigValue("REMOTE_HOST").toString(),
                                           getConfigValue("REMOTE_PORT").toInt(),
                                           this);
-
                 timeOut(getConfigValue(FR_NET_DRIVER_TIMEOUT).toInt());                                  // Подеждем, пока произойдет соенинение с сервером приложения
 
                 db->clearLockedDocumentList();
@@ -754,6 +753,8 @@ bool TApplication::initApplication()
                     reportsList = Reports::create<Reports>();
                     openPlugins();
                 }
+
+                tcpServer->open();
 
                 gui->showMenus();
 
@@ -853,7 +854,10 @@ void TApplication::close()
     }
 
     if (tcpServer != 0 /*nullptr*/)
+    {
+        tcpServer->close();
         delete tcpServer;
+    }
 
     if (tcpClient != 0 /*nullptr*/)
         delete tcpClient;
@@ -956,7 +960,7 @@ void    TApplication::openPlugins()
         {
             bankTerminal->setApp(this);
             bankTerminal->getDefaultConfigs(BANK_TERMINAL_PLUGIN_NAME);
-            readSettings();
+//            readSettings();
             if (!bankTerminal->open())
             {
                 bankTerminal->close();
