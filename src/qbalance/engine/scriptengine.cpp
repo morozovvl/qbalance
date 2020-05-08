@@ -343,13 +343,8 @@ void DriverFRFromScriptValue(const QScriptValue &object, DriverFR* &out) {
 // класс BankTerminal
 Q_DECLARE_METATYPE(BankTerminal*)
 
-QScriptValue BankTerminalConstructor(QScriptContext *, QScriptEngine *engine) {
-    BankTerminal *object = static_cast<BankTerminal*>(TApplication::exemplar()->createPlugin(BANK_TERMINAL_PLUGIN_NAME));
-    return engine->newQObject(object, QScriptEngine::ScriptOwnership);
-}
-
 QScriptValue BankTerminalToScriptValue(QScriptEngine *engine, BankTerminal* const &in) {
-    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
+    return engine->newQObject(in);
 }
 
 void BankTerminalFromScriptValue(const QScriptValue &object, BankTerminal* &out) {
@@ -830,7 +825,7 @@ void ScriptEngine::loadScriptObjects()
     qScriptRegisterMetaType(this, DriverFRToScriptValue, DriverFRFromScriptValue);
     globalObject().setProperty("DriverFR", newQObject(app->getDrvFR()));
     qScriptRegisterMetaType(this, BankTerminalToScriptValue, BankTerminalFromScriptValue);
-    globalObject().setProperty("BankTerminal", newQMetaObject(&QObject::staticMetaObject, newFunction(BankTerminalConstructor)));
+    globalObject().setProperty("BankTerminal", newQObject(app->getBankTerminal()));
     qScriptRegisterMetaType(this, EventLoopToScriptValue, EventLoopFromScriptValue);
     globalObject().setProperty("EventLoop", newQMetaObject(&QObject::staticMetaObject, newFunction(EventLoopConstructor)));
     qScriptRegisterMetaType(this, FormToScriptValue, FormFromScriptValue);

@@ -58,7 +58,7 @@ void BankTerminal::getDefaultConfigs(QString configName)
 #if defined(Q_OS_WIN)
     app->setConfig(configName, BANK_TERMINAL_PATH, "Каталог программы банковского терминала", CONFIG_VALUE_STRING, "C:/BankTerminal/");
 #else
-    app->setConfig(configName, BANK_TERMINAL_PATH, "Каталог программы банковского терминала", CONFIG_VALUE_STRING, "/home/vladimir/BankTerminal/");
+    app->setConfig(configName, BANK_TERMINAL_PATH, "Каталог программы банковского терминала", CONFIG_VALUE_STRING, "/home/vladimir/BankTerminal/old/");
 #endif
 }
 

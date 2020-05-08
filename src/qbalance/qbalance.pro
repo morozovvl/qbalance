@@ -3,8 +3,8 @@
 # -------------------------------------------------
 
 # для профилировщика
-#QMAKE_CXXFLAGS_DEBUG += -pg
-#QMAKE_LFLAGS_DEBUG += -pg
+QMAKE_CXXFLAGS_DEBUG += -g
+QMAKE_LFLAGS_DEBUG += -g
 
 #QMAKE_CXXFLAGS += -std=c++11
 #QMAKE_LFLAGS += -static -static-libgcc -static-libstdc++ -lm -Wl,--rpath='\$\$ORIGIN/lib64 -Wl, -Bdynamic -l:libsqlite3.so'
@@ -216,10 +216,10 @@ win32:RCC_DIR = ../qbalance
 unix {
     TARGET = ../../$${APP_NAME}
 
-# INCLUDEPATH = ../google-breakpad/src
+    INCLUDEPATH = ../breakpad/src
 # HEADERS += crashhandler/crashhandler.h
 # SOURCES += crashhandler/crashhandler.cpp
-# LIBS += ../google-breakpad/src/client/linux/libbreakpad_client.a
+    LIBS += ../breakpad/src/client/linux/libbreakpad_client.a
  isEmpty(PREFIX) {
   PREFIX =   /usr
   }

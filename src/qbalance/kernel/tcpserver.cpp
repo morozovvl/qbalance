@@ -105,7 +105,7 @@ void TcpServer::slotReadClient()
     QTcpSocket* pClientSocket = static_cast<QTcpSocket*>(sender());
 
     if (pClientSocket->isValid())
-        processRequest(pClientSocket, pClientSocket->readAll().data());
+        processRequest(pClientSocket, QString(pClientSocket->readAll().data()).simplified());
 }
 
 
@@ -124,9 +124,7 @@ void TcpServer::processRequest(QTcpSocket* pClientSocket, QString str)
 {
     QString resStr = "Ok";
 
-    qDebug() << str;
-
-    app->debug(5, QString("From %1: %2").arg(pClientSocket->peerAddress().toString()).arg(str.simplified()));
+    app->debug(5, QString("From %1: %2").arg(pClientSocket->peerAddress().toString()).arg(str));
 
     if (driverFR != 0 /*nullptr*/ && str.left(4) == "=fr=" && app->drvFRisValid())
     {   // Если это запрос работы с фискальным регистратором и фискальный регистратор работает

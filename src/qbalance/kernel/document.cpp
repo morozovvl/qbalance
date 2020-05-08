@@ -100,7 +100,7 @@ void Document::postInitialize(int oper, Documents* par)
     localDictsOpened = false;
     docModified = false;
     doSubmit = false;                 // По умолчанию не будем обновлять записи в БД сразу, чтобы собрать обновления в транзакцию
-    photoEnabled = false;
+    photoEnabled = true;
     quanAccount = false;
     singlePrv = false;
     locked = false;

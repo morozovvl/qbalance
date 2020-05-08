@@ -41,21 +41,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "kernel/app.h"
 #include "kernel/dictionaries.h"
 
-//#include "crashhandler/crashhandler.h"
+#include "client/linux/handler/exception_handler.h"
 
 //#include <mcheck.h>
 
 
-//#if defined(Q_OS_LINUX)
-//#define CRASHHANDLER
-//#endif
+static bool dumpCallback(const google_breakpad::MinidumpDescriptor& descriptor,
+void* context, bool succeeded) {
+  printf("Dump path: %s\n", descriptor.path());
+  return succeeded;
+}
 
-
-// Процедура для создания ошибки сегментирования
-//int buggyFunc() {
-//    delete reinterpret_cast<QString*>(0xFEE1DEAD);
-//    return 0;
-//}
+void crash() { volatile int* a = (int*)(NULL); *a = 1; }
 
 
 int main(int argc, char *argv[])
@@ -77,12 +74,6 @@ int main(int argc, char *argv[])
 #endif
     QTextCodec::setCodecForLocale(application.codec());
 
-//#ifdef CRASHHANDLER
-//    Breakpad::CrashHandler::instance()->Init(TApplication::exemplar()->getCrashDumpsPath());
-//#endif
-
-//    buggyFunc();
-
     int lResult = 0;
     bool lStart = true;
 
@@ -93,6 +84,10 @@ int main(int argc, char *argv[])
     {
         if (application.open())
         {
+            google_breakpad::MinidumpDescriptor descriptor(application.applicationDirPath().append("/crashdumps").toAscii().data());
+            google_breakpad::ExceptionHandler eh(descriptor, NULL, dumpCallback, NULL, true, -1);
+//            crash();
+
             application.debug(0, "\n");
             application.debug(0, QString("Program startup. v.%1").arg(application.applicationVersion()));
 
