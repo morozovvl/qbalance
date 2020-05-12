@@ -434,7 +434,7 @@ bool DriverFR::open(QString port, int rate, int timeout, int password)
     serialPort = app->getSerialPort(port);
     if (serialPort != 0 /*nullptr*/)
     {
-        // Сначала поищем на удаленном компьютере, т.к. это быстрее
+        // Сначала поищем на удаленном компьютере
         if (serialPort->getTcpClient()->isValid() && app->getConfigValue("FR_USE_REMOTE").toBool())
         {
             remote = true;

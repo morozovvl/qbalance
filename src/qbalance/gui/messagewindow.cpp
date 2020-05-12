@@ -114,44 +114,17 @@ void MessageWindow::hide()
 
 void MessageWindow::readSettings()
 {
-    QHash<QString, int> settingValues;
+    QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
+    settings.beginGroup(configName);
+    int defY = qRound(app->getMainWindow()->centralWidget()->height() * 0.6);
+    int defHeight = app->getMainWindow()->centralWidget()->height() - defY;
 
-    QSettings settings(app->applicationDataDirPath(), QSettings::IniFormat);
-    if (settings.status() == QSettings::NoError)
-    {
-        settings.beginGroup(configName);
-        if (settings.contains("x") &&
-            settings.contains("y") &&
-            settings.contains("width") &&
-            settings.contains("height") &&
-            settings.value("width", 0).toInt() > 0 &&
-            settings.value("height", 0).toInt() > 0)
-        {
-            settingValues.insert("x", settings.value("x").toInt());
-            settingValues.insert("y", settings.value("y").toInt());
-            settingValues.insert("width", settings.value("width").toInt());
-            settingValues.insert("height", settings.value("height").toInt());
-        }
-        settings.endGroup();
-    }
-    if (settingValues.count() == 0)
-        app->getDBFactory()->getConfig(configName, &settingValues);
-    if (settingValues.count() == 0)
-    {
-        // Загрузим значения по умолчанию
-        int defY = qRound(app->getMainWindow()->centralWidget()->height() * 0.6);
-        int defHeight = app->getMainWindow()->centralWidget()->height() - defY;
+    int x = settings.value("x", 0).toInt();
+    int y = settings.value("y", defY).toInt();
+    int w = settings.value("width", app->getMainWindow()->centralWidget()->width()).toInt();
+    int h = settings.value("height", defHeight).toInt();
 
-        settingValues.insert("x", 0);
-        settingValues.insert("y", defY);
-        settingValues.insert("width", app->getMainWindow()->centralWidget()->width());
-        settingValues.insert("height", defHeight);
-    }
-
-    int x = settingValues.value("x");
-    int y = settingValues.value("y");
-    int w = settingValues.value("width");
-    int h = settingValues.value("height");
+    settings.endGroup();
 
     if (subWindow != 0 /*nullptr*/)
         subWindow->setGeometry(x, y, w, h);
@@ -180,22 +153,13 @@ void MessageWindow::writeSettings()
         h = textEditor->geometry().height();
     }
 
-    QSettings settings(app->applicationDataDirPath(), QSettings::IniFormat);
+    QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
     settings.beginGroup(configName);
     settings.setValue("x", x);
     settings.setValue("y", y);
     settings.setValue("width", w);
     settings.setValue("height", h);
     settings.endGroup();
-
-    // И если работает пользователь SA, то сохраним конфигурацию окна на сервере
-    if (app->isSA() && app->getConfigValue("SAVE_FORM_CONFIG_TO_DB").toBool())
-    {
-        app->getDBFactory()->setConfig(configName, "x", QString("%1").arg(x));
-        app->getDBFactory()->setConfig(configName, "y", QString("%1").arg(y));
-        app->getDBFactory()->setConfig(configName, "width", QString("%1").arg(w));
-        app->getDBFactory()->setConfig(configName, "height", QString("%1").arg(h));
-    }
 }
 
 

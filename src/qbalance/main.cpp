@@ -46,8 +46,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //#include <mcheck.h>
 
 
-static bool dumpCallback(const google_breakpad::MinidumpDescriptor& descriptor,
-void* context, bool succeeded) {
+static bool dumpCallback(const google_breakpad::MinidumpDescriptor& descriptor, void*, bool succeeded)
+{
   printf("Dump path: %s\n", descriptor.path());
   return succeeded;
 }

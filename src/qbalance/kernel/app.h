@@ -241,12 +241,12 @@ public:
     Q_INVOKABLE void saveFileToServer(QString, QString, FileType, bool = false);
     Q_INVOKABLE void savePhotoToServer(QString file, QString localFile);
     Q_INVOKABLE void saveFile(QString, QByteArray*);
-    Q_INVOKABLE void print(QString = "");
-    Q_INVOKABLE void print(QStringList);
-    Q_INVOKABLE void printToArray(QString, QString);
-    Q_INVOKABLE void printArray(QString);
-    Q_INVOKABLE void clearPrintArrays();
-    Q_INVOKABLE int printArrayCount(QString);
+    Q_INVOKABLE virtual void print(QString = "");
+    Q_INVOKABLE virtual void print(QStringList);
+    Q_INVOKABLE virtual void printToArray(QString, QString);
+    Q_INVOKABLE virtual void printArray(QString);
+    Q_INVOKABLE virtual void clearPrintArrays();
+    Q_INVOKABLE virtual int printArrayCount(QString);
     MessageWindow* getMessageWindow();
     void    initConfig();
     QString     findFileFromEnv(QString);

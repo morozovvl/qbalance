@@ -792,19 +792,6 @@ bool TApplication::initApplication()
                     accDict->setPhotoEnabled(false);
                 }
 
-                if (getConfigValue("FR_NEEDED").toBool() && !isScriptMode())
-                {
-                    if (driverFRisValid)
-                        showMessageOnStatusBar("Найден фискальный регистратор.\n");
-                    else
-                    {
-                        if (driverFR != 0 /*nullptr*/ && driverFR->isLocked())
-                            showMessageOnStatusBar("Фискальный регистратор занят. Не удалось соединиться.\n");
-                        else
-                            showMessageOnStatusBar("Фискальный регистратор не найден.\n");
-                    }
-                }
-
                 // Создадим заголовок в главном окне
                 QString title = "";
                 if (getConfigPrefix().size() > 0)
@@ -929,7 +916,10 @@ void    TApplication::openPlugins()
                                getConfigValue("FR_DRIVER_PASSWORD").toInt()))
             {
                     driverFRisValid = true;
+                    print("Найден фискальный регистратор.");
             }
+            else
+                print("Фискальный регистратор не найден.");
         }
     }
 

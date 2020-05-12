@@ -40,7 +40,7 @@ BankTerminal::BankTerminal(QObject *parent) : QObject(parent)
     program = "loadparm.exe";
 #endif
     remote = false;
-    locked = true;
+    locked = false;
 }
 
 
@@ -92,7 +92,7 @@ bool BankTerminal::open()
                 result = true;
             }
             else
-                app->showError(QObject::trUtf8("Фискальный регистратор, необходимый для банковского терминала, не обнаружен"));
+                app->showError(QObject::trUtf8("Фискальный регистратор, необходимый для банковского терминала, не найден"));
         }
         else
         {
@@ -113,8 +113,10 @@ bool BankTerminal::open()
                 tcpClient->logError();
             }
         }
-        if (!result)
-            app->showError(QObject::trUtf8("Банковский терминал не обнаружен"));
+        if (result)
+            app->print("Найден банковский терминал.");
+        else
+            app->print("Банковский терминал не найден.");
     }
     return result;
 }
@@ -127,48 +129,66 @@ void BankTerminal::close()
 }
 
 
-bool BankTerminal::process(int oper, int sum, int type, int track)
+QString BankTerminal::process(int oper, int sum, int type, int track)
 {
-    bool result = false;
+    QString result = "false";
     if (!remote)
     {
-        locked = true;
-        if (driverFR->Connect())
+        if (!locked)
         {
-            QString command = QString("%1 %2").arg(program).arg(oper);
-            if (sum > 0)
-                command.append(QString(" %1").arg(sum));
-            if (type > 0)
-                command.append(QString(" %1").arg(type));
-            if (track > 0)
-                command.append(QString(" %1").arg(track));
-
-            // Очистим предыдущие результаты
-            QDir(path).remove("e");
-            QDir(path).remove("p");
-
-            // Запустим программу терминала
-
-            app->debug(6, command);
-
-            termProcess->start(command);
-            if (!termProcess->waitForFinished(app->getConfigValue(BANK_TERMINAL_PROGRAM_WAIT_TIME).toInt()))
+            locked = true;
+            if (driverFR->Connect())
             {
-                app->showError(QString(QObject::trUtf8("Время ожидания терминала (%1 c) истекло. Нажмите кнопку <ОТМЕНА> на терминале.")).arg(app->getConfigValue(BANK_TERMINAL_PROGRAM_WAIT_TIME).toInt()/1000));                  // выдадим сообщение об ошибке
-                termProcess->kill();
-            }
-            else
-            {
-                result = testResult();
-                if (!result)
-                    app->showError(resultParams.value(MESSAGE));
-                else
-                    printSlip();
-            }
+                QString command = QString("%1 %2").arg(program).arg(oper);
+                if (sum > 0)
+                    command.append(QString(" %1").arg(sum));
+                if (type > 0)
+                    command.append(QString(" %1").arg(type));
+                if (track > 0)
+                    command.append(QString(" %1").arg(track));
 
-            driverFR->DisConnect();
+                // Очистим предыдущие результаты
+                QDir(path).remove("e");
+                QDir(path).remove("p");
+
+                // Запустим программу терминала
+
+                app->debug(6, command);
+
+                QTime dieTime= QTime::currentTime().addMSecs(app->getConfigValue(BANK_TERMINAL_PROGRAM_WAIT_TIME).toInt());
+
+                termProcess->start(command);
+
+                while (true)
+                {
+                    if (QTime::currentTime() >= dieTime)
+                    {
+                        result = QString(QObject::trUtf8("Время ожидания терминала (%1 c) истекло. Нажмите кнопку <ОТМЕНА> на терминале.")).arg(app->getConfigValue(BANK_TERMINAL_PROGRAM_WAIT_TIME).toInt()/1000);                  // выдадим сообщение об ошибке
+                        termProcess->kill();
+                        break;
+                    }
+                    if (termProcess->state() == QProcess::NotRunning)
+                    {
+                        if (!testResult())
+                            result = resultParams.value(MESSAGE);
+                        else
+                        {
+                            printSlip();
+                            result = "true";
+                        }
+                        break;
+                    }
+                    app->sleep(100);
+                }
+
+                app->debug(6, result);
+
+                driverFR->DisConnect();
+            }
+            locked = false;
         }
-        locked = false;
+        else
+            result = "Банковский терминал занят. Повторите попытку позже.";
     }
     else
     {
@@ -176,25 +196,13 @@ bool BankTerminal::process(int oper, int sum, int type, int track)
         // а теперь поищем на удаленном, если указан его IP
         if (tcpClient != 0 /*nullptr*/)
         {
-            if (tcpClient->sendToServer(BANK_TERMINAL_IS_LOCKED) && tcpClient->waitResult())
-            {
-                QString res = tcpClient->getResult();
-                result = (res == "true" ? true : false);
-                if (!result)
-                {
-                    if (tcpClient->sendToServer(QString("%1 %2 %3 %4 %5 ").arg(BANK_TERMINAL_PROCESS)
-                                                                         .arg(oper)
-                                                                         .arg(sum)
-                                                                         .arg(type)
-                                                                         .arg(track)) && tcpClient->waitResult())
-                    {
-                        QString res = tcpClient->getResult();
-                        result = (res == "true" ? true : false);
-                    }
-                }
-                else
-                    app->showError("Банковский терминал занят. Повторите попытку позже.");
-            }
+            tcpClient->sendToServer(QString("%1 %2 %3 %4 %5 ").arg(BANK_TERMINAL_PROCESS)
+                                                                      .arg(oper)
+                                                                      .arg(sum)
+                                                                      .arg(type)
+                                                                      .arg(track));
+            tcpClient->waitResult();
+            result = tcpClient->getResult();
         }
         else
             tcpClient->logError();
@@ -208,7 +216,6 @@ bool BankTerminal::testResult()
     bool result = false;
     if (!remote)
     {
-        locked = true;
         resultParams.clear();
         QString fileName = path + "e";
         if (QFileInfo(fileName).exists())
@@ -259,7 +266,6 @@ bool BankTerminal::testResult()
                     result = true;
             }
         }
-        locked = false;
     }
     return result;
 }
@@ -269,7 +275,6 @@ void BankTerminal::printSlip()
 {
     if (!remote)
     {
-        locked = true;
         QString fileName = path + "p";
         if (QFileInfo(fileName).exists() && driverFR != 0 /*nullptr*/)
         {
@@ -289,8 +294,6 @@ void BankTerminal::printSlip()
                 } while (!line.isNull());
 
                 // Отпечатаем слипы
-                driverFR->setShowProgressBar(true);
-                int proc = 100 / lines.count();
                 for (int i = 0; i < lines.count(); i++)
                 {
                     line = lines.at(i);
@@ -304,12 +307,9 @@ void BankTerminal::printSlip()
                         else
                             app->sleep(app->getConfigValue(BANK_TERMINAL_PRINT_WAIT_TIME).toInt());
                     }
-                    driverFR->setProgressDialogValue(proc * i);
                 }
-                driverFR->setProgressDialogValue(100);
             }
         }
-        locked = false;
     }
 }
 
@@ -322,24 +322,16 @@ bool BankTerminal::isLocked()
 
 QString BankTerminal::processRemoteQuery(QString command)
 {
-    QString result = "false";
+    QString result = "Ok";
+if (command.indexOf(BANK_TERMINAL_PROCESS) == 0)
+    {
+        QStringList argList = command.split(" ");
+        int oper = argList.at(1).toInt();
+        int sum = argList.at(2).toInt();
+        int type = argList.at(3).toInt();
+        int track = argList.at(4).toInt();
 
-    if (command.indexOf(BANK_TERMINAL_IS_LOCKED) == 0)
-    {
-        result = (locked ? "true" : "false");
-    }
-    else if (command.indexOf(BANK_TERMINAL_PROCESS) == 0)
-    {
-        int oper, sum, type, track;
-        command.replace(0, command.indexOf(" "), "");
-        oper = command.left(command.indexOf(" ")).toInt();
-        command.replace(0, command.indexOf(" "), "");
-        sum = command.left(command.indexOf(" ")).toInt();
-        command.replace(0, command.indexOf(" "), "");
-        type = command.left(command.indexOf(" ")).toInt();
-        command.replace(0, command.indexOf(" "), "");
-        track = command.left(command.indexOf(" ")).toInt();
-        result = (process(oper, sum, type, track) ? "true" : "false");
+        result = process(oper, sum, type, track);
     }
     return result;
 }

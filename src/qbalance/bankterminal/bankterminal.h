@@ -48,9 +48,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
 #define BANK_TERMINAL_PREFIX     "bankTerminal_"
-#define BANK_TERMINAL_IS_READY   "bankTerminal_IsReady"
-#define BANK_TERMINAL_IS_LOCKED  "bankTerminal_IsLocked"
-#define BANK_TERMINAL_PROCESS    "bankTerminal_process"
+#define BANK_TERMINAL_IS_READY   BANK_TERMINAL_PREFIX "IsReady"
+#define BANK_TERMINAL_PROCESS    BANK_TERMINAL_PREFIX "process"
 
 class TApplication;
 class DriverFR;
@@ -65,7 +64,7 @@ public:
     virtual bool open();
     virtual void close();
     virtual void setApp(TApplication* a);
-    Q_INVOKABLE virtual bool process(int, int = 0, int = 0, int = 0);              // Обработать операцию с картой
+    Q_INVOKABLE virtual QString process(int, int = 0, int = 0, int = 0);              // Обработать операцию с картой
     Q_INVOKABLE virtual QString getCardCode();
     Q_INVOKABLE virtual QString getResultData(QString);
     Q_INVOKABLE virtual bool isLocked();
