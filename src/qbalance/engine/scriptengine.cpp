@@ -440,7 +440,7 @@ Q_DECLARE_METATYPE(Dictionaries*)
 
 QScriptValue DictionariesConstructor(QScriptContext*, QScriptEngine *engine) {
      Dictionaries* dicts = Dictionaries::create<Dictionaries>();
-     return engine->newQObject(dicts/*, QScriptEngine::ScriptOwnership*/);
+     return engine->newQObject(dicts, QScriptEngine::ScriptOwnership);
 }
 
 QScriptValue DictionariesToScriptValue(QScriptEngine *engine, Dictionaries* const &in) {
@@ -454,15 +454,14 @@ void DictionariesFromScriptValue(const QScriptValue &object, Dictionaries* &out)
 
 // класс Documents
 Q_DECLARE_METATYPE(Documents*)
-
-QScriptValue DocumentsConstructor(QScriptContext *context, QScriptEngine *engine) {
-     Documents* doc = Documents::create<Documents>(context->argument(0).toInteger());
-     return engine->newQObject(doc/*, QScriptEngine::ScriptOwnership*/);
-}
+//QScriptValue DocumentsConstructor(QScriptContext *context, QScriptEngine *engine) {
+//     Documents* doc = Documents::create<Documents>(context->argument(0).toInteger());
+//     return engine->newQObject(doc/*, QScriptEngine::ScriptOwnership*/);
+//}
 
 
 QScriptValue DocumentsToScriptValue(QScriptEngine *engine, Documents* const &in) {
-    return engine->newQObject(in, QScriptEngine::QtOwnership, QScriptEngine::PreferExistingWrapperObject);
+    return engine->newQObject(in/*, QScriptEngine::QtOwnership, QScriptEngine::PreferExistingWrapperObject*/);
 }
 
 
@@ -474,13 +473,13 @@ void DocumentsFromScriptValue(const QScriptValue &object, Documents* &out) {
 // класс Document
 Q_DECLARE_METATYPE(Document*)
 
-QScriptValue DocumentConstructor(QScriptContext *context, QScriptEngine *engine) {
-    Documents* docs;
-    DocumentsFromScriptValue(context->argument(1), docs);
-    Document *object = Document::create<Document>(context->argument(0).toInteger(), docs);
-
-    return engine->newQObject(object/*, QScriptEngine::ScriptOwnership*/);
-}
+//QScriptValue DocumentConstructor(QScriptContext *context, QScriptEngine *engine) {
+//    Documents* docs;
+//    DocumentsFromScriptValue(context->argument(1), docs);
+//    Document *object = Document::create<Document>(context->argument(0).toInteger(), docs);
+//
+//    return engine->newQObject(object/*, QScriptEngine::ScriptOwnership*/);
+//}
 
 QScriptValue DocumentToScriptValue(QScriptEngine *engine, Document* const &in) {
     return engine->newQObject(in/*, QScriptEngine::ScriptOwnership*/);
@@ -844,10 +843,13 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("Saldo", newQMetaObject(&QObject::staticMetaObject, newFunction(SaldoConstructor)));
     qScriptRegisterMetaType(this, DictionariesToScriptValue, DictionariesFromScriptValue);
     globalObject().setProperty("Dictionaries", newQMetaObject(&QObject::staticMetaObject, newFunction(DictionariesConstructor)));
+//    globalObject().setProperty("Dictionaries", newQObject(parent->getDictionaries()));
     qScriptRegisterMetaType(this, DocumentsToScriptValue, DocumentsFromScriptValue);
-    globalObject().setProperty("Documents", newQMetaObject(&QObject::staticMetaObject, newFunction(DocumentsConstructor)));
+//    globalObject().setProperty("Documents", newQMetaObject(&QObject::staticMetaObject, newFunction(DocumentsConstructor)));
+    globalObject().setProperty("Documents", newQObject(documents));
     qScriptRegisterMetaType(this, DocumentToScriptValue, DocumentFromScriptValue);
-    globalObject().setProperty("Document", newQMetaObject(&QObject::staticMetaObject, newFunction(DocumentConstructor)));
+//    globalObject().setProperty("Document", newQMetaObject(&QObject::staticMetaObject, newFunction(DocumentConstructor)));
+    globalObject().setProperty("Document", newQObject(document));
     qScriptRegisterMetaType(this, CalendarFormToScriptValue, CalendarFormFromScriptValue);
     globalObject().setProperty("CalendarForm", newQMetaObject(&QObject::staticMetaObject, newFunction(CalendarFormConstructor)));
 
