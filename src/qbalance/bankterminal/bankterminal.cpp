@@ -41,6 +41,8 @@ BankTerminal::BankTerminal(QObject *parent) : QObject(parent)
 #endif
     remote = false;
     locked = false;
+    processFinished = false;
+    processResult = false;
 }
 
 
@@ -88,6 +90,7 @@ bool BankTerminal::open()
 
                 termProcess = new QProcess(app);
                 termProcess->setWorkingDirectory(path);
+                connect(termProcess, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(testResult(int, QProcess::ExitStatus)));
 
                 result = true;
             }
@@ -125,7 +128,10 @@ bool BankTerminal::open()
 void BankTerminal::close()
 {
     if (termProcess != 0 /*nullptr*/)
+    {
+        disconnect(termProcess, SIGNAL(finished(int exitCode, QProcess::ExitStatus exitStatus)), this, SLOT(testResult(exitCode, exitStatus)));
         delete termProcess;
+    }
 }
 
 
@@ -157,19 +163,17 @@ QString BankTerminal::process(int oper, int sum, int type, int track)
 
                 QTime dieTime= QTime::currentTime().addMSecs(app->getConfigValue(BANK_TERMINAL_PROGRAM_WAIT_TIME).toInt());
 
+                processFinished = false;
+                processResult = false;
+
                 termProcess->start(command);
 
                 while (true)
                 {
-                    if (QTime::currentTime() >= dieTime)
+                    // Если процесс вызова терминала завершен
+                    if (processFinished)
                     {
-                        result = QString(QObject::trUtf8("Время ожидания терминала (%1 c) истекло. Нажмите кнопку <ОТМЕНА> на терминале.")).arg(app->getConfigValue(BANK_TERMINAL_PROGRAM_WAIT_TIME).toInt()/1000);                  // выдадим сообщение об ошибке
-                        termProcess->kill();
-                        break;
-                    }
-                    if (termProcess->state() == QProcess::NotRunning)
-                    {
-                        if (!testResult())
+                        if (!processResult)
                             result = resultParams.value(MESSAGE);
                         else
                         {
@@ -178,7 +182,14 @@ QString BankTerminal::process(int oper, int sum, int type, int track)
                         }
                         break;
                     }
-                    app->sleep(100);
+                    // Если истекло время ожидания
+                    if (QTime::currentTime() >= dieTime)
+                    {
+                        result = QString(QObject::trUtf8("Время ожидания терминала (%1 c) истекло. Нажмите кнопку <ОТМЕНА> на терминале.")).arg(app->getConfigValue(BANK_TERMINAL_PROGRAM_WAIT_TIME).toInt()/1000);                  // выдадим сообщение об ошибке
+                        termProcess->kill();
+                        break;
+                    }
+                    app->sleep(300);
                 }
 
                 app->debug(6, result);
@@ -211,63 +222,67 @@ QString BankTerminal::process(int oper, int sum, int type, int track)
 }
 
 
-bool BankTerminal::testResult()
+void BankTerminal::testResult(int exitCode, QProcess::ExitStatus exitStatus)
 {
-    bool result = false;
+    processResult = false;
     if (!remote)
     {
         resultParams.clear();
-        QString fileName = path + "e";
-        if (QFileInfo(fileName).exists())
+//        if (exitCode == 0 && exitStatus == QProcess::NormalExit)
+        if (exitStatus == QProcess::NormalExit)
         {
-            QFile file(fileName);
-            if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+            QString fileName = path + "e";
+            if (QFileInfo(fileName).exists())
             {
-                QTextCodec* codec = QTextCodec::codecForName("KOI8-R");
-                QTextStream stream(&file);
-                stream.setCodec(codec);
-                QStringList line = QString(stream.readLine()).split(',');
-                resultParams.insert(RESULT_CODE, line.at(0).trimmed());
-                resultParams.insert(MESSAGE, line.at(1).trimmed());
-                resultParams.insert(CARD_NUMBER, QString(stream.readLine()).trimmed());
-                resultParams.insert(VALIDITY_PERIOD, QString(stream.readLine()).trimmed());
-                resultParams.insert(AUTHORIZATION_CODE, QString(stream.readLine()).trimmed());
-                resultParams.insert(INTERNAL_OPERATION_CODE, QString(stream.readLine()).trimmed());
-                resultParams.insert(CARD_TYPE, QString(stream.readLine()).trimmed());
-                resultParams.insert(IS_SBERCARD, QString(stream.readLine()).trimmed());
-                resultParams.insert(TERMINAL_NUMBER, QString(stream.readLine()).trimmed());
-                resultParams.insert(OPERATION_DATETIME, QString(stream.readLine()).trimmed());
-                resultParams.insert(LINK_OPERATION_NUMBER, QString(stream.readLine()).trimmed());
-                resultParams.insert(CARD_NUMBER_HASH, QString(stream.readLine()).trimmed());
-                file.close();
-                if (resultParams.value(RESULT_CODE) == "0")
-                    result = true;
-            }
-        }
-        fileName = path + "p";
-        if (QFileInfo(fileName).exists())
-        {
-            QFile file(fileName);
-            if (file.open(QIODevice::ReadOnly | QIODevice::Text))
-            {
-                QTextCodec* codec = QTextCodec::codecForName("KOI8-R");
-                QTextStream stream(&file);
-                stream.setCodec(codec);
-                QString line;
-                for (int i = 0; i < 15; i++)
-                    line = QString(stream.readLine()).trimmed();
-                if (line.contains(':'))
+                QFile file(fileName);
+                if (file.open(QIODevice::ReadOnly | QIODevice::Text))
                 {
-                    line = line.split(':').at(1).trimmed();
-                    resultParams.insert(CARD_HOLDER_NAME, line);
+                    QTextCodec* codec = QTextCodec::codecForName("KOI8-R");
+                    QTextStream stream(&file);
+                    stream.setCodec(codec);
+                    QStringList line = QString(stream.readLine()).split(',');
+                    resultParams.insert(RESULT_CODE, line.at(0).trimmed());
+                    resultParams.insert(MESSAGE, line.at(1).trimmed());
+                    resultParams.insert(CARD_NUMBER, QString(stream.readLine()).trimmed());
+                    resultParams.insert(VALIDITY_PERIOD, QString(stream.readLine()).trimmed());
+                    resultParams.insert(AUTHORIZATION_CODE, QString(stream.readLine()).trimmed());
+                    resultParams.insert(INTERNAL_OPERATION_CODE, QString(stream.readLine()).trimmed());
+                    resultParams.insert(CARD_TYPE, QString(stream.readLine()).trimmed());
+                    resultParams.insert(IS_SBERCARD, QString(stream.readLine()).trimmed());
+                    resultParams.insert(TERMINAL_NUMBER, QString(stream.readLine()).trimmed());
+                    resultParams.insert(OPERATION_DATETIME, QString(stream.readLine()).trimmed());
+                    resultParams.insert(LINK_OPERATION_NUMBER, QString(stream.readLine()).trimmed());
+                    resultParams.insert(CARD_NUMBER_HASH, QString(stream.readLine()).trimmed());
+                    file.close();
+                    if (resultParams.value(RESULT_CODE) == "0")
+                        processResult = true;
                 }
-                file.close();
-                if (resultParams.value(RESULT_CODE) == "0")
-                    result = true;
+            }
+            fileName = path + "p";
+            if (QFileInfo(fileName).exists())
+            {
+                QFile file(fileName);
+                if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+                {
+                    QTextCodec* codec = QTextCodec::codecForName("KOI8-R");
+                    QTextStream stream(&file);
+                    stream.setCodec(codec);
+                    QString line;
+                    for (int i = 0; i < 15; i++)
+                        line = QString(stream.readLine()).trimmed();
+                    if (line.contains(':'))
+                    {
+                        line = line.split(':').at(1).trimmed();
+                        resultParams.insert(CARD_HOLDER_NAME, line);
+                    }
+                    file.close();
+                    if (resultParams.value(RESULT_CODE) == "0")
+                        processResult = true;
+                }
             }
         }
+        processFinished = true;
     }
-    return result;
 }
 
 
@@ -288,7 +303,8 @@ void BankTerminal::printSlip()
                 // Прочитаем слипы
                 QStringList lines;
                 QString line;
-                do {
+                do
+                {
                     line = stream.readLine();
                     lines.append(line);
                 } while (!line.isNull());
@@ -323,7 +339,7 @@ bool BankTerminal::isLocked()
 QString BankTerminal::processRemoteQuery(QString command)
 {
     QString result = "Ok";
-if (command.indexOf(BANK_TERMINAL_PROCESS) == 0)
+    if (command.indexOf(BANK_TERMINAL_PROCESS) == 0)
     {
         QStringList argList = command.split(" ");
         int oper = argList.at(1).toInt();

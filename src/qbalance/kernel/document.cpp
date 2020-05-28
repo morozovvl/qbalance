@@ -584,11 +584,8 @@ void Document::show()
     parent->setCurrentDocument(parent->getId());
     app->debug(1, "");
     app->debug(1, QString("Opened document %1 (ОПЕР=%2, НОМЕР=%3)").arg(docId).arg(operNumber).arg(parent->getValue("НОМЕР").toString()));
-    locked = false;
-    bool lock = lockDocument();        // Попытаемся заблокировать документ
-    if (!lock)
-        setEnabled(false);                      // Если заблокировать не удалось
-    locked = !lock;
+    locked = lockDocument();
+    setEnabled(locked);                      // Если заблокировать не удалось
     docModified = false;
     query();
     Essence::show();
@@ -605,11 +602,9 @@ void Document::query()
 void Document::hide()
 {
     Essence::hide();
-    if (!locked)
-    {
-        unlockDocument();
-//        setEnabled(true);
-    }
+    unlockDocument();
+    locked = false;
+    setEnabled(true);
     app->debug(1, QString("Closed document %1").arg(docId));
 }
 
@@ -1238,7 +1233,7 @@ void Document::preparePrintValues()
 
 void Document::setEnabled(bool en)
 {
-    if (!locked)
+    if (locked)
     {
         Essence::setEnabled(en);
         form->setEnabled(en);

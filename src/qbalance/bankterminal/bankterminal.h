@@ -78,12 +78,16 @@ private:
     QString     path;
     QString     program;
     QHash<QString, QString> resultParams;
-    QProcess* termProcess;
+    QProcess*       termProcess;
     bool            remote;
     bool            locked;     // Банковский терминал заблокирован на период работы с клиентом
+    bool            processFinished;
+    bool            processResult;
 
-    virtual bool    testResult();
     virtual void    printSlip();
+
+public slots:
+    virtual void    testResult(int exitCode, QProcess::ExitStatus exitStatus);
 };
 
 Q_DECLARE_INTERFACE(BankTerminal, "org.QBalance.BankTerminal")

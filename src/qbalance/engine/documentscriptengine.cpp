@@ -102,7 +102,7 @@ void DocumentScriptEngine::loadScriptObjects()
     // инициализируем глобальные объекты скрипта печати
     if (reportContext != 0 /*nullptr*/)
     {
-        globalObject().setProperty("reportContext", newQObject(reportContext, QScriptEngine::ScriptOwnership));
+        globalObject().setProperty("reportContext", newQObject(reportContext/*, QScriptEngine::ScriptOwnership*/));
     }
 }
 

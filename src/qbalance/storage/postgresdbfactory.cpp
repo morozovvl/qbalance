@@ -188,12 +188,10 @@ bool PostgresDBFactory::lockDocument(int docId)
     bool result = true;
     if (isTableExists("блокдокументов"))
     {
-/*
         int id = getValue(QString("SELECT \"PID\" FROM \"блокдокументов\" WHERE \"КОД_ДОКУМЕНТЫ\" = %1;").arg(docId)).toInt();
         if (id > 0)
             result = false;
         else
-*/
             exec(QString("INSERT INTO \"блокдокументов\" (\"PID\", \"КОД_ДОКУМЕНТЫ\") VALUES (%1, %2);").arg(pid).arg(docId));
     }
     return result;
