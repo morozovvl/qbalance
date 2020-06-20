@@ -314,7 +314,7 @@ void Updates::transmissionFinished(QNetworkReply* reply)
                 // Составим список файлов, которые нужно загрузить или выгрузить
                 if (app->getConfigValue("UPDATES_FTP_PROGRAM").toBool())
                 {
-                    QStringList filesList = prepareFilesList("", programUpdateXMLFile);
+                    QStringList filesList = prepareFilesList("", programUpdateXMLFile, true);
                     if (filesList.count() > 0)
                     {
                         // Загрузим обновления

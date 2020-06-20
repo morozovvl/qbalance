@@ -871,7 +871,6 @@ void Dictionary::setSqlCommand(QString command)
 void Dictionary::setFilter(QString f)
 {
     filter = f;
-//    qDebug() << filter;
 }
 
 

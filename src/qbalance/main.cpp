@@ -41,7 +41,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "kernel/app.h"
 #include "kernel/dictionaries.h"
 
-#include "client/linux/handler/exception_handler.h"
+#include "../../breakpad/src/client/linux/handler/exception_handler.h"
 
 //#include <mcheck.h>
 

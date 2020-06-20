@@ -92,6 +92,7 @@ TApplication::TApplication(int & argc, char** argv)
     barCodeReaded = false;
     cardCodeReader = 0 /*nullptr*/;
     bankTerminal = 0 /*nullptr*/;
+    gsmModem = 0 /*nullptr*/;
     updates = 0 /*nullptr*/;
     tcpServer = 0 /*nullptr*/;
     tcpClient = 0 /*nullptr*/;
@@ -560,6 +561,7 @@ void TApplication::initConfig()
     setConfig("password", "PASSWORD_BUTTON", "", CONFIG_VALUE_PUSHBUTTON, "Сменить пароль");
 
     setConfigTypeName("openoffice", "OpenOffice");
+    setConfig("openoffice", "OO_NEEDED", "Использовать OpenOffice", CONFIG_VALUE_BOOLEAN, false);
     setConfig("openoffice", "OO_PATH", "Каталог OpenOffice", CONFIG_VALUE_STRING, "");
 
     setConfigTypeName("emailclient", "E-Mail");
@@ -568,6 +570,17 @@ void TApplication::initConfig()
     setConfig("emailclient", "EMAILCLIENT_SERVER_PORT", "Порт", CONFIG_VALUE_INTEGER, 465);
     setConfig("emailclient", "EMAILCLIENT_USER_ADDRESS", "Ваш адрес E-mail", CONFIG_VALUE_STRING, "");
     setConfig("emailclient", "EMAILCLIENT_USER_PASSWORD", "Ваш пароль", CONFIG_VALUE_PASSWORD, "");
+
+    setConfigTypeName("sms", "GSM модем");
+    setConfig("sms", "GSMMODEM_NEEDED", "Использовать GSM модем", CONFIG_VALUE_BOOLEAN, false);
+#if defined(Q_OS_LINUX)
+    setConfig("sms", "GSMMODEM_PORT", "Порт GSM модема", CONFIG_VALUE_STRING, "/dev/rfcomm0");
+#elif defined(Q_OS_WIN)
+    setConfig("sms", "GSMMODEM_PORT", "Порт GSM модема", CONFIG_VALUE_STRING, "COM1");
+#endif
+    setConfig("sms", "GSMMODEM_BOUD_RATE", "Скорость", CONFIG_VALUE_BOUND, 3);
+    setConfig("sms", "GSMMODEM_MAX_TIMEOUT", "Максимальное время ожидания модема, с", CONFIG_VALUE_INTEGER, 60);
+    setConfig("sms", "GSMMODEM_PREFIX", "Телефонный префикс страны", CONFIG_VALUE_STRING, "+7");
 }
 
 
@@ -712,9 +725,6 @@ bool TApplication::initApplication()
 
     initConfig();
 
-//    if (!loadDefaultConfig)
-//        readSettings();
-
     db  = new PostgresDBFactory();
 //    db  = new SQLiteDBFactory();
     db->setConnectionTimeout(10);
@@ -771,8 +781,8 @@ bool TApplication::initApplication()
                     int updatesCnt = db->updatesCount();
                     if (updatesCnt > 0)
                     {
-//                            if (showYesNo(QString(QObject::trUtf8("Найдено обновлений базы данных: %1. Применить их?")).arg(updatesCnt)) == QMessageBox::Yes)
-                          db->loadUpdates();
+//                        if (showYesNo(QString(QObject::trUtf8("Найдено обновлений базы данных: %1. Применить их?")).arg(updatesCnt)) == QMessageBox::Yes)
+                            db->loadUpdates();
                     }
                 }
 
@@ -1004,11 +1014,34 @@ void    TApplication::openPlugins()
 //            }
 //        }
 //    }
+
+    if (getConfigValue("GSMMODEM_NEEDED").toBool())
+    {
+        gsmModem = static_cast<GSMmodem*>(createPlugin("gsmmodem"));
+        if (gsmModem != 0 /*nullptr*/)
+        {
+            gsmModem->setApp(this);
+
+            if (!gsmModem->open())
+            {
+                gsmModem->close();
+                delete gsmModem;
+                gsmModem = 0 /*nullptr*/;
+            }
+        }
+    }
 }
 
 
 void TApplication::closePlugins()
 {
+    if (gsmModem != 0 /*nullptr*/)
+    {
+        gsmModem->close();
+        delete gsmModem;
+        gsmModem = 0 /*nullptr*/;
+    }
+
     if (barCodeReader != 0 /*nullptr*/)
     {
         barCodeReader->close();
@@ -1870,22 +1903,36 @@ void TApplication::sendSMS(QString url, QString number, QString message, QString
 {
     if (getConst("ОтправлятьСМС").toBool())
     {
-        QEventLoop loop;
-        QNetworkAccessManager manager(this);
-        QNetworkReply* reply;
         if (!repeat)
         {   // Если такое сообщение уже было отправлено адресату, то повторно не высылаем
             if (db->getValue(QString("SELECT COUNT(*) FROM смс_отправленные WHERE ИМЯ = '%1' AND ТЕКСТ = '%2' AND ДАТАВРЕМЯ::date = current_date;").arg(number).arg(message)).toInt() > 0)
                 return;
         }
-        QString command = QString("%1%2&to=%3&text=%4").arg(url).arg(from.size() > 0 ? "&from=" + from : "").arg(number).arg(message);
-        reply = manager.get(QNetworkRequest(QUrl(command)));
-        connect(&manager, SIGNAL(finished(QNetworkReply*)), &loop, SLOT(quit()));
-        loop.exec();
-        if (reply->error() != QNetworkReply::NoError)
-            debug(0, QString("Ошибка SMS: %1 %2").arg(reply->error()).arg(reply->errorString()));
+
+        if (gsmModem != 0 /*nullptr*/)
+        {
+            gsmModem->sendSMS(number, message);
+        }
         else
-            db->exec(QString("INSERT INTO смс_отправленные (ИМЯ, ТЕКСТ) VALUES ('%1', '%2');").arg(number).arg(message));
+        {
+            QEventLoop loop;
+            QNetworkAccessManager manager(this);
+            QNetworkReply* reply;
+            QString command = QString("%1%2&to=%3&text=%4").arg(url).arg(from.size() > 0 ? "&from=" + from : "").arg(number).arg(message);
+            reply = manager.get(QNetworkRequest(QUrl(command)));
+            connect(&manager, SIGNAL(finished(QNetworkReply*)), &loop, SLOT(quit()));
+            loop.exec();
+            if (reply->error() != QNetworkReply::NoError)
+            {
+                debug(0, QString("Ошибка SMS: %1 %2").arg(reply->error()).arg(reply->errorString()));
+                return;
+            }
+        }
+
+        db->exec(QString("INSERT INTO смс_отправленные (ИМЯ, ТЕКСТ) VALUES ('%1', '%2');").arg(number).arg(message));
+
+        if (isSA())
+            print(QString("Отправлено SMS на номер %1: \"%2\"").arg(number).arg(message));
     }
 }
 
@@ -2060,86 +2107,93 @@ QString TApplication::getReportFile(QString tagName, bool autoPrint, QWidget* fo
 
 QString TApplication::getProcessFile(QString tagName, QWidget* formWidget, QRect rect)
 {
+    QString result = "";
+
     Dictionary* procs = getDictionary("доступ_к_обработкам");
-    procs->query();
 
-    QString result;
-    QDir dir = QDir(getScriptsPath());
-    QString ext = ".js";
-    QStringList files;
-    // Получим шаблоны с сервера
-    QStringList fs = db->getFilesList(tagName, ScriptFileType, true);
-    foreach (QString f, fs)
+    if (procs != 0 /*nullptr*/)
     {
-        if (!files.contains(f))
-            files << f;
-    }
 
-    // Получим список локальных шаблонов отчетов
-    fs = dir.entryList(QStringList(tagName + ".*" + ext), QDir::Files, QDir::Name);
-    foreach (QString f, fs)
-    {
-        if (!files.contains(f))
+        procs->query();
+
+        QDir dir = QDir(getScriptsPath());
+        QString ext = ".js";
+        QStringList files;
+
+        // Получим шаблоны с сервера
+        QStringList fs = db->getFilesList(tagName, ScriptFileType, true);
+        foreach (QString f, fs)
         {
-            files << f;
-            Essence::getFile(getScriptsPath(), f, ScriptFileType);
+            if (!files.contains(f))
+                files << f;
         }
-    }
 
-    QStringList processes;
-    QMenu* menu = new QMenu(formWidget);
-    QAction* newProcessAct = new QAction(QObject::trUtf8("Создать новую обработку..."), this);
-    QAction* execScriptAct = new QAction(QObject::trUtf8("Выполнить скрипт..."), this);
-    if (isSA())
-    {
-        menu->addAction(newProcessAct);
-        menu->addAction(execScriptAct);
-    }
-    if (files.count() > 0)
-    {
-        if (isSA())
-            menu->addSeparator();
-        for (int i = 0; i < files.size(); i++)
+        // Получим список локальных шаблонов отчетов
+        fs = dir.entryList(QStringList(tagName + ".*" + ext), QDir::Files, QDir::Name);
+        foreach (QString f, fs)
         {
-            QString file = files.at(i);
-            QString oldFile = file;
-            file.remove(tagName + ".", Qt::CaseInsensitive);      // Уберем префикс файла
-            if (file != oldFile)
+            if (!files.contains(f))
             {
-                file.remove(ext, Qt::CaseInsensitive);                                  // И его суффикс
-                if (procs->locateValue("ИМЯ", file) >= 0)
+                files << f;
+                Essence::getFile(getScriptsPath(), f, ScriptFileType);
+            }
+        }
+
+        QStringList processes;
+        QMenu* menu = new QMenu(formWidget);
+        QAction* newProcessAct = new QAction(QObject::trUtf8("Создать новую обработку..."), this);
+        QAction* execScriptAct = new QAction(QObject::trUtf8("Выполнить скрипт..."), this);
+        if (isSA())
+        {
+            menu->addAction(newProcessAct);
+            menu->addAction(execScriptAct);
+        }
+        if (files.count() > 0)
+        {
+            if (isSA())
+                menu->addSeparator();
+            for (int i = 0; i < files.size(); i++)
+            {
+                QString file = files.at(i);
+                QString oldFile = file;
+                file.remove(tagName + ".", Qt::CaseInsensitive);      // Уберем префикс файла
+                if (file != oldFile)
                 {
-                    processes << file;                                                        // Оставшуюся часть (название отчета) поместим в меню
-                    menu->addAction(file);
+                    file.remove(ext, Qt::CaseInsensitive);                                  // И его суффикс
+                    if (procs->locateValue("ИМЯ", file) >= 0)
+                    {
+                        processes << file;                                                        // Оставшуюся часть (название отчета) поместим в меню
+                        menu->addAction(file);
+                    }
                 }
             }
         }
-    }
-    QAction* action = menu->exec(formWidget->mapToGlobal(formWidget->mapToGlobal(QPoint(rect.x() + 100, rect.y()-menu->height()))));
-    if (action != 0 /*nullptr*/)
-    {
-        if (action == newProcessAct)
+        QAction* action = menu->exec(formWidget->mapToGlobal(formWidget->mapToGlobal(QPoint(rect.x() + 100, rect.y()-menu->height()))));
+        if (action != 0 /*nullptr*/)
         {
-            QString reportName;                         // Создадим имя отчета по умолчанию
-            int i = 1;
-            do
+            if (action == newProcessAct)
             {
-                reportName = QString("Отчет%1").arg(i++);
-            } while (processes.contains(reportName));
-            bool ok;
-            reportName = QInputDialog::getText(formWidget, QObject::trUtf8("Создать новый документ"),
-                                          QObject::trUtf8("Наименование документа:"), QLineEdit::Normal,
-                                          reportName, &ok);
-            if (ok && !reportName.isEmpty())
-                result = tagName + "." + reportName + ext;
+                QString reportName;                         // Создадим имя отчета по умолчанию
+                int i = 1;
+                do
+                {
+                    reportName = QString("Отчет%1").arg(i++);
+                } while (processes.contains(reportName));
+                bool ok;
+                reportName = QInputDialog::getText(formWidget, QObject::trUtf8("Создать новый документ"),
+                                              QObject::trUtf8("Наименование документа:"), QLineEdit::Normal,
+                                              reportName, &ok);
+                if (ok && !reportName.isEmpty())
+                    result = tagName + "." + reportName + ext;
+            }
+            else if (action == execScriptAct)
+            {
+                dirName = "processScriptDir";
+                result = QFileInfo(getOpenFileName(gui->getMainWindow(), "Укажите файл скрипта для выполнения", "", tr("Scripts (*.js *.qs)"))).fileName();
+            }
+            else
+                result = tagName + "." + action->text() + ext;
         }
-        else if (action == execScriptAct)
-        {
-            dirName = "processScriptDir";
-            result = QFileInfo(getOpenFileName(gui->getMainWindow(), "Укажите файл скрипта для выполнения", "", tr("Scripts (*.js *.qs)"))).fileName();
-        }
-        else
-            result = tagName + "." + action->text() + ext;
     }
     return result;
 }

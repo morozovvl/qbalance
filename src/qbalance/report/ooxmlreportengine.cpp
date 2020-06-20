@@ -28,6 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../engine/reportcontext.h"
 #include "../kernel/app.h"
 #include "../gui/tableview.h"
+#include "../odfpreviewlib/odfpreviewlib.h"
 
 
 OOXMLReportEngine::OOXMLReportEngine(Essence* ess, DocumentScriptEngine* engine) : ReportEngine(engine)
@@ -94,6 +95,9 @@ bool OOXMLReportEngine::open(QString fileName, ReportContext* cont, bool justPri
                 return false;
             }
         }
+
+        expressionsForEvaluation.clear();           // очистим список выражений для скриптового движка
+
         findTables();
         foreach (QString table, tablesForPrinting)
         {
@@ -111,33 +115,47 @@ bool OOXMLReportEngine::open(QString fileName, ReportContext* cont, bool justPri
 
         ooxmlEngine->close();
 
-        // Запустим OpenOffice
-        if (ooPath.size() == 0)
+        if (app->getConfigValue("OO_NEEDED").toBool())
         {
-            ooPath = app->getConfigValue("OO_PATH").toString();
-#if defined(Q_OS_LINUX)
-//            ooPath = TApplication::exemplar()->findFileFromEnv("soffice");
-            if (ooPath.size() > 0)
-                ooPath = ooPath.append("/");
-            ooPath += "soffice";
-#elif defined(Q_OS_WIN)
-//            ooPath = TApplication::exemplar()->findFileFromEnv("soffice.exe");
-            if (ooPath.size() > 0)
-                ooPath = ooPath.append("\\");
-            ooPath += "soffice.exe";
-#endif
+            // Запустим OpenOffice
+            if (ooPath.size() == 0)
+            {
+                ooPath = app->getConfigValue("OO_PATH").toString();
+    #if defined(Q_OS_LINUX)
+    //            ooPath = TApplication::exemplar()->findFileFromEnv("soffice");
+                if (ooPath.size() > 0)
+                    ooPath = ooPath.append("/");
+                ooPath += "soffice";
+    #elif defined(Q_OS_WIN)
+    //            ooPath = TApplication::exemplar()->findFileFromEnv("soffice.exe");
+                if (ooPath.size() > 0)
+                    ooPath = ooPath.append("\\");
+                ooPath += "soffice.exe";
+    #endif
+            }
+            QStringList commandLine;
+            commandLine << "--calc" << "--invisible" << "--quickstart";
+            if (justPrint && printerName.size() > 0)
+                commandLine << "--pt" << printerName;
+            commandLine << fileName;
+            ooProcess->start(ooPath, commandLine);
+            if (!ooProcess->waitForStarted())    // Подождем 1 секунду и если процесс не запустился
+                TApplication::exemplar()->showError(QObject::trUtf8("Не удалось запустить") + " Open Office" + ". " + ooProcess->errorString());                  // выдадим сообщение об ошибке
+            else
+                result = true;
         }
-        QStringList commandLine;
-        commandLine << "--calc" << "--invisible" << "--quickstart";
-        if (justPrint && printerName.size() > 0)
-            commandLine << "--pt" << printerName;
-        commandLine << fileName;
-        ooProcess->start(ooPath, commandLine);
-        if (!ooProcess->waitForStarted())    // Подождем 1 секунду и если процесс не запустился
-            TApplication::exemplar()->showError(QObject::trUtf8("Не удалось запустить") + " Open Office" + ". " + ooProcess->errorString());                  // выдадим сообщение об ошибке
         else
-            result = true;
+        {
+            OdfPreviewLib ods;
+            if (ods.open(fileName))
+            {
+                ods.preview();
+                ods.close();
+                result = true;
+            }
+        }
     }
+
     return result;
 }
 
@@ -153,8 +171,6 @@ void OOXMLReportEngine::writeVariables(int strNumber)
 */
 {
     QDomDocument* doc = ooxmlEngine->getDomDocument();
-
-    expressionsForEvaluation.clear();           // очистим список выражений для скриптового движка
 
 // Пункт 1 (см. комментарий выше)
 
@@ -212,7 +228,7 @@ void OOXMLReportEngine::writeHeader()
 */
 {
     QDomDocument* doc = ooxmlEngine->getDomDocument();
-    expressionsForEvaluation.clear();           // очистим список выражений для скриптового движка
+
     cells = doc->elementsByTagName("text:p");   // будем выбирать только те ячейки, которые содержат текст
     tableNameForPrinting = context->getTableName();
 
@@ -433,3 +449,4 @@ void OOXMLReportEngine::copyPage(int copyCount)
         lastNode = firstNode.parentNode().insertAfter(clone, lastNode);  // то добавим клон строки после первой строки тела документа
     }
 }
+

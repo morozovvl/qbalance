@@ -16,17 +16,22 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
+#include "../../SMTPEmail/src/SmtpMime"
+#include "../../SMTPEmail/src/smtpclient.h"
+#include "../../SMTPEmail/src/mimemessage.h"
 
 #include "emailclient.h"
 
 
-EMailClient::EMailClient(const QString & host, int port, ConnectionType ct) : SmtpClient(host, port, ct)
+EMailClient::EMailClient(QObject *parent) :  QObject(parent)
 {
+//    smtp = new SmtpClient(/*host, port, ct*/);
 }
 
 
 EMailClient::~EMailClient()
 {
+//    delete smtp;
 }
 
 
@@ -42,15 +47,14 @@ void EMailClient::close()
 }
 
 
-int EMailClient::sendMail()
+int EMailClient::sendMail(const QString & host, int port/*, SmtpClient::ConnectionType ct*/)
 {
-    SmtpClient* smtp = new SmtpClient("smtp.gmail.com", 465/*, SmtpClient::SslConnection*/);
-
     // We need to set the username (your email address) and password
     // for smtp authentification.
+    SmtpClient* smtp = new SmtpClient(host, port/*, ct*/);
 
-    smtp->setUser("ip5540726@gmail.com");
-    smtp->setPassword("mva10031974");
+//    smtp->setUser("ip5540726@gmail.com");
+//    smtp->setPassword("mva10031974");
 
 /*
     // Now we create a MimeMessage object. This is the email.
@@ -94,9 +98,8 @@ int EMailClient::sendMail()
     }
 */
 
-    smtp->quit();
-
+//    smtp->quit();
 
     delete smtp;
-    return 0;
+//    return 0;
 }

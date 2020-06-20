@@ -1502,12 +1502,9 @@ void Essence::print(QString fileName, bool newFile, bool justPrint, int copyCoun
                 case OOXMLreportTemplate:
                 {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
                     OOXMLReportEngine* report = new OOXMLReportEngine(this, reportScriptEngine);
-                    if (report->open())
-                    {
-                        report->setFileName(fileName);
-                        report->open(fullFileName, reportScriptEngine->getReportContext(), justPrint, copyCount, printerName);
-                        report->close();
-                    }
+//                    report->setFileName(fileName);
+                    report->open(fullFileName, reportScriptEngine->getReportContext(), justPrint, copyCount, printerName);
+                    report->close();
                     delete report;
                 }
                 break;

@@ -122,7 +122,8 @@ SOURCES += main.cpp \
     storage/postgresdbfactory.cpp \
     storage/sqlitedbfactory.cpp \
     kernel/report.cpp \
-    kernel/reports.cpp
+    kernel/reports.cpp \
+    odfpreviewlib/odfpreviewlib.cpp
 
 HEADERS +=  gui/passwordform.h \
     gui/form.h \
@@ -198,7 +199,8 @@ HEADERS +=  gui/passwordform.h \
     storage/sqlitedbfactory.h \
     storage/mymultilist.h \
     kernel/report.h \
-    kernel/reports.h
+    kernel/reports.h \
+    odfpreviewlib/odfpreviewlib.h
 
 
 RESOURCES += ../../resources.qrc
@@ -216,10 +218,12 @@ win32:RCC_DIR = ../qbalance
 unix {
     TARGET = ../../$${APP_NAME}
 
-    INCLUDEPATH = ../breakpad/src
+    INCLUDEPATH += ../breakpad/src
+    INCLUDEPATH += ../quazip
 # HEADERS += crashhandler/crashhandler.h
 # SOURCES += crashhandler/crashhandler.cpp
     LIBS += ../breakpad/src/client/linux/libbreakpad_client.a
+    LIBS += ../quazip/libquazip.so
  isEmpty(PREFIX) {
   PREFIX =   /usr
   }
@@ -253,3 +257,9 @@ OTHER_FILES += \
     ../../README
 
 #LIBS +=  ../../lib64/libmpfr.so
+
+#win32: LIBS += -L$$PWD/quazip -lquazip
+#unix:  LIBS += -L$$PWD/../quazip -lquazip
+
+#INCLUDEPATH += $$PWD/../quazip
+#DEPENDPATH += $$PWD/../quazip

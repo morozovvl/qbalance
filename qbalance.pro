@@ -11,7 +11,8 @@ SUBDIRS = src/qbalance/plugins \
           src/qbalance/barcodereader \
           src/qbalance/cardcodereader \
           src/qbalance/driverfr \
-#          src/qbalance/emailclient \
+          src/qbalance/gsmmodem \
+          src/qbalance/emailclient \
           src/qbalance
 
 #          src/gsl \

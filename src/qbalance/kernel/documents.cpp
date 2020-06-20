@@ -70,6 +70,7 @@ void Documents::postInitialize(int opNumber, QObject *parent)
     lDeleteable = db->getTopersProperties(operNumber, "deleteable").toBool();
     lUpdateable = db->getTopersProperties(operNumber, "updateable").toBool();
 
+
     scriptEngine = 0 /*nullptr*/;
 //    scriptEngineEnabled = false;
     doSubmit = true;
@@ -222,10 +223,6 @@ void Documents::setCurrentDocument(int strNum)
 void Documents::query(QString defaultFilter, bool)
 {
     QString resFilter = defaultFilter;
-
-    if (resFilter.size() > 0)
-        resFilter.append(" AND ");
-
     QStringList paramList = form->getFilter().split(QRegExp("\\s+"));
     {
         foreach (QString param, paramList)

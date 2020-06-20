@@ -666,13 +666,7 @@ void WizardOperation::sortHeaders(QListWidget* headers, QList<FieldType>* fields
         QString column = headers->item(i)->data(Qt::UserRole).toString();
         for (int j = 0; j < fields->count(); j++)
         {
-            QString tName = fields->at(j).table;
             QString cName = fields->at(j).column;
-/*
-            if (!mainTablesList.contains(tName))
-                cName = QString(tName + "__" + cName).toUpper();
-            qDebug() << "#########" << cName << column;
-*/
             if (cName == column)
             {
                 FieldType field = fields->at(j);

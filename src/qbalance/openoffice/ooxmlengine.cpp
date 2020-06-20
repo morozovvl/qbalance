@@ -43,7 +43,7 @@ void OOXMLEngine::setApp(TApplication* a)
 
 QDomDocument* OOXMLEngine::getDomDocument()
 {
-    return & doc;
+    return &doc;
 }
 
 

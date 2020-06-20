@@ -17,36 +17,36 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#ifndef CARDCODEREADER_H
-#define CARDCODEREADER_H
+
+#ifndef GSMMODEM_H
+#define GSMMODEM_H
 
 #include <QtCore/QObject>
-#include <QtGui/QKeyEvent>
 #include "../serialport/qmyextserialport.h"
 
-class CardCodeReader : public QObject
+class TApplication;
+
+class GSMmodem : public QObject
 {
     Q_OBJECT
 public:
-    explicit CardCodeReader(QObject *parent = 0 /*nullptr*/);
-    ~CardCodeReader();
+    explicit GSMmodem(QObject *parent = 0 /*nullptr*/);
+    ~GSMmodem();
+    virtual void setApp(TApplication* a) { app = a; }
+
     virtual bool open();
     virtual void close();
-    virtual void setApp(TApplication* a);
-    virtual void readCardReader(QKeyEvent*);
 
-    
-public slots:
-
-signals:
-    void cardCodeReaded(QString);
+    virtual void sendSMS(QString, QString);
 
 private:
-    TApplication*           app;
-    QString                 cardReaderCode;
-    QString                 crPrefix;
+    TApplication* app;
+    QMyExtSerialPort*         serialPort;
+
+    QString processCommand(QString);
+
 };
 
-Q_DECLARE_INTERFACE(CardCodeReader, "org.QBalance.CardCodeReader")
+Q_DECLARE_INTERFACE(GSMmodem, "org.QBalance.GSMmodem")
 
-#endif // CARDCODEREADER_H
+#endif // GSMMODEM_H

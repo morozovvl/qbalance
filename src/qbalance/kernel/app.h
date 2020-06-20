@@ -51,6 +51,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../serialport/qmyextserialport.h"
 //#include "../bankterminal/bankterminal.h"
 #include "../emailclient/emailclient.h"
+#include "../gsmmodem/gsmmodem.h"
 #include "updates.h"
 
 
@@ -336,6 +337,7 @@ private:
     BarCodeReader*          barCodeReader;
     CardCodeReader*         cardCodeReader;
     EMailClient*            smtpclient;
+    GSMmodem*               gsmModem;
     bool                    fsWebCamIsValid;
     static QList<QString>       DebugModes;
     static TApplication*    Exemplar;

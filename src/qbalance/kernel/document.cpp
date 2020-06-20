@@ -91,7 +91,8 @@ void Document::postInitialize(int oper, Documents* par)
     lPrintable = true;
     lInsertable = true;
     lDeleteable = true;
-    lUpdateable = true;
+//    lUpdateable = true;
+    lUpdateable = parent->isUpdateable();
     isDictionary = false;
     lIsDocument = true;
     addingFromQuery = false;
@@ -591,6 +592,24 @@ void Document::show()
     Essence::show();
 }
 
+
+int Document::exec()
+{
+    int result = 0;
+    parent->setCurrentDocument(parent->getId());
+    app->debug(1, "");
+    app->debug(1, QString("Opened document %1 (ОПЕР=%2, НОМЕР=%3)").arg(docId).arg(operNumber).arg(parent->getValue("НОМЕР").toString()));
+    locked = lockDocument();
+    setEnabled(locked);                      // Если заблокировать не удалось
+    docModified = false;
+    query();
+    result = Essence::exec();
+    unlockDocument();
+    locked = false;
+    setEnabled(true);
+    app->debug(1, QString("Closed document %1").arg(docId));
+    return result;
+}
 
 void Document::query()
 {

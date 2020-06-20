@@ -19,15 +19,7 @@
 static QString toString(double val)
 {
     QString result;
-/*
-    std::stringstream buffer;
-    buffer.precision(-3);
-    buffer << val;
-    result = QString().fromUtf8(buffer.str().c_str());
-    qDebug() << QString("=== %1 %2").arg(val).arg(result);
-*/
     result = QString("%1").arg(val);
-    qDebug() << "===" << val << result;
     return result;
 }
 
@@ -35,15 +27,7 @@ static QString toString(double val)
 static double fromString(const char * val)
 {
     double result;
-/*
-    std::stringstream buffer;
-    buffer.precision(-3);
-    buffer << val;
-    buffer >> result;
-    qDebug() << QString("*** %1 %2 %3").arg(val).arg(buffer.str().c_str()).arg(toString(result));
-*/
     result = QString(val).toDouble();
-    qDebug() << "***" << val << result;
     return result;
 }
 
@@ -78,10 +62,6 @@ static void calcEndSaldo(sqlite3 *db, QString acc, long id)
 
     endQuan = quan + dbQuan - crQuan;
     endSaldo = saldo + debet - credit;
-//    if (endQuan != zero)
-//    {
-//        endPrice = endSaldo / endQuan;
-//    }
 
     command = QString("UPDATE сальдо SET КОНКОЛ = %1, КОНСАЛЬДО = %2, КОНЦЕНА = %3 WHERE СЧЕТ = '%4' AND КОД = %5;")
             .arg(toString(endQuan))
@@ -212,15 +192,11 @@ static void calcCrSaldo(sqlite3 *db, QString acc, long id,double quan,double sum
         crQuan += quan;
         credit += sum;
 
-        qDebug() << toString(credit) << toString(sum);
-
         command = QString("UPDATE сальдо SET КРКОЛ = %1, КРЕДИТ = %2 WHERE СЧЕТ = '%3' AND КОД = %4;")
                 .arg(analiticAcc == 0 ? "0.0" : toString(crQuan))
             .arg(toString(credit))
             .arg(acc)
             .arg(id);
-
-        qDebug() << command;
 
         rc = sqlite3_exec(db, command.toUtf8().data(), 0 /*nullptr*/, 0 /*nullptr*/, 0 /*nullptr*/);
         calcEndSaldo(db, acc, id);
