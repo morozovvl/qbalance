@@ -788,7 +788,11 @@ bool DriverFR::deviceIsReady()
     for (int i = 0; i < maxTries; i++)
     {
         short int repl = readByte();
-        if (repl == NAK)
+        if (repl == -1)
+        {
+            return false;
+        }
+        else if (repl == NAK)
         {
             return true;
         }

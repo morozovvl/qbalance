@@ -920,7 +920,9 @@ void ScriptEngine::loadScriptObjects()
     importExtension("qt.gui");
     importExtension("qt.sql");
     importExtension("qt.xml");
-//    importExtension("qt.network");
+
+
+    //    importExtension("qt.network");
 //    importExtension("qt.opengl");
 //    importExtension("qt.svg");
 //    importExtension("qt.uitools");

@@ -1274,8 +1274,11 @@ void Essence::preparePrintValues()
             {
                 reportScriptEngine->getReportContext()->setValue(QString("таблица.%1").arg(field).toLower(), rec.value(field), i);
             }
-            reportScriptEngine->getReportContext()->setValue(QString("таблица.%1").arg("номерстроки"), QVariant(i), i);
+            reportScriptEngine->getReportContext()->setValue(QString("таблица.%1").arg("НОМЕРСТРОКИ"), QVariant(i), i);
         }
+
+        reportScriptEngine->getReportContext()->setValue(QString("таблица.%1").arg("КОЛСТРОК"), rowCount());
+
         if (scriptEngineEnabled && scriptEngine != 0 /*nullptr*/)
             scriptEngine->eventPreparePrintValues();
     }
