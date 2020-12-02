@@ -65,102 +65,61 @@ void OOXMLReportEngine::setFileName(QString fName)
 }
 
 
-bool OOXMLReportEngine::open(QString fileName, ReportContext* cont, bool justPrint, int copyCount, QString printerName)
+bool OOXMLReportEngine::open(QString fName, ReportContext* cont)
 {
     bool result = false;
-    int strNumber = 0;
-    if (ooxmlEngine->open(fileName))
+    fileName = fName;
+
+    if (ooxmlEngine->open(fName))
     {
         context = cont;
-        QString barCodePicture = findBarCode();
-        if (barCodePicture.size() > 0)     // Найден штрих-код
-        {
-            strNumber = essence->getGrdTable()->currentIndex().row() + 1;      // Будем печатать одну конкретную текущую строку
-            context->setCurrentRow(strNumber);
-            QProcess* zint = new QProcess();
-            zint->setWorkingDirectory(ooxmlEngine->getTmpDir());
-            QString zintCommandLine = "zint -o " + barCodePicture;
-            zintCommandLine.append(QString(" -b %1").arg(app->getConfigValue("BAR_CODE_PRINTER_BARCODETYPE").toInt()));
-            zintCommandLine.append(QString(" --height=%1").arg(app->getConfigValue("BAR_CODE_PRINTER_BARCODEHEIGHT").toInt()));
-            zintCommandLine.append(" --border=0");
-            zintCommandLine.append(" -d " + essence->prepareBarCodeData());
-#if defined(Q_OS_LINUX)
-                zint->start(zintCommandLine);
-#elif defined(Q_OS_WIN)
-                zint->start(app->applicationDirPath() + zintCommandLine);
-#endif
-            if (!zint->waitForStarted())
-            {
-                app->showError(QObject::trUtf8("Не удалось запустить программу формирования штрихкода zint"));
-                return false;
-            }
-        }
-
-        expressionsForEvaluation.clear();           // очистим список выражений для скриптового движка
-
-        findTables();
-        foreach (QString table, tablesForPrinting)
-        {
-            tableNameForPrinting = table;
-            writeVariables(strNumber);       // Перепишем переменные из контекста печати в файл content.xml
-        }
-
-        if (scriptEngine != 0 /*nullptr*/)
-            scriptEngine->eventBeforeTotalPrint();
-
-        writeHeader();
-
-        if (justPrint && copyCount > 1)     // Если будем печатать сразу несколько копий
-            copyPage(copyCount);            // То страницу размножим
-
-        ooxmlEngine->close();
-
-        if (app->getConfigValue("OO_NEEDED").toBool())
-        {
-            // Запустим OpenOffice
-            if (ooPath.size() == 0)
-            {
-                ooPath = app->getConfigValue("OO_PATH").toString();
-    #if defined(Q_OS_LINUX)
-    //            ooPath = TApplication::exemplar()->findFileFromEnv("soffice");
-                if (ooPath.size() > 0)
-                    ooPath = ooPath.append("/");
-                ooPath += "soffice";
-    #elif defined(Q_OS_WIN)
-    //            ooPath = TApplication::exemplar()->findFileFromEnv("soffice.exe");
-                if (ooPath.size() > 0)
-                    ooPath = ooPath.append("\\");
-                ooPath += "soffice.exe";
-    #endif
-            }
-            QStringList commandLine;
-            commandLine << "--calc" << "--invisible" << "--quickstart";
-            if (justPrint && printerName.size() > 0)
-                commandLine << "--pt" << printerName;
-            commandLine << fileName;
-            ooProcess->start(ooPath, commandLine);
-            if (!ooProcess->waitForStarted())    // Подождем 1 секунду и если процесс не запустился
-                TApplication::exemplar()->showError(QObject::trUtf8("Не удалось запустить") + " Open Office" + ". " + ooProcess->errorString());                  // выдадим сообщение об ошибке
-            else
-                result = true;
-        }
-        else
-        {
-            OdfPreviewLib ods;
-            if (ods.open(fileName))
-            {
-                ods.preview();
-                ods.close();
-                result = true;
-            }
-        }
+        result = true;
     }
 
     return result;
 }
 
 
-void OOXMLReportEngine::writeVariables(int strNumber)
+bool OOXMLReportEngine::makeReport(int copyCount, int strNum)
+{
+    bool result = true;
+
+    int strNumber = 1;
+    if (strNum == -1)
+    {
+        strNum = 1;
+//            strNumber = essence->rowCount();
+        strNumber = essence->getGrdTable()->currentIndex().row() + 1;
+    }
+    else
+        context->setCurrentRow(strNum);
+
+    result = makeBarCode();
+
+    expressionsForEvaluation.clear();           // очистим список выражений для скриптового движка
+
+    findTables();
+    foreach (QString table, tablesForPrinting)
+    {
+        tableNameForPrinting = table;
+        writeVariables(strNum);       // Перепишем переменные из контекста печати в файл content.xml
+    }
+
+    if (scriptEngine != 0 /*nullptr*/)
+        scriptEngine->eventBeforeTotalPrint();
+
+    writeHeader();
+
+    if (copyCount > 1)     // Если будем печатать сразу несколько копий
+        copyPage(copyCount);            // То страницу размножим
+
+    ooxmlEngine->close();
+
+    return result;
+}
+
+
+void OOXMLReportEngine::writeVariables(int strNum)
 /*
 Ищет в шаблоне content.xml (см.разархивированный файл OpenOffice) ячейки с текстом вида "[<выражение>]".
 Заменяет <выражение> значением из контекста печати. Для этого:
@@ -191,14 +150,12 @@ void OOXMLReportEngine::writeVariables(int strNumber)
     if (!firstRowNode.isNull())                 // Если в шаблоне было найдено "тело" таблицы
     {
         QDomNode lastNode = firstRowNode;       // lastNode будет указывать на последнюю добавленную строку таблицы
-        int strNum = 1;
         int strCounter = scriptEngine->getReportContext()->getRowCount(tableNameForPrinting);
-        if (strNumber > 0)          // Это ценник со штрих-кодом
-        {
-            strNum = strNumber;     // Будем печатать только одну строку
-            strCounter = strNum;
-        }
-        for (; strNum <= strCounter; strNum++)    // по порядку строк документа
+//        if (strNumber > 0)          // Это ценник со штрих-кодом
+//        {
+//            strCounter = strNumber;
+//        }
+        for (int i = 0; i < strCounter; i++)    // по порядку строк документа
         {
             if (scriptEngine->eventBeforeLinePrint(strNum))
             {
@@ -212,7 +169,7 @@ void OOXMLReportEngine::writeVariables(int strNumber)
             }
 
             scriptEngine->eventAfterLinePrint(strNum);
-
+            strNum++;
         }
         firstRowNode.parentNode().removeChild(firstRowNode);                        // удалим первую строку тела документа, т.к. в ней содержатся только шаблоны (без данных)
                                                                                     // он не заполнялся данными, т.к. был нужен для клонирования следующих строк
@@ -448,5 +405,94 @@ void OOXMLReportEngine::copyPage(int copyCount)
         QDomNode clone = firstNode.cloneNode();              // склонируем первую строку тела таблицы, будем читать из и писать в клон строки
         lastNode = firstNode.parentNode().insertAfter(clone, lastNode);  // то добавим клон строки после первой строки тела документа
     }
+}
+
+
+bool OOXMLReportEngine::makeBarCode()
+{
+    bool    result = true;
+
+    QString barCodePicture = findBarCode();
+    if (barCodePicture.size() > 0)     // Найден штрих-код
+    {
+        QProcess* zint = new QProcess();
+        zint->setWorkingDirectory(ooxmlEngine->getTmpDir());
+        QString zintCommandLine = "zint -o " + barCodePicture;
+        zintCommandLine.append(QString(" -b %1").arg(app->getConfigValue("BAR_CODE_PRINTER_BARCODETYPE").toInt()));
+        zintCommandLine.append(QString(" --height=%1").arg(app->getConfigValue("BAR_CODE_PRINTER_BARCODEHEIGHT").toInt()));
+        zintCommandLine.append(" --border=0");
+        zintCommandLine.append(" -d " + essence->prepareBarCodeData());
+#if defined(Q_OS_LINUX)
+            zint->start(zintCommandLine);
+#elif defined(Q_OS_WIN)
+            zint->start(app->applicationDirPath() + zintCommandLine);
+#endif
+        if (!zint->waitForStarted())
+        {
+            app->showError(QObject::trUtf8("Не удалось запустить программу формирования штрихкода zint"));
+            result = false;
+        }
+    }
+
+    return result;
+}
+
+
+bool OOXMLReportEngine::startOpenOffice(bool justPrint, QString printerName)
+{
+    bool result = false;
+
+    // Запустим OpenOffice
+    if (ooPath.size() == 0)
+    {
+        ooPath = app->getConfigValue("OO_PATH").toString();
+#if defined(Q_OS_LINUX)
+//            ooPath = TApplication::exemplar()->findFileFromEnv("soffice");
+        if (ooPath.size() > 0)
+            ooPath = ooPath.append("/");
+        ooPath += "soffice";
+#elif defined(Q_OS_WIN)
+//            ooPath = TApplication::exemplar()->findFileFromEnv("soffice.exe");
+        if (ooPath.size() > 0)
+            ooPath = ooPath.append("\\");
+        ooPath += "soffice.exe";
+#endif
+    }
+
+    QStringList commandLine;
+    commandLine << "--calc" << "--invisible" << "--quickstart";
+    if (justPrint && printerName.size() > 0)
+        commandLine << "--pt" << printerName;
+    commandLine << fileName;
+    ooProcess->start(ooPath, commandLine);
+    if (!ooProcess->waitForStarted())    // Подождем 1 секунду и если процесс не запустился
+        TApplication::exemplar()->showError(QObject::trUtf8("Не удалось запустить") + " Open Office" + ". " + ooProcess->errorString());                  // выдадим сообщение об ошибке
+    else
+        result = true;
+
+    return result;
+}
+
+
+bool OOXMLReportEngine::preview(bool justPrint, QString printerName)
+{
+    bool result = false;
+
+    if (app->getConfigValue("OO_NEEDED").toBool())
+    {
+        result = startOpenOffice(justPrint, printerName);
+    }
+    else
+    {
+        OdfPreviewLib ods;
+        if (ods.open(fileName))
+        {
+            ods.preview();
+            ods.close();
+            result = true;
+        }
+    }
+
+    return result;
 }
 

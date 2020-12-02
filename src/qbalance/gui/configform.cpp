@@ -69,8 +69,9 @@ bool ConfigForm::open(QWidget* pwgt)
 
         formWidget->setWindowTitle(QObject::trUtf8("Настройки"));
 
-        QTreeWidget* treeWidget = new QTreeWidget();
-        QTreeWidgetItem* treeWidgetItem0 = 0 /*nullptr*/;
+        treeWidget = new QTreeWidget();
+
+//        QTreeWidgetItem* treeWidgetItem0 = 0 /*nullptr*/;
 /*
         treeWidgetItem0 = new QTreeWidgetItem(treeWidget, QStringList(QObject::trUtf8("Справочники")));
         treeWidgetItem0->addChild(new QTreeWidgetItem(QStringList() << QObject::trUtf8("Создать") << "10"));
@@ -87,10 +88,14 @@ bool ConfigForm::open(QWidget* pwgt)
         treeWidgetItem0->addChild(new QTreeWidgetItem(treeWidgetItem0, QStringList() << QObject::trUtf8("Свойства") << "31"));
         treeWidgetItem0->addChild(new QTreeWidgetItem(treeWidgetItem0, QStringList() << QObject::trUtf8("Доступ") << "32"));
 */
+        treeWidget->setColumnCount(1);
+        QList<QTreeWidgetItem *> items;
+
         foreach (QString type, app->getConfigTypes())
         {
-            treeWidgetItem0 = new QTreeWidgetItem(treeWidget, QStringList() << app->getConfigTypeName(type) << type);
+            items.append(new QTreeWidgetItem(treeWidget, QStringList() << app->getConfigTypeName(type) << type));
         }
+        treeWidget->insertTopLevelItems(0, items);
 
         connect(treeWidget, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), this, SLOT(dispatch(QTreeWidgetItem*, int)));
 
@@ -110,9 +115,18 @@ bool ConfigForm::open(QWidget* pwgt)
         }
 
 //        app->setIcons(formWidget);
+
         return true;
     }
     return false;
+}
+
+
+void ConfigForm::close()
+{
+    Form::close();
+
+    delete treeWidget;
 }
 
 

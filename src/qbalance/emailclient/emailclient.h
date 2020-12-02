@@ -38,7 +38,7 @@ signals:
 public slots:
 
 private:
-//    SmtpClient* smtp;
+    SmtpClient* smtp;
 };
 
 Q_DECLARE_INTERFACE(EMailClient, "org.QBalance.EMailClient")

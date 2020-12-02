@@ -130,8 +130,8 @@ static void calcDbSaldo(sqlite3 *db, QString acc, long id,double quan,double sum
 
     if (balanceAcc == 1)
     {
-       double      dbQuan;
-       double      debet;
+       double      dbQuan   = 0.0;
+       double      debet    = 0.0;
 
         QString command = QString("SELECT ДБКОЛ, ДЕБЕТ FROM сальдо WHERE СЧЕТ = '%1' AND КОД = %2;").arg(acc).arg(id);
         sqlite3_prepare_v2(db, command.toUtf8().data(), -1, &stmt, 0 /*nullptr*/);
@@ -151,7 +151,7 @@ static void calcDbSaldo(sqlite3 *db, QString acc, long id,double quan,double sum
             .arg(acc)
             .arg(id);
 
-        rc = sqlite3_exec(db, command.toUtf8().data(), 0 /*nullptr*/, 0 /*nullptr*/, 0 /*nullptr*/);
+        sqlite3_exec(db, command.toUtf8().data(), 0 /*nullptr*/, 0 /*nullptr*/, 0 /*nullptr*/);
         calcEndSaldo(db, acc, id);
     }
 }
@@ -159,7 +159,7 @@ static void calcDbSaldo(sqlite3 *db, QString acc, long id,double quan,double sum
 
 
 
-static void calcCrSaldo(sqlite3 *db, QString acc, long id,double quan,double sum)
+static void calcCrSaldo(sqlite3 *db, QString acc, long id, double quan, double sum)
 {
     sqlite3_stmt *stmt;
     int rc;
@@ -177,8 +177,8 @@ static void calcCrSaldo(sqlite3 *db, QString acc, long id,double quan,double sum
 
     if (balanceAcc == 1)
     {
-       double crQuan;
-       double credit;
+       double crQuan    = 0.0;
+       double credit    = 0.0;
 
         QString command = QString("SELECT КРКОЛ, КРЕДИТ FROM сальдо WHERE СЧЕТ = '%1' AND КОД = %2;").arg(acc).arg(id);
         sqlite3_prepare_v2(db, command.toUtf8().data(), -1, &stmt, 0 /*nullptr*/);
@@ -198,7 +198,7 @@ static void calcCrSaldo(sqlite3 *db, QString acc, long id,double quan,double sum
             .arg(acc)
             .arg(id);
 
-        rc = sqlite3_exec(db, command.toUtf8().data(), 0 /*nullptr*/, 0 /*nullptr*/, 0 /*nullptr*/);
+        sqlite3_exec(db, command.toUtf8().data(), 0 /*nullptr*/, 0 /*nullptr*/, 0 /*nullptr*/);
         calcEndSaldo(db, acc, id);
     }
 }

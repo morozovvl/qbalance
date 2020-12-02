@@ -9,7 +9,7 @@ QT       += core gui xml printsupport
 greaterThan(QT_MAJOR_VERSION, 4): QT += printsupport
 
 TARGET = odfpreviewlib
-TEMPLATE = lib
+#TEMPLATE = lib
 #DESTDIR = ../
 
 DEFINES += OdfPreviewLib_LIBRARY

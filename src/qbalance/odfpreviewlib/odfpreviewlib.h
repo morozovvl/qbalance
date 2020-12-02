@@ -71,7 +71,7 @@ class OdfPreviewLib : public QObject
     Q_OBJECT
 
 public:
-    OdfPreviewLib(QWidget *parent = nullptr);
+    OdfPreviewLib(QWidget *parent = 0 /*nullptr*/);
     ~OdfPreviewLib();
 
     bool open(const QString);

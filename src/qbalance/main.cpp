@@ -41,18 +41,23 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "kernel/app.h"
 #include "kernel/dictionaries.h"
 
-#include "../../breakpad/src/client/linux/handler/exception_handler.h"
-
 //#include <mcheck.h>
 
 
-static bool dumpCallback(const google_breakpad::MinidumpDescriptor& descriptor, void*, bool succeeded)
-{
-  printf("Dump path: %s\n", descriptor.path());
-  return succeeded;
-}
+//#if  defined(Q_OS_LINUX)
+//
+//    #include "../../breakpad/src/client/linux/handler/exception_handler.h"
+//
+//    static bool dumpCallback(const google_breakpad::MinidumpDescriptor& descriptor, void*, bool succeeded)
+//    {
+//        printf("Dump path: %s\n", descriptor.path());
+//        return succeeded;
+//    }
+//
+//#endif
 
-void crash() { volatile int* a = (int*)(NULL); *a = 1; }
+
+//void crash() { volatile int* a = (int*)(NULL); *a = 1; }
 
 
 int main(int argc, char *argv[])
@@ -84,10 +89,14 @@ int main(int argc, char *argv[])
     {
         if (application.open())
         {
-            google_breakpad::MinidumpDescriptor descriptor(application.applicationDirPath().append("/crashdumps").toAscii().data());
-            google_breakpad::ExceptionHandler eh(descriptor, NULL, dumpCallback, NULL, true, -1);
-//            crash();
 
+//#if  defined(Q_OS_LINUX)
+//
+//            google_breakpad::MinidumpDescriptor descriptor(application.applicationDirPath().append("/crashdumps").toAscii().data());
+//            google_breakpad::ExceptionHandler eh(descriptor, NULL, dumpCallback, NULL, true, -1);
+////            crash();
+//
+//#endif
             application.debug(0, "\n");
             application.debug(0, QString("Program startup. v.%1").arg(application.applicationVersion()));
 

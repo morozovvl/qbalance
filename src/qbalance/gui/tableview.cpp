@@ -163,10 +163,10 @@ void TableView::setCurrentFocus()
 {
     currentChangedScripts = false;
     QModelIndex index = currentIndex();      // Запомним, где стоял курсор
-    int column = index.column() < 0 ? 0 : index.column();
+//    int column = index.column() < 0 ? 0 : index.column();
     int row = index.row() < 0 ? 0 : index.row();
     selectNextColumn();
-    column = currentIndex().column();
+    int column = currentIndex().column();
     reset();
     setCurrentIndex(index.sibling(row, column));
     currentChangedScripts = true;

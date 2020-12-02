@@ -138,7 +138,10 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt)
     }
 
     bool docParams = false;
-    formWidget->resize(600, formWidget->height());
+
+    if (formWidget != 0 /*nullptr*/)
+        formWidget->resize(600, formWidget->height());
+
     foreach (QString dictName, getParent()->getDictionariesList()->keys())
     {   // Просмотрим список справочников, с которыми работает форма документа
         if (getParent()->getDictionariesList()->value(dictName)->isConst())
@@ -214,7 +217,7 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt)
         }
         buttonCancel->hide();
     }
-    else
+    else if (formWidget != 0 /*nullptr*/)
     {
         if (docParams)
         {

@@ -161,7 +161,7 @@ void TcpServer::processRequest(QTcpSocket* pClientSocket, QString str)
             sendToClient(pClientSocket, resStr);
         }
     }
-    else if (str.indexOf("driverFRisReady") == 0)
+    else if (driverFR != 0 /*nullptr*/ && str.indexOf("driverFRisReady") == 0)
     {
         bool result = false;
         if (driverFR != 0 /*nullptr*/)
@@ -169,7 +169,7 @@ void TcpServer::processRequest(QTcpSocket* pClientSocket, QString str)
         resStr = (result ? "true" : "false");
         sendToClient(pClientSocket, resStr);
     }
-    else if (str.indexOf("isLockedDriverFR") == 0)
+    else if (driverFR != 0 /*nullptr*/ && str.indexOf("isLockedDriverFR") == 0)
     {
         bool result = false;
         // Если драйвер ФР заблокировал сам клиент

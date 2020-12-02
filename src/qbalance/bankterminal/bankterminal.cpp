@@ -111,10 +111,6 @@ bool BankTerminal::open()
                         remote = true;
                 }
             }
-            else
-            {
-                tcpClient->logError();
-            }
         }
         if (result)
             app->print("Найден банковский терминал.");
@@ -215,8 +211,6 @@ QString BankTerminal::process(int oper, int sum, int type, int track)
             tcpClient->waitResult();
             result = tcpClient->getResult();
         }
-        else
-            tcpClient->logError();
     }
     return result;
 }
@@ -355,13 +349,19 @@ QString BankTerminal::processRemoteQuery(QString command)
 
 QString BankTerminal::getCardCode()
 {
-    return resultParams.value(CARD_NUMBER);
+    QString result = "";
+    if (!remote)
+        result = resultParams.value(CARD_NUMBER);
+    return result;
 }
 
 
 QString BankTerminal::getResultData(QString key)
 {
-    return resultParams.value(key);
+    QString result = "";
+    if (!remote)
+        result = resultParams.value(key);
+    return result;
 }
 
 

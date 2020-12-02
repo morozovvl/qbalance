@@ -209,10 +209,10 @@ bool DBFactory::createNewDB(QString dbName, QString password, QStringList script
     {
         foreach (QString script, scripts)
         {
-            lResult = execPSql(QStringList() << "-f" << script << dbName, "postgres", password);
+            execPSql(QStringList() << "-f" << script << dbName, "postgres", password);
         }
         command = QString("ALTER DATABASE %1 OWNER TO %2;").arg(dbName).arg("sa");
-        lResult = execPSql(QStringList() << QString("-c \"%1\"").arg(command), "postgres", password);
+        execPSql(QStringList() << QString("-c \"%1\"").arg(command), "postgres", password);
     }
 //    app->saveMessages();
     app->getMessageWindow()->hide();

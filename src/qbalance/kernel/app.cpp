@@ -727,6 +727,7 @@ bool TApplication::initApplication()
 
     db  = new PostgresDBFactory();
 //    db  = new SQLiteDBFactory();
+
     db->setConnectionTimeout(10);
 
     if (db->getDB()->isValid())
@@ -2101,6 +2102,10 @@ QString TApplication::getReportFile(QString tagName, bool autoPrint, QWidget* fo
                 result = tagName + "." + action->text() + ext;
         }
     }
+
+    delete newReportAct;
+    delete menu;
+
     return result;
 }
 
@@ -2194,6 +2199,12 @@ QString TApplication::getProcessFile(QString tagName, QWidget* formWidget, QRect
             else
                 result = tagName + "." + action->text() + ext;
         }
+
+        execScriptAct->deleteLater();
+        newProcessAct->deleteLater();
+        delete action;
+        delete menu;
+
     }
     return result;
 }

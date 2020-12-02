@@ -25,13 +25,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 EMailClient::EMailClient(QObject *parent) :  QObject(parent)
 {
-//    smtp = new SmtpClient(/*host, port, ct*/);
+    smtp = new SmtpClient(/*host, port, ct*/);
 }
 
 
 EMailClient::~EMailClient()
 {
-//    delete smtp;
+    delete smtp;
 }
 
 

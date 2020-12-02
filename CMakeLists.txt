@@ -24,6 +24,7 @@ add_subdirectory(src/qbalance/barcodereader)
 add_subdirectory(src/qbalance/cardcodereader)
 add_subdirectory(src/qbalance/driverfr)
 add_subdirectory(src/qbalance/emailclient)
+add_subdirectory(src/qbalance/odfpreviewlib)
 add_subdirectory(src/qbalance)
 
 set(CMAKE_AUTOMOC OFF)

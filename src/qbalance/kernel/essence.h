@@ -127,8 +127,9 @@ public:
     Q_INVOKABLE virtual bool            add() { return true; }                      // Добавление записи
     Q_INVOKABLE virtual bool            remove(bool = false);     // Удаление записи
     Q_INVOKABLE virtual void            view();                         // Просмотр записи
-    Q_INVOKABLE virtual void            print(QString, bool = false, bool = false, int = 1, QString = "");  // Печать
-    Q_INVOKABLE virtual void            printLabel(QString, int = 1);                 // Печать
+    Q_INVOKABLE virtual void            print(QString, bool = false, bool = false, int = 1, QString = "", int = -1);  // Печать
+    Q_INVOKABLE virtual void            printLabel(QString, int = 1);                 // Печать этикеток
+    Q_INVOKABLE virtual void            printLabel1(QString, int = -1);                 // Печать этикеток
     virtual void                        load();
 
 // Функции для получения, сохранения данных модели

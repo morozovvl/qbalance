@@ -1412,12 +1412,20 @@ void Essence::printLabel(QString fileName, int copyCount)
         QString printerName = app->getConfigValue("BAR_CODE_PRINTER_NAME").toString();
         QString labelSize = app->getConfigValue("BAR_CODE_PRINTER_BARCODESIZE").toString();
         bool preview = app->getConfigValue("BAR_CODE_PRINTER_BARCODEPREVIEW").toBool();
-        print(fileName + "(" + labelSize + ").ods", false, !preview, copyCount, printerName);
+        print(fileName + "(" + labelSize + ").ods", false, !preview, copyCount, printerName, getCurrentRow() + 1);
     }
 }
 
 
-void Essence::print(QString fileName, bool newFile, bool justPrint, int copyCount, QString printerName)
+void Essence::printLabel1(QString fileName, int strNumber)
+{
+    QString printerName = app->getConfigValue("BAR_CODE_PRINTER_NAME").toString();
+    bool preview = app->getConfigValue("BAR_CODE_PRINTER_BARCODEPREVIEW").toBool();
+    print(fileName, false, !preview, 1, printerName, strNumber);
+}
+
+
+void Essence::print(QString fileName, bool newFile, bool justPrint, int copyCount, QString printerName, int strNumber)
 // fileName - файл с шаблоном документа
 {
     bool result = true;                         // По умолчанию документ будет печататься
@@ -1505,8 +1513,11 @@ void Essence::print(QString fileName, bool newFile, bool justPrint, int copyCoun
                 case OOXMLreportTemplate:
                 {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
                     OOXMLReportEngine* report = new OOXMLReportEngine(this, reportScriptEngine);
-//                    report->setFileName(fileName);
-                    report->open(fullFileName, reportScriptEngine->getReportContext(), justPrint, copyCount, printerName);
+                    if (report->open(fullFileName, reportScriptEngine->getReportContext()))
+                    {
+                        if (report->makeReport(copyCount, strNumber))
+                            report->preview(justPrint, printerName);
+                    }
                     report->close();
                     delete report;
                 }

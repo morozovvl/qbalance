@@ -779,7 +779,7 @@ void WizardOperation::frameDeactivated(int frameNumber)
                 item = prvTable->item(i, crConstField);
                 if (item != 0 /*nullptr*/)
                     toperT.crConst = (QString(item->text()).compare(db->getTrueValue()) == 0) ? true : false;
-                item = prvTable->item(i, itogField);
+//                item = prvTable->item(i, itogField);
                 item = prvTable->item(i, crSalVisField);
                 if (item != 0 /*nullptr*/)
                     toperT.crSaldoVisible = (QString(item->text()).compare(db->getTrueValue()) == 0) ? true : false;

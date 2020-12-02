@@ -36,8 +36,10 @@ public:
     OOXMLReportEngine(Essence*, DocumentScriptEngine* = 0 /*nullptr*/);
     ~OOXMLReportEngine();
     virtual bool open();
-    virtual bool open(QString name, ReportContext* context, bool = false, int = 1, QString = "");
+    virtual bool open(QString name, ReportContext* context);
     void         setFileName(QString fName);
+    bool        makeReport(int, int);
+    bool        preview(bool, QString);
 
 private:
     TApplication*               app;
@@ -53,7 +55,7 @@ private:
     Essence*                    essence;
     QProcess*                   ooProcess;
 
-    void writeVariables(int = 0);                                              // Заполняет поля с переменными в шаблоне
+    void writeVariables(int = 1);                                              // Заполняет поля с переменными в шаблоне
     void writeHeader();
     bool readExpression(int, int = 0);
     QString getTableVariable(QDomElement, QString);
@@ -61,6 +63,8 @@ private:
     void findTables();
     QString findBarCode();
     void copyPage(int);
+    bool    makeBarCode();
+    bool    startOpenOffice(bool, QString);
 };
 
 #endif // OOXMLREPORTENGINE_H

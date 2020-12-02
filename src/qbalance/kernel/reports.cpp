@@ -77,6 +77,8 @@ void Reports::cmdOk()
 
 void Reports::show()
 {
+    form->getButtonRequery()->hide();
+
     Dictionary::show();
     grdTable->cmdRequery();
 }

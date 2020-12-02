@@ -271,7 +271,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt)
     // Подключим кнопку "Обновить"
     if (defaultForm)
         buttonRequery = insertButton("buttonRequery");
-    else
+    else if (formWidget != 0 /*nullptr*/)
         buttonRequery = static_cast<QPushButton*>(formWidget->findChild("buttonRequery"));
 
     if (buttonRequery != 0 /*nullptr*/)
@@ -285,7 +285,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt)
         {
             if (defaultForm)
                 buttonView = insertButton("buttonView");
-            else
+            else if (formWidget != 0 /*nullptr*/)
                 buttonView = static_cast<QPushButton*>(formWidget->findChild("buttonView"));
 
             if (buttonView != 0 /*nullptr*/)

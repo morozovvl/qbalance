@@ -936,7 +936,7 @@ bool ScriptEngine::evaluate()
     if (script.size() > 0)
     {
         tryEventLoopExit = false;
-        result = QScriptEngine::evaluate(script).isValid();
+        QScriptEngine::evaluate(script).isValid();
         tryEventLoopExit = true;
         if (hasUncaughtException())
         {   // Если в скриптах произошла ошибка
@@ -944,7 +944,7 @@ bool ScriptEngine::evaluate()
             app->showError(errorMessage);
             // Если произошла ошибка, то удалим ошибочные скрипты
             script = "";
-            return false;
+            result = false;
         }
         else
         {

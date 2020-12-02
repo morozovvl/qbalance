@@ -15,9 +15,11 @@ add_subdirectory(report)
 add_subdirectory(openoffice)
 add_subdirectory(serialport)
 add_subdirectory(startup)
+add_subdirectory(odspreviewlib)
+
 
 set(SUBDIRS0 startup)
-set(SUBDIRS1 kernel gui report openoffice storage engine serialport)
+set(SUBDIRS1 kernel gui report openoffice storage engine serialport odspreviewlib)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY})
 

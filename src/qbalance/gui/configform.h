@@ -52,6 +52,7 @@ public:
     ConfigForm(QObject* parent = 0 /*nullptr*/);
     ~ConfigForm();
     virtual bool open(QWidget* pwgt = 0 /*nullptr*/);
+    virtual void close();
 
 public slots:
     virtual void cmdOk();
@@ -65,6 +66,7 @@ private:
     QFrame* frame;
     QHash<QString, ConfigEntry> configs;
     QString                     currentConfigGroup;
+    QTreeWidget*                treeWidget;
 
     void dictAdd();
     void dictProperties();
