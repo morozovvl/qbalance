@@ -77,8 +77,6 @@ void Reports::cmdOk()
 
 void Reports::show()
 {
-    form->getButtonRequery()->hide();
-
     Dictionary::show();
     grdTable->cmdRequery();
 }
@@ -93,10 +91,9 @@ void Reports::setForm(QString)
     }
 
     form = new FormGridSearch();
-
     form->appendToolTip("buttonOk", trUtf8("Открыть отчет"));
-
     form->open(parentForm, this, getTagName());
+    form->getButtonRequery()->hide();
 }
 
 

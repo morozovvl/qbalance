@@ -1105,7 +1105,7 @@ bool Essence::isFormSelected()
 
 void Essence::cmdOk()
 {
-    db->execCommands();
+    saveChanges();
 }
 
 
@@ -1587,17 +1587,19 @@ void Essence::setCardReaderEnabled(bool enabled)
 
 void Essence::submit()
 {
-    // Сохраним в БД все столбцы. Будут сохраняться только те, в которых произошли изменения
-    int row = getCurrentRow();
-
-    for (int i = 0; i < tableModel->record().count(); i++)
+    if (!isView)
     {
-        QString fieldName = tableModel->record().fieldName(i);
-        QVariant oldValue = getOldValue(fieldName);
-        QVariant newValue = getValue(fieldName);
-        if (newValue != oldValue)    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
+        // Сохраним в БД все столбцы. Будут сохраняться только те, в которых произошли изменения
+        int row = getCurrentRow();
+
+        for (int i = 0; i < tableModel->record().count(); i++)
         {
-            tableModel->prepareCommand(tableModel->index(row, i));
+            QString fieldName = tableModel->record().fieldName(i);
+            QVariant oldValue = getOldValue(fieldName);
+            QVariant newValue = getValue(fieldName);
+
+            if (newValue != oldValue)    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
+                tableModel->prepareCommand(tableModel->index(row, i));
         }
     }
 }
@@ -1606,7 +1608,9 @@ void Essence::submit()
 bool Essence::saveChanges()
 {
     bool lResult = false;
+
     submit();
+
     if (db->execCommands())
     {
         updateCurrentRow();

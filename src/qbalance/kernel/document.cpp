@@ -1317,9 +1317,8 @@ bool Document::saveChanges()
     bool result = false;
 
     calcItog();
+    parent->updateCurrentRow();
     result = Essence::saveChanges();
-    if (result)
-        parent->updateCurrentRow();
     return result;
 }
 

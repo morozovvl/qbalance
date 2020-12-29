@@ -701,7 +701,7 @@ public:
     virtual QMyExtSerialPort* getSerialPort() { return serialPort; }
     virtual bool isRemote() { return remote; }
     Q_INVOKABLE virtual bool isLocked();
-    virtual void        setLock(bool lock, QString lockedByHost = "");
+    Q_INVOKABLE virtual void setLock(bool lock, QString lockedByHost = "");
     virtual QString     getLockedByHost() { return lockedByHost; }          // Вернуть кем заблокирован фискальник
     Q_INVOKABLE virtual void setProgressDialogValue(int value);
     Q_INVOKABLE virtual void setShowProgressBar(bool);

@@ -291,7 +291,6 @@ void FormDocument::hide()
 
 void FormDocument::cmdOk()
 {
-    FormGrid::cmdOk();
     if (getParent() != 0 /*nullptr*/)
     {
         saveDate(dateEdit->date());
@@ -303,6 +302,7 @@ void FormDocument::cmdOk()
             cmdQuery();
         }
     }
+    FormGrid::cmdOk();
 }
 
 
