@@ -84,15 +84,10 @@ bool OOXMLReportEngine::makeReport(int copyCount, int strNum)
 {
     bool result = true;
 
-    int strNumber = 1;
-    if (strNum == -1)
+    if (strNum > 0)
     {
-        strNum = 1;
-//            strNumber = essence->rowCount();
-        strNumber = essence->getGrdTable()->currentIndex().row() + 1;
-    }
-    else
         context->setCurrentRow(strNum);
+    }
 
     result = makeBarCode();
 
@@ -119,7 +114,7 @@ bool OOXMLReportEngine::makeReport(int copyCount, int strNum)
 }
 
 
-void OOXMLReportEngine::writeVariables(int strNum)
+void OOXMLReportEngine::writeVariables(int strNumber)
 /*
 Ищет в шаблоне content.xml (см.разархивированный файл OpenOffice) ячейки с текстом вида "[<выражение>]".
 Заменяет <выражение> значением из контекста печати. Для этого:
@@ -150,12 +145,14 @@ void OOXMLReportEngine::writeVariables(int strNum)
     if (!firstRowNode.isNull())                 // Если в шаблоне было найдено "тело" таблицы
     {
         QDomNode lastNode = firstRowNode;       // lastNode будет указывать на последнюю добавленную строку таблицы
+        int strNum = 1;
         int strCounter = scriptEngine->getReportContext()->getRowCount(tableNameForPrinting);
-//        if (strNumber > 0)          // Это ценник со штрих-кодом
-//        {
-//            strCounter = strNumber;
-//        }
-        for (int i = 0; i < strCounter; i++)    // по порядку строк документа
+        if (strNumber > 0)          // Это ценник со штрих-кодом
+        {
+            strNum = strNumber;     // Будем печатать только одну строку
+            strCounter = strNum;
+        }
+        for (; strNum <= strCounter; strNum++)    // по порядку строк документа
         {
             if (scriptEngine->eventBeforeLinePrint(strNum))
             {
@@ -169,7 +166,6 @@ void OOXMLReportEngine::writeVariables(int strNum)
             }
 
             scriptEngine->eventAfterLinePrint(strNum);
-            strNum++;
         }
         firstRowNode.parentNode().removeChild(firstRowNode);                        // удалим первую строку тела документа, т.к. в ней содержатся только шаблоны (без данных)
                                                                                     // он не заполнялся данными, т.к. был нужен для клонирования следующих строк

@@ -52,6 +52,7 @@ class FormDocument : public FormGrid {
 public:
     FormDocument();
     ~FormDocument();
+    Q_INVOKABLE virtual void close();
     virtual Document* getParent(bool = false);
     virtual void parametersChangedEvent();
     QDateEdit* getDateEdit();
@@ -83,8 +84,8 @@ private:
 //    virtual QDomElement createWidgetsStructure();
 
 private slots:
-    void    saveDate(QDate);
-    void    saveNumber(QString);
+    void    saveDate();
+    void    saveNumber();
 };
 
 #endif // FORMDOCUMENT_H

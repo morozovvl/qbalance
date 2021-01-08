@@ -58,6 +58,18 @@ FormDocument::~FormDocument()
 }
 
 
+void FormDocument::close()
+{
+    if (dateEdit != 0 /*nullptr*/)
+        disconnect(dateEdit, SIGNAL(editingFinished()), this, SLOT(saveDate()));
+
+    if (numberEdit != 0 /*nullptr*/)
+        disconnect(numberEdit, SIGNAL(editingFinished()), this, SLOT(saveNumber()));
+
+    FormGrid::close();
+}
+
+
 Document* FormDocument::getParent(bool)
 {
     return static_cast<Document*>(parent);
@@ -253,6 +265,16 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt)
         if (buttonDelete != 0 /*nullptr*/)
             buttonDelete->hide();
     }
+
+    if (dateEdit != 0 /*nullptr*/)
+    {
+        dateEdit->setDisplayFormat(app->dateFormat());
+        connect(dateEdit, SIGNAL(editingFinished()), this, SLOT(saveDate()));
+    }
+
+    if (numberEdit != 0 /*nullptr*/)
+        connect(numberEdit, SIGNAL(editingFinished()), this, SLOT(saveNumber()));
+
 }
 
 
@@ -293,8 +315,6 @@ void FormDocument::cmdOk()
 {
     if (getParent() != 0 /*nullptr*/)
     {
-        saveDate(dateEdit->date());
-        saveNumber(numberEdit->text());
         getParent()->getParent()->getGrdTable()->setFocus();
         if (dateEdit->date() < app->getBeginDate() || dateEdit->date() > app->getEndDate())
         {
@@ -350,15 +370,15 @@ void FormDocument::setEnabled(bool enabled)
 }
 
 
-void FormDocument::saveDate(QDate date)
+void FormDocument::saveDate()
 {
-    getParent()->setDate(date.toString(app->dateFormat()));
+    getParent()->setDate(dateEdit->text());
 }
 
 
-void FormDocument::saveNumber(QString text)
+void FormDocument::saveNumber()
 {
-    getParent()->setNumber(text);
+    getParent()->setNumber(numberEdit->text());
 }
 
 

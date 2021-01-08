@@ -427,8 +427,11 @@ bool Document::remove(bool noAsk)
                     Dictionary::query();
                     if (scriptEngineEnabled && scriptEngine != 0 /*nullptr*/)
                         scriptEngine->eventAfterDeleteString(docId);
+/*
                     calcItog();
                     db->execCommands();
+*/
+                    saveChanges();
                     return true;
                 }
                 app->showError(QString(QObject::trUtf8("Не удалось удалить строку")));
@@ -961,6 +964,7 @@ bool Document::setTableModel(int)
         db->getToperDictAliases(operNumber, topersList, &dictsList);
         for (int i = 0; i < dictsList.count(); i++)
         {
+            Dictionary* dict;
             if (dictsList.at(i).isSaldo)
             {
                 Saldo* saldo = dictionaries->getSaldo(dictsList.at(i).acc);
@@ -968,19 +972,19 @@ bool Document::setTableModel(int)
                 if (searchParameters != 0 /*nullptr*/)
                     searchParameters->setDictionaries(dictionaries);
                 saldo->setAutoLoaded(true);
-                Dictionary* dict = dictionaries->getDictionary(dictsList.at(i).prototype);
-                dict->setAutoLoaded(true);
+                dict = dictionaries->getDictionary(dictsList.at(i).prototype);
             }
             else
             {
-                Dictionary* dict = dictionaries->getDictionary(dictsList.at(i).name);
+                dict = dictionaries->getDictionary(dictsList.at(i).name);
                 if (dictsList.at(i).isConst)
                     dict->setConst(true);
                 SearchParameters* searchParameters = static_cast<FormGridSearch*>(dict->getForm())->getSearchParameters();
                 if (searchParameters != 0 /*nullptr*/)
                     searchParameters->setDictionaries(dictionaries);
-                dict->setAutoLoaded(true);
             }
+            dict->setAutoLoaded(true);
+            dict->setReadOnly(true);
         }
 
         int columnCount = 0;
@@ -1005,7 +1009,8 @@ bool Document::setTableModel(int)
                       keyColumn = columnCount;                                    // Запомним номер столбца с ключом
               }
 
-              if (!columnsProperties.value(i).constReadOnly)
+              if (!columnsProperties.value(i).constReadOnly &&
+                      dictionaries->getDictionary(columnsProperties.value(i).table)->isUpdateable())
                   // Если поле входит в список сохраняемых полей
                   tableModel->setUpdateInfo(columnsProperties.value(i).name, columnsProperties.value(i).table, field, columnsProperties.value(i).type, columnsProperties.value(i).length, columnsProperties.value(i).precision, columnCount, keyColumn);
 
@@ -1264,8 +1269,6 @@ void Document::setDate(QString date)
 {
     QString field = db->getObjectName("документы.дата");
     parent->setValue(field, QVariant(date));
-    static_cast<FormDocument*>(getForm())->getDateEdit()->setDate(parent->getValue(field).toDate());
-    static_cast<FormDocument*>(getForm())->getDateEdit()->repaint();
 }
 
 
@@ -1317,8 +1320,9 @@ bool Document::saveChanges()
     bool result = false;
 
     calcItog();
-    parent->updateCurrentRow();
     result = Essence::saveChanges();
+    if (result)
+        parent->updateCurrentRow();
     return result;
 }
 

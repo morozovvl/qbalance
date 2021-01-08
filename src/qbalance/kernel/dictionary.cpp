@@ -165,6 +165,7 @@ bool Dictionary::open(QString command, QString tName)
                 fld = columnsProperties.at(i);
 
                 // Для основной таблицы сохраним информацию для обновления
+
                 if (fld.table == columnsProperties.at(0).table)
                 {
                     if (fld.name == idFieldName)

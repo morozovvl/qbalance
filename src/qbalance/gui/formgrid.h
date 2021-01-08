@@ -46,7 +46,7 @@ class FormGrid : public Form {
 public:
     FormGrid(QObject* parent = 0 /*nullptr*/);
     ~FormGrid();
-    virtual void close();
+    Q_INVOKABLE virtual void close();
     Q_INVOKABLE virtual void    setLeftPercent(bool percent);
     Q_INVOKABLE virtual bool    isLeftPercent();
     Q_INVOKABLE virtual void    setRightPercent(bool percent);
