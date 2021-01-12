@@ -105,7 +105,6 @@ void Document::postInitialize(int oper, Documents* par)
     quanAccount = false;
     singlePrv = false;
     locked = false;
-
 }
 
 
@@ -427,10 +426,6 @@ bool Document::remove(bool noAsk)
                     Dictionary::query();
                     if (scriptEngineEnabled && scriptEngine != 0 /*nullptr*/)
                         scriptEngine->eventAfterDeleteString(docId);
-/*
-                    calcItog();
-                    db->execCommands();
-*/
                     saveChanges();
                     return true;
                 }
@@ -1009,8 +1004,7 @@ bool Document::setTableModel(int)
                       keyColumn = columnCount;                                    // Запомним номер столбца с ключом
               }
 
-              if (!columnsProperties.value(i).constReadOnly &&
-                      dictionaries->getDictionary(columnsProperties.value(i).table)->isUpdateable())
+              if (!columnsProperties.value(i).constReadOnly)
                   // Если поле входит в список сохраняемых полей
                   tableModel->setUpdateInfo(columnsProperties.value(i).name, columnsProperties.value(i).table, field, columnsProperties.value(i).type, columnsProperties.value(i).length, columnsProperties.value(i).precision, columnCount, keyColumn);
 

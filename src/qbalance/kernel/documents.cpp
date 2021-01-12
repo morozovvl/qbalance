@@ -70,7 +70,6 @@ void Documents::postInitialize(int opNumber, QObject *parent)
     lDeleteable = db->getTopersProperties(operNumber, "deleteable").toBool();
     lUpdateable = db->getTopersProperties(operNumber, "updateable").toBool();
 
-
     scriptEngine = 0 /*nullptr*/;
 //    scriptEngineEnabled = false;
     doSubmit = true;

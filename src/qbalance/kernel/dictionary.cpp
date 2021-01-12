@@ -170,7 +170,9 @@ bool Dictionary::open(QString command, QString tName)
                 {
                     if (fld.name == idFieldName)
                         keyColumn = i;
-                    else if (fieldList.contains(fld.name))
+                    else if (fieldList.contains(fld.name) &&
+                             dictionaries != 0 /*nullptr*/ &&
+                             dictionaries->getDocument() == 0 /*nullptr*/)
                         tableModel->setUpdateInfo(fld.name, fld.table, fld.name, fld.type, fld.length, fld.precision, i, keyColumn);
                 }
             }
