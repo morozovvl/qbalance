@@ -170,9 +170,7 @@ bool Dictionary::open(QString command, QString tName)
                 {
                     if (fld.name == idFieldName)
                         keyColumn = i;
-                    else if (fieldList.contains(fld.name) &&
-                             dictionaries != 0 /*nullptr*/ &&
-                             dictionaries->getDocument() == 0 /*nullptr*/)
+                    else if (fieldList.contains(fld.name))
                         tableModel->setUpdateInfo(fld.name, fld.table, fld.name, fld.type, fld.length, fld.precision, i, keyColumn);
                 }
             }
@@ -846,15 +844,14 @@ void Dictionary::lock(bool toLock)
 {
     if (isSet())
     {
-        if (rowCount() == 0)
-            getId();
         foreach (QString dictName, getChildDicts())
         {
             Dictionary* dict = dictionaries->getDictionary(dictName);
             if (toLock)
             {
                 int id = getValue(idFieldName + "_" + dictName).toInt();
-                dict->setId(id);
+                if (id > 0)
+                    dict->setId(id);
             }
             dict->lock(toLock);
         }

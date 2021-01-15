@@ -304,6 +304,7 @@ bool Document::add()
                 }
             }
         }
+
         if (appendDocString() > 0)
         {
             if (getScriptEngine() != 0 /*nullptr*/)
@@ -984,33 +985,19 @@ bool Document::setTableModel(int)
 
         int columnCount = 0;
         int keyColumn   = 0;
+
         QString attrName = QString("атрибуты%1").arg(operNumber);
         for (int i = 0; i < columnsProperties.count(); i++)
         {
             QString field = columnsProperties.value(i).name;
 
-              if (topersList->at(0).attributes && columnsProperties.value(i).table == attrName)
-              {
-                  if (field == db->getObjectName("атрибуты.код").toUpper())
-                      // Если в списке полей встретилось поле ключа
-                      keyColumn = columnCount;                                    // Запомним номер столбца с ключом
-              }
-              else
-              {
-                  if (field.contains("__"))
-                      field = field.mid(field.indexOf("__") + 2);
-                  if (field == db->getObjectName("проводки.код").toUpper())
-                      // Если в списке полей встретилось поле ключа
-                      keyColumn = columnCount;                                    // Запомним номер столбца с ключом
-              }
-
-              if (!columnsProperties.value(i).constReadOnly)
-                  // Если поле входит в список сохраняемых полей
-                  tableModel->setUpdateInfo(columnsProperties.value(i).name, columnsProperties.value(i).table, field, columnsProperties.value(i).type, columnsProperties.value(i).length, columnsProperties.value(i).precision, columnCount, keyColumn);
-
-            // Создадим список атрибутов документа, которые могут добавляться при добавлении новой строки документа
             if (columnsProperties.value(i).table == attrName)
             {
+                if (field == db->getObjectName("атрибуты.код").toUpper())
+                // Если в списке полей встретилось поле ключа
+                    keyColumn = columnCount;                                    // Запомним номер столбца с ключом
+
+                // Создадим список атрибутов документа, которые могут добавляться при добавлении новой строки документа
                 QString fieldName = columnsProperties.value(i).column;
                 attrFields.append(fieldName);
                 QString idFieldName = db->getObjectName("код");
@@ -1021,9 +1008,38 @@ bool Document::setTableModel(int)
                     Dictionary* dict = dictionaries->getDictionary(dictName);
                     dict->setAutoLoaded(true);
                 }
+
+                if (!columnsProperties.value(i).constReadOnly)
+                    // Если поле входит в список сохраняемых полей
+                    tableModel->setUpdateInfo(columnsProperties.value(i).name, columnsProperties.value(i).table, field, columnsProperties.value(i).type, columnsProperties.value(i).length, columnsProperties.value(i).precision, columnCount, keyColumn);
             }
+
             columnCount++;      // Считаем столбцы
         }
+
+        columnCount = 0;
+        keyColumn   = 0;
+
+        for (int i = 0; i < columnsProperties.count(); i++)
+        {
+            QString field = columnsProperties.value(i).name;
+
+            if (columnsProperties.value(i).table != attrName)
+            {
+                if (field.contains("__"))
+                    field = field.mid(field.indexOf("__") + 2);
+                if (field == db->getObjectName("проводки.код").toUpper())
+                    // Если в списке полей встретилось поле ключа
+                    keyColumn = columnCount;                                    // Запомним номер столбца с ключом
+
+                if (!columnsProperties.value(i).constReadOnly)
+                    // Если поле входит в список сохраняемых полей
+                    tableModel->setUpdateInfo(columnsProperties.value(i).name, columnsProperties.value(i).table, field, columnsProperties.value(i).type, columnsProperties.value(i).length, columnsProperties.value(i).precision, columnCount, keyColumn);
+            }
+
+            columnCount++;      // Считаем столбцы
+        }
+
         return true;
     }
     app->showError(QString(QObject::trUtf8("Не существует таблица <%1>")).arg(tableName));
@@ -1122,6 +1138,7 @@ int Document::appendDocString(bool repaint)
         fldName = prefix + "ДБКОД";
         if (prvValues.keys().contains(fldName))
             dbId = prvValues.value(fldName).toInt();
+
         dictName = topersList->at(i).dbDictAlias;
         if (dbId == 0 && dictName.size() > 0)           // если скриптами не задан код и есть справочник
         {
@@ -1132,6 +1149,7 @@ int Document::appendDocString(bool repaint)
         fldName = prefix + "КРКОД";
         if (prvValues.keys().contains(fldName))
             crId = prvValues.value(fldName).toInt();
+
         dictName = topersList->at(i).crDictAlias;
         if (crId == 0 && dictName.size() > 0)
         {
@@ -1311,13 +1329,8 @@ int Document::appendDocStrings(int rowCount)
 
 bool Document::saveChanges()
 {
-    bool result = false;
-
     calcItog();
-    result = Essence::saveChanges();
-    if (result)
-        parent->updateCurrentRow();
-    return result;
+    return Essence::saveChanges();
 }
 
 

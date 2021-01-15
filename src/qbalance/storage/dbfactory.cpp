@@ -285,7 +285,6 @@ void DBFactory::setError(QString errText)
         errorText = "Ошибка соединения";
         emergencyExit = true;
     }
-    app->debug(1, " Error: " + errorText);
     app->showError(errText);
     if (emergencyExit)
         app->exit();

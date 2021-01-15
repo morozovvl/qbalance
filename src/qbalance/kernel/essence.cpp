@@ -1598,7 +1598,7 @@ void Essence::submit()
             QVariant oldValue = getOldValue(fieldName);
             QVariant newValue = getValue(fieldName);
 
-            if (newValue != oldValue)    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
+            if (oldValue.isValid() && newValue != oldValue)    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
                 tableModel->prepareCommand(tableModel->index(row, i));
         }
     }
