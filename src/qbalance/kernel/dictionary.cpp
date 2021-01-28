@@ -790,7 +790,7 @@ void Dictionary::updateCurrentRow(int strNum)
 {   // Делает запрос к БД по одной строке справочника. Изменяет в текущей модели поля, которые в БД отличаются от таковых в модели.
     // Применяется после работы формул для изменения полей в строке, которые косвенно изменились
 
-    int str = strNum == 0 ? getId() : strNum;
+    int str = strNum == 0 ? getValue(idFieldName).toInt() : strNum;
 
     preparedSelectCurrentRow.bindValue(":value", str);
 

@@ -116,7 +116,9 @@ void Saldo::lock(bool toLock)
     if (toLock)
     {
         Dictionary* dict = dictionaries->getDictionary(dictionaryName);
-        dict->setId(getValue(idFieldName).toInt());
+        int id = getValue(idFieldName).toInt();
+        if (id > 0)
+            dict->setId(id);
         dict->lock();
         locked = true;
     }
@@ -175,27 +177,30 @@ QString Saldo::transformSelectStatement(QString statement) {
 void Saldo::setPhotoPath(QString path)
 {
     Essence::setPhotoPath(path);
-    dictionaries->getDictionary(dictionaryName)->setPhotoPath(path);
+//    dictionaries->getDictionary(dictionaryName)->setPhotoPath(path);
 }
 
 
 bool Saldo::setId(int id)
 {
-    bool enabled = photoEnabled;
-    photoEnabled = false;
-    bool q = quan;                          // Отменим временно ограничение на нулевые остатки сальдо
-    quan = false;                           // иначе не все сальдо будут видны
-    tableModel->selectStatement();
-    db->insertSaldo(account, id);
-    query(QString("%1.%2='%3' AND %1.%4=%5").arg(db->getObjectNameCom("сальдо"))
-                                            .arg(db->getObjectNameCom("сальдо.СЧЕТ"))
-                                            .arg(account)
-                                            .arg(db->getObjectNameCom("сальдо.КОД"))
-                                            .arg(id));
-    grdTable->selectRow(0);
-    photoEnabled = enabled;
-    quan = q;
-    tableModel->selectStatement();
-    lock(true);
+    if (id > 0)
+    {
+        bool enabled = photoEnabled;
+        photoEnabled = false;
+        bool q = quan;                          // Отменим временно ограничение на нулевые остатки сальдо
+        quan = false;                           // иначе не все сальдо будут видны
+        tableModel->selectStatement();
+        db->insertSaldo(account, id);
+        query(QString("%1.%2='%3' AND %1.%4=%5").arg(db->getObjectNameCom("сальдо"))
+                                        .arg(db->getObjectNameCom("сальдо.СЧЕТ"))
+                                        .arg(account)
+                                        .arg(db->getObjectNameCom("сальдо.КОД"))
+                                        .arg(id));
+        grdTable->selectRow(0);
+        photoEnabled = enabled;
+        quan = q;
+        tableModel->selectStatement();
+        lock(true);
+    }
     return (rowCount() > 0);
 }

@@ -92,11 +92,9 @@ bool Documents::open()
 
         currentDocument = Document::create<Document>(operNumber, this);
         if (currentDocument->open())
-        {
             currentDocument->setFormTitle(subFormTitle);
-//            scriptEngine = currentDocument->getScriptEngine();
-            result = true;
-        }
+
+        result = true;
     }
     else
         app->showError(QString(QObject::trUtf8("Запрещено просматривать операцию <%1> пользователю %2")).arg(formTitle, app->getLogin()));
