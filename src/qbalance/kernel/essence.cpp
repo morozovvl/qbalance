@@ -110,6 +110,7 @@ void Essence::postInitialize(QString name, QObject* parent)
     reportScriptEngine = 0 /*nullptr*/;
     lIsDocument = false;
     cardReaderEnabled = false;
+    modified = false;
 }
 
 
@@ -486,12 +487,15 @@ bool Essence::calculate(bool update)
             if (!scriptEngine->getScriptError())
             {
                 if (scriptEngine->getScriptResult())
+                {
+                    modified = true;
                     lResult = true;
+                }
             }
         }
     }
 
-    if (update && !isView)
+    if (update && !isView && modified)
         saveChanges();
 
     return lResult;
@@ -901,6 +905,8 @@ bool Essence::remove(bool noAsk)
 int Essence::exec()
 {
     int result = 0;
+    modified = false;
+
     if (!opened)
         open();
     if (opened && form != 0 /*nullptr*/)
@@ -915,6 +921,8 @@ int Essence::exec()
 
 void Essence::show()
 {
+    modified = false;
+
     if (!opened)
         open();
     if (opened && form != 0 /*nullptr*/)
@@ -1105,7 +1113,8 @@ bool Essence::isFormSelected()
 
 void Essence::cmdOk()
 {
-    saveChanges();
+    if (modified)
+        saveChanges();
 }
 
 
@@ -1700,3 +1709,11 @@ bool Essence::isMenuMode()
 {
     return menuMode;
 }
+
+
+bool Essence::isModified()
+{
+    return modified;
+}
+
+

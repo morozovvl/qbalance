@@ -138,7 +138,6 @@ public:
     Q_INVOKABLE virtual void setForm(QString = "");
     Q_INVOKABLE virtual void updateCurrentRow(int = 0);
     Q_INVOKABLE void loadDocument();        // Загружает документ перед тем, как его показать
-    Q_INVOKABLE bool isModified();
     Q_INVOKABLE void calcItog();
     bool isSinglePrv();
     bool isQuanAccount();

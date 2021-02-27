@@ -188,12 +188,6 @@ bool Document::getIsSingleString()
 }
 
 
-bool Document::isModified()
-{
-    return docModified;
-}
-
-
 bool Document::isSinglePrv()
 {
     return singlePrv;
@@ -1121,9 +1115,20 @@ int Document::appendDocString(bool repaint)
     foreach (QString dictName, getDictionariesList()->keys())
     {
         Dictionary* dict = dictionaries->getDictionary(dictName);
-        if (dict->isAutoLoaded())
+        if (!dict->isSaldo())
         {
-            prepareValue(dictName, dict);
+            if (dict->isAutoLoaded())
+            {
+                prepareValue(dictName, dict);
+            }
+        }
+        else
+        {
+            Saldo* sal = dictionaries->getSaldo(dictName);
+            if (sal->isAutoLoaded())
+            {
+                prepareValue(dictName, static_cast<Dictionary*>(sal));
+            }
         }
     }
 
@@ -1140,7 +1145,7 @@ int Document::appendDocString(bool repaint)
             dbId = prvValues.value(fldName).toInt();
 
         dictName = topersList->at(i).dbDictAlias;
-        if (dbId == 0 && dictName.size() > 0)           // если скриптами не задан код и есть справочник
+        if (dbId == 0 && dictName.size() > 0 && prvValues.contains(dictName))           // если скриптами не задан код и есть справочник
         {
             dbId = prvValues.value(dictName).toInt();
             if (dbId == 0 && !getIsSingleString())
@@ -1151,7 +1156,7 @@ int Document::appendDocString(bool repaint)
             crId = prvValues.value(fldName).toInt();
 
         dictName = topersList->at(i).crDictAlias;
-        if (crId == 0 && dictName.size() > 0)
+        if (crId == 0 && dictName.size() > 0 && prvValues.contains(dictName))
         {
             crId = prvValues.value(dictName).toInt();
             if (crId == 0 && !getIsSingleString())

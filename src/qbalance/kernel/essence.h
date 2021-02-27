@@ -106,6 +106,7 @@ protected:
     QHash<QString, QVariant> printValues;
     bool                menuMode;           // Форма справочника принимает форму меню
     bool                isView;
+    bool                modified;
 
     virtual void        preparePrintValues();                   // Готовит значения для печати
     virtual void        prepareSelectCurrentRowCommand();
@@ -199,6 +200,7 @@ public:
     Q_INVOKABLE void setGrdTable(TableView* gt);
     Q_INVOKABLE virtual void    setMenuMode(bool);
     Q_INVOKABLE virtual bool    isMenuMode();
+    Q_INVOKABLE bool isModified();
 
 
 // Функции для обеспечения работы скриптов

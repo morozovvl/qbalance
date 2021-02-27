@@ -113,7 +113,11 @@ Saldo* Dictionaries::getSaldo(QString acc)
 {
     if (acc.size() == 0)
         return 0 /*nullptr*/;
-    QString alias = "saldo" + acc;
+
+    QString alias = acc;
+    if (!acc.contains("saldo"))
+        alias = "saldo" + acc;
+
     if (!dictionariesList.contains(alias))
     {             // Если справочник с таким именем не существует, то попробуем его создать
         if (!addSaldo(acc))

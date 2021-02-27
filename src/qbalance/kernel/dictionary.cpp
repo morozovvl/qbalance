@@ -552,6 +552,7 @@ int Dictionary::getId(int row, bool forceToRefresh)
                     return result;
             }
         }
+
         if (filter.size() > 0)
         {
             query(filter);
@@ -560,7 +561,9 @@ int Dictionary::getId(int row, bool forceToRefresh)
             else
                 result = Essence::getId(0);
         }
+
     }
+
     return result;
 }
 
@@ -579,7 +582,7 @@ bool Dictionary::setId(int id)
                 if (!dict->isSet())
                 {
                     int val = getValue(QString("%1_%2").arg(idFieldName).arg(dictName).toUpper(), 0).toInt();
-                    if (val > 0)
+                    if (val >= 0)
                         dict->setId(val);
                 }
             }
