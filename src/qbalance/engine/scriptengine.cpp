@@ -843,12 +843,9 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("Saldo", newQMetaObject(&QObject::staticMetaObject, newFunction(SaldoConstructor)));
     qScriptRegisterMetaType(this, DictionariesToScriptValue, DictionariesFromScriptValue);
     globalObject().setProperty("Dictionaries", newQMetaObject(&QObject::staticMetaObject, newFunction(DictionariesConstructor)));
-//    globalObject().setProperty("Dictionaries", newQObject(parent->getDictionaries()));
     qScriptRegisterMetaType(this, DocumentsToScriptValue, DocumentsFromScriptValue);
-//    globalObject().setProperty("Documents", newQMetaObject(&QObject::staticMetaObject, newFunction(DocumentsConstructor)));
     globalObject().setProperty("Documents", newQObject(documents));
     qScriptRegisterMetaType(this, DocumentToScriptValue, DocumentFromScriptValue);
-//    globalObject().setProperty("Document", newQMetaObject(&QObject::staticMetaObject, newFunction(DocumentConstructor)));
     globalObject().setProperty("Document", newQObject(document));
     qScriptRegisterMetaType(this, CalendarFormToScriptValue, CalendarFormFromScriptValue);
     globalObject().setProperty("CalendarForm", newQMetaObject(&QObject::staticMetaObject, newFunction(CalendarFormConstructor)));
@@ -908,25 +905,12 @@ void ScriptEngine::loadScriptObjects()
     if (documents != 0 /*nullptr*/)
         globalObject().setProperty("documents", newQObject(documents/*, QScriptEngine::ScriptOwnership*/));
 
-/*
-    foreach (const QString &ext, availableExtensions())
-    {
-        qDebug() << ext;
-        importExtension(ext);
-    }
-*/
     importExtension("qt");
     importExtension("qt.core");
     importExtension("qt.gui");
     importExtension("qt.sql");
     importExtension("qt.xml");
 
-
-    //    importExtension("qt.network");
-//    importExtension("qt.opengl");
-//    importExtension("qt.svg");
-//    importExtension("qt.uitools");
-//    importExtension("qt.xmlpatterns");
 }
 
 

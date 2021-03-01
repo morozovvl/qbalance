@@ -845,6 +845,13 @@ void TApplication::close()
 {
     closePlugins();
 
+    foreach(QString loaderName, loaders.keys())
+    {
+        QPluginLoader* loader = loaders.value(loaderName);
+        loader->unload();
+        delete loader;
+    }
+
     if (updates != 0 /*nullptr*/)
     {
         updates->close();
@@ -1272,15 +1279,16 @@ QObject* TApplication::createPlugin(QString fileName)
 #endif
     if (QDir().exists(pluginFile))
     {
-        QPluginLoader loader(pluginFile, this);
-        loader.setLoadHints(QLibrary::ResolveAllSymbolsHint);
-        loader.load();
-        if (loader.isLoaded())
+        QPluginLoader* loader = new QPluginLoader(pluginFile, this);
+        loader->setLoadHints(QLibrary::ResolveAllSymbolsHint);
+        loader->load();
+        if (loader->isLoaded())
         {
-            result = loader.instance();
+            loaders.insert(pluginFile, loader);
+            result = loader->instance();
         }
         else
-            showError(loader.errorString());
+            showError(loader->errorString());
     }
     return result;
 }

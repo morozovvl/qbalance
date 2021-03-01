@@ -379,6 +379,7 @@ private:
     void            setConfigValue(QString name, QVariant value);
     void            setConfigTypeName(QString type, QString name) { configTypes.insert(type, name); }
     void            writeToDebugFile(QString, QString);
+    QHash<QString, QPluginLoader*> loaders;
 
 private slots:
     void                    setTimeIsOut();
