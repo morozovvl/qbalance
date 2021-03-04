@@ -91,7 +91,6 @@ void Document::postInitialize(int oper, Documents* par)
     lPrintable = true;
     lInsertable = true;
     lDeleteable = true;
-//    lUpdateable = true;
     lUpdateable = parent->isUpdateable();
     isDictionary = false;
     lIsDocument = true;
@@ -99,7 +98,6 @@ void Document::postInitialize(int oper, Documents* par)
     cardReaderEnabled = true;
 
     localDictsOpened = false;
-    docModified = false;
     doSubmit = false;                 // По умолчанию не будем обновлять записи в БД сразу, чтобы собрать обновления в транзакцию
     photoEnabled = true;
     quanAccount = false;
@@ -207,13 +205,11 @@ bool Document::calculate(bool)
     {
         if (Essence::calculate())           // После вычисление не сохранять
         {   // Если в вычислениях не было ошибки
-            docModified = true;
             lResult = true;
         }
         else
         {
             restoreOldValues();                     // и восстановим старые значения
-            docModified = false;
         }
     }
     return lResult;
@@ -580,7 +576,6 @@ void Document::show()
     app->debug(1, QString("Opened document %1 (ОПЕР=%2, НОМЕР=%3)").arg(docId).arg(operNumber).arg(parent->getValue("НОМЕР").toString()));
     locked = lockDocument();
     setEnabled(locked);                      // Если заблокировать не удалось
-    docModified = false;
     query();
     Essence::show();
 }
@@ -594,7 +589,6 @@ int Document::exec()
     app->debug(1, QString("Opened document %1 (ОПЕР=%2, НОМЕР=%3)").arg(docId).arg(operNumber).arg(parent->getValue("НОМЕР").toString()));
     locked = lockDocument();
     setEnabled(locked);                      // Если заблокировать не удалось
-    docModified = false;
     query();
     result = Essence::exec();
     unlockDocument();

@@ -73,8 +73,7 @@ bool                TApplication::loadDefaultConfig = false;
 bool                TApplication::fullDebugInfo = false;                  // По умолчанию выводится неполная отладочная информация (для лучшей читаемости журнала)
 QString             TApplication::trueApplicationName = "qbalance";
 QString             TApplication::homeDir = "";
-
-
+bool                TApplication::noDebug = false;
 
 
 TApplication::TApplication(int & argc, char** argv)
@@ -1334,12 +1333,18 @@ void TApplication::setDebugMode(int value, bool active)
     {
         if (DebugModes.contains(valName))
             DebugModes.removeAll(valName);
+        else if (value == 0)
+        {
+            DebugModes.clear();
+            noDebug = true;
+        }
     }
 }
 
+
 void TApplication::debug(int mode, const QString& value, bool timeIsEnabled)
 {
-    if ((writeDebug && isDebugMode(mode)) || mode == 0)
+    if (((writeDebug && isDebugMode(mode)) || mode == 0) && !noDebug)
     {
         QString debugMode = QString("%1").arg(mode);
         if (DebugModes.contains("") || mode == 0)
@@ -2276,6 +2281,7 @@ bool TApplication::readParameters(int argc, char *argv[])
                 out << QObject::trUtf8("  -d4| --debug4     - Включить журнал устройства COM-порта (файл debug4.log)\n");
                 out << QObject::trUtf8("  -d5| --debug5     - Включить журнал обмена между экземплярами приложения (файл debug5.log)\n");
                 out << QObject::trUtf8("  -d6| --debug6     - Включить журнал банковского терминала (файл debug6.log)\n");
+                out << QObject::trUtf8("  -do| --debugoff   - Отключить все журналы\n");
                 out << QObject::trUtf8("  -ul| --unitelogs  - Объединить все включенные журналы отладки в одном файле (debug.log)\n");
                 out << QObject::trUtf8("  -fd| --fulldebug  - Выводить полную отладочную информацию (по умолчанию выключено)\n");
                 out << QObject::trUtf8("  -h | --host       - IP адрес хоста\n");
@@ -2333,6 +2339,11 @@ bool TApplication::readParameters(int argc, char *argv[])
                  parameter.compare("--debug6", Qt::CaseInsensitive) == 0)
             {
                 setDebugMode(6);
+            }
+            else if (parameter.compare("-do", Qt::CaseInsensitive) == 0 ||
+                 parameter.compare("--debugoff", Qt::CaseInsensitive) == 0)
+            {
+                setDebugMode(0, false);
             }
             else if (parameter.compare("-ul", Qt::CaseInsensitive) == 0 ||
                  parameter.compare("--unitelogs", Qt::CaseInsensitive) == 0)

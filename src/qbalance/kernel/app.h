@@ -339,7 +339,8 @@ private:
     EMailClient*            smtpclient;
     GSMmodem*               gsmModem;
     bool                    fsWebCamIsValid;
-    static QList<QString>       DebugModes;
+    static bool             noDebug;
+    static QList<QString>   DebugModes;
     static TApplication*    Exemplar;
     DBFactory*              db;
     bool                    barCodeReaded;

@@ -294,7 +294,6 @@ void DBFactory::setError(QString errText)
 bool DBFactory::beginTransaction()
 {
     QString command = "BEGIN;";
-//    app->debug(1, command);
     return exec(command);
 }
 
@@ -302,7 +301,6 @@ bool DBFactory::beginTransaction()
 void DBFactory::commitTransaction()
 {
     QString command = "COMMIT;";
-//    app->debug(1, command);
     exec(command);
 }
 
@@ -310,7 +308,6 @@ void DBFactory::commitTransaction()
 void DBFactory::rollbackTransaction()
 {
     QString command = "ROLLBACK;";
-//    app->debug(1, command);
     exec(command);
 }
 

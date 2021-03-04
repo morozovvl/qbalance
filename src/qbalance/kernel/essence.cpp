@@ -1623,6 +1623,7 @@ bool Essence::saveChanges()
     if (db->execCommands())
     {
         updateCurrentRow();
+        modified = true;
         lResult = true;
     }
     else       // Во время сохранения результатов произошла ошибка

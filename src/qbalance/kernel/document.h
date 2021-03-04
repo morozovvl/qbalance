@@ -57,7 +57,6 @@ private:
     QHash<QString, QVariant>        oldValues0;         // Старые значения для первой строки документа - там хранятся значения "свободной" проводки
     QList<ToperType>*               topersList;
     bool                            localDictsOpened;
-    bool                            docModified;
     bool                            quanAccount;        // В проводках есть количественный учет
     bool                            singlePrv;          // Проводка простая (одиночная)
     bool                            addingFromQuery;
