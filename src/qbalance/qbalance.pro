@@ -123,7 +123,8 @@ SOURCES += main.cpp \
     storage/sqlitedbfactory.cpp \
     kernel/report.cpp \
     kernel/reports.cpp \
-    odfpreviewlib/odfpreviewlib.cpp
+    odfpreviewlib/odfpreviewlib.cpp \
+    ../sqlite/sqlite3.c
 
 HEADERS +=  gui/passwordform.h \
     gui/form.h \
@@ -200,7 +201,9 @@ HEADERS +=  gui/passwordform.h \
     storage/mymultilist.h \
     kernel/report.h \
     kernel/reports.h \
-    odfpreviewlib/odfpreviewlib.h
+    odfpreviewlib/odfpreviewlib.h \
+    ../sqlite/sqlite3.h \
+    ../sqlite/sqlite3ext.h
 
 
 RESOURCES += ../../resources.qrc
@@ -238,14 +241,18 @@ unix {
  icons.files =  qbalance.png
  INSTALLS +=  target  desktop  icons
 # LIBS += ../../lib/libqextserialport.so
-    LIBS += -lsqlite3
+#    LIBS += -lsqlite3
+    LIBS += -ldl
 }
 
 windows {
     TARGET = ../../../$${APP_NAME}
 #    RC_FILE+=resources.rc
 #    LIBS += ../../qextserialport1.dll
-    LIBS += ../../sqlite3.dll
+    LIBS += ../../quazip.dll
+#    LIBS += ../../sqlite3.dll
+#    LIBS += -ldl
+
 }
 
 OTHER_FILES += \

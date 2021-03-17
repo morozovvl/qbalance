@@ -1296,7 +1296,6 @@ void Document::setNumber(QString number)
     parent->setValue(field, QVariant(number));
     static_cast<FormDocument*>(getForm())->getNumberEdit()->repaint();
     static_cast<FormDocument*>(getForm())->getNumberEdit()->setText(getParent()->getValue(field).toString());
-
 }
 
 
@@ -1317,6 +1316,7 @@ void Document::cmdOk()
 {
     Dictionary::cmdOk();
     parent->showItog();
+    parent->saveChanges();
 }
 
 

@@ -560,7 +560,7 @@ void TApplication::initConfig()
     setConfig("password", "PASSWORD_BUTTON", "", CONFIG_VALUE_PUSHBUTTON, "Сменить пароль");
 
     setConfigTypeName("openoffice", "OpenOffice");
-    setConfig("openoffice", "OO_NEEDED", "Использовать OpenOffice", CONFIG_VALUE_BOOLEAN, false);
+    setConfig("openoffice", "OO_NEEDED", "Использовать OpenOffice", CONFIG_VALUE_BOOLEAN, true);
     setConfig("openoffice", "OO_PATH", "Каталог OpenOffice", CONFIG_VALUE_STRING, "");
 
     setConfigTypeName("emailclient", "E-Mail");

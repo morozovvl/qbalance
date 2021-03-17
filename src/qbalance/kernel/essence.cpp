@@ -614,6 +614,8 @@ void Essence::setValue(QString n, QVariant value, int row)
                 }
                 else
                     tableModel->setData(index, value);  // QSqlQuery::value: not positioned on a valid record
+
+                modified = true;
                 break;
             }
         }
@@ -1113,8 +1115,7 @@ bool Essence::isFormSelected()
 
 void Essence::cmdOk()
 {
-    if (modified)
-        saveChanges();
+    saveChanges();
 }
 
 
@@ -1235,7 +1236,10 @@ void Essence::updateCurrentRow(int strNum)
             QVariant value = preparedSelectCurrentRow.record().value(fieldName);
             QVariant recValue = tableModel->record(str).value(fieldName);
             if (value != recValue)
+            {
                 tableModel->setData(tableModel->index(str, i), value, true);
+                modified = true;
+            }
         }
         setCurrentIndex(index);
     }
@@ -1618,16 +1622,19 @@ bool Essence::saveChanges()
 {
     bool lResult = false;
 
-    submit();
-
-    if (db->execCommands())
+    if (modified)
     {
-        updateCurrentRow();
-        modified = true;
-        lResult = true;
+        submit();
+
+        if (db->execCommands())
+        {
+            updateCurrentRow();
+            modified = false;
+            lResult = true;
+        }
+        else       // Во время сохранения результатов произошла ошибка
+            restoreOldValues();
     }
-    else       // Во время сохранения результатов произошла ошибка
-        restoreOldValues();
     return lResult;
 }
 
