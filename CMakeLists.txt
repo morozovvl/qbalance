@@ -14,7 +14,7 @@ set(CPACK_PACKAGE_RELEASE 1)
 set (PROJECT0 qbalance)
 set (PROJECT1 qb_main)
 
-SET (CMAKE_CXX_FLAGS "-ludev" )
+SET (CMAKE_CXX_FLAGS "-ludev -lquazip" )
 
 find_package (Qt4 REQUIRED)
 include(${QT_USE_FILE})
@@ -24,7 +24,7 @@ add_subdirectory(src/qbalance/barcodereader)
 add_subdirectory(src/qbalance/cardcodereader)
 add_subdirectory(src/qbalance/driverfr)
 add_subdirectory(src/qbalance/emailclient)
-add_subdirectory(src/qbalance/odfpreviewlib)
+#add_subdirectory(src/qbalance/odfpreviewlib)
 add_subdirectory(src/qbalance)
 
 set(CMAKE_AUTOMOC OFF)

@@ -167,10 +167,10 @@ bool DBFactory::createNewDBs(QString hostName, QString dbName, int port)
     {
         const QString login = frm->getLogin();
         const QString password = frm->getPassword();
-/*
+
         if (open(login, password))
         {
-*/
+
             const QStringList scripts = initializationScriptList();
             if (scripts.size() > 0)
             {
@@ -184,11 +184,11 @@ bool DBFactory::createNewDBs(QString hostName, QString dbName, int port)
             else
                 app->showError(QString(QObject::trUtf8("Не найден файл(ы) инициализации БД (initdb*.sql).")));
             close();
-/*
+
        }
        else
           app->showError(QObject::trUtf8("Не удалось создать соединение с сервером."));
-*/
+
     }
     delete frm;
 
