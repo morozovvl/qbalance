@@ -165,29 +165,22 @@ bool DBFactory::createNewDBs(QString hostName, QString dbName, int port)
     frm->addLogin("postgres");
     if (frm->exec())
     {
-        const QString login = frm->getLogin();
+//        const QString login = frm->getLogin();
         const QString password = frm->getPassword();
+        const QStringList scripts = initializationScriptList();
 
-        if (open(login, password))
+        if (scripts.size() > 0)
         {
-
-            const QStringList scripts = initializationScriptList();
+            createNewDB(dbName, password, scripts);
+            const QStringList extScripts = initializationScriptList("ext");
             if (scripts.size() > 0)
             {
-                createNewDB(dbName, password, scripts);
-                const QStringList extScripts = initializationScriptList("ext");
-                if (scripts.size() > 0)
-                {
-                    createNewDB(dbName + "_extend", password, extScripts);
-                }
+                createNewDB(dbName + "_extend", password, extScripts);
             }
-            else
-                app->showError(QString(QObject::trUtf8("Не найден файл(ы) инициализации БД (initdb*.sql).")));
-            close();
-
-       }
-       else
-          app->showError(QObject::trUtf8("Не удалось создать соединение с сервером."));
+        }
+        else
+            app->showError(QString(QObject::trUtf8("Не найден файл(ы) инициализации БД (initdb*.sql).")));
+        close();
 
     }
     delete frm;

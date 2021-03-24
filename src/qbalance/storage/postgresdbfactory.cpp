@@ -11,6 +11,8 @@ PostgresDBFactory::PostgresDBFactory(): DBFactory()
     db = new QSqlDatabase(QSqlDatabase::addDatabase("QPSQL"));
     if (db->isValid())
         dbExtend = new QSqlDatabase(QSqlDatabase::addDatabase("QPSQL", "qt_sql_pictures_connection"));
+    else
+        app->showError(db->driverName());
 }
 
 
