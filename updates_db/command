@@ -1,0 +1,18 @@
+#! /bin/sh
+
+#cp /home/vladimir/work1/Backup/enterprise ./enterprise.bak
+#sudo service postgresql start
+PGPASSWORD=123456 dropdb -U sa qbalance
+PGPASSWORD=123456 dropdb -U sa qbalance_extend
+PGPASSWORD=123456 createdb -U sa qbalance
+#dropdb -U sa enterprise
+#createdb -U sa enterprise
+#psql -U sa enterprise < ./enterprise.bak
+PGPASSWORD=123456 psql -U sa qbalance < ./enterprise.bak
+PGPASSWORD=123456 psql -U sa -c "DELETE FROM блокдокументов" qbalance
+PGPASSWORD=123456 psql -U sa qbalance < ./очистка_РАБОЧЕЙ_базы.sql
+PGPASSWORD=123456 pg_dump -U sa qbalance > ../initdb1.sql
+PGPASSWORD=123456 dropdb -U sa qbalance
+
+
+
