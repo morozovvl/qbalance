@@ -35,6 +35,7 @@ private:
     QDate       beginDate;
     QDate       endDate;
     bool        dictEnabled;
+    bool        isQuan;
 
 protected:
     Report(QString = "", QObject* parent = 0 /*nullptr*/);

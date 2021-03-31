@@ -42,6 +42,7 @@ bool Report::open(QDate bDate, QDate eDate, QString acc, QString)
     setTagName("оборот" + account);
 
     dict = app->getDictionary(db->getAccountsValue(account, "ИМЯСПРАВОЧНИКА").toString());
+    isQuan = db->getAccountsValue(account, "КОЛИЧЕСТВО").toBool();
 
     if (dict != 0 /*nullptr*/)
     {
@@ -65,7 +66,15 @@ bool Report::open(QDate bDate, QDate eDate, QString acc, QString)
                 table->appendColumnDefinition("ДОКУМЕНТ", "Документ");
                 table->appendColumnDefinition("НОМЕР", "№ док.");
                 table->appendColumnDefinition("КОММЕНТАРИЙ", "Комментарий");
+
+                if (isQuan)
+                    table->appendColumnDefinition("ДБКОЛ", "Дб.Кол", true, 10, 3);
+
                 table->appendColumnDefinition("ДЕБЕТ", "Дебет", true, 10, 2);
+
+                if (isQuan)
+                    table->appendColumnDefinition("КРКОЛ", "Кр.Кол", true, 10, 3);
+
                 table->appendColumnDefinition("КРЕДИТ", "Кредит", true, 10, 2);
 
                 if (form->getButtonView() != 0 /*nullptr*/)
@@ -109,7 +118,10 @@ void Report::preparePrintValues()   // Готовит значения для п
 QString Report::getReportSqlSelectStatement(int id, QDate begDate, QDate endDate)
 {
     QString command = db->getCalcObjOborotCommand(account, id, begDate, endDate);
-    command = QString("SELECT ДАТА, ОПЕРНОМЕР, ОПЕРИМЯ, ДОКУМЕНТ, НОМЕР, КОММЕНТАРИЙ, ДЕБЕТ, КРЕДИТ FROM (%1) s").arg(command);
+    if (isQuan)
+        command = QString("SELECT ДАТА, ОПЕРНОМЕР, ОПЕРИМЯ, ДОКУМЕНТ, НОМЕР, КОММЕНТАРИЙ, ДБКОЛ, ДЕБЕТ, КРКОЛ, КРЕДИТ FROM (%1) s").arg(command);
+    else
+        command = QString("SELECT ДАТА, ОПЕРНОМЕР, ОПЕРИМЯ, ДОКУМЕНТ, НОМЕР, КОММЕНТАРИЙ, ДЕБЕТ, КРЕДИТ FROM (%1) s").arg(command);
     return command;
 }
 

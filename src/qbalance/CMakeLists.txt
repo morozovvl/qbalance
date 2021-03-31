@@ -5,7 +5,7 @@
 
 project (${PROJECT0})
 
-find_library(LIB_SQLITE3 sqlite3 libsqlite3.so)
+find_library(LIB_SQLITE3 sqlite3)
 
 add_subdirectory(engine)
 add_subdirectory(gui)

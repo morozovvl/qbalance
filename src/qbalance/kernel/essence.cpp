@@ -481,10 +481,10 @@ bool Essence::calculate(bool update)
     if (scriptEngineEnabled && scriptEngine != 0 /*nullptr*/)
     {
         scriptEngine->eventCalcTable();
-        if (!scriptEngine->getScriptError())
+        if (scriptEngine->getScriptResult())
         {
             scriptEngine->eventAfterCalculate();
-            if (!scriptEngine->getScriptError())
+            if (scriptEngine->getScriptResult())
             {
                 if (scriptEngine->getScriptResult())
                 {
@@ -568,14 +568,6 @@ QVariant Essence::getValue(QString n, int row)
                 result = QVariant(QDate().fromString(result.toString(), app->dateFormat()));
             }
         }
-/*
-        else
-        {
-            app->showError(QObject::trUtf8("Не существует колонки ") + n + QObject::trUtf8(" в таблице ") + tableName);
-//            app->print(QObject::trUtf8("Не существует колонки ") + n + QObject::trUtf8(" в таблице ") + tableName);
-//            scriptEngine->setScriptError();
-        }
-*/
     }
     return result;
 }

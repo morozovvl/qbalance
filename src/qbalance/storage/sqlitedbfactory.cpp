@@ -438,29 +438,33 @@ bool SQLiteDBFactory::open(QString, QString)
                 sqlite3 *db_handle = *static_cast<sqlite3 **>(v.data());
                 if (db_handle != 0 /*nullptr*/)
                 {
-                    sqlite3_initialize();
+//                    if (sqlite3_open("qbalance.sqlite3", &db_handle) == 0)
+//                    {
+                        sqlite3_initialize();
 
-                    sqlite3_create_function(db_handle, "upper", 1, SQLITE_UTF8, 0 /*nullptr*/, &upperFunc, 0 /*nullptr*/, 0 /*nullptr*/);
-                    sqlite3_create_function(db_handle, "UPPER", 1, SQLITE_UTF8, 0 /*nullptr*/, &upperFunc, 0 /*nullptr*/, 0 /*nullptr*/);
-                    sqlite3_create_function(db_handle, "Upper", 1, SQLITE_UTF8, 0 /*nullptr*/, &upperFunc, 0 /*nullptr*/, 0 /*nullptr*/);
+                        sqlite3_create_function(db_handle, "upper", 1, SQLITE_UTF8, 0 /*nullptr*/, &upperFunc, 0 /*nullptr*/, 0 /*nullptr*/);
+                        sqlite3_create_function(db_handle, "UPPER", 1, SQLITE_UTF8, 0 /*nullptr*/, &upperFunc, 0 /*nullptr*/, 0 /*nullptr*/);
+                        sqlite3_create_function(db_handle, "Upper", 1, SQLITE_UTF8, 0 /*nullptr*/, &upperFunc, 0 /*nullptr*/, 0 /*nullptr*/);
 
-                    sqlite3_create_function(db_handle, "lower", 1, SQLITE_UTF8, 0 /*nullptr*/, &lowerFunc, 0 /*nullptr*/, 0 /*nullptr*/);
-                    sqlite3_create_function(db_handle, "LOWER", 1, SQLITE_UTF8, 0 /*nullptr*/, &lowerFunc, 0 /*nullptr*/, 0 /*nullptr*/);
-                    sqlite3_create_function(db_handle, "Lower", 1, SQLITE_UTF8, 0 /*nullptr*/, &lowerFunc, 0 /*nullptr*/, 0 /*nullptr*/);
+                        sqlite3_create_function(db_handle, "lower", 1, SQLITE_UTF8, 0 /*nullptr*/, &lowerFunc, 0 /*nullptr*/, 0 /*nullptr*/);
+                        sqlite3_create_function(db_handle, "LOWER", 1, SQLITE_UTF8, 0 /*nullptr*/, &lowerFunc, 0 /*nullptr*/, 0 /*nullptr*/);
+                        sqlite3_create_function(db_handle, "Lower", 1, SQLITE_UTF8, 0 /*nullptr*/, &lowerFunc, 0 /*nullptr*/, 0 /*nullptr*/);
 
 
-                    sqlite3_create_function(db_handle, "encode", 2, SQLITE_UTF8, 0 /*nullptr*/, &encodeFunc, 0 /*nullptr*/, 0 /*nullptr*/);
-                    sqlite3_create_function(db_handle, "ENCODE", 2, SQLITE_UTF8, 0 /*nullptr*/, &encodeFunc, 0 /*nullptr*/, 0 /*nullptr*/);
-                    sqlite3_create_function(db_handle, "Encode", 2, SQLITE_UTF8, 0 /*nullptr*/, &encodeFunc, 0 /*nullptr*/, 0 /*nullptr*/);
+                        sqlite3_create_function(db_handle, "encode", 2, SQLITE_UTF8, 0 /*nullptr*/, &encodeFunc, 0 /*nullptr*/, 0 /*nullptr*/);
+                        sqlite3_create_function(db_handle, "ENCODE", 2, SQLITE_UTF8, 0 /*nullptr*/, &encodeFunc, 0 /*nullptr*/, 0 /*nullptr*/);
+                        sqlite3_create_function(db_handle, "Encode", 2, SQLITE_UTF8, 0 /*nullptr*/, &encodeFunc, 0 /*nullptr*/, 0 /*nullptr*/);
 
-                    sqlite3_create_function(db_handle, "insertPrv", 7, SQLITE_UTF8, 0 /*nullptr*/, &insertPrvFunc, 0 /*nullptr*/, 0 /*nullptr*/);
-                    sqlite3_create_function(db_handle, "calcPrv", 12, SQLITE_UTF8, 0 /*nullptr*/, &calcPrvFunc, 0 /*nullptr*/, 0 /*nullptr*/);
-                    sqlite3_create_function(db_handle, "removePrv", 6, SQLITE_UTF8, 0 /*nullptr*/, &removePrvFunc, 0 /*nullptr*/, 0 /*nullptr*/);
+                        sqlite3_create_function(db_handle, "insertPrv", 7, SQLITE_UTF8, 0 /*nullptr*/, &insertPrvFunc, 0 /*nullptr*/, 0 /*nullptr*/);
+                        sqlite3_create_function(db_handle, "calcPrv", 12, SQLITE_UTF8, 0 /*nullptr*/, &calcPrvFunc, 0 /*nullptr*/, 0 /*nullptr*/);
+                        sqlite3_create_function(db_handle, "removePrv", 6, SQLITE_UTF8, 0 /*nullptr*/, &removePrvFunc, 0 /*nullptr*/, 0 /*nullptr*/);
+
+                        return true;
+
+//                    }
 
                 }
             }
-
-            return true;
         }
     }
     return false;

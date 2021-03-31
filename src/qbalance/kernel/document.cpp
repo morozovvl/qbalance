@@ -201,9 +201,9 @@ bool Document::isQuanAccount()
 bool Document::calculate(bool)
 {
     bool lResult = false;
-    if (enabled && !scriptEngine->getScriptError())             // Если это не повторный вход в функцию и разрешено редактирование документа
+    if (enabled)             // Если разрешено редактирование документа
     {
-        if (Essence::calculate())           // После вычисление не сохранять
+        if (Essence::calculate())
         {   // Если в вычислениях не было ошибки
             lResult = true;
         }

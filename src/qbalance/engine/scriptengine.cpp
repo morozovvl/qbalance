@@ -749,18 +749,6 @@ int ScriptEngine::getScriptResult()
 }
 
 
-void ScriptEngine::setScriptError()
-{
-    scriptError = true;
-}
-
-
-bool ScriptEngine::getScriptError()
-{
-    return scriptError;
-}
-
-
 void ScriptEngine::setIsDocumentScript(bool docScr)
 {
     globalObject().setProperty("isDocumentScript", docScr);
@@ -1494,7 +1482,6 @@ QScriptValue ScriptEngine::scriptCall(QString eventName, const QScriptValue &thi
     {
         QString program = scriptFileName + ":" + eventName;
         TApplication::exemplar()->debug(3, program);
-        scriptError = false;
         result = globalObject().property(eventName).call(thisObject, args);
         if (hasUncaughtException())
         {   // Если в скриптах произошла ошибка

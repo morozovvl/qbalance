@@ -1,6 +1,6 @@
 #! /bin/sh
 
-#cp /home/vladimir/work1/Backup/enterprise ./enterprise.bak
+cp /home/vladimir/work1/Backup/enterprise ./enterprise.bak
 #sudo service postgresql start
 PGPASSWORD=123456 dropdb -U sa qbalance
 PGPASSWORD=123456 dropdb -U sa qbalance_extend

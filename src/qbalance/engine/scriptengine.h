@@ -68,8 +68,6 @@ public:
     QString getErrorMessage();
     virtual void setErrorMessage(QString error = "");
     int getScriptResult();
-    virtual void    setScriptError();
-    virtual bool    getScriptError();
     void setIsDocumentScript(bool docScr);
     QString getScriptFileName();
     Essence* getParent();
@@ -127,7 +125,6 @@ private:
     static QHash<QString, QString> scripts;
     int                 scriptResult;
     QString             errorMessage;
-    bool                scriptError;
     QString             lastErrorMessage;
     QString             scriptFileName;
     SqlQueryClass*      sqlQueryClass;
