@@ -1621,7 +1621,6 @@ bool Essence::saveChanges()
         if (db->execCommands())
         {
             updateCurrentRow();
-            modified = false;
             lResult = true;
         }
         else       // Во время сохранения результатов произошла ошибка

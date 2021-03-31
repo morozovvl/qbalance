@@ -186,7 +186,7 @@ public:
     Q_INVOKABLE void setUpdateable(bool b);
     Q_INVOKABLE void setPrintable(bool b);
     Q_INVOKABLE virtual void setEnabled(bool);
-    Q_INVOKABLE bool isEnabled();
+    Q_INVOKABLE virtual bool isEnabled();
     Q_INVOKABLE void hideAllGridSections();
     Q_INVOKABLE void hideGridSection(QString columnName);
     Q_INVOKABLE void showGridSection(QString columnName);
@@ -200,7 +200,7 @@ public:
     Q_INVOKABLE void setGrdTable(TableView* gt);
     Q_INVOKABLE virtual void    setMenuMode(bool);
     Q_INVOKABLE virtual bool    isMenuMode();
-    Q_INVOKABLE bool isModified();
+    Q_INVOKABLE virtual bool isModified();
 
 
 // Функции для обеспечения работы скриптов
