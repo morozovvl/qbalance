@@ -8,7 +8,6 @@
 #include "../kernel/app.h"
 #include <iostream>
 #include <sstream>
-#include "../../sqlite/sqlite3.h"
 //#include "fixed_point.h"
 
 //using namespace std;
@@ -440,7 +439,8 @@ bool SQLiteDBFactory::open(QString, QString)
                 {
 //                    if (sqlite3_open("qbalance.sqlite3", &db_handle) == 0)
 //                    {
-                        sqlite3_initialize();
+
+                        qDebug() << sqlite3_initialize();
 
                         sqlite3_create_function(db_handle, "upper", 1, SQLITE_UTF8, 0 /*nullptr*/, &upperFunc, 0 /*nullptr*/, 0 /*nullptr*/);
                         sqlite3_create_function(db_handle, "UPPER", 1, SQLITE_UTF8, 0 /*nullptr*/, &upperFunc, 0 /*nullptr*/, 0 /*nullptr*/);
@@ -450,19 +450,16 @@ bool SQLiteDBFactory::open(QString, QString)
                         sqlite3_create_function(db_handle, "LOWER", 1, SQLITE_UTF8, 0 /*nullptr*/, &lowerFunc, 0 /*nullptr*/, 0 /*nullptr*/);
                         sqlite3_create_function(db_handle, "Lower", 1, SQLITE_UTF8, 0 /*nullptr*/, &lowerFunc, 0 /*nullptr*/, 0 /*nullptr*/);
 
-
                         sqlite3_create_function(db_handle, "encode", 2, SQLITE_UTF8, 0 /*nullptr*/, &encodeFunc, 0 /*nullptr*/, 0 /*nullptr*/);
                         sqlite3_create_function(db_handle, "ENCODE", 2, SQLITE_UTF8, 0 /*nullptr*/, &encodeFunc, 0 /*nullptr*/, 0 /*nullptr*/);
                         sqlite3_create_function(db_handle, "Encode", 2, SQLITE_UTF8, 0 /*nullptr*/, &encodeFunc, 0 /*nullptr*/, 0 /*nullptr*/);
 
                         sqlite3_create_function(db_handle, "insertPrv", 7, SQLITE_UTF8, 0 /*nullptr*/, &insertPrvFunc, 0 /*nullptr*/, 0 /*nullptr*/);
                         sqlite3_create_function(db_handle, "calcPrv", 12, SQLITE_UTF8, 0 /*nullptr*/, &calcPrvFunc, 0 /*nullptr*/, 0 /*nullptr*/);
-                        sqlite3_create_function(db_handle, "removePrv", 6, SQLITE_UTF8, 0 /*nullptr*/, &removePrvFunc, 0 /*nullptr*/, 0 /*nullptr*/);
+                        sqlite3_create_function(db_handle, "removeprv", 6, SQLITE_UTF8, 0 /*nullptr*/, &removePrvFunc, 0 /*nullptr*/, 0 /*nullptr*/);
 
                         return true;
-
 //                    }
-
                 }
             }
         }

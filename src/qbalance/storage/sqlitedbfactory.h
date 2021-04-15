@@ -1,6 +1,7 @@
 #ifndef SQLITEDBFACTORY_H
 #define SQLITEDBFACTORY_H
 #include "dbfactory.h"
+#include "../../sqlite/sqlite3.h"
 
 
 class SQLiteDBFactory : public DBFactory
@@ -52,6 +53,8 @@ public:
 
 private:
     void _reloadColumnProperties(QString, QString);
+//    sqlite3*    db_handle;
+
 };
 
 #endif // SQLITEDBFACTORY_H
