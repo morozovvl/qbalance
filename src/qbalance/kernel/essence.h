@@ -201,6 +201,7 @@ public:
     Q_INVOKABLE virtual void    setMenuMode(bool);
     Q_INVOKABLE virtual bool    isMenuMode();
     Q_INVOKABLE virtual bool isModified();
+    Q_INVOKABLE virtual void setModified(bool);
 
 
 // Функции для обеспечения работы скриптов

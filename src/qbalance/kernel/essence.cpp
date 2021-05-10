@@ -478,6 +478,7 @@ bool Essence::isVisible()
 bool Essence::calculate(bool update)
 {
     bool lResult = false;
+
     if (scriptEngineEnabled && scriptEngine != 0 /*nullptr*/)
     {
         scriptEngine->eventCalcTable();
@@ -494,6 +495,8 @@ bool Essence::calculate(bool update)
             }
         }
     }
+    else
+        modified = true;
 
     if (update && !isView && modified)
         saveChanges();
@@ -608,6 +611,14 @@ void Essence::setValue(QString n, QVariant value, int row)
                     tableModel->setData(index, value);  // QSqlQuery::value: not positioned on a valid record
 
                 modified = true;
+
+                if (dictionaries != 0 /*nullptr*/)
+                {
+                    Document* doc = dictionaries->getDocument();
+                    if (doc != 0 /*nullptr*/)
+                        doc->setModified(modified);
+                }
+
                 break;
             }
         }
@@ -1713,6 +1724,12 @@ bool Essence::isMenuMode()
 bool Essence::isModified()
 {
     return modified;
+}
+
+
+void Essence::setModified(bool m)
+{
+    modified = m;
 }
 
 
