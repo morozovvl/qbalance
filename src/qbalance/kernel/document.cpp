@@ -205,6 +205,7 @@ bool Document::calculate(bool)
     {
         if (Essence::calculate())
         {   // Если в вычислениях не было ошибки
+
             lResult = true;
         }
         else
@@ -354,6 +355,7 @@ int Document::addFromQuery(QString queryName)
                 i++;
                 progressDialog->setValue(i);
             } while (queryData.next());
+
             progressDialog->hide();
             delete progressDialog;
             addingFromQuery = false;
@@ -363,6 +365,7 @@ int Document::addFromQuery(QString queryName)
             static_cast<DocumentScriptEngine*>(scriptEngine)->eventAppendFromQuery(queryName, &record);
 
         Dictionary::query();
+
         saveChanges();
     }
     return result;
@@ -417,7 +420,9 @@ bool Document::remove(bool noAsk)
                     Dictionary::query();
                     if (scriptEngineEnabled && scriptEngine != 0 /*nullptr*/)
                         scriptEngine->eventAfterDeleteString(docId);
+
                     saveChanges();
+
                     return true;
                 }
                 app->showError(QString(QObject::trUtf8("Не удалось удалить строку")));

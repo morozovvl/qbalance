@@ -204,7 +204,8 @@ void MySqlRelationalTableModel::setRelation(int column, int keyColumn, const QSq
 
 
 void MySqlRelationalTableModel::setOrderClause(QString sort) {
-    sortClause = sort;
+    if (sortClause.size() == 0)
+        sortClause = sort;
 }
 
 

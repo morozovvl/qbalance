@@ -91,10 +91,10 @@ bool BarCodeReader::testBarCode(QString str)
         result = true;                   // Сейчас будем предполагать, что это штрихкод
         QTimer::singleShot(50, this, SLOT(testBarCode()));
     }
-    else if (barCodeString.size() > 0)
-    {
-        app->barCodeReadyRead(getBarCodeString());
-    }
+//    else if (barCodeString.size() > 0)
+//    {
+//        app->barCodeReadyRead(getBarCodeString());
+//    }
     lastTime = time;                        // Запомним время последнего нажатия
     return result;
 }

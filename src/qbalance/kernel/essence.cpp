@@ -110,7 +110,7 @@ void Essence::postInitialize(QString name, QObject* parent)
     reportScriptEngine = 0 /*nullptr*/;
     lIsDocument = false;
     cardReaderEnabled = false;
-    modified = false;
+//    modified = false;
 }
 
 
@@ -489,16 +489,16 @@ bool Essence::calculate(bool update)
             {
                 if (scriptEngine->getScriptResult())
                 {
-                    modified = true;
+//                    modified = true;
                     lResult = true;
                 }
             }
         }
     }
-    else
-        modified = true;
+//    else
+//        modified = true;
 
-    if (update && !isView && modified)
+    if (update && !isView/* && modified*/)
         saveChanges();
 
     return lResult;
@@ -610,14 +610,16 @@ void Essence::setValue(QString n, QVariant value, int row)
                 else
                     tableModel->setData(index, value);  // QSqlQuery::value: not positioned on a valid record
 
-                modified = true;
 
-                if (dictionaries != 0 /*nullptr*/)
-                {
-                    Document* doc = dictionaries->getDocument();
-                    if (doc != 0 /*nullptr*/)
-                        doc->setModified(modified);
-                }
+//                modified = true;
+//
+//                if (dictionaries != 0 /*nullptr*/)
+//                {
+//                    Document* doc = dictionaries->getDocument();
+//                    if (doc != 0 /*nullptr*/)
+//                        doc->setModified(modified);
+//                }
+
 
                 break;
             }
@@ -910,7 +912,7 @@ bool Essence::remove(bool noAsk)
 int Essence::exec()
 {
     int result = 0;
-    modified = false;
+//    modified = false;
 
     if (!opened)
         open();
@@ -926,7 +928,7 @@ int Essence::exec()
 
 void Essence::show()
 {
-    modified = false;
+//    modified = false;
 
     if (!opened)
         open();
@@ -1241,7 +1243,7 @@ void Essence::updateCurrentRow(int strNum)
             if (value != recValue)
             {
                 tableModel->setData(tableModel->index(str, i), value, true);
-                modified = true;
+//                modified = true;
             }
         }
         setCurrentIndex(index);
@@ -1625,18 +1627,19 @@ bool Essence::saveChanges()
 {
     bool lResult = false;
 
-    if (modified)
-    {
+//    if (modified)
+//    {
         submit();
 
         if (db->execCommands())
         {
             updateCurrentRow();
+//            modified = false;
             lResult = true;
         }
         else       // Во время сохранения результатов произошла ошибка
             restoreOldValues();
-    }
+//    }
     return lResult;
 }
 
@@ -1723,13 +1726,13 @@ bool Essence::isMenuMode()
 
 bool Essence::isModified()
 {
-    return modified;
+    return db->isExistsCommands();
 }
 
-
+/*
 void Essence::setModified(bool m)
 {
     modified = m;
 }
-
+*/
 
