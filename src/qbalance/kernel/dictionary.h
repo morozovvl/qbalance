@@ -134,6 +134,7 @@ public:
 
     Q_INVOKABLE virtual void            setFilter(QString);
     Q_INVOKABLE virtual QString         getFilter(QString) const;
+
 };
 
 #endif // DICTIONARY_H

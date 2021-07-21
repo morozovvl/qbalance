@@ -313,6 +313,9 @@ public:
     Updates*        getUpdates();
     static QString         getTrueApplicationName();
 
+    void    setAppendFromQuery(bool);
+    bool    isAppendFromQuery();
+
 
 public slots:
     void loadScriptFile();
@@ -372,6 +375,8 @@ private:
     bool                    writeDebug;
     static  bool            fullDebugInfo;
     static QString                 trueApplicationName;
+
+    bool                    appendFromQuery;
 
     void loadConsts();
     QString getAnyPath(QString, QString = "", QString = "");

@@ -94,7 +94,6 @@ void Document::postInitialize(int oper, Documents* par)
     lUpdateable = parent->isUpdateable();
     isDictionary = false;
     lIsDocument = true;
-    addingFromQuery = false;
     cardReaderEnabled = true;
 
     localDictsOpened = false;
@@ -314,6 +313,7 @@ int Document::addFromQuery(QString queryName)
     int result = 0;
     if (queryName.size() > 0 && checkConstDicts())
     {
+        app->setAppendFromQuery(true);
         QSqlRecord record;
         QSqlQuery queryData;
         if (db->getDictionariesProperties(queryName).value(db->getObjectName("доступ_к_справочникам.меню")).toBool())
@@ -340,7 +340,6 @@ int Document::addFromQuery(QString queryName)
 
         if (queryData.first())
         {
-            addingFromQuery = true;
             MyProgressDialog* progressDialog;
             progressDialog = app->getMyProgressDialog(trUtf8("Ожидайте окончания работы запроса..."));
             progressDialog->resize(600, progressDialog->height());
@@ -358,7 +357,6 @@ int Document::addFromQuery(QString queryName)
 
             progressDialog->hide();
             delete progressDialog;
-            addingFromQuery = false;
             result = queryData.size();;
         }
         else
@@ -366,6 +364,9 @@ int Document::addFromQuery(QString queryName)
 
         Dictionary::query();
 
+//        calcItog();
+
+        app->setAppendFromQuery(false);
         saveChanges();
     }
     return result;
@@ -847,7 +848,7 @@ void Document::setConstDictId(QString dName, QVariant id)
                 }
             }
         }
-        db->execCommands();
+//        db->execCommands();
         Dictionary::query();
         grdTable->selectRow(currentRow);
         grdTable->setFocus();
@@ -1316,14 +1317,14 @@ void Document::showParameterText(QString dictName)
     static_cast<FormDocument*>(getForm())->showParameterText(dictName);
 }
 
-
+/*
 void Document::cmdOk()
 {
-    Dictionary::cmdOk();
+//    Dictionary::cmdOk();
     parent->showItog();
     parent->saveChanges();
 }
-
+*/
 
 int Document::appendDocStrings(int rowCount)
 {
@@ -1348,3 +1349,5 @@ void Document::unlockDocument()
 {
     db->unlockDocument(docId);
 }
+
+

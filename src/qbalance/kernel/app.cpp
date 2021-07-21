@@ -113,6 +113,7 @@ TApplication::TApplication(int & argc, char** argv)
     dirName = "";
     debugToBuffer = true;
     writeDebug = true;
+    appendFromQuery = false;
 }
 
 
@@ -2492,4 +2493,16 @@ Updates* TApplication::getUpdates()
 QString TApplication::getTrueApplicationName()
 {
     return trueApplicationName;
+}
+
+
+void    TApplication::setAppendFromQuery(bool a)
+{
+    appendFromQuery = a;
+}
+
+
+bool    TApplication::isAppendFromQuery()
+{
+    return appendFromQuery;
 }

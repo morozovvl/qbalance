@@ -951,5 +951,3 @@ QString Dictionary::getFilter(QString defFilter) const
     return defFilter + filter;
 }
 
-
-

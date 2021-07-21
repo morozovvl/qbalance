@@ -59,7 +59,6 @@ private:
     bool                            localDictsOpened;
     bool                            quanAccount;        // В проводках есть количественный учет
     bool                            singlePrv;          // Проводка простая (одиночная)
-    bool                            addingFromQuery;
 
     bool showNextDict();
     void showItog();
@@ -94,7 +93,7 @@ public:
     Q_INVOKABLE virtual void show();                // Показать форму в немодальном режиме
     Q_INVOKABLE virtual void hide();                // Скрыть форму
     Q_INVOKABLE virtual void query();
-    Q_INVOKABLE virtual void cmdOk();                       // Обработка нажатий кнопок "Ok"
+//    Q_INVOKABLE virtual void cmdOk();                       // Обработка нажатий кнопок "Ok"
 
 
 
