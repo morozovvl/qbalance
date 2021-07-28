@@ -1341,6 +1341,7 @@ bool Document::saveChanges()
 
 bool Document::lockDocument()
 {
+    parent->updateCurrentRow();
     return db->lockDocument(docId);
 }
 
