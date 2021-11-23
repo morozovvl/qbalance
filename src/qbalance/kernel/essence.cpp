@@ -1413,7 +1413,7 @@ void Essence::cardCodeReaded(QString cardCode)
     if (scriptEngineEnabled && scriptEngine != 0 /*nullptr*/ && enabled && cardReaderEnabled && form != 0 /*nullptr*/)
     {
         Dialog* frm = form->getFormWidget();
-        if (frm != 0 /*nullptr*/ && frm->isVisible() && frm->isActiveWindow())
+        if (frm != 0 /*nullptr*/ && frm->isVisible() && frm == app->getActiveSubWindow()->widget())
         {
             scriptEngine->eventCardCodeReaded(cardCode);
         }
