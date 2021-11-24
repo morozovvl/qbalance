@@ -333,9 +333,10 @@ bool BankTerminal::isLocked()
 QString BankTerminal::processRemoteQuery(QString command)
 {
     QString result = "Ok";
+    QStringList argList = command.split(" ");
+
     if (command.indexOf(BANK_TERMINAL_PROCESS) == 0)
     {
-        QStringList argList = command.split(" ");
         int oper = argList.at(1).toInt();
         int sum = argList.at(2).toInt();
         int type = argList.at(3).toInt();
@@ -349,8 +350,8 @@ QString BankTerminal::processRemoteQuery(QString command)
     }
     else if (command.indexOf(BANK_TERMINAL_GETRESULTDATA) == 0)
     {
-        QStringList argList = command.split(" ");
         QString key = argList.at(1);
+
         result = getResultData(key);
     }
     return result;
