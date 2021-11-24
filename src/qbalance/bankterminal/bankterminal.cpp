@@ -216,7 +216,7 @@ QString BankTerminal::process(int oper, int sum, int type, int track)
 }
 
 
-void BankTerminal::testResult(int exitCode, QProcess::ExitStatus exitStatus)
+void BankTerminal::testResult(int /*exitCode*/, QProcess::ExitStatus exitStatus)
 {
     processResult = false;
     if (!remote)
@@ -343,6 +343,16 @@ QString BankTerminal::processRemoteQuery(QString command)
 
         result = process(oper, sum, type, track);
     }
+    else if (command.indexOf(BANK_TERMINAL_GETCARDCODE) == 0)
+    {
+        result = getCardCode();
+    }
+    else if (command.indexOf(BANK_TERMINAL_GETRESULTDATA) == 0)
+    {
+        QStringList argList = command.split(" ");
+        QString key = argList.at(1);
+        result = getResultData(key);
+    }
     return result;
 }
 
@@ -352,6 +362,17 @@ QString BankTerminal::getCardCode()
     QString result = "";
     if (!remote)
         result = resultParams.value(CARD_NUMBER);
+    else
+    {
+        TcpClient* tcpClient = app->getTcpClient();
+        // а теперь поищем на удаленном, если указан его IP
+        if (tcpClient != 0 /*nullptr*/)
+        {
+            tcpClient->sendToServer(QString("%1 ").arg(BANK_TERMINAL_GETCARDCODE));
+            tcpClient->waitResult();
+            result = tcpClient->getResult();
+        }
+    }
     return result;
 }
 
@@ -361,6 +382,17 @@ QString BankTerminal::getResultData(QString key)
     QString result = "";
     if (!remote)
         result = resultParams.value(key);
+    else
+    {
+        TcpClient* tcpClient = app->getTcpClient();
+        // а теперь поищем на удаленном, если указан его IP
+        if (tcpClient != 0 /*nullptr*/)
+        {
+            tcpClient->sendToServer(QString("%1 %2 ").arg(BANK_TERMINAL_GETRESULTDATA).arg(key));
+            tcpClient->waitResult();
+            result = tcpClient->getResult();
+        }
+    }
     return result;
 }
 

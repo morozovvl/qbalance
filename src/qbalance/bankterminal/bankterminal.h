@@ -47,9 +47,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define CARD_HOLDER_NAME "ИмяДержателяКарты"
 
 
-#define BANK_TERMINAL_PREFIX     "bankTerminal_"
-#define BANK_TERMINAL_IS_READY   BANK_TERMINAL_PREFIX "IsReady"
-#define BANK_TERMINAL_PROCESS    BANK_TERMINAL_PREFIX "process"
+#define BANK_TERMINAL_PREFIX            "bankTerminal_"
+#define BANK_TERMINAL_IS_READY          BANK_TERMINAL_PREFIX "IsReady"
+#define BANK_TERMINAL_PROCESS           BANK_TERMINAL_PREFIX "process"
+#define BANK_TERMINAL_GETCARDCODE       BANK_TERMINAL_PREFIX "getCardCode"
+#define BANK_TERMINAL_GETRESULTDATA     BANK_TERMINAL_PREFIX "getResultData"
+
 
 class TApplication;
 class DriverFR;
