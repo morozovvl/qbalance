@@ -118,6 +118,7 @@ bool Document::open()
 
 void Document::close()
 {
+    unlockDocument();
     Essence::close();
     dictionaries->close();
     delete dictionaries;
@@ -598,9 +599,6 @@ int Document::exec()
     query();
     result = Essence::exec();
     unlockDocument();
-    locked = false;
-    setEnabled(true);
-    app->debug(1, QString("Closed document %1").arg(docId));
     return result;
 }
 
@@ -615,9 +613,6 @@ void Document::hide()
 {
     Essence::hide();
     unlockDocument();
-    locked = false;
-    setEnabled(true);
-    app->debug(1, QString("Closed document %1").arg(docId));
 }
 
 
@@ -1348,7 +1343,13 @@ bool Document::lockDocument()
 
 void Document::unlockDocument()
 {
-    db->unlockDocument(docId);
+    if (locked)
+    {
+        db->unlockDocument(docId);
+        locked = false;
+        setEnabled(true);
+        app->debug(1, QString("Closed document %1").arg(docId));
+    }
 }
 
 

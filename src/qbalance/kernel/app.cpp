@@ -712,6 +712,9 @@ bool TApplication::open() {
     gui = new GUIFactory();
     lResult = gui->open();
 
+    debug(0, "\n");
+    debug(0, QString("Program startup. v.%1").arg(applicationVersion()));
+
     return lResult;
 }
 
@@ -867,6 +870,19 @@ void TApplication::close()
     if (tcpClient != 0 /*nullptr*/)
         delete tcpClient;
 
+    if (documents.count() > 0)
+    {
+        foreach(QString operName, documents.keys())
+        {
+            Documents* doc = documents.value(operName);
+            doc->close();
+            delete doc;
+            documents.remove(operName);
+        }
+    }
+
+    debug(0, "Program shutdown.\n");
+
     if (db != 0 /*nullptr*/)
     {
         if (db->isOpened())
@@ -876,17 +892,6 @@ void TApplication::close()
                 saveMessages();
                 writeSettings();
                 delete messagesWindow;
-            }
-
-            if (documents.count() > 0)
-            {
-                foreach(QString operName, documents.keys())
-                {
-                    Documents* doc = documents.value(operName);
-                    doc->close();
-                    delete doc;
-                    documents.remove(operName);
-                }
             }
 
             if (reportsList != 0 /*nullptr*/)
@@ -916,6 +921,7 @@ void TApplication::close()
 
     if (gui != 0 /*nullptr*/)
         gui->close();
+
 }
 
 
