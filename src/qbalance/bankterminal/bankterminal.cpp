@@ -332,7 +332,7 @@ bool BankTerminal::isLocked()
 
 QString BankTerminal::processRemoteQuery(QString command)
 {
-    QString result = "Ok";
+    QString result = "";
     QStringList argList = command.split(" ");
 
     if (command.indexOf(BANK_TERMINAL_PROCESS) == 0)

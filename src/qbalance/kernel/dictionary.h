@@ -121,7 +121,7 @@ public:
     Q_INVOKABLE virtual void updateCurrentRow(int = 0);
 
     Q_INVOKABLE virtual void        lock(bool = true);
-    virtual bool isLocked();
+    Q_INVOKABLE virtual bool isLocked();
     Q_INVOKABLE bool isPictureExist();
     Q_INVOKABLE QString getSearchExpression(QString = "");
     Q_INVOKABLE void setGetIdRefresh(bool val);

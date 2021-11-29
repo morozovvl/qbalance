@@ -495,7 +495,7 @@ bool Essence::calculate(bool update)
         }
     }
 
-    if (update && !isView/* && modified*/)
+    if (update && !isView)
         saveChanges();
 
     return lResult;

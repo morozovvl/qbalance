@@ -120,7 +120,7 @@ void TcpClient::slotConnected()
 }
 
 
-bool    TcpClient::waitResult()
+bool TcpClient::waitResult()
 {
 //    slotReadyRead();
     bool result = false;
@@ -147,7 +147,7 @@ bool    TcpClient::waitResult()
 }
 
 
-void  TcpClient::tryReceive()
+void TcpClient::tryReceive()
 {
     if (resultReady || !m_pTcpSocket->isValid())
         return;                    // Результат от сервера готов
