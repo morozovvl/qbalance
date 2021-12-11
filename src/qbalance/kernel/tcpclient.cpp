@@ -51,17 +51,20 @@ void TcpClient::slotReadyRead()
 {
     resultReady = false;
 
-    result = QString(m_pTcpSocket->readAll().data()).simplified();
-    app->debug(5, QString("From %1: %2").arg(m_pTcpSocket->peerAddress().toString()).arg(result));
-
-    if (result == "*ping*")
+    if (m_pTcpSocket->isValid() && m_pTcpSocket->isReadable())
     {
-        sendToServer("*ping*Ok*");
-        result = "";
-    }
+        result = QString(m_pTcpSocket->readAll().data()).simplified();
+        app->debug(5, QString("From %1: %2").arg(m_pTcpSocket->peerAddress().toString()).arg(result));
 
-    if (result.size() > 0)
-        resultReady = true;
+        if (result == "*ping*")
+        {
+            sendToServer("*ping*Ok*");
+            result = "";
+        }
+
+        if (result.size() >= 0)
+            resultReady = true;
+    }
 }
 
 
@@ -124,6 +127,7 @@ bool TcpClient::waitResult()
 {
 //    slotReadyRead();
     bool result = false;
+
     tryReceive();
 //    app->startTimeOut(app->getConfigValue(MAX_NET_TIMEOUT).toInt());                   // Ждем ответа в течение 10 сек
     QTime dieTime= QTime::currentTime().addMSecs(app->getConfigValue(MAX_NET_TIMEOUT).toInt());
@@ -138,7 +142,7 @@ bool TcpClient::waitResult()
             break;
         if (QTime::currentTime() >= dieTime)
         {
-            app->debug(5, "*** ЗАДЕРЖКА свыше 10 сек ***");
+            app->debug(5, QString("*** ЗАДЕРЖКА свыше %1 мс ***").arg(app->getConfigValue(MAX_NET_TIMEOUT).toInt()));
             break;
         }
         app->sleep(100);
