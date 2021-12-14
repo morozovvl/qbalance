@@ -881,8 +881,6 @@ void TApplication::close()
         }
     }
 
-    debug(0, "Program shutdown.\n");
-
     if (db != 0 /*nullptr*/)
     {
         if (db->isOpened())
@@ -921,6 +919,8 @@ void TApplication::close()
 
     if (gui != 0 /*nullptr*/)
         gui->close();
+
+    debug(0, "Program shutdown.\n");
 
 }
 
