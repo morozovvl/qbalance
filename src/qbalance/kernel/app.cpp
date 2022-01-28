@@ -881,46 +881,44 @@ void TApplication::close()
         }
     }
 
-    if (db != 0 /*nullptr*/)
+    if (messagesWindow != 0 /*nullptr*/)
     {
-        if (db->isOpened())
-        {
-            if (messagesWindow != 0 /*nullptr*/)
-            {
-                saveMessages();
-                writeSettings();
-                delete messagesWindow;
-            }
+        saveMessages();
+        writeSettings();
+        delete messagesWindow;
+    }
 
-            if (reportsList != 0 /*nullptr*/)
-            {
-                reportsList->close();
-                delete reportsList;
-            }
+    if (reportsList != 0 /*nullptr*/)
+    {
+        reportsList->close();
+        delete reportsList;
+    }
 
-            if (topersList != 0 /*nullptr*/)
-            {
-                topersList->close();
-                delete topersList;
-            }
+    if (topersList != 0 /*nullptr*/)
+    {
+        topersList->close();
+        delete topersList;
+    }
 
-            if (dictionaryList != 0 /*nullptr*/)
-            {
-                dictionaryList->close();
-                delete dictionaryList;
-            }
-
-        }
-
-        db->close();
-        delete db;
-        db = 0 /*nullptr*/;
+    if (dictionaryList != 0 /*nullptr*/)
+    {
+        dictionaryList->close();
+        delete dictionaryList;
     }
 
     if (gui != 0 /*nullptr*/)
         gui->close();
 
     debug(0, "Program shutdown.\n");
+
+    if (db != 0 /*nullptr*/)
+    {
+        if (db->isOpened())
+            db->close();
+
+        delete db;
+        db = 0 /*nullptr*/;
+    }
 
 }
 
