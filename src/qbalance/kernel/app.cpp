@@ -573,6 +573,7 @@ void TApplication::initConfig()
 
     setConfigTypeName("sms", "GSM модем");
     setConfig("sms", "GSMMODEM_NEEDED", "Использовать GSM модем", CONFIG_VALUE_BOOLEAN, false);
+    setConfig("sms", "GSMMODEM_USE_REMOTE", "Искать GSM модем в локальной сети", CONFIG_VALUE_BOOLEAN, false);
 #if defined(Q_OS_LINUX)
     setConfig("sms", "GSMMODEM_PORT", "Порт GSM модема", CONFIG_VALUE_STRING, "/dev/rfcomm0");
 #elif defined(Q_OS_WIN)
@@ -1920,6 +1921,8 @@ QString TApplication::getOpenFileName(QWidget* parent, QString caption, QString 
 
 void TApplication::sendSMS(QString url, QString number, QString message, QString from, bool repeat)
 {
+    bool result = false;
+
     if (getConst("ОтправлятьСМС").toBool())
     {
         if (!repeat)
@@ -1928,9 +1931,13 @@ void TApplication::sendSMS(QString url, QString number, QString message, QString
                 return;
         }
 
-        if (gsmModem != 0 /*nullptr*/)
+        if (getConfigValue("GSMMODEM_NEEDED").toBool())
         {
-            gsmModem->sendSMS(number, message);
+            if (gsmModem != 0 /*nullptr*/)
+            {
+                gsmModem->sendSMS(number, message);
+                result = true;
+            }
         }
         else
         {
@@ -1944,14 +1951,21 @@ void TApplication::sendSMS(QString url, QString number, QString message, QString
             if (reply->error() != QNetworkReply::NoError)
             {
                 debug(0, QString("Ошибка SMS: %1 %2").arg(reply->error()).arg(reply->errorString()));
-                return;
             }
+            else
+                result = true;
         }
 
         db->exec(QString("INSERT INTO смс_отправленные (ИМЯ, ТЕКСТ) VALUES ('%1', '%2');").arg(number).arg(message));
 
         if (isSA())
             print(QString("Отправлено SMS на номер %1: \"%2\"").arg(number).arg(message));
+
+        if (!result)
+        {
+            print("");
+            print("Не удалось отправить СМС");
+        }
     }
 }
 
@@ -2236,6 +2250,23 @@ bool TApplication::bankTerminalIsValid()
         result = false;
     }
     return result;
+}
+
+
+bool TApplication::gsmmodemIsValid()
+{
+    bool result = true;
+    if (gsmModem == 0 /*nullptr*/)
+    {
+        result = false;
+    }
+    return result;
+}
+
+
+GSMmodem* TApplication::getGSMModem()
+{
+    return gsmModem;
 }
 
 

@@ -223,6 +223,9 @@ public:
     Q_INVOKABLE bool bankTerminalIsValid();
     Q_INVOKABLE BankTerminal* getBankTerminal();
 
+    Q_INVOKABLE bool gsmmodemIsValid();
+    Q_INVOKABLE GSMmodem* getGSMModem();
+
     virtual TcpServer* getTcpServer();
     virtual TcpClient* getTcpClient();
 

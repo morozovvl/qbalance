@@ -259,14 +259,14 @@ QString OOXMLEngine::getCellText(int row, int column)
     if (!element.isNull())
     {
         if (element.attribute("office:value-type") == "float")
-            result = element.attribute("office:value");
+            result = element.attribute("office:value").trimmed();
         else
         {
             QDomElement refElement = element;
             refElement = refElement.elementsByTagName("text:a").at(0).toElement();
             if (!refElement.isNull())
             {
-                result = refElement.attribute("xlink:href");
+                result = refElement.attribute("xlink:href").trimmed();
             }
             else
             {

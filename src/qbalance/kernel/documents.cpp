@@ -152,8 +152,8 @@ bool Documents::add()
         else if (date > TApplication::exemplar()->getEndDate())
             date = TApplication::exemplar()->getEndDate();
     }
-    else
-    {
+//    else
+//    {
         int strNum = db->addDoc(operNumber, date);
         if (strNum > 0)
         {
@@ -166,7 +166,7 @@ bool Documents::add()
             setCurrentDocument(strNum);
             result = true;
         }
-    }
+//    }
     return result;
 }
 

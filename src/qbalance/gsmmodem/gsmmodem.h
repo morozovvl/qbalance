@@ -24,6 +24,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QObject>
 #include "../serialport/qmyextserialport.h"
 
+#define GSMMODEM_PREFIX            "gsmmodem_"
+#define GSMMODEM_IS_READY          GSMMODEM_PREFIX "IsReady"
+#define GSMMODEM_PROCESS           GSMMODEM_PREFIX "process"
+
+
 class TApplication;
 
 class GSMmodem : public QObject
@@ -37,13 +42,15 @@ public:
     virtual bool open();
     virtual void close();
 
-    virtual void sendSMS(QString, QString);
+    virtual QString sendSMS(QString, QString);
+    virtual QString processRemoteQuery(QString);
 
 private:
     TApplication* app;
-    QMyExtSerialPort*         serialPort;
+    QMyExtSerialPort*           serialPort;
+    bool                        remote;
 
-    QString processCommand(QString);
+    QString process(QString = "");
 
 };
 

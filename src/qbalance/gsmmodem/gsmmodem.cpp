@@ -22,12 +22,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QDebug>
 #include "gsmmodem.h"
 #include "../kernel/app.h"
+#include "../kernel/tcpclient.h"
+
 
 
 GSMmodem::GSMmodem(QObject *parent) :  QObject(parent)
 {
     app = 0 /*nullptr*/;
     serialPort = 0 /*nullptr*/;
+    remote = false;
 }
 
 
@@ -40,25 +43,46 @@ GSMmodem::~GSMmodem()
 bool GSMmodem::open()
 {
     bool result = false;
-    serialPort = app->getSerialPort(app->getConfigValue("GSMMODEM_PORT").toString());
-    if (serialPort != 0 /*nullptr*/)
+
+    if (app->getConfigValue("GSMMODEM_USE_REMOTE").toBool())
     {
-        serialPort->setRemote(false);
-        serialPort->setBaudRate(app->getConfigValue("GSMMODEM_BOUD_RATE").toInt());
+        TcpClient* tcpClient = app->getTcpClient();
+        // а теперь поищем на удаленном, если TcpClient исправен
+        if (tcpClient != 0 /*nullptr*/)
+        {
+            if (tcpClient->sendToServer(GSMMODEM_IS_READY) && tcpClient->waitResult())
+            {
+                QString res = tcpClient->getResult();
+                result = (res == "true" ? true : false);
+                if (result)
+                    remote = true;
+            }
+        }
+    }
+    else
+    {
+        serialPort = app->getSerialPort(app->getConfigValue("GSMMODEM_PORT").toString());
+        if (serialPort != 0 /*nullptr*/)
+        {
+            serialPort->setBaudRate(app->getConfigValue("GSMMODEM_BOUD_RATE").toInt());
 
 #if  defined(Q_OS_LINUX)
-            if (serialPort->open(QIODevice::ReadWrite) && serialPort->isOpen())
+                if (serialPort->open(QIODevice::ReadWrite) && serialPort->isOpen())
 #elif   defined(Q_OS_WIN)
-            if (serialPort->open(QIODevice::ReadWrite | QIODevice::Unbuffered) && serialPort->isOpen())
+                if (serialPort->open(QIODevice::ReadWrite | QIODevice::Unbuffered) && serialPort->isOpen())
 #endif
-            {
-                app->print("Найден GSM модем");
-                app->print(processCommand("ATI"));
-                result = true;
-            }
-            else
-                app->print("GSM модем не найден");
+                    result = true;
+        }
     }
+    if (result)
+    {
+        app->print("Найден GSM модем");
+        app->print(process("ATI"));
+        app->print(process());
+    }
+    else
+        app->print("GSM модем не найден");
+
     return result;
 }
 
@@ -73,42 +97,76 @@ void GSMmodem::close()
 }
 
 
-QString GSMmodem::processCommand(QString comm)
+QString GSMmodem::process(QString comm)
 {
-    int timeOut = app->getConfigValue("GSMMODEM_MAX_TIMEOUT").toInt() * 1000;
-    QByteArray command;
     QString result;
-    char r;
 
-    command.append(comm + "\r");
-    serialPort->setMyTimeout(timeOut);
-
-    QTime dieTime= QTime::currentTime().addMSecs(timeOut);
-    serialPort->writeData(command.data(), command.size());
-
-    while (true)
+    if (!remote)
     {
-        serialPort->readData(&r, 1);
-        if (QTime::currentTime() >= dieTime)    // Время ожидания вышло, прекратим попытки
+        int timeOut = app->getConfigValue("GSMMODEM_MAX_TIMEOUT").toInt() * 1000;
+        QByteArray command;
+        char r;
+
+        command.append(comm + "\r");
+        serialPort->setMyTimeout(timeOut);
+
+        QTime dieTime= QTime::currentTime().addMSecs(timeOut);
+        serialPort->writeData(command.data(), command.size());
+
+        while (true)
         {
-            serialPort->writeLog(QString("Result:%1. Истек таймаут %2 мс").arg(result).arg(timeOut));
-            break;
-        }
-        if (r == '\r' || r == '\n')
-        {
-            if (result.size() > 0)
+            serialPort->readData(&r, 1);
+            if (QTime::currentTime() >= dieTime)    // Время ожидания вышло, прекратим попытки
+            {
+                serialPort->writeLog(QString("Result:%1. Истек таймаут %2 мс").arg(result).arg(timeOut));
                 break;
+            }
+            if (r == '\r' || r == '\n')
+            {
+                if (result.size() > 0)
+                    break;
+            }
+            else
+                result.append(QString(r));
         }
-        else
-            result.append(QString(r));
+    }
+    else
+    {
+        TcpClient* tcpClient = app->getTcpClient();
+        // а теперь поищем на удаленном, если указан его IP
+        if (tcpClient != 0 /*nullptr*/)
+        {
+            tcpClient->sendToServer(QString("%1 %2 ").arg(GSMMODEM_PROCESS).arg(comm));
+            tcpClient->waitResult();
+            result = tcpClient->getResult();
+        }
+    }
+
+    return result;
+}
+
+
+QString GSMmodem::sendSMS(QString number, QString message)
+{
+    QString result = "";
+    process("AT+CMGF=1");
+    process("AT+CMGS=\"" + app->getConfigValue("GSMMODEM_PREFIX").toString() + number + "\"");
+    result = process(message + "\x1A");
+    return result;
+}
+
+
+QString GSMmodem::processRemoteQuery(QString command)
+{
+    QString result = "";
+
+    if (command.indexOf(GSMMODEM_PROCESS) == 0)
+    {
+        command.remove(GSMMODEM_PROCESS);
+        command = command.trimmed();
+        result = process(command);
     }
     return result;
 }
 
 
-void GSMmodem::sendSMS(QString number, QString message)
-{
-    processCommand("AT+CMGF=1");
-    processCommand("AT+CMGS=\"" + app->getConfigValue("GSMMODEM_PREFIX").toString() + number + "\"");
-    processCommand(message + "\x1A");
-}

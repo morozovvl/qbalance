@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "tcpserver.h"
 #include "app.h"
 #include "../bankterminal/bankterminal.h"
+#include "../gsmmodem/gsmmodem.h"
 
 
 TcpServer::TcpServer(quint16 nPort, QObject *parent ):   QObject(parent)
@@ -124,6 +125,8 @@ void TcpServer::processRequest(QTcpSocket* pClientSocket, QString str)
 {
     QString resStr = "Ok";
 
+    qDebug() << "<<<" << str;
+
     app->debug(5, QString("From %1: %2").arg(pClientSocket->peerAddress().toString()).arg(str));
 
     if (driverFR != 0 /*nullptr*/ && str.left(4) == "=fr=" && app->drvFRisValid())
@@ -202,6 +205,19 @@ void TcpServer::processRequest(QTcpSocket* pClientSocket, QString str)
         }
         else
             resStr = app->getBankTerminal()->processRemoteQuery(str);
+        sendToClient(pClientSocket, resStr);
+    }
+    else if (str.indexOf(GSMMODEM_PREFIX) == 0)
+    {
+        if (str.indexOf(GSMMODEM_IS_READY) == 0)
+        {
+            bool result = app->gsmmodemIsValid();
+            resStr = (result ? "true" : "false");
+        }
+        else
+        {
+            resStr = app->getGSMModem()->processRemoteQuery(str);
+        }
         sendToClient(pClientSocket, resStr);
     }
     else if (str.indexOf("app.exit") == 0)
