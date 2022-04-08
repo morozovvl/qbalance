@@ -32,12 +32,15 @@ TcpClient::TcpClient(const QString& strHost, quint16 nPort, QObject *parent ):  
     port = nPort;
     m_pTcpSocket = new QTcpSocket(this);
     resultReady = false;
-    m_pTcpSocket->connectToHost(hostName, port);
     connect(m_pTcpSocket, SIGNAL(connected()), SLOT(slotConnected()));
     connect(m_pTcpSocket, SIGNAL(readyRead()), SLOT(slotReadyRead()));
     connect(m_pTcpSocket, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(slotError(QAbstractSocket::SocketError)));
-    app->debug(5, QString("Устанавливаем соединение с хостом %1 и портом %2.").arg(hostName).arg(port));
-    app->debug(5, QString("Статус сокета: %1.").arg(m_pTcpSocket->state()));
+    if (hostName.size() > 0 && port > 0)
+    {
+        m_pTcpSocket->connectToHost(hostName, port);
+        app->debug(5, QString("Устанавливаем соединение с хостом %1 и портом %2.").arg(hostName).arg(port));
+        app->debug(5, QString("Статус сокета: %1.").arg(m_pTcpSocket->state()));
+    }
 }
 
 
@@ -90,20 +93,28 @@ void TcpClient::logError()
 }
 
 
-bool TcpClient::sendToServer(QString str)
+bool TcpClient::sendToServer(QString str, QString strHost, quint16 nPort, int timeOut)
 {
-    if (!connected)
+    QString h = (strHost != "" ? strHost : hostName);
+    quint16 p = (nPort > 0 ? nPort : port);
+    int t = (timeOut > 0 ? timeOut : app->getConfigValue(MAX_NET_TIMEOUT).toInt());
+
+    if (h.size() > 0 && p > 0)
     {
-        m_pTcpSocket->connectToHost(hostName, port);
-        m_pTcpSocket->waitForConnected(app->getConfigValue(MAX_NET_TIMEOUT).toInt());
+        if (!connected)
+        {
+            m_pTcpSocket->connectToHost(h, p);
+            m_pTcpSocket->waitForConnected(t);
+        }
+        resultReady = false;                    // Результат запроса еще не готов
+
+        QString s = QString(str).append("\r\n");
+        m_pTcpSocket->write(s.toAscii().data());
+
+        app->debug(5, QString("To %1: %2").arg(m_pTcpSocket->peerAddress().toString()).arg(str));
+        return m_pTcpSocket->waitForReadyRead(t);      // Будем ждать ответа от сервера в течение 1 сек
     }
-    resultReady = false;                    // Результат запроса еще не готов
-
-    QString s = QString(str).append("\r\n");
-    m_pTcpSocket->write(s.toAscii().data());
-
-    app->debug(5, QString("To %1: %2").arg(m_pTcpSocket->peerAddress().toString()).arg(str));
-    return m_pTcpSocket->waitForReadyRead(app->getConfigValue(MAX_NET_TIMEOUT).toInt());      // Будем ждать ответа от сервера в течение 1 сек
+    return false;
 }
 
 

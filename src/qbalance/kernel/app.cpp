@@ -574,13 +574,16 @@ void TApplication::initConfig()
     setConfigTypeName("sms", "GSM модем");
     setConfig("sms", "GSMMODEM_NEEDED", "Использовать GSM модем", CONFIG_VALUE_BOOLEAN, false);
     setConfig("sms", "GSMMODEM_USE_REMOTE", "Искать GSM модем в локальной сети", CONFIG_VALUE_BOOLEAN, false);
+    setConfig("sms", "GSMMODEM_REMOTE_HOST", "Удаленный хост", CONFIG_VALUE_STRING, "192.168.0.1");
+    setConfig("sms", "GSMMODEM_REMOTE_PORT", "Удаленный порт (локальный порт сервера)", CONFIG_VALUE_INTEGER, 44444);
+
 #if defined(Q_OS_LINUX)
     setConfig("sms", "GSMMODEM_PORT", "Порт GSM модема", CONFIG_VALUE_STRING, "/dev/rfcomm0");
 #elif defined(Q_OS_WIN)
     setConfig("sms", "GSMMODEM_PORT", "Порт GSM модема", CONFIG_VALUE_STRING, "COM1");
 #endif
     setConfig("sms", "GSMMODEM_BOUD_RATE", "Скорость", CONFIG_VALUE_BOUND, 3);
-    setConfig("sms", "GSMMODEM_MAX_TIMEOUT", "Максимальное время ожидания модема, с", CONFIG_VALUE_INTEGER, 60);
+    setConfig("sms", "GSMMODEM_MAX_TIMEOUT", "Максимальное время ожидания модема, мс", CONFIG_VALUE_INTEGER, 1000);
     setConfig("sms", "GSMMODEM_PREFIX", "Телефонный префикс страны", CONFIG_VALUE_STRING, "+7");
 }
 
@@ -620,13 +623,15 @@ void TApplication::setConfigValue(QString name, QVariant value)
 }
 
 
-QVariant TApplication::getConfigValue(QString name)
+QVariant TApplication::getConfigValue(QString name, QVariant defaultValue)
 {
     QVariant result;
     if (configs.contains(name))
     {
         result = configs.value(name).value;
     }
+    else
+        result = defaultValue;
     return result;
 }
 

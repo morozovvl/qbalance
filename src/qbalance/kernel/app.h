@@ -296,7 +296,7 @@ public:
     void    closePlugins();
 
 // Работа с пользовательской конфигурацией программы
-    virtual QVariant        getConfigValue(QString name);
+    virtual QVariant        getConfigValue(QString, QVariant = QVariant());
     QStringList     getConfigTypes();
     QString         getConfigTypeName(QString type);
     QHash<QString, ConfigEntry>* getConfigs();

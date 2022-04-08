@@ -47,10 +47,15 @@ bool GSMmodem::open()
     if (app->getConfigValue("GSMMODEM_USE_REMOTE").toBool())
     {
         TcpClient* tcpClient = app->getTcpClient();
+
         // а теперь поищем на удаленном, если TcpClient исправен
         if (tcpClient != 0 /*nullptr*/)
         {
-            if (tcpClient->sendToServer(GSMMODEM_IS_READY) && tcpClient->waitResult())
+            if (tcpClient->sendToServer(GSMMODEM_IS_READY,
+                                        app->getConfigValue("GSMMODEM_REMOTE_HOST", "").toString(),
+                                        app->getConfigValue("GSMMODEM_REMOTE_PORT", 0).toInt(),
+                                        app->getConfigValue("GSMMODEM_MAX_TIMEOUT", 0).toInt())
+                    && tcpClient->waitResult())
             {
                 QString res = tcpClient->getResult();
                 result = (res == "true" ? true : false);
@@ -77,7 +82,8 @@ bool GSMmodem::open()
     if (result)
     {
         app->print("Найден GSM модем");
-        app->print(process("ATI"));
+        if (process("ATI").size() == 0)
+            app->print("Ответ на запрос от GSM модема не получен");
         app->print(process());
     }
     else
@@ -89,7 +95,7 @@ bool GSMmodem::open()
 
 void GSMmodem::close()
 {
-    if (serialPort != 0)
+    if (serialPort != 0 /*nullptr*/)
     {
         serialPort->close();
         delete serialPort;
@@ -103,7 +109,7 @@ QString GSMmodem::process(QString comm)
 
     if (!remote)
     {
-        int timeOut = app->getConfigValue("GSMMODEM_MAX_TIMEOUT").toInt() * 1000;
+        int timeOut = app->getConfigValue("GSMMODEM_MAX_TIMEOUT").toInt();
         QByteArray command;
         char r;
 
@@ -133,16 +139,20 @@ QString GSMmodem::process(QString comm)
     else
     {
         TcpClient* tcpClient = app->getTcpClient();
+
         // а теперь поищем на удаленном, если указан его IP
         if (tcpClient != 0 /*nullptr*/)
         {
-            tcpClient->sendToServer(QString("%1 %2 ").arg(GSMMODEM_PROCESS).arg(comm));
+            tcpClient->sendToServer(QString("%1 %2 ").arg(GSMMODEM_PROCESS).arg(comm),
+                                    app->getConfigValue("GSMMODEM_REMOTE_HOST", "").toString(),
+                                    app->getConfigValue("GSMMODEM_REMOTE_PORT", 0).toInt(),
+                                    app->getConfigValue("GSMMODEM_MAX_TIMEOUT", 0).toInt());
             tcpClient->waitResult();
             result = tcpClient->getResult();
         }
     }
 
-    return result;
+    return result.trimmed();
 }
 
 
