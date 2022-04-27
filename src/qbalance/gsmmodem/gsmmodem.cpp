@@ -81,10 +81,12 @@ bool GSMmodem::open()
     }
     if (result)
     {
-        app->print("Найден GSM модем");
+        QString message = "GSM модем найден";
         if (process("ATI").size() == 0)
-            app->print("Ответ на запрос от GSM модема не получен");
-        app->print(process());
+            message += ", но не отвечает на запросы";
+        else
+            message += " и отвечает на запросы";
+        app->print(message);
     }
     else
         app->print("GSM модем не найден");
