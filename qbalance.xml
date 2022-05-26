@@ -1,7 +1,7 @@
 <project>
     <shortName>qbalance</shortName>
     <fullName>QBalance</fullName>
-    <version>0.82</version>
+    <version>1.02</version>
     <licenseFile>LICENSE.GPL</licenseFile>
     <logoImage>resources/qbalance.png</logoImage>
     <defaultLanguage>ru</defaultLanguage>

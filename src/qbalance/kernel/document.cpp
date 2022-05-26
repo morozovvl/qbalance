@@ -312,6 +312,8 @@ bool Document::add()
 int Document::addFromQuery(QString queryName)
 {
     int result = 0;
+    bool success = true;
+
     if (queryName.size() > 0 && checkConstDicts())
     {
         app->setAppendFromQuery(true);
@@ -351,24 +353,40 @@ int Document::addFromQuery(QString queryName)
             do {
                 record = queryData.record();
                 if (record.count() > 0)
-                    static_cast<DocumentScriptEngine*>(scriptEngine)->eventAppendFromQuery(queryName, &record);
+                {
+                    if (static_cast<DocumentScriptEngine*>(scriptEngine)->eventAppendFromQuery(queryName, &record) == 0)
+                        success = false;
+                }
                 i++;
                 progressDialog->setValue(i);
-            } while (queryData.next());
+            } while (queryData.next() && success);
 
             progressDialog->hide();
             delete progressDialog;
-            result = queryData.size();;
+
+            result = queryData.size();
         }
         else
-            static_cast<DocumentScriptEngine*>(scriptEngine)->eventAppendFromQuery(queryName, &record);
+        {
+            if (static_cast<DocumentScriptEngine*>(scriptEngine)->eventAppendFromQuery(queryName, &record) == 0)
+                success = false;;
+        }
 
         Dictionary::query();
 
 //        calcItog();
 
         app->setAppendFromQuery(false);
-        saveChanges();
+
+        if (success)
+            saveChanges();
+        else
+        {
+            restoreOldValues();
+            result = 0;
+            app->showError(QObject::trUtf8("Не удалось добавить данные из запроса."));
+        }
+
     }
     return result;
 }
@@ -1172,37 +1190,41 @@ int Document::appendDocString(bool repaint)
 
     // Добавим строку в документ с параметрами всех проводок операции
     result = db->addDocStr(operNumber, docId, parameter);
-    QString attrList;
-    foreach (QString attr, attrFields)
-    {
-        if (prvValues.keys().contains(attr))
-        {
-            if (attrList.size() > 0)
-                attrList = attrList + ", ";
-            QVariant val = prvValues.value(attr);
-            QString value;
-            if (val.type() == QVariant::String)
-                value = QString("'%1'").arg(val.toString());
-            else
-                value = val.toString();
-            attrList.append(QString("%1=%2").arg(attr).arg(value));
-        }
-    }
-    if (attrList.size() > 0)
-    {
-        db->saveDocAttribute(operNumber, docId, attrList);
-    }
 
-    if (result > 0 && repaint)      // Если строка была добавлена
+    if (result > 0)
     {
-        int newRow = tableModel->rowCount();
-        tableModel->insertRow(newRow);
-        setCurrentRow(newRow);
-        updateCurrentRow(result);
-        if (grdTable != 0 /*nullptr*/)
+        QString attrList;
+        foreach (QString attr, attrFields)
         {
-            grdTable->repaint();
-            grdTable->setCurrentFocus();
+            if (prvValues.keys().contains(attr))
+            {
+                if (attrList.size() > 0)
+                    attrList = attrList + ", ";
+                QVariant val = prvValues.value(attr);
+                QString value;
+                if (val.type() == QVariant::String)
+                    value = QString("'%1'").arg(val.toString());
+                else
+                    value = val.toString();
+                attrList.append(QString("%1=%2").arg(attr).arg(value));
+            }
+        }
+        if (attrList.size() > 0)
+        {
+            db->saveDocAttribute(operNumber, docId, attrList);
+        }
+
+        if (repaint)      // Если строка была добавлена
+        {
+            int newRow = tableModel->rowCount();
+            tableModel->insertRow(newRow);
+            setCurrentRow(newRow);
+            updateCurrentRow(result);
+            if (grdTable != 0 /*nullptr*/)
+            {
+                grdTable->repaint();
+                grdTable->setCurrentFocus();
+            }
         }
     }
 

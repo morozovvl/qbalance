@@ -34,7 +34,7 @@ public:
     DocumentScriptEngine(Essence *parent = 0 /*nullptr*/);
     DocumentScriptEngine(QHash<QString, QVariant>*, Essence *parent = 0 /*nullptr*/);
     ~DocumentScriptEngine();
-    virtual void eventAppendFromQuery(QString, QSqlRecord*);
+    virtual int eventAppendFromQuery(QString, QSqlRecord*);
     virtual bool eventBeforeLinePrint(int);
     virtual void eventAfterLinePrint(int);
     virtual void eventBeforeTotalPrint();

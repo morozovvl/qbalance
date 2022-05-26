@@ -108,8 +108,11 @@ void DocumentScriptEngine::loadScriptObjects()
 
 
 // События
-void DocumentScriptEngine::eventAppendFromQuery(QString queryName, QSqlRecord* values)
+int DocumentScriptEngine::eventAppendFromQuery(QString queryName, QSqlRecord* values)
 {
+    int result = 0;
+    QScriptValue res;
+
     QString eventName = "EventAppendFromQuery";
     // Сначала преобразуем данные в записи к виду, пригодному для передачи в скрипты
     QScriptValue row = newObject();
@@ -120,7 +123,11 @@ void DocumentScriptEngine::eventAppendFromQuery(QString queryName, QSqlRecord* v
     QScriptValueList args;
     args << newVariant(QVariant(queryName));
     args << row;
-    scriptCall(eventName, currentContext()->thisObject(), args);
+    res = scriptCall(eventName, currentContext()->thisObject(), args);
+
+    if (res.toString() != "undefined")
+        result = res.toInteger();
+    return result;
 }
 
 
